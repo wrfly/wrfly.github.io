@@ -5,10 +5,26 @@
     <link>https://wrfly.kfd.me/tags/daily/</link>
     <description>Recent content in Daily on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 19 Oct 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 31 Dec 2017 22:13:35 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/tags/daily/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Last-Day-of-2017</title>
+      <link>https://wrfly.kfd.me/posts/last-day-of-2017/</link>
+      <pubDate>Sun, 31 Dec 2017 22:13:35 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/last-day-of-2017/</guid>
+      <description>今天是2017年的最后一天，晚上吃了一包泡面，一根黄瓜，一个苹果，一会儿还要吃个橘子。（说好的减肥呢）
+昨天晚上+今天的产出是一个新博客，当当当当，就是现在看到的这个了。 从Jekyll换到了Hugo，变了的是目录结构和内容，不变的还是markdown。
+过程中有几个坑，在这里记录一下。
+Tags的问题 Jekyll的tags可以用空格区分，但是在这里换成了hugo，就得用严格的yaml格式了，像以前这种的：
+--- tags: daily blog --- 都得换成
+--- tags: - daily - blog --- Title和创建时间的问题 以前写的东西，都是以文件名作为标题和创建时间，但在这里也得先在header中声明，老办法行不通了，必须要这样：
+--- date: &amp;#34;2017-12-31T22:13:35+08:00&amp;#34; title: &amp;#34;Last-Day-of-2017&amp;#34; categories: - daily tags: - daily - blog --- 解决问题 原先的文件中是没有声明这些东西的，所以就的批量修改，一般没毛病的话，sed就能解决了：
+# 增加date和title for f in *;do export T=&amp;#34;`echo &amp;#34;$f&amp;#34; | cut -d &amp;#34;-&amp;#34; -f4 | cut -d &amp;#34;.&amp;#34; -f1`&amp;#34; export D=$(date --date=`echo &amp;#34;$f&amp;#34; | cut -d &amp;#34;-&amp;#34; -f -3` +&amp;#34;%Y-%m-%d&amp;#34;) sed -i &amp;#34;s/post/post\ndate: $D\ntitle: $T/1&amp;#34; $f done #把原先的layout删掉 for f in *;do sed -i &amp;#34;1,10{/layout/d}&amp;#34; $f done # 把tags用[]括起来 for f in *;do cat &amp;#34;$f&amp;#34; | head -n10| grep &amp;#34;tags: &amp;#34; | grep -v &amp;#34;\[&amp;#34; &amp;amp;&amp;amp; echo $f &amp;amp;&amp;amp; sed -i &amp;#34;s/\(tags: \)\(.</description>
+    </item>
     
     <item>
       <title>拆拆拆</title>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Blog on wrfly&#39;s blog</title>
-    <link>https://wrfly.kfd.me/tags/blog/</link>
-    <description>Recent content in Blog on wrfly&#39;s blog</description>
+    <title>Daily on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/categories/daily/</link>
+    <description>Recent content in Daily on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Sun, 31 Dec 2017 22:13:35 +0800</lastBuildDate>
     
-	<atom:link href="https://wrfly.kfd.me/tags/blog/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://wrfly.kfd.me/categories/daily/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -24,22 +24,6 @@ Tags的问题 Jekyll的tags可以用空格区分，但是在这里换成了hugo�
 --- tags: - daily - blog --- Title和创建时间的问题 以前写的东西，都是以文件名作为标题和创建时间，但在这里也得先在header中声明，老办法行不通了，必须要这样：
 --- date: &amp;#34;2017-12-31T22:13:35+08:00&amp;#34; title: &amp;#34;Last-Day-of-2017&amp;#34; categories: - daily tags: - daily - blog --- 解决问题 原先的文件中是没有声明这些东西的，所以就的批量修改，一般没毛病的话，sed就能解决了：
 # 增加date和title for f in *;do export T=&amp;#34;`echo &amp;#34;$f&amp;#34; | cut -d &amp;#34;-&amp;#34; -f4 | cut -d &amp;#34;.&amp;#34; -f1`&amp;#34; export D=$(date --date=`echo &amp;#34;$f&amp;#34; | cut -d &amp;#34;-&amp;#34; -f -3` +&amp;#34;%Y-%m-%d&amp;#34;) sed -i &amp;#34;s/post/post\ndate: $D\ntitle: $T/1&amp;#34; $f done #把原先的layout删掉 for f in *;do sed -i &amp;#34;1,10{/layout/d}&amp;#34; $f done # 把tags用[]括起来 for f in *;do cat &amp;#34;$f&amp;#34; | head -n10| grep &amp;#34;tags: &amp;#34; | grep -v &amp;#34;\[&amp;#34; &amp;amp;&amp;amp; echo $f &amp;amp;&amp;amp; sed -i &amp;#34;s/\(tags: \)\(.</description>
-    </item>
-    
-    <item>
-      <title>build-my-jekyll-blog</title>
-      <link>https://wrfly.kfd.me/posts/build-my-jekyll-blog/</link>
-      <pubDate>Mon, 29 Dec 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://wrfly.kfd.me/posts/build-my-jekyll-blog/</guid>
-      <description>I suggest U visit this site first.
--Jekyll&amp;rsquo;home page-
- md文件末尾不能存在空格，否则浏览器解析会出错误
- jekyll插入图片格式 “ ![name](link) ”
- md的名字中存在的&amp;rdquo;-&amp;ldquo;会被解析成空格
- 首先要在本地搭建好jekyll环境，
-   sudo apt-get install gem sudo gem install jekyll sudo gem install [相关组件]  可以搜一下 jekyll-now 或者 jekyll bootstrap，都有详细的教程。
-大体目录：  . ├── 404.html #404页面 ├── about.html #about页面 ├── archive.html #汇总页面 ├── assets #css，js文件存放 │ ├── css │ │ ├── pygment-trac.css │ │ └── stylesheet.css │ └── js │ ├── main.</description>
     </item>
     
   </channel>

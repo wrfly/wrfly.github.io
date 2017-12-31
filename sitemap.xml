@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://wrfly.kfd.me/posts/last-day-of-2017/</loc>
+    <lastmod>2017-12-31T22:13:35+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://wrfly.kfd.me/about/</loc>
     <lastmod>2017-12-31T00:00:00+00:00</lastmod>
   </url>
@@ -418,11 +423,6 @@
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/posts/tags-in-jekyllgithub/</loc>
-    <lastmod>2014-12-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://wrfly.kfd.me/posts/20141226/</loc>
     <lastmod>2014-12-26T00:00:00+00:00</lastmod>
   </url>
@@ -505,19 +505,13 @@
   
   <url>
     <loc>https://wrfly.kfd.me/tags/blog/</loc>
-    <lastmod>2014-12-29T00:00:00+00:00</lastmod>
+    <lastmod>2017-12-31T22:13:35+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://wrfly.kfd.me/tags/books/</loc>
     <lastmod>2015-05-29T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wrfly.kfd.me/tags/build-my-own-blog/</loc>
-    <lastmod>2014-12-27T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -545,8 +539,14 @@
   </url>
   
   <url>
+    <loc>https://wrfly.kfd.me/categories/daily/</loc>
+    <lastmod>2017-12-31T22:13:35+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://wrfly.kfd.me/tags/daily/</loc>
-    <lastmod>2017-10-19T00:00:00+00:00</lastmod>
+    <lastmod>2017-12-31T22:13:35+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -628,7 +628,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/posts/</loc>
-    <lastmod>2017-12-06T00:00:00+00:00</lastmod>
+    <lastmod>2017-12-31T22:13:35+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -694,7 +694,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/</loc>
-    <lastmod>2017-12-31T00:00:00+00:00</lastmod>
+    <lastmod>2017-12-31T22:13:35+08:00</lastmod>
     <priority>0</priority>
   </url>
   
