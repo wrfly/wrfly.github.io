@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='At first I have to say what I&rsquo;m writing blow is all bull shit.
+For these days I reinstall my Ubuntu, this is a sad story&hellip;
+The reason is that I made a mistake when I repartitioned the disk. At first I want to resize the EFI partition and the boot partition because the original EFI partition is too big for me(500M) and the boot partition is a little small(just 200M), you know it&rsquo;s unreasonable, so I decided to resize it.'>
+
+<meta property='og:title' content='Yep,installed my Ubnutu again • wrfly&#39;s blog'>
+<meta property='og:description' content='At first I have to say what I&rsquo;m writing blow is all bull shit.
+For these days I reinstall my Ubuntu, this is a sad story&hellip;
+The reason is that I made a mistake when I repartitioned the disk. At first I want to resize the EFI partition and the boot partition because the original EFI partition is too big for me(500M) and the boot partition is a little small(just 200M), you know it&rsquo;s unreasonable, so I decided to resize it.'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/yepinstalled-my-ubnutu-again/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='daily'><meta property='article:published_time' content='2015-10-25T00:00:00Z'/><meta property='article:modified_time' content='2015-10-25T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>Yep,installed my Ubnutu again • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/yepinstalled-my-ubnutu-again/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/posts'>Posts</a>
+    </li>
+  <li>
+      <a href='/tags'>Tags</a>
+    </li>
+  <li>
+      <a href='/about'>About</a>
+    </li>
+  <li>
+      <a href='/links'>Links</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Yep,installed my Ubnutu again</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2015-10-25T00:00:00Z'>2015, Oct 25</time>
+</span>
+
+  
+  
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  <p>At first I have to say what I&rsquo;m writing blow is all bull shit.</p>
+
+<p>For these days I reinstall my Ubuntu, this is a sad story&hellip;</p>
+
+<p>The reason is that I made a mistake when I repartitioned the disk. At first I want to resize the EFI partition and the boot partition because the original EFI partition is too big for me(500M) and the boot partition is a little small(just 200M), you know it&rsquo;s unreasonable, so I decided to resize it.</p>
+
+<p>First I made a Live-CD to to all of this, and I intended to shrink the EFI partition and then enlarge the boot partition. I backup the files in the EFI partition before I used gparted to resize the EFI partition but I suddently realized that it changed the format of the EFI partition from FAT32 to FAT16, I&rsquo;m quiet unhappy of it so I decided to formart it to FAT32 again. I know it will destory all the data in this partition. But as I have backuped the files before, I&rsquo;m not afraid to lost any data.</p>
+
+<p>……</p>
+
+<p>然后悲剧就开始了。EFI格式化之后，把文件复制进去，然后把boot分区扩大，原本扩大完就没事了的，不知道我脑子又抽了什么疯，莫名其妙的boot也给格式化了，现在已经回想不出当时是怎么一回事了，忘掉最好。然后怎么办？重装boot呗！</p>
+
+<p>由于我的根目录是经过加密的，要先解密mapper成lv才能挂载，于是乎：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mount /dev/mapper/ubuntu--vg-root /mnt
+mount /dev/sda2 /mnt/boot
+mount /dev/sda1 /mnt/boot/efi</code></pre></div>
+<p>把这三个分区挂载到系统中，然后再把运行相关的文件挂载到里面：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#66d9ef">for</span> i in /dev /proc /sys /run; <span style="color:#66d9ef">do</span> mount -B $i /mnt$i; <span style="color:#66d9ef">done</span></code></pre></div>
+<p>-B 选项：
+&gt; The bind mounts.
+ Since Linux 2.4.0 it is possible to remount part of the file hierarchy somewhere else. The call is
+    mount &ndash;bind olddir newdir
+ or shortoption
+    mount -B olddir newdir
+ or fstab entry is:
+    /olddir /newdir none bind</p>
+
+<p>对。
+最后：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">chroot /mnt</pre></div>
+<p>这样就进入了原来的系统。有兴趣的同学可以仔细看下 chroot 这个命令。</p>
+
+<p>然后悲剧继续。</p>
+
+<p>由于boot分区已经清空了，所有的启动相关的文件全部丢失，没了内核。怎么办？<strong>sudo apt-get remove linux-generic</strong> 不管用，因为这些内核的状态全部是 <em>rH</em> <code>dpkg -l | grep linux-image</code>可以看到，<em>r</em> 表示removed，<em>H</em> 表示没安装完全，安装了一半……（废话，boot没了，当然剩下一半了……）纠结了一天，终于在吃饭之前的某个瞬间想到，我可以把丢失的文件复制回来！然后就在Livd-CD启动的系统上装了原来系统的内核们（对，就是“们”，5个！）然后把boot分区中的内容复制到原来系统的boot分区下，然后再到原来系统中，不管是remove也好，还是purge也好，反正是把那些内核卸载了，然后，重装内核。</p>
+
+<p>大功告成了么？Naive!
+由于源磁盘是加过密的，重装之后，按说启动时应该让输密码解密，但是，没有解密这个步骤。也不知道时丢失了那个文件，但是在fstab文件（/etc/fstab 保存着系统的文件分部，挂载什么，从哪儿挂载，UUID是啥，挂在的模式是什么）中看着是对的，现在想想有可能是cryttab文件（crypttab - static information about crypted filesystems）中的UUID出了问题，反正就是坏了。。</p>
+
+<p>怎么办？</p>
+
+<p>最坏的打算就是重装了，幸好周四中午的时候刚备份完（备份完之后就残废了！）。</p>
+
+<p>中间我还想着增加一块SWAP分区，因为原来的时候把SWAP给删了，SSD太小，而且觉着swap实在鸡肋（虽然现在仍然这么想，但重装之后还是把swap给加上了，官方推荐3个G）。</p>
+
+<p>由于加密的是pv，pv又分了一个vg，vg里面就一个lv。（你有可能不懂这是什么，PV啦，VG啦,LV啦。不懂得回去看鸟哥的私房菜，第三版第八章，我也是刚看，唉，如果之前仔细看看这一部分，就不至于重装一边系统了，厚积而薄发，厚积而薄发啊！）</p>
+
+<p>想着先把原来的lv缩小，敲了一些乱七八糟的命令（大忌！如果不懂这个命令是什么，不要随便乱敲！），那天晚上看的时候不太懂，隐隐约约先把lv缩小了，但是！lv的filesize没改变！这里要注意的是缩小lv之前一定要先把lv的filesize减小，要不就会出现superblock和lv大小不一样的情况，网上搜索了很多，从09年到12年都又人遇到了这个问题，估计是和我一样手贱，乱敲命令，但是都没有解决方案，都没有解决方案！有一个中文博客，提到了这一点，说是操作顺序如果有误，就会出现这样的问题，从而导致下一步的检测无法通过，但是并没有给出解决错误的方案，无奈。我也只好死马当活马医，下面提示igore的时候忽视他，进行手动修复，大不了重装。</p>
+
+<p>自动修了大约一个小时，然并卵。</p>
+
+<p>好吧，我服了，重装。里面的所有配置都丢了，包括三个kali虚拟机，一个xp虚拟机，以及xp里面磨了三年的菜刀和养的肉鸡。日了狗！</p>
+
+<p>下一篇谈谈干货，重装之后都做了什么，适合新手和老手阅读。</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/daily'>Daily</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/posts/20151007/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>20151007</a>
+    </div><div class='next-entry'>
+      <a href='/posts/%E6%8E%A5%E7%9D%80%E4%B8%8A%E4%B8%80%E7%AF%87/'>
+        <span class='screen-reader'>Next post: </span>接着上一篇<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+      Host with github | Build with Hugo | Theme by Minimo &copy; 2015-2017 wrfly 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

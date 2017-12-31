@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='今天处理了一个Gates病毒。 病毒表面症状是，创建一个带有 ais 隐藏属性的 /etc/kblockd 文件，无法删除，并且在 /usr/bin/dpkgd/ 目录中创建了lsof netstat ss ps这些二进制文件，在 /tmp 目录下生成 gates.lod 和 moni.lod 两个文件，在 /etc/init.d/ 中创建 selinux 和 DbSecuritySpt ，并向 /etc/rc.d/rc*/ 中注册，其中，/etc/init.d/selinux 启动的是 /usr/bin/bsd-port/getty，还会创建一个隐藏的 /usr/bin/.sshd 文件作为后门。
+看上去很复杂的样子。
+解决脚本如下：
+#!/bin/bash chattr -ais /etc/kblockd #cp /dev/null /etc/kblockd #chmod -x /etc/kblockd rm -f /etc/kblockd pkill .sshd chmod -x /usr/bin/.sshd rm -f /usr/bin/.sshd pkill ^getty rm -rf /usr/bin/bsd-port rm -rf /usr/bin/dpkgd find /etc/rc.d/ -name *selinux -delete find /etc/init.d -name *selinux -delete find /etc/rc.'>
+
+<meta property='og:title' content='Linux下Gates病毒 • wrfly&#39;s blog'>
+<meta property='og:description' content='今天处理了一个Gates病毒。 病毒表面症状是，创建一个带有 ais 隐藏属性的 /etc/kblockd 文件，无法删除，并且在 /usr/bin/dpkgd/ 目录中创建了lsof netstat ss ps这些二进制文件，在 /tmp 目录下生成 gates.lod 和 moni.lod 两个文件，在 /etc/init.d/ 中创建 selinux 和 DbSecuritySpt ，并向 /etc/rc.d/rc*/ 中注册，其中，/etc/init.d/selinux 启动的是 /usr/bin/bsd-port/getty，还会创建一个隐藏的 /usr/bin/.sshd 文件作为后门。
+看上去很复杂的样子。
+解决脚本如下：
+#!/bin/bash chattr -ais /etc/kblockd #cp /dev/null /etc/kblockd #chmod -x /etc/kblockd rm -f /etc/kblockd pkill .sshd chmod -x /usr/bin/.sshd rm -f /usr/bin/.sshd pkill ^getty rm -rf /usr/bin/bsd-port rm -rf /usr/bin/dpkgd find /etc/rc.d/ -name *selinux -delete find /etc/init.d -name *selinux -delete find /etc/rc.'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/2017-3-22-linux%E4%B8%8Bgates%E7%97%85%E6%AF%92/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='daily'><meta property='article:published_time' content='2017-03-22T00:00:00Z'/><meta property='article:modified_time' content='2017-03-22T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>Linux下Gates病毒 • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/2017-3-22-linux%E4%B8%8Bgates%E7%97%85%E6%AF%92/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/posts'>Posts</a>
+    </li>
+  <li>
+      <a href='/tags'>Tags</a>
+    </li>
+  <li>
+      <a href='/about'>About</a>
+    </li>
+  <li>
+      <a href='/links'>Links</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Linux下Gates病毒</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-03-22T00:00:00Z'>2017, Mar 22</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+One min read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>今天处理了一个Gates病毒。
+病毒表面症状是，创建一个带有 <code>ais</code> 隐藏属性的 <code>/etc/kblockd</code> 文件，无法删除，并且在 <code>/usr/bin/dpkgd/</code> 目录中创建了<code>lsof netstat ss ps</code>这些二进制文件，在 <code>/tmp</code> 目录下生成 <code>gates.lod</code> 和 <code>moni.lod</code> 两个文件，在 <code>/etc/init.d/</code> 中创建 <code>selinux</code> 和 <code>DbSecuritySpt</code> ，并向 <code>/etc/rc.d/rc*/</code> 中注册，其中，<code>/etc/init.d/selinux</code> 启动的是 <code>/usr/bin/bsd-port/getty</code>，还会创建一个隐藏的 <code>/usr/bin/.sshd</code> 文件作为后门。</p>
+
+<p>看上去很复杂的样子。</p>
+
+<p>解决脚本如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/bash
+</span><span style="color:#75715e"></span>chattr -ais /etc/kblockd
+<span style="color:#75715e">#cp /dev/null /etc/kblockd
+</span><span style="color:#75715e">#chmod -x /etc/kblockd
+</span><span style="color:#75715e"></span>rm -f /etc/kblockd
+
+pkill .sshd
+chmod -x /usr/bin/.sshd
+rm -f /usr/bin/.sshd
+
+pkill ^getty
+rm -rf /usr/bin/bsd-port
+rm -rf /usr/bin/dpkgd
+
+find /etc/rc.d/ -name *selinux -delete
+find /etc/init.d -name *selinux -delete
+find /etc/rc.d/ -name *DbSecurity -delete
+find /etc/init.d -name *DbSecurity -delete
+
+yum erase net-tools <span style="color:#f92672">&amp;&amp;</span> yum install -y net-tools
+yum erase lsof <span style="color:#f92672">&amp;&amp;</span> yum install -y lsof
+yum install iproute
+yum install procps
+
+rm -f /tmp/moni.lod
+rm -f /tmp/gates.lod</code></pre></div>
+<p>别人的链接：</p>
+
+<p><a href="http://wangzan18.blog.51cto.com/8021085/1740113" target="_blank">http://wangzan18.blog.51cto.com/8021085/1740113</a></p>
+
+<p><a href="http://beijing0414.blog.51cto.com/8612563/1725375" target="_blank">http://beijing0414.blog.51cto.com/8612563/1725375</a></p>
+
+<h2 id="解决木马的套路">解决木马的套路</h2>
+
+<p>Linux下的病毒木马之类还是很好解决的，只不过鲜有人知道方法。比如 <code>chattr</code> 和 <code>lsattr</code> 这个关于隐藏属性的两个命令。</p>
+
+<ol>
+<li>确定木马进程，找出异常的进程和开放的端口。</li>
+<li>确定木马文件，一般就是那些删除不掉的文件，这个时候要用<code>lsattr</code>查看文件的隐藏属性，去除隐藏属性之后再删除。</li>
+<li>如果删除了文件之后还会再次生成，那么肯定还有一个其他的进程在守护着这个病毒，所以，这里有个办法就是，去除文件的执行权限，或者，<code>cp /dev/null &lt;木马文件&gt;</code>，这样这个文件就无法执行了。</li>
+<li>然后再去查找上一层的木马进程，一般这东西就写在 <code>/etc/rc.local</code> 或者 <code>/etc/init.d/</code> 或者 <code>/etc/rc.d/rc*/</code> 这些目录下，还有就是，用户的 <code>~/.bashrc</code> 文件，这个是容易忽略的，也不知道有没有木马往这里写东西，总之，都看一下比较好。</li>
+<li>如果确认不了木马的上层文件，那么就在确认 <code>ps</code> 命令没有被替换的前提下，一个一个的查找进程，如果 <code>ps</code> 命令都被替换了，那就重新安装一下 <code>ps</code>. 然后通过 <code>ps -a &lt;异常进程ID&gt;</code> 来确认异常文件。</li>
+<li>最后就是检查一下开放的端口，和对应的程序，发现异常之后，通过 <code>chmod -x</code> 或者 <code>cp /dev/null</code> 的方式先取消掉文件的执行能力，然后再顺藤摸瓜的查找。</li>
+<li>重启机器，看是否还有异常。</li>
+</ol>
+
+<p>最后，其实很多公司都不注意安全的，比如ssh默认端口不更改，root用弱口令，关闭防火墙等等。</p>
+
+<p>机器常升级，补丁勤着打，防火墙要开，默认端口记得改，别用弱口令，能用堡垒机就用堡垒机，服务能简单就简单，能用容器跑，尽量就用容器跑，还要注意做好隔离。</p>
+
+<p>其实这些木马都很傻逼的，无非就是这些套路。</p>
+
+<p>哦对，还有一点，就是注意一下 <code>/etc/passwd</code> 这个文件，不要被人添加了别的用户，然后uid改成0，这样就不好了。</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/daily'>Daily</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/posts/2017-3-12-confd%E7%AC%94%E8%AE%B0/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>confd笔记</a>
+    </div><div class='next-entry'>
+      <a href='/posts/2017-4-2-%E8%BF%98%E6%98%AF%E4%BB%A3%E7%90%86/'>
+        <span class='screen-reader'>Next post: </span>还是代理<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+      Host with github | &copy; 2015-2017 wrfly | theme by minimo
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

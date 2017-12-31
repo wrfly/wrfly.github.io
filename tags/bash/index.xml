@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bash on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/bash/</link>
+    <description>Recent content in Bash on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 06 Feb 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/bash/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Bash-Shortcuts</title>
+      <link>https://wrfly.kfd.me/posts/bash-shortcuts/</link>
+      <pubDate>Fri, 06 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/bash-shortcuts/</guid>
+      <description>The shortcuts listed here are based on GNU bash version 3.00. The abbreviation of &amp;ldquo;CTRL-a&amp;rdquo; means to press and hold down the Control key and press &amp;lsquo; a &amp;rsquo; once. The shortcuts should be the same for most other shells.
+The basic moving shortcuts allow movement to the end of the line, to the start of the line or to step through by character. The commands come in really handy when editing different file in another directory or copying files.</description>
+    </item>
+    
+  </channel>
+</rss>

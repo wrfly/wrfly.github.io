@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content=' 程序的拆拆拆 敏捷开发 &amp; 快速迭代 去年实习的时候就听过这两个词，很时髦，很新颖。大体的理解就是，因为创业公司技术壁垒很低，大家都争分夺秒，所以新功能的开发必须要快，一个新的特性开发出来之后，进入一个快速迭代的流程，其实也就是开发-测试-发布的一个流程，通过自动化的手段，将人为干预降到最低，把从代码到交付这个流程贯通起来，快速上线。
+技术壁垒这个东西，无非就是时间壁垒。曾经面试的时候跟一个创业公司的CEO聊过，他也给我灌输了这一点，当时我问他产品有没有壁垒，他就很坦然的说，半年。以一个时间跨度去衡量技术跨度，我觉得OK。同样一种服务，厉害一点的团队，可能半年开发完，那一般一点的团队，一年，一年半也能写个差不多。日光底下又没有新鲜事，无非就是写的好坏的问题嘛，但这些都可以通过优化，重构去解决。好的代码是重构出来的，我很同意这句话。
+而敏捷开发，我理解为，拆拆拆。从定义上讲：
+ 敏捷开发是一种以人为核心、迭代、循序渐进的开发方法。在敏捷开发中，软件项目的构建被切分成多个子项目，各个子项目的成果都经过测试，具备集成和可运行的特征。换言之，就是把一个大项目分为多个相互联系，但也可独立运行的小项目，并分别完成，在此过程中软件一直处于可使用状态。
+ 项目的概念，可以是一个单纯的project，工程上的的projet，交付的产物是一个程序；但从项目经理的角度出发，一个项目则是可以给用户带来价值的一组服务。所以这里有点模糊，但我个人理解，项目就是repo，服务就是service，两者可以联系在一起，也可以不联系在一起，一个repo可以就是一个service，但也有可能是一个service的一部分。其实结合docker的stack和container的关系，就容易理解：stack中定义一组container，一个stack对外提供服务，但一个container组成的service也可以看作为一个stack。
+敏捷开发即将原先的大项目拆分成一个一个的小项目，不同的小项目组合起来就是这个“大项目”，即“服务”。但也有可能，这个“大项目”也只是某个服务的一部分。小项目之间互相独立，只要定义好接口，不关心内部实现。这样就能以程序解耦为基础，在人员上解耦，大家互相独立的开发，写好需求，写清楚需求，这个IO流就跑起来了。
+其实程序嘛，无非就是个IO，给个输入，程序给出输出。只不过大程序完成了很多事，小程序只做一件事而已。
+也谈微服务 近些年，“微服务”这个词也挺时髦的。很幸运，一开始去的公司比较时尚，由于是做Docker服务的，所以接触Docker也还不晚。而Docker和微服务，我个人认为是紧密联系在一起的。
+什么是微服务。我们知道服务是对外提供功能的一组程序，一个服务，或者说，公司的一组业务，是由很多不同的组件构成的，那微服务就是在组件这一个层次上（组件可以理解为特定的程序），把组建拆拆拆，把程序拆开，每个组件对外还是相同的功能，但是对内而言，已经七零八散了。在微服务构架里，“七零八散”并不是个贬义词，看似很小的程序在逻辑上都是有组织有纪律的。忽然又想起微信小程序了，看来总体的发展趋势还是微小化，一开始是服务器，虚拟机，后来有了虚拟空间，再后来GAE，SAE，Docker，还有亚马逊的lambda服务，大家都是朝着微小化的方向发展，我们把机器拆开，服务拆开，接口拆开，程序拆开，进程拆开，函数拆开，最后都变成一个个的IO。
+就像是从一家家的小作坊，变成了工厂的流水线，每个人负责单一的功能，每个人都是对外提供一种服务，但由于这个服务比较小，所以就叫微服务。小作坊和工厂都是服务，不同的是，工厂的资源高度集中，工人稳定可靠（不会因为不上班而DOS），流水线分工明确，产品可追溯，流程可控制。一群工人组成的team，就像一群微服务组成的集群。
+说到集群，就不得不说管理和调度，这也是一门博大精深的学问，可以看下google的borg系统。还有集群的监控，日志，存储，网络等等等等。又想起那天去头条面试的时候，那个老大问我对成千上万的容器怎么监控，metric有哪些，当时我竟然脑子短路，只说了alive这一个，哪怕uptime呢，最后他告诉我，还要有对请求的统计（可能是他就说了这一个，也有可能我只记住了这一个）。不过现在手头正做一个API的服务，audit啊，auth啊，cache啊，metrics啊，很涨经验。
+拆拆拆 这个也是今天想到的，从程序分层，想到组件（component）分层，然后又回到了微服务。程序的分层，就是在逻辑和代码上做内部的解耦，不同的DAO，不同的Handler，不同的Type，都要一一区分，能抽象的都抽象，能解耦的都解耦，这样的好处是，在逻辑上很清晰，在测试方面也容易进行单元测试。
+又想到一个“传递和全局变量”的问题。其实一直在纠结，因为程序经常会与数据库打交道，也就是DAO的处理，初始化handler的时候，到底是将new出来的DAO传递进去，还是在DAO中定义一个全局变量，当有handler需要与数据库交互的时候，直接调用这个全局变量呢。我代码看的也少，不了解别人是怎么做的，但经讨论认为，如果说DAO的session或者client能够保证并发安全，那么这个全局变量是没问题的。如果不能保证并发安全，那么就要么加锁（或者队列），要么就再new一个新的出来给handler用。这就要具体情况具体分析了，像influxdb的UDP的client，就可以每次调用的时候new一个出来。但既然其HTTP的client能够保证并发安全，那么全局变量的做法也是OK的。
+拆程序不仅在逻辑上的分层很清晰，在流程上的层次也很明确。以后有新的功能开发，直接找到对应的module或者handler或者别的什么名字，在其基础上append代码就可以，如果有其他地方的改动，也只是小修小补，只要做好feature的unit test，其他的改动也不会有问题。
+如果一个程序让人读起来很乱，那么就需要考虑重构，内部解耦，划分好调用层次，流程顺序等等。
+实在不行，就重写吧。
+扩展阅读  https://www.biaodianfu.com/tencent-agile.html http://agilemanifesto.org/iso/zhchs/principles.html 解析微服务架构 http://wiki.mbalib.com/wiki/%E6%95%8F%E6%8D%B7%E5%BC%80%E5%8F%91  '>
+
+<meta property='og:title' content='拆拆拆 • wrfly&#39;s blog'>
+<meta property='og:description' content=' 程序的拆拆拆 敏捷开发 &amp; 快速迭代 去年实习的时候就听过这两个词，很时髦，很新颖。大体的理解就是，因为创业公司技术壁垒很低，大家都争分夺秒，所以新功能的开发必须要快，一个新的特性开发出来之后，进入一个快速迭代的流程，其实也就是开发-测试-发布的一个流程，通过自动化的手段，将人为干预降到最低，把从代码到交付这个流程贯通起来，快速上线。
+技术壁垒这个东西，无非就是时间壁垒。曾经面试的时候跟一个创业公司的CEO聊过，他也给我灌输了这一点，当时我问他产品有没有壁垒，他就很坦然的说，半年。以一个时间跨度去衡量技术跨度，我觉得OK。同样一种服务，厉害一点的团队，可能半年开发完，那一般一点的团队，一年，一年半也能写个差不多。日光底下又没有新鲜事，无非就是写的好坏的问题嘛，但这些都可以通过优化，重构去解决。好的代码是重构出来的，我很同意这句话。
+而敏捷开发，我理解为，拆拆拆。从定义上讲：
+ 敏捷开发是一种以人为核心、迭代、循序渐进的开发方法。在敏捷开发中，软件项目的构建被切分成多个子项目，各个子项目的成果都经过测试，具备集成和可运行的特征。换言之，就是把一个大项目分为多个相互联系，但也可独立运行的小项目，并分别完成，在此过程中软件一直处于可使用状态。
+ 项目的概念，可以是一个单纯的project，工程上的的projet，交付的产物是一个程序；但从项目经理的角度出发，一个项目则是可以给用户带来价值的一组服务。所以这里有点模糊，但我个人理解，项目就是repo，服务就是service，两者可以联系在一起，也可以不联系在一起，一个repo可以就是一个service，但也有可能是一个service的一部分。其实结合docker的stack和container的关系，就容易理解：stack中定义一组container，一个stack对外提供服务，但一个container组成的service也可以看作为一个stack。
+敏捷开发即将原先的大项目拆分成一个一个的小项目，不同的小项目组合起来就是这个“大项目”，即“服务”。但也有可能，这个“大项目”也只是某个服务的一部分。小项目之间互相独立，只要定义好接口，不关心内部实现。这样就能以程序解耦为基础，在人员上解耦，大家互相独立的开发，写好需求，写清楚需求，这个IO流就跑起来了。
+其实程序嘛，无非就是个IO，给个输入，程序给出输出。只不过大程序完成了很多事，小程序只做一件事而已。
+也谈微服务 近些年，“微服务”这个词也挺时髦的。很幸运，一开始去的公司比较时尚，由于是做Docker服务的，所以接触Docker也还不晚。而Docker和微服务，我个人认为是紧密联系在一起的。
+什么是微服务。我们知道服务是对外提供功能的一组程序，一个服务，或者说，公司的一组业务，是由很多不同的组件构成的，那微服务就是在组件这一个层次上（组件可以理解为特定的程序），把组建拆拆拆，把程序拆开，每个组件对外还是相同的功能，但是对内而言，已经七零八散了。在微服务构架里，“七零八散”并不是个贬义词，看似很小的程序在逻辑上都是有组织有纪律的。忽然又想起微信小程序了，看来总体的发展趋势还是微小化，一开始是服务器，虚拟机，后来有了虚拟空间，再后来GAE，SAE，Docker，还有亚马逊的lambda服务，大家都是朝着微小化的方向发展，我们把机器拆开，服务拆开，接口拆开，程序拆开，进程拆开，函数拆开，最后都变成一个个的IO。
+就像是从一家家的小作坊，变成了工厂的流水线，每个人负责单一的功能，每个人都是对外提供一种服务，但由于这个服务比较小，所以就叫微服务。小作坊和工厂都是服务，不同的是，工厂的资源高度集中，工人稳定可靠（不会因为不上班而DOS），流水线分工明确，产品可追溯，流程可控制。一群工人组成的team，就像一群微服务组成的集群。
+说到集群，就不得不说管理和调度，这也是一门博大精深的学问，可以看下google的borg系统。还有集群的监控，日志，存储，网络等等等等。又想起那天去头条面试的时候，那个老大问我对成千上万的容器怎么监控，metric有哪些，当时我竟然脑子短路，只说了alive这一个，哪怕uptime呢，最后他告诉我，还要有对请求的统计（可能是他就说了这一个，也有可能我只记住了这一个）。不过现在手头正做一个API的服务，audit啊，auth啊，cache啊，metrics啊，很涨经验。
+拆拆拆 这个也是今天想到的，从程序分层，想到组件（component）分层，然后又回到了微服务。程序的分层，就是在逻辑和代码上做内部的解耦，不同的DAO，不同的Handler，不同的Type，都要一一区分，能抽象的都抽象，能解耦的都解耦，这样的好处是，在逻辑上很清晰，在测试方面也容易进行单元测试。
+又想到一个“传递和全局变量”的问题。其实一直在纠结，因为程序经常会与数据库打交道，也就是DAO的处理，初始化handler的时候，到底是将new出来的DAO传递进去，还是在DAO中定义一个全局变量，当有handler需要与数据库交互的时候，直接调用这个全局变量呢。我代码看的也少，不了解别人是怎么做的，但经讨论认为，如果说DAO的session或者client能够保证并发安全，那么这个全局变量是没问题的。如果不能保证并发安全，那么就要么加锁（或者队列），要么就再new一个新的出来给handler用。这就要具体情况具体分析了，像influxdb的UDP的client，就可以每次调用的时候new一个出来。但既然其HTTP的client能够保证并发安全，那么全局变量的做法也是OK的。
+拆程序不仅在逻辑上的分层很清晰，在流程上的层次也很明确。以后有新的功能开发，直接找到对应的module或者handler或者别的什么名字，在其基础上append代码就可以，如果有其他地方的改动，也只是小修小补，只要做好feature的unit test，其他的改动也不会有问题。
+如果一个程序让人读起来很乱，那么就需要考虑重构，内部解耦，划分好调用层次，流程顺序等等。
+实在不行，就重写吧。
+扩展阅读  https://www.biaodianfu.com/tencent-agile.html http://agilemanifesto.org/iso/zhchs/principles.html 解析微服务架构 http://wiki.mbalib.com/wiki/%E6%95%8F%E6%8D%B7%E5%BC%80%E5%8F%91  '>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/2017-10-19-%E6%8B%86%E6%8B%86%E6%8B%86/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='daily'><meta property='article:published_time' content='2017-10-19T00:00:00Z'/><meta property='article:modified_time' content='2017-10-19T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>拆拆拆 • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/2017-10-19-%E6%8B%86%E6%8B%86%E6%8B%86/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/posts'>Posts</a>
+    </li>
+  <li>
+      <a href='/tags'>Tags</a>
+    </li>
+  <li>
+      <a href='/about'>About</a>
+    </li>
+  <li>
+      <a href='/links'>Links</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>拆拆拆</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-10-19T00:00:00Z'>2017, Oct 19</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+One min read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<h1 id="程序的拆拆拆">程序的拆拆拆</h1>
+
+<h2 id="敏捷开发-快速迭代">敏捷开发 &amp; 快速迭代</h2>
+
+<p>去年实习的时候就听过这两个词，很时髦，很新颖。大体的理解就是，因为创业公司技术壁垒很低，大家都争分夺秒，所以新功能的开发必须要快，一个新的特性开发出来之后，进入一个快速迭代的流程，其实也就是开发-测试-发布的一个流程，通过自动化的手段，将人为干预降到最低，把从代码到交付这个流程贯通起来，快速上线。</p>
+
+<p>技术壁垒这个东西，无非就是时间壁垒。曾经面试的时候跟一个创业公司的CEO聊过，他也给我灌输了这一点，当时我问他产品有没有壁垒，他就很坦然的说，半年。以一个时间跨度去衡量技术跨度，我觉得OK。同样一种服务，厉害一点的团队，可能半年开发完，那一般一点的团队，一年，一年半也能写个差不多。日光底下又没有新鲜事，无非就是写的好坏的问题嘛，但这些都可以通过优化，重构去解决。<strong>好的代码是重构出来的</strong>，我很同意这句话。</p>
+
+<p>而敏捷开发，我理解为，拆拆拆。从定义上讲：</p>
+
+<blockquote>
+<p>敏捷开发是一种以人为核心、迭代、循序渐进的开发方法。在敏捷开发中，软件项目的构建被切分成多个子项目，各个子项目的成果都经过测试，具备集成和可运行的特征。换言之，就是把一个大项目分为多个相互联系，但也可独立运行的小项目，并分别完成，在此过程中软件一直处于可使用状态。</p>
+</blockquote>
+
+<p>项目的概念，可以是一个单纯的project，工程上的的projet，交付的产物是一个程序；但从项目经理的角度出发，一个项目则是可以给用户带来价值的一组服务。所以这里有点模糊，但我个人理解，项目就是repo，服务就是service，两者可以联系在一起，也可以不联系在一起，一个repo可以就是一个service，但也有可能是一个service的一部分。其实结合docker的stack和container的关系，就容易理解：stack中定义一组container，一个stack对外提供服务，但一个container组成的service也可以看作为一个stack。</p>
+
+<p>敏捷开发即将原先的大项目拆分成一个一个的小项目，不同的小项目组合起来就是这个“大项目”，即“服务”。但也有可能，这个“大项目”也只是某个服务的一部分。小项目之间互相独立，只要定义好接口，不关心内部实现。这样就能以程序解耦为基础，在人员上解耦，大家互相独立的开发，写好需求，写清楚需求，这个IO流就跑起来了。</p>
+
+<p>其实程序嘛，无非就是个IO，给个输入，程序给出输出。只不过大程序完成了很多事，小程序只做一件事而已。</p>
+
+<h2 id="也谈微服务">也谈微服务</h2>
+
+<p>近些年，“微服务”这个词也挺时髦的。很幸运，一开始去的公司比较时尚，由于是做Docker服务的，所以接触Docker也还不晚。而Docker和微服务，我个人认为是紧密联系在一起的。</p>
+
+<p>什么是微服务。我们知道服务是对外提供功能的一组程序，一个服务，或者说，公司的一组业务，是由很多不同的组件构成的，那微服务就是在组件这一个层次上（组件可以理解为特定的程序），把组建拆拆拆，把程序拆开，每个组件对外还是相同的功能，但是对内而言，已经七零八散了。在微服务构架里，“七零八散”并不是个贬义词，看似很小的程序在逻辑上都是有组织有纪律的。忽然又想起微信小程序了，看来总体的发展趋势还是微小化，一开始是服务器，虚拟机，后来有了虚拟空间，再后来GAE，SAE，Docker，还有亚马逊的lambda服务，大家都是朝着微小化的方向发展，我们把机器拆开，服务拆开，接口拆开，程序拆开，进程拆开，函数拆开，最后都变成一个个的IO。</p>
+
+<p>就像是从一家家的小作坊，变成了工厂的流水线，每个人负责单一的功能，每个人都是对外提供一种服务，但由于这个服务比较小，所以就叫微服务。小作坊和工厂都是服务，不同的是，工厂的资源高度集中，工人稳定可靠（不会因为不上班而DOS），流水线分工明确，产品可追溯，流程可控制。一群工人组成的team，就像一群微服务组成的集群。</p>
+
+<p>说到集群，就不得不说管理和调度，这也是一门博大精深的学问，可以看下google的<a href="https://research.google.com/pubs/pub43438.html" target="_blank">borg系统</a>。还有集群的监控，日志，存储，网络等等等等。又想起那天去头条面试的时候，那个老大问我对成千上万的容器怎么监控，metric有哪些，当时我竟然脑子短路，只说了alive这一个，哪怕uptime呢，最后他告诉我，还要有对请求的统计（可能是他就说了这一个，也有可能我只记住了这一个）。不过现在手头正做一个API的服务，audit啊，auth啊，cache啊，metrics啊，很涨经验。</p>
+
+<h2 id="拆拆拆">拆拆拆</h2>
+
+<p>这个也是今天想到的，从程序分层，想到组件（component）分层，然后又回到了微服务。程序的分层，就是在逻辑和代码上做内部的解耦，不同的DAO，不同的Handler，不同的Type，都要一一区分，能抽象的都抽象，能解耦的都解耦，这样的好处是，在逻辑上很清晰，在测试方面也容易进行单元测试。</p>
+
+<p>又想到一个“传递和全局变量”的问题。其实一直在纠结，因为程序经常会与数据库打交道，也就是DAO的处理，初始化handler的时候，到底是将new出来的DAO传递进去，还是在DAO中定义一个全局变量，当有handler需要与数据库交互的时候，直接调用这个全局变量呢。我代码看的也少，不了解别人是怎么做的，但经讨论认为，如果说DAO的session或者client能够保证并发安全，那么这个全局变量是没问题的。如果不能保证并发安全，那么就要么加锁（或者队列），要么就再new一个新的出来给handler用。这就要具体情况具体分析了，像influxdb的UDP的client，就可以每次调用的时候new一个出来。但既然其HTTP的client能够保证并发安全，那么全局变量的做法也是OK的。</p>
+
+<p>拆程序不仅在逻辑上的分层很清晰，在流程上的层次也很明确。以后有新的功能开发，直接找到对应的module或者handler或者别的什么名字，在其基础上append代码就可以，如果有其他地方的改动，也只是小修小补，只要做好feature的unit test，其他的改动也不会有问题。</p>
+
+<p>如果一个程序让人读起来很乱，那么就需要考虑重构，内部解耦，划分好调用层次，流程顺序等等。</p>
+
+<p>实在不行，就重写吧。</p>
+
+<h2 id="扩展阅读">扩展阅读</h2>
+
+<ul>
+<li><a href="https://www.biaodianfu.com/tencent-agile.html" target="_blank">https://www.biaodianfu.com/tencent-agile.html</a></li>
+<li><a href="http://agilemanifesto.org/iso/zhchs/principles.html" target="_blank">http://agilemanifesto.org/iso/zhchs/principles.html</a></li>
+<li><a href="https://www.ibm.com/developerworks/community/blogs/3302cc3b-074e-44da-90b1-5055f1dc0d9c/entry/%E8%A7%A3%E6%9E%90%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84_%E4%B8%80_%E4%BB%80%E4%B9%88%E6%98%AF%E5%BE%AE%E6%9C%8D%E5%8A%A1?lang=en" target="_blank">解析微服务架构</a></li>
+<li><a href="http://wiki.mbalib.com/wiki/%E6%95%8F%E6%8D%B7%E5%BC%80%E5%8F%91" target="_blank">http://wiki.mbalib.com/wiki/%E6%95%8F%E6%8D%B7%E5%BC%80%E5%8F%91</a></li>
+</ul>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/daily'>Daily</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/posts/2017-9-8-20170908/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>20170908</a>
+    </div><div class='next-entry'>
+      <a href='/posts/2017-11-27-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/'>
+        <span class='screen-reader'>Next post: </span>系统设计<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+      Host with github | &copy; 2015-2017 wrfly | theme by minimo
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

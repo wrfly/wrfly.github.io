@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='好记性不如烂笔头。
+昨天完成了项目的 etcd &#43; confd &#43; openresty 的反代部分，在这里记录一下。这东西学起来还是有点时间的，文档也说的不明白，没个example可以看。
+etcd 部分 单点etcd启动：
+docker volume create etcd_data docker run -dti --network host \ 	-v etcd_data:/default.etcd \ 	-e ETCD_LISTEN_PEER_URLS=http://10.170.1.31:2380 \ 	-e ETCD_LISTEN_CLIENT_URLS=http://10.170.1.31:2379 \ 	-e ETCD_ADVERTISE_CLIENT_URLS=http://10.170.1.31:2379 \ 	quay.io/coreos/etcd:latest 然后这个 quay.io/coreos/etcd:latest 镜像隔着我国比较远，所以不如用我的镜像 wrfly/etcd pull 的时候会快一点。 （2017-3-12 version: latest）
+confd 配置部分 confd启动的时候需要一些配置：
+backend = &#34;etcd&#34; confdir = &#34;/etc/confd&#34; log-level = &#34;info&#34; watch = true noop = false prefix = &#34;/&#34; scheme = &#34;http&#34; node = [ &#34;1.'>
+
+<meta property='og:title' content='confd笔记 • wrfly&#39;s blog'>
+<meta property='og:description' content='好记性不如烂笔头。
+昨天完成了项目的 etcd &#43; confd &#43; openresty 的反代部分，在这里记录一下。这东西学起来还是有点时间的，文档也说的不明白，没个example可以看。
+etcd 部分 单点etcd启动：
+docker volume create etcd_data docker run -dti --network host \ 	-v etcd_data:/default.etcd \ 	-e ETCD_LISTEN_PEER_URLS=http://10.170.1.31:2380 \ 	-e ETCD_LISTEN_CLIENT_URLS=http://10.170.1.31:2379 \ 	-e ETCD_ADVERTISE_CLIENT_URLS=http://10.170.1.31:2379 \ 	quay.io/coreos/etcd:latest 然后这个 quay.io/coreos/etcd:latest 镜像隔着我国比较远，所以不如用我的镜像 wrfly/etcd pull 的时候会快一点。 （2017-3-12 version: latest）
+confd 配置部分 confd启动的时候需要一些配置：
+backend = &#34;etcd&#34; confdir = &#34;/etc/confd&#34; log-level = &#34;info&#34; watch = true noop = false prefix = &#34;/&#34; scheme = &#34;http&#34; node = [ &#34;1.'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/2017-3-12-confd%E7%AC%94%E8%AE%B0/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='share'><meta property='article:tag' content='cluster'><meta property='article:published_time' content='2017-03-12T00:00:00Z'/><meta property='article:modified_time' content='2017-03-12T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>confd笔记 • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/2017-3-12-confd%E7%AC%94%E8%AE%B0/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/posts'>Posts</a>
+    </li>
+  <li>
+      <a href='/tags'>Tags</a>
+    </li>
+  <li>
+      <a href='/about'>About</a>
+    </li>
+  <li>
+      <a href='/links'>Links</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>confd笔记</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-03-12T00:00:00Z'>2017, Mar 12</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+3 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>好记性不如烂笔头。</p>
+
+<p>昨天完成了项目的 etcd + confd + openresty 的反代部分，在这里记录一下。这东西学起来还是有点时间的，文档也说的不明白，没个example可以看。</p>
+
+<h2 id="etcd-部分">etcd 部分</h2>
+
+<p>单点etcd启动：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker volume create etcd_data
+docker run -dti --network host <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>	-v etcd_data:/default.etcd <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>	-e ETCD_LISTEN_PEER_URLS<span style="color:#f92672">=</span>http://10.170.1.31:2380 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>	-e ETCD_LISTEN_CLIENT_URLS<span style="color:#f92672">=</span>http://10.170.1.31:2379 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>	-e ETCD_ADVERTISE_CLIENT_URLS<span style="color:#f92672">=</span>http://10.170.1.31:2379 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>	quay.io/coreos/etcd:latest</code></pre></div>
+<p>然后这个 <code>quay.io/coreos/etcd:latest</code> 镜像隔着我国比较远，所以不如用我的镜像 <code>wrfly/etcd</code> pull 的时候会快一点。 （2017-3-12 version: latest）</p>
+
+<h2 id="confd-配置部分">confd 配置部分</h2>
+
+<p>confd启动的时候需要一些配置：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">backend <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;etcd&#34;</span>
+confdir <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/etc/confd&#34;</span>
+log-level <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;info&#34;</span>
+watch <span style="color:#f92672">=</span> true
+noop <span style="color:#f92672">=</span> false
+prefix <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/&#34;</span>
+scheme <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;http&#34;</span>
+node <span style="color:#f92672">=</span> <span style="color:#f92672">[</span>
+	<span style="color:#e6db74">&#34;1.2.3.4:2379&#34;</span>,
+	<span style="color:#e6db74">&#34;4.3.2.1:2379&#34;</span>,
+	<span style="color:#e6db74">&#34;1.4.2.3:2379&#34;</span>,
+<span style="color:#f92672">]</span></code></pre></div>
+<p>node 部分是 etcd 的地址，如果你的 backend 不是 etcd 的话，那就是你用的数据库的地址。具体情况具体分析。</p>
+
+<p>启动 confd 的时候可以指定一些参数，比起 etcd，有一点不好，就是不能通过读环境变量的方式来传入，所以要通过命令行传递：</p>
+
+<p>全部说明：
+<a href="https://github.com/kelseyhightower/confd/blob/master/docs/command-line-flags.md" target="_blank">Documents</a></p>
+
+<p>有几个参数说明一下（针对etcd）：</p>
+
+<ul>
+<li><p>watch = true ： 这里是通过 watch 来检测 etcd 中数据变化的，就跟通过 <code>curl http://etcd:2379/v2/keys/xxx/xxx?watch=true</code> 一样。这样就不用通过时间间隔来抓数据了，所以通过watch配置的文件都是 real-time 的。</p></li>
+
+<li><p><code>-basic-auth</code> 和 <code>-password</code> 讲真这两个参数我没用过，但是以后一定要用的。 所以在这里 TODO 一下。</p></li>
+</ul>
+
+<h2 id="confd-配置模板">confd 配置模板</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>template<span style="color:#f92672">]</span>
+src <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;nginx.http.tmpl&#34;</span>
+dest <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/etc/nginx/conf.d/http.conf&#34;</span>
+keys <span style="color:#f92672">=</span> <span style="color:#f92672">[</span>
+    <span style="color:#e6db74">&#34;/&#34;</span>,
+<span style="color:#f92672">]</span>
+check_cmd <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;nginx -t -c /etc/nginx/nginx.conf&#34;</span>
+reload_cmd <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;nginx -s reload&#34;</span></code></pre></div>
+<p>来看一下这个配置模板文件，<code>src</code> 指的是模板文件的地址，就是依据那个模板生成我们的配置文件；<code>dest</code>则就是生成的配置文件存放的位置了。</p>
+
+<p>keys 是 <code>keys (array of strings) - An array of keys.</code> 我也不知道具体能起什么效果，可能模板中需要？</p>
+
+<p>全部文档 -&gt; <a href="https://github.com/kelseyhightower/confd/blob/master/docs/template-resources.md" target="_blank">link</a></p>
+
+<h2 id="模板语法">模板语法</h2>
+
+<p>展示一下最终成果：</p>
+
+<pre>
+```bash
+{{range $challengeID := lsdir "/challenges"}}{{ $challengeRoot := printf "/challenges/%s" $challengeID }}{{ $urlKey := printf "%s/url" $challengeRoot }}{{ $servicesRoot := printf "%s/services" $challengeRoot }}
+{{range $service := lsdir $servicesRoot}}{{ $pubK := printf "%s/%s/pub" $servicesRoot $service }}{{ $tgtK := printf "%s/%s/tgt" $servicesRoot $service }}{{$pubV := getv $pubK}}{{$tgtV := getv $tgtK}}{{if ne $pubV "0" }}
+upstream {{base $challengeID}}_{{base $service}} { {{range getvs "/nodes/*"}}
+    server {{.}}:{{$pubV}};{{end}}
+}
+server {
+    server_name {{getv $urlKey}}{{getenv "FC_DOMAIN"}};
+    listen {{$tgtV}};
+    location / {
+        proxy_pass       {{base $challengeID}}_{{base $service}};
+        proxy_redirect    off;
+        proxy_set_header  Host             $host;
+        proxy_set_header  X-Real-IP        $remote_addr;
+        proxy_set_header  X-Forwarded-For  $proxy_add_x_forwarded_for;
+    }
+}
+{{end}}{{end}}{{end}}
+```
+</pre>
+
+<p>然后 pretty print 一下：
+<pre></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">{{</span>range $challengeID :<span style="color:#f92672">=</span> lsdir <span style="color:#e6db74">&#34;/challenges&#34;</span><span style="color:#f92672">}}</span>
+    <span style="color:#f92672">{{</span> $challengeRoot :<span style="color:#f92672">=</span> printf <span style="color:#e6db74">&#34;/challenges/%s&#34;</span> $challengeID <span style="color:#f92672">}}</span>
+    <span style="color:#f92672">{{</span> $urlKey :<span style="color:#f92672">=</span> printf <span style="color:#e6db74">&#34;%s/url&#34;</span> $challengeRoot <span style="color:#f92672">}}</span>
+    <span style="color:#f92672">{{</span> $servicesRoot :<span style="color:#f92672">=</span> printf <span style="color:#e6db74">&#34;%s/services&#34;</span> $challengeRoot <span style="color:#f92672">}}</span>
+
+    <span style="color:#f92672">{{</span>range $service :<span style="color:#f92672">=</span> lsdir $servicesRoot<span style="color:#f92672">}}</span>
+        <span style="color:#f92672">{{</span> $pubK :<span style="color:#f92672">=</span> printf <span style="color:#e6db74">&#34;%s/%s/pub&#34;</span> $servicesRoot $service <span style="color:#f92672">}}</span>
+        <span style="color:#f92672">{{</span> $tgtK :<span style="color:#f92672">=</span> printf <span style="color:#e6db74">&#34;%s/%s/tgt&#34;</span> $servicesRoot $service <span style="color:#f92672">}}</span>
+        <span style="color:#f92672">{{</span> $pubV :<span style="color:#f92672">=</span> getv $pubK <span style="color:#f92672">}}</span>
+        <span style="color:#f92672">{{</span> $tgtV :<span style="color:#f92672">=</span> getv $tgtK <span style="color:#f92672">}}</span>
+        
+        <span style="color:#f92672">{{</span><span style="color:#66d9ef">if</span> ne $pubV <span style="color:#e6db74">&#34;0&#34;</span> <span style="color:#f92672">}}</span>
+            upstream <span style="color:#f92672">{{</span> base $challengeID <span style="color:#f92672">}}</span>_<span style="color:#f92672">{{</span> base $service <span style="color:#f92672">}}</span> <span style="color:#f92672">{</span> 
+                <span style="color:#f92672">{{</span>range getvs <span style="color:#e6db74">&#34;/nodes/*&#34;</span><span style="color:#f92672">}}</span>
+                server <span style="color:#f92672">{{</span>.<span style="color:#f92672">}}</span>:<span style="color:#f92672">{{</span>$pubV<span style="color:#f92672">}}</span>;
+                <span style="color:#f92672">{{</span>end<span style="color:#f92672">}}</span>
+            <span style="color:#f92672">}</span>
+            server <span style="color:#f92672">{</span>
+                server_name <span style="color:#f92672">{{</span>getv $urlKey<span style="color:#f92672">}}{{</span>getenv <span style="color:#e6db74">&#34;DOMAIN&#34;</span><span style="color:#f92672">}}</span>;
+                listen <span style="color:#f92672">{{</span>$tgtV<span style="color:#f92672">}}</span>;
+                location / <span style="color:#f92672">{</span>
+                    proxy_pass  <span style="color:#f92672">{{</span>base $challengeID<span style="color:#f92672">}}</span>_<span style="color:#f92672">{{</span>base $service<span style="color:#f92672">}}</span>;
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">{{</span>end<span style="color:#f92672">}}</span>
+    <span style="color:#f92672">{{</span>end<span style="color:#f92672">}}</span>
+<span style="color:#f92672">{{</span>end<span style="color:#f92672">}}</span></code></pre></div>
+<p></pre></p>
+
+<p>然后说明一下 etcd 中的键值结构：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/challenges/xx-xx-xx/url <span style="color:#f92672">=</span> www.baidu.com
+
+/challenges/xx-xx-xx/service/nginx
+/challenges/xx-xx-xx/service/nginx/pub <span style="color:#f92672">=</span> <span style="color:#ae81ff">30000</span>
+/challenges/xx-xx-xx/service/nginx/tgt <span style="color:#f92672">=</span> <span style="color:#ae81ff">80</span>
+
+/challenges/xx-xx-xx/service/ubuntu
+/challenges/xx-xx-xx/service/ubuntu/pub <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+/challenges/xx-xx-xx/service/ubuntu/tgt <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+
+/nodes/
+/nodes/a <span style="color:#f92672">=</span> <span style="color:#ae81ff">192</span>.168.1.101
+/nodes/b <span style="color:#f92672">=</span> <span style="color:#ae81ff">192</span>.168.1.102</code></pre></div>
+<p>然后说一下语法，看完语法之后，再回头看就会明白多了。</p>
+
+<p>首先是 <code>range</code>， 以 {{ range $var }} 开头， 以 {{end}} 结尾，最近相邻配对。其中里面的 $var 可以是 <code>ls</code> 或者 <code>lsdir</code> 一个可以list的对象，或者 $var 就是一个 list，类似于 golang 里面的<code>for i,v := range variable</code>。</p>
+
+<p>然后在 range 和 end 中间，我们就可以搞点事情了。</p>
+
+<p>首先是赋值，注意到上面的 printf 了吗，printf 接受两个参数，第一个是格式，第二个是变量，然后用 <code>:=</code> 赋值给一个变量。</p>
+
+<p>还忘记说上面的 <code>lsdir</code>: <code>lsdir</code> 会返回这个 dir 下面所有的<strong>带有 subdir</strong>的 dir 的 name。而 <code>ls</code> 则是返回相反的东西，即返回 <code>dir</code> 下面所有 key 的 value。</p>
+
+<p>然后就是 getv， getv 接受的参数是一个 key， 也就是上面 <code>/challenge/xxx-xxx-xxx/url</code> 这样的键，然后返回键的值。</p>
+
+<p>与之对应的是 getvs， 顾名思义，其返回 <strong>匹配的 key</strong> 的全部值，如果没有值用来返回，则会报错。</p>
+
+<p>还有 <code>get</code> 和 <code>gets</code>，与上面的区别是， get 会同时返回 Key 和 Value, 而getv则只是返回了 Key 的Value。gets 同样。</p>
+
+<p>接着是 <code>if</code> 这个东西，它也是需要以 {{end}} 来表示结尾的。中间是判断一个 bool 值，比如上面的 <code>ne $pubV &quot;0&quot;</code>。 其中 ne 的意思是不相等，同样的还有 eq, gt, lt 等等等等。具体看这里：<a href="https://golang.org/pkg/text/template/#hdr-Functions" target="_blank">HERE</a></p>
+
+<p>然后是<code>getenv</code>，这个就是读取一个环境变量。</p>
+
+<h3 id="其他">其他</h3>
+
+<p>举例： <code>{{ $upstream := replace (base $challengeID) &quot;-&quot; &quot;&quot; -1 }}</code></p>
+
+<p>这行定义了一个 $upstream 的变量，它将 {{base $challengeID}} 的结果作为 replace 的第一个参数（因为外面已经有<code>{{ }}</code>了，所以里面要用括号），然后replace接收的第二个参数是要替换的字符，第三个参数是替换为的字符，第四个参数则是替换的数量，-1代表全部替换。</p>
+
+<p>还有这个 split 也是对字符进行操作的：
+<pre></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">{{</span> $url :<span style="color:#f92672">=</span> split <span style="color:#f92672">(</span>getv <span style="color:#e6db74">&#34;/deis/service&#34;</span><span style="color:#f92672">)</span> <span style="color:#e6db74">&#34;:&#34;</span> <span style="color:#f92672">}}</span>
+    host: <span style="color:#f92672">{{</span>index $url <span style="color:#ae81ff">0</span><span style="color:#f92672">}}</span>
+    port: <span style="color:#f92672">{{</span>index $url <span style="color:#ae81ff">1</span><span style="color:#f92672">}}</span></code></pre></div>
+<p></pre></p>
+
+<p>（OK，中间被其他事情打断了，导致想不起要说什么了，就这样吧。）</p>
+
+<p>官方文档 -&gt; <a href="https://github.com/kelseyhightower/confd/blob/master/docs/templates.md" target="_blank">link</a></p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/share'>Share</a>, <a class='tag' href='/tags/cluster'>Cluster</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/posts/2017-3-8-etcd%E7%AC%94%E8%AE%B0/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>etcd笔记</a>
+    </div><div class='next-entry'>
+      <a href='/posts/2017-3-22-linux%E4%B8%8Bgates%E7%97%85%E6%AF%92/'>
+        <span class='screen-reader'>Next post: </span>Linux下Gates病毒<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+      Host with github | &copy; 2015-2017 wrfly | theme by minimo
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

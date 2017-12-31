@@ -1,0 +1,41 @@
+THIS IS INDEX FILE(index.md) AND IT IS THE KEY~
+
+---
+layout: index
+---
+<head>
+<meta charset="utf-8" />
+<title>{% if page.title %}{{ page.title }} – {% endif %}{{ site.name }} – {{ site.description }}</title>
+<link rel="shortcut icon" href="{{ site.url }}/img/favicon.png" type="image/x-icon">
+</head>
+
+<frameset rows="*,0" cols="*" framespacing="0" frameborder="no" border="0">
+<frame src="/home/" name="mainFrame" frameborder="no" scrolling="yes">
+<frame src="/html/music.html" name="bottomFrame" framespacing="0" frameborder="no" border="0" noresize>
+</frameset> 
+
+
+THIS IS MUSIC.HTML FILE(music.html)
+
+<audio autoplay loop src="audio.mp3"></audio>
+
+THIS IS HOME FILE(I changed its name from index to home but it doesn't matter because its permalink is /home/)
+
+---
+layout: default
+permalink: /home/
+---
+<!-- <div>{{ site.tags.TAG }}</div> -->
+<ul>
+  {% for post in site.posts %}
+	<li>      
+      <h2>{{ post.title }} </h2>
+      {{ post.date | date: "%B %e, %Y" }}
+      <section>
+        {{ post.content | truncatewords:20 | }}
+      </section>
+      <a href="{{ site.baseurl }}{{ post.url }}">Read More</a>
+      <hr>
+      </li>
+  {% endfor %}
+</ul>

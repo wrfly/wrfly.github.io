@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Share on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/share/</link>
+    <description>Recent content in Share on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 27 Nov 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/share/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>系统设计</title>
+      <link>https://wrfly.kfd.me/posts/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/</link>
+      <pubDate>Mon, 27 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/</guid>
+      <description>引子 事情还要从大三说起，当时不知道哪里来的想法，可能是知乎刷多了，又联合了一个“六度分隔理论”，就想爬取知乎上所有人的关注和被关注数据，看是否能够验证一下这个理论。当时也就脑子一热，只是想完成这件事情，但没有考虑过具体怎样完成。
+然后等到毕业设计的时候，这个想法又在脑子里闪过，不过想着由于工程量太大，就换了另外一个设计，是结合实习期间看到，学到的一些东西，做了一个能够运行的系统，现在也考虑要不要放出来，或者等以后有时间再打磨一下API再放出来。这都是后话了。
+真正的开展，还要到三个月前，我找工作的那两周。那个周末被CMGS帮忙内推了几家公司，等面试的时间也怪无聊的，就把这个想法捡了起来，毕竟一个月的工作，还是跟着CMGS学了一些工程上的东西的（咱就像是海绵，到哪里都能吸两口）。
+那这个系统是什么呢？
+简单的说，是一个爬虫。复杂的说，是一个可以自我复制的爬虫。
+我其实并没有深入了解过一般爬虫的实现方法，但大体推测，也无外乎是抓取页面，分析链接，然后顺藤摸瓜，如此反复。这样就会有一个问题，我要放出多少只爬虫，才能够满足我的需求？像搜索引擎这种级别的，他们资源多，放出去的虫子也多，基本可以无限制的爬来爬去。但如果是个人性质的，针对某一个站点，有筛选过滤策略条件的，而且还要充分利用资源，那就得好好琢磨一下了。
+一个大胆的想法。
+为什么不能让爬虫学习一下鸣人，可以自我复制呢？
+我放出去一个蜘蛛，抓取 kfd.me 这个站的所有页面，母蜘蛛发现了 &amp;ldquo;kfd.me/a/&amp;ldquo;，然后分裂一个小蜘蛛去爬 &amp;ldquo;kfd.me/a/*&amp;ldquo;，自己再去寻找，子蜘蛛此时如果发现了&amp;rdquo;*kfd.me/a/a1/*&amp;rdquo; 那么这个蜘蛛再次分裂，产生一个新的蜘蛛去抓 &amp;ldquo;kfd.me/a/a1/*&amp;ldquo;，自己去寻找 &amp;ldquo;kfd.me/a/*&amp;rdquo; 其他的URI。
+这个分裂过程，可以是fork，等系统资源差不多了，再去远程调用创建一个新的蜘蛛，远程调用的方式可以是对进程的调用，也可以直接创建一个容器，利用kubernetes，docker swarm或者CMGS做的eru-lambda，总之能够在集群资源中创建新的容器的调度系统就可以。
+这样一来，只要我们有充足的资源，那这个蜘蛛分裂的过程就可以一直下去，也不必考虑循环问题，因为每个蜘蛛都有自己的作用域，或者说抓取的范围，不是他的地盘，他不会操心，而等到蜘蛛抓取完自己地盘里的信息了，就自杀，释放集群资源。
+子子孙孙无穷尽也。
+系统设计 前面罗嗦了那么多（真不愧是话唠），终于到正规了。
+那如何设计一个这样的系统呢？
+我认为，世界上大部分的事情，都是相通的。自然界中的事物，现象，人类可以学习并应用到自己的生活中。而人类社会中，经过历史验证过的流程，设计，理念也同样可以应用在系统设计方面。
+比如说流水线作业，比如说我们的等级制度，比如说我们的通信流程。
+流水线作业可以对应微服务架构；社会等级制度可以对应系统中的等级划分（主从结构，或者其他的结构）；通信流程可以对应系统中的网络划分（子网掩码对应不同省份的区号，集团内部网络可以理解为自制域）。等等等等。
+所以，在设计系统的时候，我感觉，应该跟建一座工厂，或者建立一支军队差不多。都是利用一些资源，去完成我们的目的，或者提供某种服务。
+工厂里有机器，有工人，有宿舍，有老板，还有洗手间，工作车间，秘书，经理，各种各种；军队又分军种，分武器，分等级，分战区，分连队，分部门，组织精密，等级森严。
+那么一个系统呢，系统中也要考虑网络架构，存储，通信，日志，跨区域服务，分不同的组件，资源调度，资源监控，还要考虑机器的成本，维护的成本（相当于后勤部门），还有项目管理，配置管理，问题追踪，告警处理等等等等。乍一听很庞大，是的没错，因为我说了一大坨，但如果我们条理化呢，每种角色都分门别类呢。一口吃不成个胖子，一天也设计不出一套系统。
+其实冯诺依曼的体系已经经过了历史的验证，至少目前还没有更好的架构出现。那么我们就可以参照着来啊，比如说一台计算机，要有CPU，内存，网卡，硬盘，显卡，主板，声卡，电源，那么系统中就要有，调度器，运行时环境，网络，存储，监控，日志，整体构架，告警系统，宿主机系统。
+调度器可以理解为对系统的整体掌控，对业务应用的调度和计算；运行时环境可以理解为Python，JVM，Docker；网络可以分为区域网络，服务网络；存储又有分布式存储，文件存储，数据库，消息队列，文件共享；监控就是对系统中各个组件的监控（包括负载，性能，各种指标）；日志则是收集各个组件产生的日志文件；整体架构，则是对于系统而言，是不是方便扩展的，是不是方便调试的，有没有容灾，可不可以拆分，解耦做得好不好，备份恢复方案做的怎么样；告警系统则是在某个环节中出现错误时，能不能即使有效准确的通知到上级（也就是我们），能不能让人迅速定位问题，解决问题；宿主机系统则是这个“系统”运行在哪里，是Windows还是Linux，是Ubuntu还是CentOS，是Andriod还是iOS。
+理清楚了，就可以开始干活了。
+拿我的spider来说，单就角色划分而言，可以有四种角色：
+ discover：发现新大陆，只负责找人 worker：抓取分析找到的人的信息，苦力活 monitor：监控worker的工作，万一有占着茅坑不拉屎的，就给干掉；也会监控discover和watcher，万一有哪个gg了，重启一下他们 watcher：检测某一个用户的动态，更新数据库中内容 boss：monitor向其汇报，它再汇报给我  当然这中间还要考虑其他的很多问题，比如说网络怎么弄（现在看来，可以用gus-proxy作为代理），角色之间信息传递通过什么（消息队列，etcd，DB选型），监控策略是什么，如何将数据展示出来等等。discover和worker如何分身，watcher如何分身，他们之间怎么互相通信（可以参考蚂蚁，两两通信，然后慢慢扩散，但是又有时效性的问题）。
+所以真的是一件很庞大的事情。
+组件设计 个人感觉，设计这个东西就是一个大事化小，小事化了的过程，一个系统提供复杂的服务，满足复杂的需求，完成复杂的任务，而系统中的组件就是将复杂的任务拆分，并一点点完成的小蚂蚁。虽然说是蚂蚁，但是也有基础的功能，最简单的，输入和输出。
+其实任何东西都可以理解为输入和输出，典型的就是函数，要有参数和返回值，当然也可以没有返回值，没有那就是空，返回值为空，当然，参数也可以为空。许多函数累加，就会变成一个程序，这个时候，输入和输出就变得复杂了起来，但拆开来看，还是有输入和输出的，只是很细了而已。
+既然一个组建是有输入和输出组成的（大体上），那么这样看起来就简单多了。比如说上面提到的 *discover*，就是一个发现新用户的组建或者成为程序（但程序的话，也是一些程序，毕竟discover不会只有一个，而是以集群的形式存在，对外展现是输入和输出，对内而言是一个组件），他的输入是知乎的网址，输出是新发现的用户。
+怎样让这个程序变成一个集群，从而成为系统的一个组件呢。比如，某个discover发现了一个用户，他怎么知道是新用户，而不是已经被别人发现过的呢。当然可以将每个discover发现的用户保存到一个共享的数据库中，然后每次查询的时候，如果发现已经被人发现过了，那就不查了。但能不能有这样一种思路，就是，每个discover的发现，对自身而言都是新大陆，重复发现并不会对现有的数据产成影响，派出去的discover越多，重复发现的概率虽然也会增大，但是我们发现的新用户也会越多，而且，还可以定义discover回家的规则，即如何让一个discover停下（关于停止，可以采用命令发布的模式，每个discover接受中央发出的指令，也可以采用discover主动领取圣旨的模式，衡量自身是否满足停止的条件，然后自行判断：这两种模式没有本质的区别，都是中央集权）。
+（忽然想到一句话，从知乎某个大V那里看来的，说，“如果你在行动之前想清楚要怎样做，已经超过80%的程序员了”，很有道理。）
+把组建抽象为输入和输出，但每个组件不可能只有一组输入输出，他可能会有别的功能，这个时候就需要把每一对输入输出抽出来，在脑子里形成一个清单，然后一点一点实现。当然，最好能够一次性把需求列完成，这样可以避免以后的大改动，抽象程度也会更高一点。但，这好像是不可能的，我们的需求不可能一成不变，组件的功能也不可能不会增加，这就需要我们组件内部的耦合性要低。当我们把系统拆开的时候，其实就是在解耦了，现在我们要把组件拆开，也是对组件的解藕。
+系统的解藕对于系统功能的扩展和规模的扩展都有好处；组件内部的解藕，对于程序员而言，则是很关键和必要的事情，能省下以后不少的麻烦，开发人员节省出来的时间，对于公司而言就是节省金钱。
+解藕意味着抽象，拆分，但也不能把程序拆的七零八散，把系统弄得超级复杂。Simple is good。
+后语 这篇文章跨了两天的时间，思路有点断。
+原本这里想说一下对于程序设计的看法，然而鄙人有点懒，等想起来再说好了。
+就酱。</description>
+    </item>
+    
+    <item>
+      <title>热升级</title>
+      <link>https://wrfly.kfd.me/posts/%E7%83%AD%E5%8D%87%E7%BA%A7/</link>
+      <pubDate>Sun, 30 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E7%83%AD%E5%8D%87%E7%BA%A7/</guid>
+      <description> 什么是热升级 see https://my.oschina.net/astaxie/blog/136364
+我理解的热升级就是更新程序而不需要重启，当然这个重启是宏观上的重启，即不需要重新启动服务器或者服务进程，但从底层来讲，至少子进程还是需要重新启动一下的，毕竟更新了代码。
+典型的热升级是nginx的 upgrade-on-fly
+其原理就是启动两个master进程（一个新版本，一个旧版本），端口复用，同时处理请求，然后再下线旧版本的nginx，这里边要处理的就是保持连接的问题，即不能让旧版本nginx的连接断开，从而影响业务。
+难点与要处理的问题  保持连接（stop-gracefully） 不能断开old version与client建立的连接 无缝衔接（zero-downtime）要保证新的请求都能被new version的binary所处理，不能遗漏或拒绝 资源稳定（分布式资源锁）不能因为新旧版本的处理而导致资源不一致，资源抢占、竞争等问题  第一点和第二点是最基本要处理的，第三点则是业务层面，也就是在程序逻辑层面要保证的。
+保持旧的连接同时转移新的请求给new version，就是要保证old version不退出的情况下，new version接管进程的listenner，golang不支持端口复用，所以只能有转移listenner的fd来实现。不管是master-worker类型的还是endless这种 fork-exec 类型的，都是这种实现。
+现有的解决方案 我知道的开源实现方案有这么几个：
+ https://github.com/facebookgo/grace https://github.com/rcrowley/goagain https://github.com/fvbock/endless https://github.com/jpillora/overseer  其中overseer和endless都是动手实践过的。
+endless的缺点就是，old versino退出之后，新exec出来的进程是一个新的进程，也就是说，脱离的原来的环境而被init进程托管，这个时候如果你用systemd进行进程管理的话，systemd就会认为其已经dead了。
+所以如果想采用endless的话，就要像nginx那样，用fork的方式启动进程，即启动之后fork一份，然后主进程退出，同时维护一份pid文件，告诉systemd这样的进程管理工具，他的pid是谁，还活着没。
+而overseer则属于master-child这种类型，一个master负责检查是否有更新，有的话就新fork一个进程出来，转移所有的env，listenner，args等。上层来看，程序还是那个程序，但是负责处理请求的进程则换成了新的child进程。
+两者相同的地方就是对于请求的处理，都在accept层面放了计数器（不然就没法知道还有多少个连接了）从而实现graceful stop。
+然后 思来想去，还是overseer比较适合，相当于在上层加了一个handler，然后我给加了一个file的fetcher：
+https://github.com/wrfly/overseer
+看来大家都很忙，owner说是要给瞅瞅，但这么久了那个PR还没合。 当然，我也不介意别人用我的namespace hhh
+参考资料  https://my.oschina.net/astaxie/blog/136364 https://fitstar.github.io/falcore/hot_restart https://grisha.org/blog/2014/06/03/graceful-restart-in-golang/  </description>
+    </item>
+    
+    <item>
+      <title>confd笔记</title>
+      <link>https://wrfly.kfd.me/posts/confd%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Sun, 12 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/confd%E7%AC%94%E8%AE%B0/</guid>
+      <description>好记性不如烂笔头。
+昨天完成了项目的 etcd + confd + openresty 的反代部分，在这里记录一下。这东西学起来还是有点时间的，文档也说的不明白，没个example可以看。
+etcd 部分 单点etcd启动：
+docker volume create etcd_data docker run -dti --network host \ 	-v etcd_data:/default.etcd \ 	-e ETCD_LISTEN_PEER_URLS=http://10.170.1.31:2380 \ 	-e ETCD_LISTEN_CLIENT_URLS=http://10.170.1.31:2379 \ 	-e ETCD_ADVERTISE_CLIENT_URLS=http://10.170.1.31:2379 \ 	quay.io/coreos/etcd:latest 然后这个 quay.io/coreos/etcd:latest 镜像隔着我国比较远，所以不如用我的镜像 wrfly/etcd pull 的时候会快一点。 （2017-3-12 version: latest）
+confd 配置部分 confd启动的时候需要一些配置：
+backend = &amp;#34;etcd&amp;#34; confdir = &amp;#34;/etc/confd&amp;#34; log-level = &amp;#34;info&amp;#34; watch = true noop = false prefix = &amp;#34;/&amp;#34; scheme = &amp;#34;http&amp;#34; node = [ &amp;#34;1.</description>
+    </item>
+    
+    <item>
+      <title>Ubuntu下更改网卡名字以及pppoe配置IPv6</title>
+      <link>https://wrfly.kfd.me/posts/ubuntu%E4%B8%8B%E6%9B%B4%E6%94%B9%E7%BD%91%E5%8D%A1%E5%90%8D%E5%AD%97%E4%BB%A5%E5%8F%8Apppoe%E9%85%8D%E7%BD%AEipv6/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/ubuntu%E4%B8%8B%E6%9B%B4%E6%94%B9%E7%BD%91%E5%8D%A1%E5%90%8D%E5%AD%97%E4%BB%A5%E5%8F%8Apppoe%E9%85%8D%E7%BD%AEipv6/</guid>
+      <description>今天晚上莫名其妙解决了两个问题。
+第一个是更改Ubuntu升级到15.04之后网卡名字改变的问题，从15.04开始到16.04，网卡一直都是奇奇怪怪的名字，比如原来的eth0变成了enp1s0,wlan0变成了wpxxx(我真记不清了～)
+以前的时候找了一些方法也没有搞定，今天莫名其妙的找了一个方法，搞定了。
+配置文件事这个：/etc/udev/rules.d/10-network.rules（如果没有的话就创建一个），在里面添加如下代码：
+SUBSYSTEM==&amp;#34;net&amp;#34;, ACTION==&amp;#34;add&amp;#34;, ATTR{address}==&amp;#34;20:1a:xx:xx:xx:xx&amp;#34;, NAME=&amp;#34;eth0&amp;#34; SUBSYSTEM==&amp;#34;net&amp;#34;, ACTION==&amp;#34;add&amp;#34;, ATTR{address}==&amp;#34;70:18:xx:xx:xx:xx&amp;#34;, NAME=&amp;#34;wlan0&amp;#34; 那些xxxxxx是你网卡的MAC地址。然后重启就OK了。
+第二个是pppoe拨号的IPv6问题，以前的时候一直没搞定，今天突然发现一个文件：/etc/sysctl.d/10-ipv6-privacy.conf，是配置IPv6选择临时地址还是广播地址的，然后把里面的东西都注释掉，完美解决。
+里面的内容是这样子的：
+# IPv6 Privacy Extensions (RFC 4941) # --- # IPv6 typically uses a device&amp;#39;s MAC address when choosing an IPv6 address # to use in autoconfiguration. Privacy extensions allow using a randomly # generated IPv6 address, which increases privacy. # # Acceptable values: # 0 - don’t use privacy extensions. # 1 - generate privacy addresses # 2 - prefer privacy addresses and use them over the normal addresses.</description>
+    </item>
+    
+    <item>
+      <title>cookies-session-and-验证码</title>
+      <link>https://wrfly.kfd.me/posts/cookies-session-and-%E9%AA%8C%E8%AF%81%E7%A0%81/</link>
+      <pubDate>Wed, 13 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/cookies-session-and-%E9%AA%8C%E8%AF%81%E7%A0%81/</guid>
+      <description>概览 先来给出几个定义，什么是cookie，session 和验证码。
+Cookie:  Cookie（复数形态Cookies），中文名称为“小型文本文件”或“小甜饼”，指某些网站为了辨别用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。
+ Session(php):  一个访问者访问你的 web 网站将被分配一个唯一的 id, 就是所谓的会话 id. 这个 id 可以存储在用户端的一个 cookie 中，也可以通过 URL 进行传递.
+ 验证码：  全自动区分计算机和人类的公开图灵测试（英语：Completely Automated Public Turing test to tell Computers and Humans Apart，简称CAPTCHA），俗称验证码，是一种区分用户是计算机或人的公共全自动程序。在CAPTCHA测试中，作为服务器的计算机会自动生成一个问题由用户来解答。这个问题可以由计算机生成并评判，但是必须只有人类才能解答。由于计算机无法解答CAPTCHA的问题，所以回答出问题的用户就可以被认为是人类。
+ 简单地说, cookie和session是用来识别用户身份的数据, cookie又可以分为保存在内存中的和保存在硬盘中的cookie, 保存在内存中的cookie在标签页关闭的时候会自动销毁, 而如果设定了cookie的过期时间, 那么cookie则会保存在硬盘中一段时间. 而且在同一浏览器中, cookie是可以共享的.
+cookie的格式:
+Set-Cookie:键1=值1;键2=值2;过期时间;作用域;作用路径;[secure]
+作用域和作用路径是用来区分cookie的, 过期时间是告诉浏览器这个cookie在什么时候过期; 而 secure 标志则是当一个请求通过 SSL 或 HTTPS 创建时，包含 secure 选项的 cookie 才能被发送至服务器.
+服务器端通过用户提供的cookie确认用户身份, 这就造成一个问题, 如果我知道你的cookie, 在cookie未过期的情况下, 那么我就可以伪造你, 而且一些敏感信息如果存放在cookie里, 就有可能通过一定的技术手段得到那些敏感信息. 因为cookie的存在是单向的. 而HTTP协议又是无状态的.</description>
+    </item>
+    
+    <item>
+      <title>let commmand was not found in bash?</title>
+      <link>https://wrfly.kfd.me/posts/let-commmand-was-not-found-in-bash/</link>
+      <pubDate>Sat, 11 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/let-commmand-was-not-found-in-bash/</guid>
+      <description>要解决问题,首先要遇到问题.
+在bash中运行下面一段代码:
+#!/bin/bash #spawn.sh PIDS=$(pidof sh $0) P_array=($PIDS) echo $PIDS let &amp;#34;instances=${#P_array[*]}- 1&amp;#34; echo &amp;#34;$instancesinstance(s) of this script running.&amp;#34; echo &amp;#34;[Hit Ctl-C to exit.]&amp;#34;; echo sleep 1 sh $0 exit 0 你会得到什么?
+运行错误?let命令找不到了? OK, 反正是运行不了, 当然, 除了第一句.
+这是在高级bash脚本编程指南中的一个例子,但是在我的ubuntu中却报错了,为什么?
+搜索了一下,发现这个let是bash的内建命令,什么意思呢?就是只有bash有这个命令,而sh, dash, 都没有这个命令.
+如果想知道你电脑中到底有什么shell,可以通过
+cat /etc/shells 这个命令来得知.
+# /etc/shells: valid login shells /bin/sh /bin/dash /bin/bash /bin/rbash /bin/ksh93 /usr/bin/screen 但是我们在脚本第一行已经写明了要用bash运行啊,为什么还不可以?
+Ok,请问,你运行的方式是什么呢? sh script.sh ? 这样还是用sh运行呀,而且Ubuntu中sh默认关联的shell是dash,并不是bash.所以才会出现 let command not found 这种情况.
+(PS:最关键的一句! 倒数第二行! 脚本用了sh来运行自身, 所以才会在第二次循环运行时出现错误!</description>
+    </item>
+    
+    <item>
+      <title>一些小东西,关于alias</title>
+      <link>https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E5%B0%8F%E4%B8%9C%E8%A5%BF%E5%85%B3%E4%BA%8Ealias/</link>
+      <pubDate>Sat, 11 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E5%B0%8F%E4%B8%9C%E8%A5%BF%E5%85%B3%E4%BA%8Ealias/</guid>
+      <description>alias 是一个设置别名的小工具~
+具体可见维基百科
+但是它只会解析别名, 也就是说, 如果你告诉它, 张三跟张麻子是一个人, 你说张三, 他就知道你说的是张麻子, 但是如果你告诉他张三欠我一块钱, 那他就gg了, 人家并不能理解张麻子欠你一块钱啊. 或许他会说: 等等, 一块钱是什么?
+这里我遇到的问题是如何传递参数进去.
+curl ipinfo.io/8.8.8.8 这条命令是查看 8.8.8.8 的ip所在地, 那么, 如果我设置了
+alias ipadrs=&amp;#39;curl ipinfo.io/$1&amp;#39; 会不会成功?
+当然不会, 因为他不知道, 也无法处理你给他传进去的 ip.
+没有办法么?
+当然不是.
+这里用到的技巧是function命令.
+首先定义一个function hi() #你也可以把这个function去掉, 如果你觉得啰嗦的话,毕竟系统知道这是一个函数而不是好吃的.
+function hi(){ echo &amp;#34;Hello $1!&amp;#34; } 当然啦,你完全可以横着写:
+function hi(){ echo &amp;#34;Hello $1!&amp;#34;;} #你也可以把这个function去掉, 并不像C那样声明一下返回值 然后你在命令行里输入
+hi world 有点意思吧! 我们已经可以把参数传递进去了耶~
+且慢! 如果你关闭了这个窗口, 你就会发现, 为毛行不通了?
+那是必须的, 因为在这个shell中运行的是临时变量, 也就是说没有在文件中保存下来, 毕竟我们没有对文件进行操作啊, 所以呢, 就要把他记录下来, 然后每次运行的时候都会有这个function. 但是话又说回来, 往哪儿写呢?</description>
+    </item>
+    
+    <item>
+      <title>VPS总结</title>
+      <link>https://wrfly.kfd.me/posts/vps%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Tue, 10 Mar 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/vps%E6%80%BB%E7%BB%93/</guid>
+      <description>有了VPS可以干什么 前几天买了Digitalocean家的一台VPS，新加坡的最快，尽管很多人说旧金山的稳定。
+买VPS的初衷是用来翻墙，搭建一个VPN什么的，因为我也不知道有了VPS可以干嘛，除了翻墙。
+我电脑一直用着Goagent，php代理，香港的一台主机，当然，这也得多亏了coding团队的奉献，我也是借着人家的付出才翻得墙，虽然我知道他们不允许搭建代理应用&amp;ndash;。不道德吧，有点儿。
+手机原来用的是别人的shadowsocks，但是不知道为什么，那位好心人又把服务器关了，所以我借用的shadowsocks也不能用了，无奈之下才要买VPS，当然，只花了$5，因为github对教育的优惠。
+https://www.digitalocean.com/?refcode=642012c0a066
+这个是我的邀请链接，通过这个邀请链接注册之后，你会有十美元到账。之后就是通过paypal充5美元进去，这里需要用到绑定银行卡，然后账户里就有十五美元了～至少能用三个月呢～三十块钱，三个月的VPS，还是蛮划算的～
+然后我就来总结一下我搭建完这台VPS的经验吧。（顺便说一句，百度真是越来越垃圾了，出了搜索广告很牛逼，别的，真是不敢恭维。）
+学东西去官网，问问题去社区。这是我最到的收获之一。
+Login 新建了VPS，第一步当然是要登陆，可是问题来了，怎么登陆？
+Option 1. 密码
+你可以用digitalocean自带的发送一封密码邮件到你的邮箱里，接收root的密码。然后用ssh登陆：ssh root@your_vps_ip 然后输入密码就可以了。进入之后更改密码。
+Option 2. 密钥
+SSH Key是专用的名词，我翻译成密钥请不要打我。
+现在本地生成一对密钥，把 key.pub 粘贴到Digitalocean上，然后用你的私钥连接。 Details 妈蛋人家说的实在是太详细了，就连锁定SSH Key访问都说了。我就不在这里罗嗦了。一步一步来，总没有错的。
+进入了VPS之后，你得到的就是一个黑框，当然，也可以是绿的。
+命令行操作，不多说。
+先更新软件：
+然后就可以安装你想安装的东西了。
+Shadowsocks 安装shadowsocks的话，还是得看官方教程：Click me
+系统没有安装pip，要先自己安一下apt-get install pip
+然后我建议是在/opt目录下安装各种东西，给每一个软件mkdir一个文件夹，相关的文件全都放进去，查找的时候也好找。
+总之，不会的就去google，记得要用英文搜索。
+最重要的一点是开机启动的问题，我试了很多方法单就是不成功，不管是放在/etc/rc.local还是在/etc/init.d/里面，都不能够成功的开机启动，可能是我的脚本有问题吧。影响也不大，服务器又不是经常开机～
+安装VPN 我尝试过安装OpenVpn,从互联网的某个角落找到了一个一键安装的脚本，但是苦于不会弄，失败了。 我相信聪明的你一定会成功的。
+然后我就尝试了PPTP，详细的链接在这里，很详细了。那里面的第五步之后的全是客户端的配置，其实我们不用管，因为有图形化界面，自己添加一个VPN就好了，IP地址，用户名，密码。很感谢那些写教程的人。谢谢。
+Nginx或者Apache 既然是服务器那就少不了这两个大神，选择一个，然后安上，或者全部都要，但一定要记得更改默认端口，因为只能有一个开启80端口，另一个请改成8080或者其他的。这样才不会产生冲突。当然，如果你不做反代理什么的，没必要开俩。
+具体的安装步骤很简单，我不罗嗦。就是在配置的时候会有些麻烦，不过，既然我们有搜索引擎，那他们就该发挥他们的作用。搜一下，你会找到答案的。
+这里我要说的是，虚拟主机。
+以前我也不知道那些虚拟主机是怎么搞的，windows下的好理解，开端口或者图形化处理，都是很简单，那么linux下的要怎么弄？其实也很简单，无非就是在配置文件里添加一个name而已，在/etc/nginx/sites-enabled/里面，放着的是已经启用的网站，一般这里面的文件全是/etc/nginx/sites-available里面的软连接。
+在里面放一个文件，比如，virtualhost：  server { listen 80;
+root /var/www/virtualhost/html; index index.html index.htm; server_name yourdomain.com www.yourdomain.com; #这里的yourdomain.com就是你要解析到这台服务器上的地址，你在domain管理里面将网址A记录解析到这台服务器的IP就Ok了。 } } 
+关于那些php的配置，不在这里累赘。我把配置贴出来，照着葫芦画瓢吧～</description>
+    </item>
+    
+    <item>
+      <title>kali nginx php</title>
+      <link>https://wrfly.kfd.me/posts/kali-nginx-php/</link>
+      <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/kali-nginx-php/</guid>
+      <description>今天在Kali下配置了Nginx，但是php一直开不起来，妈蛋，搞了好久好久，原来是 php5-frm 没有重启。坑死了。
+先安装php-fpm
+apt-get install php5-fpm 然后修改nginx的配置文件:
+vim /etc/nginx/sites-available/default 里面php-fpm的默认配置是注释掉的 
+pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000 # #location ~ .php$ {
+fastcgi_split_path_info ^(.+.php)(/.+)$; # NOTE: You should have &amp;ldquo;cgi.fix_pathinfo = 0;&amp;rdquo; in php.ini #
+# With php5-cgi alone: fastcgi_pass 127.0.0.1:9000; # With php5-fpm: fastcgi_pass unix:/var/run/php5-fpm.sock; fastcgi_index index.php; include fastcgi_params; #}  改成
+location ~ \.php$ { fastcgi_split_path_info ^(.+\.php)(/.+)$; # # NOTE: You should have &amp;#34;cgi.</description>
+    </item>
+    
+    <item>
+      <title>Guide to Vim</title>
+      <link>https://wrfly.kfd.me/posts/guide-to-vim/</link>
+      <pubDate>Thu, 25 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/guide-to-vim/</guid>
+      <description>Vim使用
+The Basics of Moving in Vim
+The first thing you&amp;rsquo;ll want to learn is how to move around a file. When you&amp;rsquo;re in command mode, you&amp;rsquo;ll want to remember the following keys and what they do:
+h moves the cursor one character to the left. j moves the cursor down one line. k moves the cursor up one line. l moves the cursor one character to the right. 0 moves the cursor to the beginning of the line.</description>
+    </item>
+    
+    <item>
+      <title>hydra使用方法</title>
+      <link>https://wrfly.kfd.me/posts/hydra%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Tue, 07 Oct 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/hydra%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</guid>
+      <description>Hydra 破解登录密码 PS. 这篇文章不知道是从哪儿抄来的。。。2017-4-5
+格式：
+hydra [[[-l LOGIN|-L FILE] [-p PASS|-P FILE]] | [-C FILE]] [-e ns] [-o FILE] [-t TASKS] [-M FILE [-T TASKS]] [-w TIME] [-f] [-s PORT] [-S] [-vV] server service [OPT] # 可选的-R 继续从上一次进度接着破解 -S 采用SSL链接（大写的S） -s PORT 如果非默认端口，可通过这个参数指定 -l LOGIN 小写，用于指定破解的用户，对特定用户破解 -L FILE 大写，用于指定用户的用户名字典 -p PASS 小写，用于指定密码破解，少用，一般是采用密码字典 -P FILE 大写，用于指定密码字典 -e ns 额外的选项，n：空密码试探，s：使用指定账户和密码试探 -C FILE 使用冒号分割格式 例如 “登录名:密码&amp;#34;来代替-L/-P参数 -M FILE 指定目标列表文件一行一条 -o FILE 指定结果输出文件 -f 在使用-M参数以后 找到第一对登录名或者密码的时候中止破解 -t TASKS 同时运行的线程数，默认为16 -w TIME 设置最大超时的时间，单位秒，默认是30s -v / -V 显示详细过程 server 目标ip service 指定服务名，支持如下: &amp;lt;br /&amp;gt;telnet ftp pop3[-ntlm] imap[-ntlm] smb smbnt http[s]-{head|get} http-{get|post date: 2014-10-07 title: hydra使用方法 cisco-enable vnc ldap2 ldap3 mssql mysql oracle-listener post date: 2014-10-07 title: hydra使用方法 rexec rlogin pcnfs snmp rsh cvs svn icq sapr3 ssh2 smtp-auth[-ntlm] pcanywhere teamspeak sip vmauthd firebird ncp afp OPT 可选项 如何使用代理服务器进行破解（这一点主要处于攻击者的ip，处于自身安全考虑） HYDRA_PROXY_HTTP 变量参数可以用来定义代理服务器(只能使用http代理) 语法:</description>
+    </item>
+    
+  </channel>
+</rss>

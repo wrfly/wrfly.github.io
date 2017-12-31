@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ubuntu on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/ubuntu/</link>
+    <description>Recent content in Ubuntu on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 09 Jun 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/ubuntu/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>好玩的Linux命令行_II</title>
+      <link>https://wrfly.kfd.me/posts/%E5%A5%BD%E7%8E%A9%E7%9A%84linux%E5%91%BD%E4%BB%A4%E8%A1%8C_ii/</link>
+      <pubDate>Tue, 09 Jun 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%A5%BD%E7%8E%A9%E7%9A%84linux%E5%91%BD%E4%BB%A4%E8%A1%8C_ii/</guid>
+      <description>这条网站上统计了很多很多好玩有用的命令，感兴趣的同学可以看一下哦！ http://www.commandlinefu.com/commands/browse/sort-by-votes/
+下面这些是我从上面摘抄的，但是也请转载注明出处～
+先装上pv，然后再敲这一条，会把你帅呆了的！
+echo &amp;#34;You can simulate on-screen typing just like in the movies&amp;#34; | pv -qL 10 来，测试一下咱的硬盘有多快：
+timeout 2s yes &amp;#34;hello world!&amp;#34; &amp;gt; big_file &amp;amp; watch du -h big_file 常用的20条命令++
+history | awk &amp;#39;{a[$2]++}END{for(i in a){print a[i] &amp;#34; &amp;#34; i}}&amp;#39; | sort -rn | head 文字版星球大战!!!
+telnet towel.blinkenlights.nl 在终端右上角显示个表
+去tmp目录下逛一圈再回来(小括号代表子shell)
+(cd /tmp &amp;amp;&amp;amp; ls) nc用来传文件：
+nc -v -l 80 &amp;lt; file.ext 更改文件后缀名，把wrfly.png改成wrfly.jpg：
+mv wrfly.{png,jpg} 把命令的输出内容转换成图片，超酷炫：
+ifconfig | convert label:@- ip.</description>
+    </item>
+    
+    <item>
+      <title>让sublime text 支持中文输入（ubuntu）</title>
+      <link>https://wrfly.kfd.me/posts/%E8%AE%A9sublime-text-%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87%E8%BE%93%E5%85%A5ubuntu/</link>
+      <pubDate>Fri, 05 Jun 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E8%AE%A9sublime-text-%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87%E8%BE%93%E5%85%A5ubuntu/</guid>
+      <description>解决在ubuntu下用 sublime_text_3 输入中文的问题。
+只解决问题，不废话：
+cd /opt/sublime_text &amp;amp;&amp;amp;\ sudo wget &amp;#34;https://gist.githubusercontent.com/wrfly/baf1314ae25f41fe8cde/raw/45c669808bed8eb6d98fe6caa3f730076e5aede3/imfix.c&amp;#34; &amp;amp;&amp;amp;\ sudo apt-get install build-essential libgtk2.0-dev &amp;amp;&amp;amp;\ sudo gcc -shared -o imfix.so imfix.c `pkg-config --libs --cflags gtk+-2.0` -fPIC &amp;amp;&amp;amp;\ sudo sed -i &amp;#34;s/exec/LD_PRELOAD=\/opt\/sublime_text\/imfix.so/&amp;#34; /usr/bin/subl &amp;amp;&amp;amp;\ sudo sed -i &amp;#34;s/\/opt\/sublime_text\/sublime_text/subl/g&amp;#34; /usr/share/applications/sublime_text.desktop &amp;amp;&amp;amp;\ echo &amp;#34;Succeed!&amp;#34; 如果你还嫌麻烦的话，没关系～
+一键安装脚本在这儿：
+wget https://gist.githubusercontent.com/wrfly/5f4187be96d93e95ad07/raw/15953c30b549efb4185df6d229324e465d279606/auto_imfix.sh 然后运行就好了 :)
+部分引用自http://html5beta.com/page/ubuntu-14-04-install-fcitx-sougoupinyin-sublime-text-3-chinese-input-fix.html</description>
+    </item>
+    
+    <item>
+      <title>linux命令行工具妙用</title>
+      <link>https://wrfly.kfd.me/posts/linux%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E5%A6%99%E7%94%A8/</link>
+      <pubDate>Wed, 13 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E5%A6%99%E7%94%A8/</guid>
+      <description>Fork from:http://mingxinglai.com/cn/2012/08/toos-of-bash/
+前言：虽然现在各种动态脚本语言发展得热火朝天,一片欣欣向荣的景象,而且动态脚本语言如python确实学习成本低,入门快,虽然unix 下各种工具比我们很多人年龄都大,但是我还是相信一些有用的小工具在可预见的时间内不会消失,因为灵活运用它们能够快速解决很多小问题,而且你不大可能写出更短的代码来。
+1. 一行命令算术运算 seq 100 | echo $[ $(tr &amp;#39;\n&amp;#39; &amp;#39;+&amp;#39;) 0] seq 5 3 20 | echo $[ $(tr &amp;#39;\n&amp;#39; &amp;#39;*&amp;#39;) 1] seq 用于产生一组等差的数列,默认首项和公差都是1,所以上面的第一行代码会产生1 －－ 100 的整数,且每个数占一行,使用tr 将换行替换成＋号以后,形成如1+2+......+100+的一行字符串,所以需要在字符串最后加一个0,最后使用echo $[ ]进行算数运算,也可以通过管道使用bc来计算seq 100 | echo $(tr &#39;\n&#39; &#39;+&#39;) 0 | bc。
+2. 100的阶乘末尾有几个零？ 这是计算机专业面试的一个比较有名的题目,正确的解法答案是 n/5 + n/5/5 + n/5/5/5&amp;hellip;&amp;hellip; 下面我们写一行代码来验证一下
+echo {1..100}|tr &amp;#39; &amp;#39; &amp;#39;*&amp;#39;|bc|tr &amp;#39;1-9&amp;#39; &amp;#39;\n&amp;#39;|sort -r| head -1|awk &amp;#39;{print length($0) }&amp;#39; 这里{1..100}属于通配符,例如你要新建100个文件,就可以touch test{1..100}.txt,还可以touch test{a..z}.txt。 算后计算出1乘到100的结果,将结果中非零的数字替换成换行符在1乘到100的结果中,必然是末尾的0最多 所以我们只需要在tr &#39;1-9&#39; &#39;\n&#39;之后,找出最长的那一行就可以了,这里使用的方法是先将结果逆序排序sort -r,然后打印第一行head -,计算出第一行的长度awk &#39;{print length($0)}&#39;。</description>
+    </item>
+    
+    <item>
+      <title>一些小东西,关于alias</title>
+      <link>https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E5%B0%8F%E4%B8%9C%E8%A5%BF%E5%85%B3%E4%BA%8Ealias/</link>
+      <pubDate>Sat, 11 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E5%B0%8F%E4%B8%9C%E8%A5%BF%E5%85%B3%E4%BA%8Ealias/</guid>
+      <description>alias 是一个设置别名的小工具~
+具体可见维基百科
+但是它只会解析别名, 也就是说, 如果你告诉它, 张三跟张麻子是一个人, 你说张三, 他就知道你说的是张麻子, 但是如果你告诉他张三欠我一块钱, 那他就gg了, 人家并不能理解张麻子欠你一块钱啊. 或许他会说: 等等, 一块钱是什么?
+这里我遇到的问题是如何传递参数进去.
+curl ipinfo.io/8.8.8.8 这条命令是查看 8.8.8.8 的ip所在地, 那么, 如果我设置了
+alias ipadrs=&amp;#39;curl ipinfo.io/$1&amp;#39; 会不会成功?
+当然不会, 因为他不知道, 也无法处理你给他传进去的 ip.
+没有办法么?
+当然不是.
+这里用到的技巧是function命令.
+首先定义一个function hi() #你也可以把这个function去掉, 如果你觉得啰嗦的话,毕竟系统知道这是一个函数而不是好吃的.
+function hi(){ echo &amp;#34;Hello $1!&amp;#34; } 当然啦,你完全可以横着写:
+function hi(){ echo &amp;#34;Hello $1!&amp;#34;;} #你也可以把这个function去掉, 并不像C那样声明一下返回值 然后你在命令行里输入
+hi world 有点意思吧! 我们已经可以把参数传递进去了耶~
+且慢! 如果你关闭了这个窗口, 你就会发现, 为毛行不通了?
+那是必须的, 因为在这个shell中运行的是临时变量, 也就是说没有在文件中保存下来, 毕竟我们没有对文件进行操作啊, 所以呢, 就要把他记录下来, 然后每次运行的时候都会有这个function. 但是话又说回来, 往哪儿写呢?</description>
+    </item>
+    
+    <item>
+      <title>Ubuntu开启休眠模式</title>
+      <link>https://wrfly.kfd.me/posts/ubuntu%E5%BC%80%E5%90%AF%E4%BC%91%E7%9C%A0%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Mon, 06 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/ubuntu%E5%BC%80%E5%90%AF%E4%BC%91%E7%9C%A0%E6%A8%A1%E5%BC%8F/</guid>
+      <description>在电源菜单中有一个sleep，那是睡眠，即
+ 计算机睡眠模式结合了待机和休眠的所有优点。将系统切换到睡眠状态后，系统会将内存中的数据全部转存到硬盘上的休眠文件中（这一点类似休眠），然后关闭除了内存外所有设备的供电，让内存中的数据依然维持着（这一点类似待机）。这样，当我们想要恢复的时候，如果在睡眠过程中供电没有发生过异常，就可以直接从内存中的数据恢复（类似待机），速度很快；但如果睡眠过程中供电异常，内存中的数据已经丢失了，还可以从硬盘上恢复（类似休眠），只是速度会慢一点。不过无论如何，这种模式都不会导致数据丢失。
+ 电脑睡眠
+而休眠是指：
+ 休眠在计算机科学中的含义指在关闭计算机的同时保持其运行状态。
+通过休眠，计算机将内存中的内容保存至硬盘或其它非易失存储器中，并在下次开机时从硬盘中将这些内容重新载入，使机器还原到与休眠前一致的状态。
+当用作保存电池电量的手段时，休眠与睡眠模式类似，不过比后者节约更多的电量，代价则是从休眠中恢复时速度更慢（因为硬盘的速度比内存慢得多）。
+ 电脑休眠
+ 在Linux内核中，休眠功能通过swsusp实现，并被内建在2.6版以后的内核中。替代性的实现是TuxOnIce，在3.4版以后的内核中作为补丁存在。另一个替代性的实现是uswsusp。
+ Linux默认不显示这个休眠选项，如果想要加进去的话（比如我有两个系统，一个ubuntu，一个win8，但是我不能让内存同使用有两种数据，但我还想开机速度更快些，并且保存原有的程序，那我就需要对系统进行休眠），可以这样做：
+1.先测试下电脑是否支持休眠
+sudo pm-hibernate 2.如果成功了，那就可以写入系统文件了
+sudo -i cd **/var/lib**/polkit-1/localauthority/50-local.d/ vi com.ubuntu.enable-hibernate.pkla （PS：如果配置不成功的话，你可以换一下路径，把/var/lib/换成/etc）
+3.将下列代码写入
+[Re-enable hibernate by default in upower] Identity=unix-user:* Action=org.freedesktop.upower.hibernate ResultActive=yes [Re-enable hibernate by default in logind] Identity=unix-user:* Action=org.freedesktop.login1.hibernate ResultActive=yes 4.重启电脑</description>
+    </item>
+    
+    <item>
+      <title>Make-a-startup-script-in-Ubuntu</title>
+      <link>https://wrfly.kfd.me/posts/make-a-startup-script-in-ubuntu/</link>
+      <pubDate>Mon, 23 Mar 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/make-a-startup-script-in-ubuntu/</guid>
+      <description>There are many ways to make a script startup at boot. It&amp;rsquo;s quite easy to write a script. But the most important things are making it have the execute permission and making sure that your script&amp;rsquo;s path is correct.
+To make it execute, you need to put this command in you terminal
+chmod +x your_script.sh Be sure that you have write a ** absolute path ** in your script or you won&amp;rsquo;t get what you want.</description>
+    </item>
+    
+    <item>
+      <title>syntax-for-SOCKS-proxy-in-apt-conf</title>
+      <link>https://wrfly.kfd.me/posts/syntax-for-socks-proxy-in-apt-conf/</link>
+      <pubDate>Sat, 14 Mar 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/syntax-for-socks-proxy-in-apt-conf/</guid>
+      <description>在ubuntu下更新软件的时候,经常会遇到网络连接失败的情况,其实并不是服务器的问题,而是GFW在捣鬼,所以,我们不得不给apt-get加上一个代理,使其更新的时候可以通过代理访问.
+HTTP代理 1.在/etc/apt/apt.conf里面添加如下代码:
+Acquire::http::Proxy &#34;http://yourproxyaddress:proxyport&#34;; 再进行apt-get操作的时候就会通过代理访问目标服务器.
+2.设置临时代理
+切换root用户,在bash中输入: export http_proxy=http://yourproxyaddress:proxyport
+如果要使用sudo apt-get的话,你需要在/etc/sudoers里面添加: Defaults env_keep = &amp;ldquo;http_proxy https_proxy ftp_proxy&amp;rdquo;
+这样会在你sudo运行命令的时候保持原来的代理,不会因为切换了root用户而改变环境变量.
+3.设置永久代理
+在.bashrc文件里面添加如下代码:
+http_proxy=http://yourproxyaddress:proxyport export http_proxy 保存文件,并重新打开终端.
+PS:如果http代理需要认证的话,可以将原来的代码替换为:
+http_proxy=http://username:password@yourproxyaddress:proxyport SOCKS代理 如果你没用http代理,而是用的 shadowsocks 或者 ssh -D 这样的代理,那么你就需要一个转发的软件了,因为apt-get默认是不支持socks代理的,尽管网上有些人将http替换为了socks,那样也是不管用的.
+但是有种方法可以让 apt-get 走 socks 代理的流量, tsocks.
+首先你要安装tsocks.
+sudo apt-get install tsocks 然后在/etc/tsocks.cong的最下面设置好socks代理的服务器以及端口号.
+然后就可以使用代理了,具体操作如下:
+$ sudo -s # tsocks apt-get dist-upgrade # exit $ 或者这样:
+$ sudo -s # . tsocks -on # apt-get dist-upgrade # .</description>
+    </item>
+    
+    <item>
+      <title>hide unity panle when use virtualbox full screen model</title>
+      <link>https://wrfly.kfd.me/posts/hide-unity-panle-when-use-virtualbox-full-screen-model/</link>
+      <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/hide-unity-panle-when-use-virtualbox-full-screen-model/</guid>
+      <description>Question:
+Answer: &amp;gt; Disabling mini-toolbar in VMs settings is a temporary work-around. In the VirtualBox manager go to Settings-&amp;gt;General-&amp;gt;Advanced tab -&amp;gt; Mini ToolBar [] Show in Fullscreen/Seamless and make sure it is unchecked.
+在Ubuntu 下运行 VirtualBox ，开一个虚拟机，全屏模式，Unity的panle会一直显示。
+取消显示只需在虚拟机的设置里把“全屏模式下显示小工具栏”取消就可以了。
+在虚拟机的&amp;ndash;设置&amp;ndash;常规&amp;ndash;高级&amp;ndash;小工具栏。
+![setting/img/hide-unity-panle-in-virtualbox/setting.png)
+取消之前是这样的
+![before/img/hide-unity-panle-in-virtualbox/before.png)
+取消之后是这样的
+![after/img/hide-unity-panle-in-virtualbox/after.png)
+原文链接</description>
+    </item>
+    
+    <item>
+      <title>Ubuntu自定义Applications</title>
+      <link>https://wrfly.kfd.me/posts/ubuntu%E8%87%AA%E5%AE%9A%E4%B9%89applications/</link>
+      <pubDate>Tue, 23 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/ubuntu%E8%87%AA%E5%AE%9A%E4%B9%89applications/</guid>
+      <description>用户自己的软件都放在 ~/.local/share/applications/ 目录下面，所以，要想添加软件到menu，只要把写好的desktop文件放到里面就可以了。desktop文件的基本格式如下:
+[Desktop Entry] Name=Your Application Exec=The application exec path(.sh/exe/.py/etc.) Icon=The application&amp;#39;s icon path. Type=Application Categories=GTK;GNOME;Utility; 放入目录中后在menu中就可以找到你的软件了。
+要是想在整个系统中都可以运行你的程序（让所有的用户都可以运行），只需要把desktop文件放到/usr/share/applications/目录中即可。(or ~/.local/share/applications)
+See: https://developer.gnome.org/integration-guide/stable/desktop-files.html.en</description>
+    </item>
+    
+    <item>
+      <title>关于Ubuntu的PATH</title>
+      <link>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Eubuntu%E7%9A%84path/</link>
+      <pubDate>Fri, 19 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Eubuntu%E7%9A%84path/</guid>
+      <description>修改ubuntu下私人用户的PATH:
+Ubuntu的环境变量，一个是存放在&amp;rdquo;environment&amp;rdquo;文件里，另外一个是在&amp;rdquo;.profile&amp;rdquo;文件中
+如果你想在PATH中添加自己的路径，那么在 ~/.profile文件最后的export PATH=后面加上:~/.bash_shell/: 就能运行你放在这个目录中的脚本程序了。
+当然，前提是你要在用户目录下面创建一个那样的文件夹。</description>
+    </item>
+    
+  </channel>
+</rss>

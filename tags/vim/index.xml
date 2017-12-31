@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Vim on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/vim/</link>
+    <description>Recent content in Vim on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 25 Dec 2014 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/vim/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Guide to Vim</title>
+      <link>https://wrfly.kfd.me/posts/guide-to-vim/</link>
+      <pubDate>Thu, 25 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/guide-to-vim/</guid>
+      <description>Vim使用
+The Basics of Moving in Vim
+The first thing you&amp;rsquo;ll want to learn is how to move around a file. When you&amp;rsquo;re in command mode, you&amp;rsquo;ll want to remember the following keys and what they do:
+h moves the cursor one character to the left. j moves the cursor down one line. k moves the cursor up one line. l moves the cursor one character to the right. 0 moves the cursor to the beginning of the line.</description>
+    </item>
+    
+  </channel>
+</rss>

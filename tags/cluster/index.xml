@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cluster on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/cluster/</link>
+    <description>Recent content in Cluster on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 12 Mar 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/cluster/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>confd笔记</title>
+      <link>https://wrfly.kfd.me/posts/confd%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Sun, 12 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/confd%E7%AC%94%E8%AE%B0/</guid>
+      <description>好记性不如烂笔头。
+昨天完成了项目的 etcd + confd + openresty 的反代部分，在这里记录一下。这东西学起来还是有点时间的，文档也说的不明白，没个example可以看。
+etcd 部分 单点etcd启动：
+docker volume create etcd_data docker run -dti --network host \ 	-v etcd_data:/default.etcd \ 	-e ETCD_LISTEN_PEER_URLS=http://10.170.1.31:2380 \ 	-e ETCD_LISTEN_CLIENT_URLS=http://10.170.1.31:2379 \ 	-e ETCD_ADVERTISE_CLIENT_URLS=http://10.170.1.31:2379 \ 	quay.io/coreos/etcd:latest 然后这个 quay.io/coreos/etcd:latest 镜像隔着我国比较远，所以不如用我的镜像 wrfly/etcd pull 的时候会快一点。 （2017-3-12 version: latest）
+confd 配置部分 confd启动的时候需要一些配置：
+backend = &amp;#34;etcd&amp;#34; confdir = &amp;#34;/etc/confd&amp;#34; log-level = &amp;#34;info&amp;#34; watch = true noop = false prefix = &amp;#34;/&amp;#34; scheme = &amp;#34;http&amp;#34; node = [ &amp;#34;1.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Wifi on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/wifi/</link>
+    <description>Recent content in Wifi on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 04 Feb 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/wifi/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>linux下的360wifi</title>
+      <link>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E7%9A%84360wifi/</link>
+      <pubDate>Wed, 04 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E7%9A%84360wifi/</guid>
+      <description>今天把之前买过的一个360wifi放在了linux下，网上很多教程，我也走了很多弯路，不过，感谢那些前辈，让生活变得更美好～
+thank you very much!
+直接贴网址吧，英文的，很容易懂。
+亲测可用，系统环境：Linux ubuntu 3.13.0-44-generic 以及 Linux kali 3.14-kali1-amd64
+http://askubuntu.com/questions/575413/ralink-148f760b-mt7601-driver-kernel-panic-on-ubuntu-14-04
+以上是问题的详情，下面的是github的网址：
+https://github.com/porjo/mt7601.git
+https://github.com/porjo/mt7601
+感谢！
+同样，这代码也应该适用于腾讯wifi，小度wifi，小米wifi等相同产品，不过本人没有亲自测试。
+如果这篇文章对您有用，请把他分享给更多的人，如果在便以过程中与到了什么问题，也可以在下方留言，我们一起进行讨论～
+然后，我所有的步骤全是从google上找到的，感谢google～同时鄙视一下百度、、
+百度搜索到的一些教程在我的电脑上并不实用，很有可能是内核版本的问题，不过，我的内核版本可是最新的呀。。。。
+转载请注明出处，谢谢。
+10-30日更：
+之前写过一个kali安装360wifi的脚本： https://gist.github.com/wrfly/08da52c72904de2400e7
+多亏了一个同学提醒我～</description>
+    </item>
+    
+    <item>
+      <title>破解Wifi密码的时候</title>
+      <link>https://wrfly.kfd.me/posts/%E7%A0%B4%E8%A7%A3wifi%E5%AF%86%E7%A0%81%E7%9A%84%E6%97%B6%E5%80%99/</link>
+      <pubDate>Tue, 03 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E7%A0%B4%E8%A7%A3wifi%E5%AF%86%E7%A0%81%E7%9A%84%E6%97%B6%E5%80%99/</guid>
+      <description>破解wpa/wpa2的密码是一件简单的事情但不是一件容易的事情。
+遇到的第一个问题就是密码库，鉴于很多人喜欢把生日作为密码，那么我就从生日开始猜测了。
+先写一个生成密码的小程序：
+#include &amp;lt;iostream&amp;gt;#include &amp;lt;iomanip&amp;gt;using namespace std; int main(){ int y = 1970; for(; y &amp;lt; 2016; y ++) for(int m = 1; m &amp;lt; 13; m ++) if(m == 2) for(int d = 1; d &amp;lt; 30; d ++) cout&amp;lt;&amp;lt;y&amp;lt;&amp;lt;setw(2)&amp;lt;&amp;lt;setfill(&amp;#39;0&amp;#39;)&amp;lt;&amp;lt;m&amp;lt;&amp;lt;setw(2)&amp;lt;&amp;lt;setfill(&amp;#39;0&amp;#39;)&amp;lt;&amp;lt;d&amp;lt;&amp;lt;endl; else if(m == 4|| m == 6|| m == 9|| m == 11) for(int d = 1; d &amp;lt; 31; d ++) cout&amp;lt;&amp;lt;y&amp;lt;&amp;lt;setw(2)&amp;lt;&amp;lt;setfill(&amp;#39;0&amp;#39;)&amp;lt;&amp;lt;m&amp;lt;&amp;lt;setw(2)&amp;lt;&amp;lt;setfill(&amp;#39;0&amp;#39;)&amp;lt;&amp;lt;d&amp;lt;&amp;lt;endl; else for(int d = 1; d &amp;lt; 32; d ++) cout&amp;lt;&amp;lt;y&amp;lt;&amp;lt;setw(2)&amp;lt;&amp;lt;setfill(&amp;#39;0&amp;#39;)&amp;lt;&amp;lt;m&amp;lt;&amp;lt;setw(2)&amp;lt;&amp;lt;setfill(&amp;#39;0&amp;#39;)&amp;lt;&amp;lt;d&amp;lt;&amp;lt;endl; return 0; } 生成的密码文件在这儿</description>
+    </item>
+    
+    <item>
+      <title>破解Wifi密码的时候-2</title>
+      <link>https://wrfly.kfd.me/posts/%E7%A0%B4%E8%A7%A3wifi%E5%AF%86%E7%A0%81%E7%9A%84%E6%97%B6%E5%80%99-2/</link>
+      <pubDate>Tue, 03 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E7%A0%B4%E8%A7%A3wifi%E5%AF%86%E7%A0%81%E7%9A%84%E6%97%B6%E5%80%99-2/</guid>
+      <description>上一篇中我说了制作生日密码的小程序，记录了一下字典的生成方式，那么这一篇中我摘抄了网上的教程，一步一步走下来，还是挺简单的。原本着想从视频中学习点东西，但是看了这篇教程以后发现文字版的更适合我～
+我也希望会适合你～
+PS：非法破解他人密码是违法行为，本人一切行为均在自己手机中进行。请大家测试的时候遵守法律法规。
+此文分享自shellhacks
+0.安装 Aircrack-ng
+$ sudo apt-get install build-essential libssl-dev libnl-3-dev pkg-config libnl-genl-3-dev 下载最新版的 Aircrack-ng：
+ $ wget http://download.aircrack-ng.org/aircrack-ng-1.2-rc1.tar.gz -O - | tar -xz $ cd aircrack-ng-1.2-rc1 $ sudo make $ sudo make install  1.打开网卡的监听模式
+首先结束可能会导致问题的进程：
+$ sudo airmon-ng check kill 然后开启网卡监听模式：
+$ sudo airmon-ng start wlan0 看一下现在的网卡在mon0上是打开的监听模式的。
+ 打开Airodump-ng来收集认证信息
+$ sudo airodump-ng mon0
+  然后选择特定的MAC地址进行测试：
+$ sudo airodump-ng -c 1 --bssid 00:11:22:33:44:55 -w WPAcrack mon0 --ignore-negative-one 上面这条命令的运行结果是这样的：</description>
+    </item>
+    
+  </channel>
+</rss>

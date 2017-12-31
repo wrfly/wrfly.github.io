@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Others on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/others/</link>
+    <description>Recent content in Others on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 14 Jun 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/others/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>stardict&#39;s icon</title>
+      <link>https://wrfly.kfd.me/posts/stardicts-icon/</link>
+      <pubDate>Sun, 14 Jun 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/stardicts-icon/</guid>
+      <description>Boys and girls~
+由于stardict的图标是png格式的，放大之后那个锯齿哟……所以我就自己画了一个～
+把它放到/usr/share/app-install/icons/stardict.svg 然后修改/usr/share/applications/stardict.desktop的Icon=/usr/share/app-install/icons/stardict.svg.</description>
+    </item>
+    
+  </channel>
+</rss>

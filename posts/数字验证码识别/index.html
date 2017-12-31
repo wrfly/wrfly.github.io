@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='昨天整理了一下校园网的密码, 由于数据库是一年前的了, 所以有些密码不能用, 为了检验那些密码是好的, 那些是坏的, 就得去自助服务那里登陆一下才能知道. 但是登陆的时候有个问题, 验证码.
+不过学校的验证码很low, 是下面这种的:
+很容易识别, 于是就研究了一下怎样用Python识别图片中的数字.
+用到的Python库 进行图像处理需要用到两个特殊的库, 第一个是PIL包下的Image模块, 第二个是进行OCR识别的pytesseract模块.
+from PIL import Image # 图片处理, 打开, 关闭, 获取像素信息 from pytesseract import * # OCR识别的库, 对应的CLI命令行为 tesseract 二值化 我们可以看到上面的验证码颜色都比较鲜艳, 虽然看起来好看, 但是对于程序来说这是没有必要且多余的, 因为程序只需要知道某个点是黑的还是白的就好. 所以首先要做的是将图片变成黑白的.
+要将一幅鲜艳的图片转换成黑白的, 还需要一点前戏, 图片灰度. 顾名思义, 就是把那些颜色都去掉, 变成灰色. 而二值化则是将灰色的点变成黑色.
+实现二值化 灰度处理 先把上面的那张1317放大看一下:
+(手动忽略那条截图时留下的细线)
+img = Image.open(&#39;1317.png&#39;) # 打开图片 img = img.convert(&#39;L&#39;) # 转换成灰度图片 img.save(&#39;1317-L.png&#39;) # 保存图片 查看转换的结果:
+可以看到, 那些色彩都没了, 变成了灰色的图片.
+二值化处理 接下来就是将灰色变成黑色, 也就是二值化, 不是0就是255.'>
+
+<meta property='og:title' content='数字验证码识别 • wrfly&#39;s blog'>
+<meta property='og:description' content='昨天整理了一下校园网的密码, 由于数据库是一年前的了, 所以有些密码不能用, 为了检验那些密码是好的, 那些是坏的, 就得去自助服务那里登陆一下才能知道. 但是登陆的时候有个问题, 验证码.
+不过学校的验证码很low, 是下面这种的:
+很容易识别, 于是就研究了一下怎样用Python识别图片中的数字.
+用到的Python库 进行图像处理需要用到两个特殊的库, 第一个是PIL包下的Image模块, 第二个是进行OCR识别的pytesseract模块.
+from PIL import Image # 图片处理, 打开, 关闭, 获取像素信息 from pytesseract import * # OCR识别的库, 对应的CLI命令行为 tesseract 二值化 我们可以看到上面的验证码颜色都比较鲜艳, 虽然看起来好看, 但是对于程序来说这是没有必要且多余的, 因为程序只需要知道某个点是黑的还是白的就好. 所以首先要做的是将图片变成黑白的.
+要将一幅鲜艳的图片转换成黑白的, 还需要一点前戏, 图片灰度. 顾名思义, 就是把那些颜色都去掉, 变成灰色. 而二值化则是将灰色的点变成黑色.
+实现二值化 灰度处理 先把上面的那张1317放大看一下:
+(手动忽略那条截图时留下的细线)
+img = Image.open(&#39;1317.png&#39;) # 打开图片 img = img.convert(&#39;L&#39;) # 转换成灰度图片 img.save(&#39;1317-L.png&#39;) # 保存图片 查看转换的结果:
+可以看到, 那些色彩都没了, 变成了灰色的图片.
+二值化处理 接下来就是将灰色变成黑色, 也就是二值化, 不是0就是255.'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/%E6%95%B0%E5%AD%97%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='code'><meta property='article:published_time' content='2016-04-10T00:00:00Z'/><meta property='article:modified_time' content='2016-04-10T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>数字验证码识别 • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/%E6%95%B0%E5%AD%97%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/posts'>Posts</a>
+    </li>
+  <li>
+      <a href='/tags'>Tags</a>
+    </li>
+  <li>
+      <a href='/about'>About</a>
+    </li>
+  <li>
+      <a href='/links'>Links</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>数字验证码识别</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2016-04-10T00:00:00Z'>2016, Apr 10</time>
+</span>
+
+  
+  
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>昨天整理了一下校园网的密码, 由于数据库是一年前的了, 所以有些密码不能用, 为了检验那些密码是好的, 那些是坏的, 就得去自助服务那里登陆一下才能知道. 但是登陆的时候有个问题, 验证码.</p>
+
+<p>不过学校的验证码很low, 是下面这种的:</p>
+
+<p><img src="/img/captcha/1317.png" alt="1317" /></p>
+
+<p><img src="/img/captcha/3764.png" alt="3764" /></p>
+
+<p><img src="/img/captcha/3952.png" alt="3952" /></p>
+
+<p>很容易识别, 于是就研究了一下怎样用Python识别图片中的数字.</p>
+
+<h2 id="用到的python库">用到的Python库</h2>
+
+<p>进行图像处理需要用到两个特殊的库, 第一个是PIL包下的Image模块, 第二个是进行OCR识别的pytesseract模块.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> PIL <span style="color:#f92672">import</span> Image <span style="color:#75715e"># 图片处理, 打开, 关闭, 获取像素信息</span>
+<span style="color:#f92672">from</span> pytesseract <span style="color:#f92672">import</span> <span style="color:#f92672">*</span> <span style="color:#75715e"># OCR识别的库, 对应的CLI命令行为 tesseract</span></code></pre></div>
+<h2 id="二值化">二值化</h2>
+
+<p>我们可以看到上面的验证码颜色都比较鲜艳, 虽然看起来好看, 但是对于程序来说这是没有必要且多余的, 因为程序只需要知道某个点是黑的还是白的就好. 所以首先要做的是将图片变成黑白的.</p>
+
+<p>要将一幅鲜艳的图片转换成黑白的, 还需要一点前戏, 图片灰度.
+顾名思义, 就是把那些颜色都去掉, 变成灰色. 而二值化则是将灰色的点变成黑色.</p>
+
+<h3 id="实现二值化">实现二值化</h3>
+
+<h4 id="灰度处理">灰度处理</h4>
+
+<p>先把上面的那张1317放大看一下:</p>
+
+<p><img src="/img/captcha/1317-ori.png" alt="1317-ori" /></p>
+
+<p>(手动忽略那条截图时留下的细线)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">img <span style="color:#f92672">=</span> Image<span style="color:#f92672">.</span>open(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;1317.png&#39;</span>) <span style="color:#75715e"># 打开图片</span>
+img <span style="color:#f92672">=</span> img<span style="color:#f92672">.</span>convert(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;L&#39;</span>) <span style="color:#75715e"># 转换成灰度图片</span>
+img<span style="color:#f92672">.</span>save(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;1317-L.png&#39;</span>) <span style="color:#75715e"># 保存图片</span></code></pre></div>
+<p>查看转换的结果:</p>
+
+<p><img src="/img/captcha/1317-L.png" alt="1317-L" /></p>
+
+<p>可以看到, 那些色彩都没了, 变成了灰色的图片.</p>
+
+<h4 id="二值化处理">二值化处理</h4>
+
+<p>接下来就是将灰色变成黑色, 也就是二值化, 不是0就是255. 0代表黑色(没有数据), 255代表白色. 0-255颜色递减.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">threshold</span>(img):
+    w, h <span style="color:#f92672">=</span> img<span style="color:#f92672">.</span>size
+    <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> range(w):
+        <span style="color:#66d9ef">for</span> y <span style="color:#f92672">in</span> range(h):
+            <span style="color:#66d9ef">if</span> img<span style="color:#f92672">.</span>getpixel((x, y)) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">255</span>: <span style="color:#75715e">#将灰色的变成黑色</span>
+                img<span style="color:#f92672">.</span>putpixel((x, y), <span style="color:#ae81ff">0</span>)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">threshold_v2</span>(img):
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34; 二值化 - 采用阈值分割法，threshold为分割点 &#34;&#34;&#34;</span>
+    threshold <span style="color:#f92672">=</span> <span style="color:#ae81ff">140</span>
+    table <span style="color:#f92672">=</span> []
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">256</span>):
+        <span style="color:#66d9ef">if</span> i <span style="color:#f92672">&lt;</span> threshold:
+            table<span style="color:#f92672">.</span>append(<span style="color:#ae81ff">0</span>)
+        <span style="color:#66d9ef">else</span>:
+            table<span style="color:#f92672">.</span>append(<span style="color:#ae81ff">1</span>)
+    img <span style="color:#f92672">=</span> img<span style="color:#f92672">.</span>point(table, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;1&#39;</span>)</code></pre></div>
+<p>通过上面的函数(两种实现方法)就可以得到下面这张图:</p>
+
+<p><img src="/img/captcha/1317-b.png" alt="1317-b" /></p>
+
+<h2 id="去除干扰点">去除干扰点</h2>
+
+<p>去除干扰点的方法有很多, 比如有篇文章提到过的九宫格的方法:</p>
+
+<p><img src="/img/captcha/rm-1.png" alt="九宫格去除干扰点" /></p>
+
+<p>用这种方法可以把那些孤立的像素点去除掉, 但是对那些两个相连的点就无能为力了, 比如上图右上角的那个大的干扰点.</p>
+
+<p>这样就很尴尬, 因为只把孤立的干扰点除去了是不够的.</p>
+
+<p>所以我就想到, 可以利用判断相邻点的面积来判断某块儿区域是不是干扰点. 因为数字或字母总是连续的, 只有干扰点才是相对孤立的. 这里相对孤立的意思是, 它们所连结起来组成的面积, 是不可能有一个完整的数字那么大的, 而且即使他们与某个数字的部分相连结, 所造成的影响也不是很大, 比如和1, 3 相连的那几个点是不影响识别的:</p>
+
+<p><img src="/img/captcha/13-part.png" alt="部分连接" /></p>
+
+<p>所以, 可以先扫描一下所有的有色点(黑点), 然后判断这些点是否连接, 并计算这些连结区域的面积. 如果连接起来的面积小于某个阀值, 则说明它是一个(块)干扰点(区),则可以将其删除.</p>
+
+<h3 id="代码实现">代码实现:</h3>
+
+<p>下面的代码是验证码识别的完整类代码, 其中关于选择干扰点和计算干扰面积的函数有 <code>find</code>,<code>merge</code>,<code>scanPixel</code>和<code>calarea</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">captcha</span>:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;验证码识别&#34;&#34;&#34;</span>
+    <span style="color:#66d9ef">def</span> __init__(self, image):
+        self<span style="color:#f92672">.</span>imgname <span style="color:#f92672">=</span> image
+        self<span style="color:#f92672">.</span>img <span style="color:#f92672">=</span> Image<span style="color:#f92672">.</span>open(image)
+        self<span style="color:#f92672">.</span>size <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>img<span style="color:#f92672">.</span>size
+        self<span style="color:#f92672">.</span>w, self<span style="color:#f92672">.</span>h <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>size
+        maxn <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>size[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">*</span> self<span style="color:#f92672">.</span>size[<span style="color:#ae81ff">1</span>]
+        self<span style="color:#f92672">.</span>dotMap <span style="color:#f92672">=</span> []
+        self<span style="color:#f92672">.</span>root <span style="color:#f92672">=</span> [i <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(maxn)]
+        self<span style="color:#f92672">.</span>count <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span> <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(maxn)]
+        self<span style="color:#f92672">.</span>dx <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>,  <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+        self<span style="color:#f92672">.</span>dy <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0</span>,  <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>]
+        self<span style="color:#f92672">.</span>vis <span style="color:#f92672">=</span> [False <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(maxn)]
+        self<span style="color:#f92672">.</span>tmp <span style="color:#f92672">=</span> []
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">find</span>(self, x):
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34; 查找某个点的root &#34;&#34;&#34;</span>
+        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>root[x] <span style="color:#f92672">!=</span> x:
+            self<span style="color:#f92672">.</span>root[x] <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>find(self<span style="color:#f92672">.</span>root[x])
+            <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>root[x]
+        <span style="color:#66d9ef">else</span>:
+            <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>root[x]
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">merge</span>(self, x, y):
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;合并root相同的区域&#34;&#34;&#34;</span>
+        x <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>find(x)
+        y <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>find(y)
+        <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">==</span> y):
+            <span style="color:#66d9ef">return</span>
+        <span style="color:#66d9ef">else</span>:
+            self<span style="color:#f92672">.</span>root[x] <span style="color:#f92672">=</span> y
+            self<span style="color:#f92672">.</span>count[y] <span style="color:#f92672">+=</span> self<span style="color:#f92672">.</span>count[x]
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">scanPixel</span>(self):
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34; 扫描点 &#34;&#34;&#34;</span>
+        <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> range(self<span style="color:#f92672">.</span>w):
+            <span style="color:#66d9ef">for</span> y <span style="color:#f92672">in</span> range(self<span style="color:#f92672">.</span>h):
+                <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>img<span style="color:#f92672">.</span>getpixel((x, y)) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+                    self<span style="color:#f92672">.</span>dotMap<span style="color:#f92672">.</span>append((x, y))
+                    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">8</span>):
+                        sx <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>dx[i] <span style="color:#f92672">+</span> x
+                        sy <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>dy[i] <span style="color:#f92672">+</span> y
+                        <span style="color:#66d9ef">if</span> sx <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">or</span> sy <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">or</span> sx <span style="color:#f92672">&gt;=</span> self<span style="color:#f92672">.</span>w <span style="color:#f92672">or</span> sy <span style="color:#f92672">&gt;=</span> self<span style="color:#f92672">.</span>h:
+                            <span style="color:#66d9ef">continue</span>
+                        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>img<span style="color:#f92672">.</span>getpixel((sx, sy)) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+                            self<span style="color:#f92672">.</span>merge(x<span style="color:#f92672">*</span>self<span style="color:#f92672">.</span>h<span style="color:#f92672">+</span>y, sx<span style="color:#f92672">*</span>self<span style="color:#f92672">.</span>h<span style="color:#f92672">+</span>sy)
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">closeImg</span>(self):
+        self<span style="color:#f92672">.</span>img<span style="color:#f92672">.</span>close()
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">saveImg</span>(self, name):
+        self<span style="color:#f92672">.</span>img<span style="color:#f92672">.</span>save(name<span style="color:#f92672">+</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;-&#34;</span><span style="color:#f92672">+</span>self<span style="color:#f92672">.</span>imgname)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">threshold</span>(self):
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34; 二值化 - 采用阈值分割法，threshold为分割点 &#34;&#34;&#34;</span>
+        threshold <span style="color:#f92672">=</span> <span style="color:#ae81ff">140</span>
+        table <span style="color:#f92672">=</span> []
+        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">256</span>):
+            <span style="color:#66d9ef">if</span> i <span style="color:#f92672">&lt;</span> threshold:
+                table<span style="color:#f92672">.</span>append(<span style="color:#ae81ff">0</span>)
+            <span style="color:#66d9ef">else</span>:
+                table<span style="color:#f92672">.</span>append(<span style="color:#ae81ff">1</span>)
+        self<span style="color:#f92672">.</span>img <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>img<span style="color:#f92672">.</span>point(table, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;1&#39;</span>)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gray</span>(self):
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34; convert the image to gray &#34;&#34;&#34;</span>
+        self<span style="color:#f92672">.</span>img <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>img<span style="color:#f92672">.</span>convert(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;L&#39;</span>)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">calarea</span>(self, x, y):
+        self<span style="color:#f92672">.</span>vis[self<span style="color:#f92672">.</span>find(x<span style="color:#f92672">*</span>self<span style="color:#f92672">.</span>h <span style="color:#f92672">+</span> y)] <span style="color:#f92672">=</span> True
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>count[self<span style="color:#f92672">.</span>find(x<span style="color:#f92672">*</span>self<span style="color:#f92672">.</span>h <span style="color:#f92672">+</span> y)]
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">clear</span>(self):
+        <span style="color:#66d9ef">for</span> dot <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>dotMap:
+            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>calarea(dot[<span style="color:#ae81ff">0</span>], dot[<span style="color:#ae81ff">1</span>]) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">15</span>:
+                self<span style="color:#f92672">.</span>img<span style="color:#f92672">.</span>putpixel(dot, <span style="color:#ae81ff">1</span>)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">text2String</span>(self):
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34; 识别转换 &#34;&#34;&#34;</span>
+        rep <span style="color:#f92672">=</span> {<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;O&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;0&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;A&#39;</span> : <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;8&#39;</span>,
+               <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;I&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;1&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;L&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;1&#39;</span>,
+               <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;Z&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;2&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;S&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;8&#39;</span>,
+               <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;E&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;6&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;G&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;9&#39;</span>,
+               <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;B&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;6&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39; &#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;&#39;</span>
+               }
+        self<span style="color:#f92672">.</span>text <span style="color:#f92672">=</span> image_to_string(self<span style="color:#f92672">.</span>img, config<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;-l chi_sim&#34;</span>)
+        self<span style="color:#f92672">.</span>text <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>text<span style="color:#f92672">.</span>upper()
+        <span style="color:#66d9ef">for</span> r <span style="color:#f92672">in</span> rep:
+            self<span style="color:#f92672">.</span>text <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>text<span style="color:#f92672">.</span>replace(r, rep[r])
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>text<span style="color:#f92672">.</span>isalnum():
+            self<span style="color:#f92672">.</span>text <span style="color:#f92672">=</span> image_to_string(self<span style="color:#f92672">.</span>img, config<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;-l eng&#34;</span>)
+        <span style="color:#66d9ef">for</span> r <span style="color:#f92672">in</span> rep:
+            self<span style="color:#f92672">.</span>text <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>text<span style="color:#f92672">.</span>replace(r, rep[r])
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">captcha</span>(self):
+        self<span style="color:#f92672">.</span>gray()
+        self<span style="color:#f92672">.</span>threshold()
+        self<span style="color:#f92672">.</span>scanPixel()
+        self<span style="color:#f92672">.</span>clear()
+        self<span style="color:#f92672">.</span>text2String()</code></pre></div>
+<p>单独处理干扰点所得到的图像为:</p>
+
+<p><img src="/img/captcha/1317-c.png" alt="1317-rm" /></p>
+
+<p>为了使效果更明显, 我准备了这样一张图:
+<img src="/img/captcha/7932.png" alt="7932" /></p>
+
+<p>放大之后:</p>
+
+<p><img src="/img/captcha/7932-big.png" alt="7932-big" /></p>
+
+<p>然后经过去点处理:</p>
+
+<p><img src="/img/captcha/7932-c.png" alt="7932-c" /></p>
+
+<p>放大:</p>
+
+<p><img src="/img/captcha/7932-c-big.png" alt="7932-c-big" /></p>
+
+<p>命令行识别对比:</p>
+
+<p><img src="/img/captcha/7932-cli.png" alt="7932-cli" /></p>
+
+<p>已经能够完美的识别了其中的数字.</p>
+
+<h2 id="ocr识别">OCR识别</h2>
+
+<p>这里用到的是pytesseract的库里面的image_to_string()函数.</p>
+
+<p>为了更精确的识别验证码, 可以在函数中加一点参数, 我这里的做法是先设置语言为中文, 加了 <code>config=&quot;-l chi_sim&quot;</code>, 然后如果其中有非数字的话, 再进行英文识别, 使用的参数为 <code>config=&quot;-l eng&quot;</code>, 其中添加了错误转换, 将某些易错的英文转换成数字.</p>
+
+<p>这样一来, 识别的正确率能达到98%.(后讲)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">text2Strings</span>(self):
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34; 识别转换 &#34;&#34;&#34;</span>
+        rep <span style="color:#f92672">=</span> {<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;O&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;0&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;A&#39;</span> : <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;8&#39;</span>,
+               <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;I&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;1&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;L&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;1&#39;</span>,
+               <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;Z&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;2&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;S&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;8&#39;</span>,
+               <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;E&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;6&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;G&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;9&#39;</span>,
+               <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;B&#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;6&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39; &#39;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;&#39;</span>
+               }
+        self<span style="color:#f92672">.</span>text <span style="color:#f92672">=</span> image_to_string(self<span style="color:#f92672">.</span>img, config<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;-l chi_sim&#34;</span>)
+        self<span style="color:#f92672">.</span>text <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>text<span style="color:#f92672">.</span>upper()
+        <span style="color:#66d9ef">for</span> r <span style="color:#f92672">in</span> rep:
+            self<span style="color:#f92672">.</span>text <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>text<span style="color:#f92672">.</span>replace(r, rep[r])
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>text<span style="color:#f92672">.</span>isalnum():
+            self<span style="color:#f92672">.</span>text <span style="color:#f92672">=</span> image_to_string(self<span style="color:#f92672">.</span>img, config<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;-l eng&#34;</span>)
+        <span style="color:#66d9ef">for</span> r <span style="color:#f92672">in</span> rep:
+            self<span style="color:#f92672">.</span>text <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>text<span style="color:#f92672">.</span>replace(r, rep[r])</code></pre></div>
+<h2 id="多线程处理">多线程处理</h2>
+
+<p>参照<a href="https://segmentfault.com/a/1190000000414339" target="_blank">这篇文章</a>的做法, 进行了并行处理, 加快了处理的速度, 一百张图进行识别用了35.8秒.</p>
+
+<p>```python
+from multiprocessing import Pool
+total = len(pics)
+wrong = 0.0</p>
+
+<p>def main(pic):
+    try:
+        i = captcha(pic)
+        i.captcha()
+        tname = i.imgname.replace(&ldquo;.png&rdquo;,&ldquo;&rdquo;)
+        oname = i.text
+        if tname !=  oname:
+            i.saveImg(oname)
+        return tname+&lsquo;.png&rsquo; , oname
+    except Exception, e:
+        print e</p>
+
+<p>pool = Pool()
+results = pool.map(main, pics) #其中pics是由图片名组成的列表
+pool.close()
+pool.join()</p>
+
+<p>for re in results:
+    if re[1] != re[0].replace(&lsquo;.png&rsquo;, &ldquo;):
+        print re[0],re[1]
+        wrong += 1</p>
+
+<p>print &lsquo;识别正确率 :%.1f&rsquo; % ((total - wrong)/total*100) + &lsquo; %&rsquo;
+````</p>
+
+<h2 id="结果验证">结果验证</h2>
+
+<p>我从登陆页面爬了100张验证码, 并根据验证码的数字更改了图片的名字:</p>
+
+<p><img src="/img/captcha/100-pics.png" alt="100pics" /></p>
+
+<p>运行之后:</p>
+
+<p><img src="/img/captcha/w.png" alt="resoult" /></p>
+
+<h2 id="最后">最后</h2>
+
+<p>还有很多可以优化的地方, 比如验证码分解, 把验证码分开, 然后根据像素点匹配数字或字母, 还需要去除那些干扰线, 需要用到数学的一些知识.</p>
+
+<p>不过现在已经能够满足我的要求了, 下一步就是集成到自动登陆里面, 那就是下一篇文章将要研究的了.</p>
+
+<p>完整代码和验证码图片在github: <a href="https://github.com/wrfly/captcha_verify" target="_blank">https://github.com/wrfly/captcha_verify</a></p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/code'>Code</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/posts/20160329/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>20160329</a>
+    </div><div class='next-entry'>
+      <a href='/posts/cookies-session-and-%E9%AA%8C%E8%AF%81%E7%A0%81/'>
+        <span class='screen-reader'>Next post: </span>cookies-session-and-验证码<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+      Host with github | Build with Hugo | Theme by Minimo &copy; 2015-2017 wrfly 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

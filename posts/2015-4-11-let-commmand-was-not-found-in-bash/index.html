@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='要解决问题,首先要遇到问题.
+在bash中运行下面一段代码:
+#!/bin/bash #spawn.sh PIDS=$(pidof sh $0) P_array=($PIDS) echo $PIDS let &#34;instances=${#P_array[*]}- 1&#34; echo &#34;$instancesinstance(s) of this script running.&#34; echo &#34;[Hit Ctl-C to exit.]&#34;; echo sleep 1 sh $0 exit 0 你会得到什么?
+运行错误?let命令找不到了? OK, 反正是运行不了, 当然, 除了第一句.
+这是在高级bash脚本编程指南中的一个例子,但是在我的ubuntu中却报错了,为什么?
+搜索了一下,发现这个let是bash的内建命令,什么意思呢?就是只有bash有这个命令,而sh, dash, 都没有这个命令.
+如果想知道你电脑中到底有什么shell,可以通过
+cat /etc/shells 这个命令来得知.
+# /etc/shells: valid login shells /bin/sh /bin/dash /bin/bash /bin/rbash /bin/ksh93 /usr/bin/screen 但是我们在脚本第一行已经写明了要用bash运行啊,为什么还不可以?
+Ok,请问,你运行的方式是什么呢? sh script.sh ? 这样还是用sh运行呀,而且Ubuntu中sh默认关联的shell是dash,并不是bash.所以才会出现 let command not found 这种情况.
+(PS:最关键的一句! 倒数第二行! 脚本用了sh来运行自身, 所以才会在第二次循环运行时出现错误!'>
+
+<meta property='og:title' content='let commmand was not found in bash? • wrfly&#39;s blog'>
+<meta property='og:description' content='要解决问题,首先要遇到问题.
+在bash中运行下面一段代码:
+#!/bin/bash #spawn.sh PIDS=$(pidof sh $0) P_array=($PIDS) echo $PIDS let &#34;instances=${#P_array[*]}- 1&#34; echo &#34;$instancesinstance(s) of this script running.&#34; echo &#34;[Hit Ctl-C to exit.]&#34;; echo sleep 1 sh $0 exit 0 你会得到什么?
+运行错误?let命令找不到了? OK, 反正是运行不了, 当然, 除了第一句.
+这是在高级bash脚本编程指南中的一个例子,但是在我的ubuntu中却报错了,为什么?
+搜索了一下,发现这个let是bash的内建命令,什么意思呢?就是只有bash有这个命令,而sh, dash, 都没有这个命令.
+如果想知道你电脑中到底有什么shell,可以通过
+cat /etc/shells 这个命令来得知.
+# /etc/shells: valid login shells /bin/sh /bin/dash /bin/bash /bin/rbash /bin/ksh93 /usr/bin/screen 但是我们在脚本第一行已经写明了要用bash运行啊,为什么还不可以?
+Ok,请问,你运行的方式是什么呢? sh script.sh ? 这样还是用sh运行呀,而且Ubuntu中sh默认关联的shell是dash,并不是bash.所以才会出现 let command not found 这种情况.
+(PS:最关键的一句! 倒数第二行! 脚本用了sh来运行自身, 所以才会在第二次循环运行时出现错误!'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/2015-4-11-let-commmand-was-not-found-in-bash/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='share'><meta property='article:published_time' content='2015-04-11T00:00:00Z'/><meta property='article:modified_time' content='2015-04-11T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>let commmand was not found in bash? • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/2015-4-11-let-commmand-was-not-found-in-bash/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/posts'>Posts</a>
+    </li>
+  <li>
+      <a href='/tags'>Tags</a>
+    </li>
+  <li>
+      <a href='/about'>About</a>
+    </li>
+  <li>
+      <a href='/links'>Links</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>let commmand was not found in bash?</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2015-04-11T00:00:00Z'>2015, Apr 11</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+2 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>要解决问题,首先要遇到问题.</p>
+
+<p>在bash中运行下面一段代码:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><span style="color:#75715e">#!/bin/bash
+</span><span style="color:#75715e"></span><span style="color:#75715e">#spawn.sh
+</span><span style="color:#75715e"></span>PIDS<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>pidof sh $0<span style="color:#66d9ef">)</span>
+P_array<span style="color:#f92672">=(</span>$PIDS<span style="color:#f92672">)</span>
+echo $PIDS
+let <span style="color:#e6db74">&#34;instances=</span><span style="color:#e6db74">${#</span>P_array[*]<span style="color:#e6db74">}</span><span style="color:#e6db74"> - 1&#34;</span>
+echo <span style="color:#e6db74">&#34;</span>$instances<span style="color:#e6db74"> instance(s) of this script running.&#34;</span>
+echo <span style="color:#e6db74">&#34;[Hit Ctl-C to exit.]&#34;</span>; echo
+sleep <span style="color:#ae81ff">1</span>
+sh $0
+exit <span style="color:#ae81ff">0</span></pre></div>
+<p>你会得到什么?</p>
+
+<p>运行错误?let命令找不到了? OK, 反正是运行不了, 当然, 除了第一句.</p>
+
+<p>这是在高级bash脚本编程指南中的一个例子,但是在我的ubuntu中却报错了,为什么?</p>
+
+<p>搜索了一下,发现这个let是bash的内建命令,什么意思呢?就是只有bash有这个命令,而sh, dash, 都没有这个命令.</p>
+
+<p>如果想知道你电脑中到底有什么shell,可以通过</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cat /etc/shells</pre></div>
+<p>这个命令来得知.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"># /etc/shells: valid login shells
+/bin/sh
+/bin/dash
+/bin/bash
+/bin/rbash
+/bin/ksh93
+/usr/bin/screen</pre></div>
+<p>但是我们在脚本第一行已经写明了要用bash运行啊,为什么还不可以?</p>
+
+<p>Ok,请问,你运行的方式是什么呢? <em>sh script.sh</em> ? 这样还是用sh运行呀,而且Ubuntu中sh默认关联的shell是dash,并不是bash.所以才会出现 let command not found 这种情况.</p>
+
+<p>(PS:最关键的一句! 倒数第二行! 脚本用了sh来运行自身, 所以才会在第二次循环运行时出现错误! 如果改为</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">bash $0</pre></div>
+<p>就没问题了.如果你也像我一样正好看到这一部分,那么聪明的你,明白为什么出错了嘛?)</p>
+
+<p>如果不信,你可以直接这样:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">bash script.sh</pre></div>
+<p>是不是成功运行了呢?但是每次都要这样真的很麻烦,有没有什么别的办法呢?当然是有的.</p>
+
+<ol>
+<li><p>alias<br />
+alias sh=&lsquo;bash&rsquo;
+这会是一个方法,但并不是长久的方法.如果想要从根本上取消sh与dash的关联,还需要&hellip;.</p></li>
+
+<li><p>这样<br />
+sudo dpkg-reconfigure dash<br />
+然后选择 NO 这样当你运行sh的时候就会用bash来运行了.并且系统中所有的shell运行方式都会改成bash,而不是dash.</p></li>
+</ol>
+
+<p><em>ATTENTAIN</em> 这样修改将会影响到系统的启动速度，甚至会影响到一些依赖于dash独有特性的脚本（这些特性bash没有提供）,使整个系统都使用bash运行脚本! 慎用!</p>
+
+<p>3.最简单的方法(Recommended),在文件开头处写明用bash, 并且将里面的sh全都换成bash.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">#!/bin/bash</pre></div>
+<p>然后运行脚本的时候添加可执行权限</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$./script.sh</pre></div>
+<p>,或者</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$bash script.sh</pre></div>
+<h2 id="下面是wiki时间">下面是wiki时间~</h2>
+
+<p>我来搬运一下各种shell的区别~</p>
+
+<h3 id="sh">sh</h3>
+
+<p>sh其实是一个连接符号</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">mr@ubuntu:~$ l /bin -h | grep sh
+-rwxr-xr-x 1 root root 1.5M Jan  9  2013 ksh93
+-rwxr-xr-x 1 root root 119K Feb 19  2014 dash
+lrwxrwxrwx 1 root root    4 Oct  7  2014 sh.distrib -&gt; dash
+lrwxrwxrwx 1 root root    7 Oct  7  2014 static-sh -&gt; busybox
+lrwxrwxrwx 1 root root    4 Oct  8  2014 rbash -&gt; bash
+-rwxr-xr-x 1 root root 998K Oct  8  2014 bash
+lrwxrwxrwx 1 root root   21 Feb 12 18:57 ksh -&gt; /etc/alternatives/ksh
+lrwxrwxrwx 1 root root    4 Apr 11 15:05 sh -&gt; dash</pre></div>
+<p>sh指向bash或者dash. 系统运行时需要启动各种脚本,默认就使用sh运行的, 根据Ubuntu系统的设定, sh 就是dash.</p>
+
+<h3 id="dash">dash</h3>
+
+<p>自Ubuntu 6.10以后，系统的默认shell /bin/sh被改成了dash。dash(the Debian Almquist shell)是一个比bash小很多但仍兼容POSIX标准的shell，它占用的磁盘空间更少，执行shell脚本比bash更快，依赖的库文件更少，当然，在功能上无法与bash相比。dash来自于NetBSD版本的Almquist Shell(ash)。</p>
+
+<p>dash shell是作为Debian Linux发行版的一部分开发的，主要出现在Ubuntu Linux发行版中。它是Bourne shell的精简版，支持的功能不像bash shell支持的那样多，这可能会给脚本编程带来一些问题。</p>
+
+<p>Ubuntu中将默认shell改为dash的主要原因是效率。由于Ubuntu启动过程中需要启动大量的shell脚本，为了优化启动速度和资源使用情况，Ubuntu做了这样的改动。</p>
+
+<h3 id="bash">bash</h3>
+
+<p>bash shell是几乎所有Linux发行版的默认shell。作为标准Unix shell——Bourne shell（沿用创建者的名字）的替代，bash shell由GNU工程开发。bash shell的名称就是针对这个Bourne shell的文字游戏，全称为“Bourne again shell”。 bash有很灵活和强大的编程接口，同时又有很友好的用户界面。功能包括命令补齐、通配符、命令历史记录、别名等。</p>
+
+<h4 id="参考资料">参考资料:</h4>
+
+<p><a href="http://www.51testing.com/html/82/138282-216130.html" target="_blank">http://www.51testing.com/html/82/138282-216130.html</a></p>
+
+<p><a href="http://www.ituring.com.cn/article/1826" target="_blank">http://www.ituring.com.cn/article/1826</a></p>
+
+<p><a href="http://blog.chinaunix.net/uid-27037833-id-3431985.html" target="_blank">http://blog.chinaunix.net/uid-27037833-id-3431985.html</a></p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/share'>Share</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/posts/2015-4-11-%E4%B8%80%E4%BA%9B%E5%B0%8F%E4%B8%9C%E8%A5%BF%E5%85%B3%E4%BA%8Ealias/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>一些小东西,关于alias</a>
+    </div><div class='next-entry'>
+      <a href='/posts/2015-04-25-nginx%E6%90%AD%E5%BB%BA%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1/'>
+        <span class='screen-reader'>Next post: </span>Nginx搭建反向代理服务<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+      Host with github | &copy; 2015-2017 wrfly | theme by minimo
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

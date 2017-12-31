@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hack on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/hack/</link>
+    <description>Recent content in Hack on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 24 May 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/hack/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>php dos</title>
+      <link>https://wrfly.kfd.me/posts/php-dos/</link>
+      <pubDate>Sun, 24 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/php-dos/</guid>
+      <description>修复漏洞请下载php最新版，并按照官方文档进行配置
+http://php.net/manual/zh/install.unix.nginx.php
+这两天我也没少省心，尽管已经落后别人好远好远了。。
+关于在php上打补丁，我觉得倒不如直接升级来的爽快
+ 升级总是有他的道理的 我懒得重新编译- -  今天一直在弄这个，把一些经验拿出来吧，当然，是给小白看的。
+解压之后，先别急着 configure ，要在configure后面加参数
+./configure --enable-fpm --with-mysql --enable-mbstring --with-mysqli  将以前用到php5-fpm的地方换成php-fpm
+按照文档来，别像我一样不懂装懂就好了～～</description>
+    </item>
+    
+    <item>
+      <title>linux下暴力破解rar，zip文件</title>
+      <link>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3rarzip%E6%96%87%E4%BB%B6/</link>
+      <pubDate>Tue, 07 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3rarzip%E6%96%87%E4%BB%B6/</guid>
+      <description>Linux暴力破解RAR，ZIP，7Z压缩包
+rarcrack,其官方主页：http://rarcrack.sourceforge.net/
+该软件用于暴力破解压缩文件的密码，但仅支持RAR, ZIP, 7Z这三种类型，其特点是可以使用多线程而且可以暂停与继续(会在当前目录生成一个xml文件，里面显示了正在尝试的一个密码)。
+安装方法
+首先从官网下载安装包，然后执行如下命令
+$ tar -xjf rarcrack-0.2.tar.bz2 $ cd rarcrack-0.2.tar.bz2 $ make $ make install 使用方法
+rarcrack 文件名 [--threads thread_num] [--type rar|zip|7z] 该软件还自带了测试样例，该目录内，执行 rarcrack test.rar &amp;ndash;threads 4 &amp;ndash;type rar ，等待一会儿即可得到结果。
+如果要改变尝试的位置可以直接打开xml，修改当前密码那一行即可。
+如果出现如下错误：
+gcc -pthread rarcrack.c xml2-config --libs --cflags -O2 -o rarcrack /bin/sh: 1: xml2-config: not found In file included from rarcrack.c:21:0: rarcrack.h:25:48: 致命错误： libxml/xmlmemory.h：没有那个文件或目录 编译中断。 make: *** [all] 错误 1 则执行：
+sudo apt-get install libxml2-dev libxslt-dev 安装相应的依赖包。</description>
+    </item>
+    
+    <item>
+      <title>interesting-web-cameras</title>
+      <link>https://wrfly.kfd.me/posts/interesting-web-cameras/</link>
+      <pubDate>Wed, 18 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/interesting-web-cameras/</guid>
+      <description>google search:
+ inurl:CgiStart?page=Multi inurl:ViewerFrame?Mode=  or just visit
+ http://webcamcity.gosnippy.com</description>
+    </item>
+    
+  </channel>
+</rss>

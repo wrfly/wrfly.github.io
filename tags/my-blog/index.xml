@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>My-blog on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/my-blog/</link>
+    <description>Recent content in My-blog on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 11 Dec 2014 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/my-blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>add disqus to github blog</title>
+      <link>https://wrfly.kfd.me/posts/add-disqus-to-github-blog/</link>
+      <pubDate>Thu, 11 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/add-disqus-to-github-blog/</guid>
+      <description>Disqus is an online comment script service. Blog or personal website often use it to let people comment their articals.
+Since I used others freamwork before, the disqus add-one is hers too.So I have to make a personal disqus for myself.
+It&amp;rsquo;s very easy.Just sigh in Disqus and click me.
+Simple easy,hum~</description>
+    </item>
+    
+  </channel>
+</rss>

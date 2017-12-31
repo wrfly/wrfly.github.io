@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='在ubuntu下更新软件的时候,经常会遇到网络连接失败的情况,其实并不是服务器的问题,而是GFW在捣鬼,所以,我们不得不给apt-get加上一个代理,使其更新的时候可以通过代理访问.
+HTTP代理 1.在/etc/apt/apt.conf里面添加如下代码:
+Acquire::http::Proxy &#34;http://yourproxyaddress:proxyport&#34;; 再进行apt-get操作的时候就会通过代理访问目标服务器.
+2.设置临时代理
+切换root用户,在bash中输入: export http_proxy=http://yourproxyaddress:proxyport
+如果要使用sudo apt-get的话,你需要在/etc/sudoers里面添加: Defaults env_keep = &ldquo;http_proxy https_proxy ftp_proxy&rdquo;
+这样会在你sudo运行命令的时候保持原来的代理,不会因为切换了root用户而改变环境变量.
+3.设置永久代理
+在.bashrc文件里面添加如下代码:
+http_proxy=http://yourproxyaddress:proxyport export http_proxy 保存文件,并重新打开终端.
+PS:如果http代理需要认证的话,可以将原来的代码替换为:
+http_proxy=http://username:password@yourproxyaddress:proxyport SOCKS代理 如果你没用http代理,而是用的 shadowsocks 或者 ssh -D 这样的代理,那么你就需要一个转发的软件了,因为apt-get默认是不支持socks代理的,尽管网上有些人将http替换为了socks,那样也是不管用的.
+但是有种方法可以让 apt-get 走 socks 代理的流量, tsocks.
+首先你要安装tsocks.
+sudo apt-get install tsocks 然后在/etc/tsocks.cong的最下面设置好socks代理的服务器以及端口号.
+然后就可以使用代理了,具体操作如下:
+$ sudo -s # tsocks apt-get dist-upgrade # exit $ 或者这样:
+$ sudo -s # . tsocks -on # apt-get dist-upgrade # .'>
+
+<meta property='og:title' content='syntax-for-SOCKS-proxy-in-apt-conf • wrfly&#39;s blog'>
+<meta property='og:description' content='在ubuntu下更新软件的时候,经常会遇到网络连接失败的情况,其实并不是服务器的问题,而是GFW在捣鬼,所以,我们不得不给apt-get加上一个代理,使其更新的时候可以通过代理访问.
+HTTP代理 1.在/etc/apt/apt.conf里面添加如下代码:
+Acquire::http::Proxy &#34;http://yourproxyaddress:proxyport&#34;; 再进行apt-get操作的时候就会通过代理访问目标服务器.
+2.设置临时代理
+切换root用户,在bash中输入: export http_proxy=http://yourproxyaddress:proxyport
+如果要使用sudo apt-get的话,你需要在/etc/sudoers里面添加: Defaults env_keep = &ldquo;http_proxy https_proxy ftp_proxy&rdquo;
+这样会在你sudo运行命令的时候保持原来的代理,不会因为切换了root用户而改变环境变量.
+3.设置永久代理
+在.bashrc文件里面添加如下代码:
+http_proxy=http://yourproxyaddress:proxyport export http_proxy 保存文件,并重新打开终端.
+PS:如果http代理需要认证的话,可以将原来的代码替换为:
+http_proxy=http://username:password@yourproxyaddress:proxyport SOCKS代理 如果你没用http代理,而是用的 shadowsocks 或者 ssh -D 这样的代理,那么你就需要一个转发的软件了,因为apt-get默认是不支持socks代理的,尽管网上有些人将http替换为了socks,那样也是不管用的.
+但是有种方法可以让 apt-get 走 socks 代理的流量, tsocks.
+首先你要安装tsocks.
+sudo apt-get install tsocks 然后在/etc/tsocks.cong的最下面设置好socks代理的服务器以及端口号.
+然后就可以使用代理了,具体操作如下:
+$ sudo -s # tsocks apt-get dist-upgrade # exit $ 或者这样:
+$ sudo -s # . tsocks -on # apt-get dist-upgrade # .'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/syntax-for-socks-proxy-in-apt-conf/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='ubuntu'><meta property='article:published_time' content='2015-03-14T00:00:00Z'/><meta property='article:modified_time' content='2015-03-14T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>syntax-for-SOCKS-proxy-in-apt-conf • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/syntax-for-socks-proxy-in-apt-conf/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/posts'>Posts</a>
+    </li>
+  <li>
+      <a href='/tags'>Tags</a>
+    </li>
+  <li>
+      <a href='/about'>About</a>
+    </li>
+  <li>
+      <a href='/links'>Links</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>syntax-for-SOCKS-proxy-in-apt-conf</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2015-03-14T00:00:00Z'>2015, Mar 14</time>
+</span>
+
+  
+  
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>在ubuntu下更新软件的时候,经常会遇到网络连接失败的情况,其实并不是服务器的问题,而是GFW在捣鬼,所以,我们不得不给apt-get加上一个代理,使其更新的时候可以通过代理访问.</p>
+
+<h3 id="http代理">HTTP代理</h3>
+
+<p>1.在<strong>/etc/apt/apt.conf</strong>里面添加如下代码:</p>
+
+<pre>Acquire::http::Proxy "http://yourproxyaddress:proxyport";</pre>
+
+<p>再进行apt-get操作的时候就会通过代理访问目标服务器.</p>
+
+<p>2.设置临时代理</p>
+
+<p>切换root用户,在bash中输入:
+<pre>export http_proxy=<a href="http://yourproxyaddress:proxyport" target="_blank">http://yourproxyaddress:proxyport</a></pre></p>
+
+<p>如果要使用<strong>sudo apt-get</strong>的话,你需要在<strong>/etc/sudoers</strong>里面添加:
+<pre>Defaults env_keep = &ldquo;http_proxy https_proxy ftp_proxy&rdquo;</pre></p>
+
+<p>这样会在你sudo运行命令的时候保持原来的代理,不会因为切换了root用户而改变环境变量.</p>
+
+<p>3.设置永久代理</p>
+
+<p>在<strong>.bashrc</strong>文件里面添加如下代码:</p>
+
+<pre>http_proxy=http://yourproxyaddress:proxyport
+export http_proxy</pre>
+
+<p>保存文件,并重新打开终端.</p>
+
+<p>PS:如果http代理需要认证的话,可以将原来的代码替换为:</p>
+
+<pre>http_proxy=http://username:password@yourproxyaddress:proxyport</pre>
+
+<h3 id="socks代理">SOCKS代理</h3>
+
+<p>如果你没用http代理,而是用的 shadowsocks 或者 ssh -D 这样的代理,那么你就需要一个转发的软件了,因为apt-get默认是不支持socks代理的,尽管网上有些人将http替换为了socks,那样也是不管用的.</p>
+
+<p>但是有种方法可以让 apt-get 走 socks 代理的流量, tsocks.</p>
+
+<p>首先你要安装tsocks.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo apt-get install tsocks</pre></div>
+<p>然后在<strong>/etc/tsocks.cong</strong>的最下面设置好socks代理的服务器以及端口号.</p>
+
+<p>然后就可以使用代理了,具体操作如下:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ sudo -s
+# tsocks apt-get dist-upgrade
+# exit
+$</pre></div>
+<p>或者这样:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ sudo -s
+# . tsocks -on
+# apt-get dist-upgrade
+# . tsocks -off # not really necessary, given the exit
+# exit
+$</pre></div>
+<p>或者更简单点:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ sudo tsocks apt-get dist-upgrade</pre></div>
+<p>参考资料:
+<a href="http://askubuntu.com/questions/35223/syntax-for-socks-proxy-in-apt-conf" target="_blank">http://askubuntu.com/questions/35223/syntax-for-socks-proxy-in-apt-conf</a></p>
+
+<p><a href="https://help.ubuntu.com/community/AptGet/Howto#Part:Setting" target="_blank">https://help.ubuntu.com/community/AptGet/Howto#Part:Setting</a> up apt-get to use a http-proxy</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/ubuntu'>Ubuntu</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/posts/vps%E6%80%BB%E7%BB%93/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>VPS总结</a>
+    </div><div class='next-entry'>
+      <a href='/posts/nginx-file-not-found-%E9%94%99%E8%AF%AF/'>
+        <span class='screen-reader'>Next post: </span>Nginx File not found 错误<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+      Host with github | Build with Hugo | Theme by Minimo &copy; 2015-2017 wrfly 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

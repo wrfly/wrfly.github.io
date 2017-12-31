@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='引子 前几天重装metasploit的时候，有几个端口一直被占用，记得以前有个命令是 可以根据端口号来确定进程号的，搜了一下，原来是fuser命令。
+fuser - identify processes using files or sockets.
+根据占用的文件或者socket来确定进程。好东西啊。
+fuser-几个常用的命令  fuser 8080/tcp 打印占用8080端口的进程 fuser /etc/passwd 打印占用/etc/passwd的进程 fuser -k 8080/tcp 杀死占用8080端口的进程  下面是来自thegeekstuff的关于fuser的一些介绍和技巧。To share and mark.
+文件或目录 $fuser . /home/mr/test: 13965c 可以看到进程ID后面跟了一个字母&rsquo;c&rsquo;，这个&rsquo;c&rsquo;其实是一个标识符，表示 这个进程把此目录作为他的当前目录。类似的还有：
+   参数 意义     c 当前目录   e 可执行文件正在运行   f 进程正在打开文件，默认省略   F 进程正在打开文件往里写入，默认省略   r 进程的根目录   m 内存映射，或者共享库    具体可以加上-v查看ACCESS详情，但是我感觉用处不大。另外-v还可以查看运行进程的用户是谁，运行的命令是什么， 这个还是很有用的。'>
+
+<meta property='og:title' content='fuser命令和lsof命令 • wrfly&#39;s blog'>
+<meta property='og:description' content='引子 前几天重装metasploit的时候，有几个端口一直被占用，记得以前有个命令是 可以根据端口号来确定进程号的，搜了一下，原来是fuser命令。
+fuser - identify processes using files or sockets.
+根据占用的文件或者socket来确定进程。好东西啊。
+fuser-几个常用的命令  fuser 8080/tcp 打印占用8080端口的进程 fuser /etc/passwd 打印占用/etc/passwd的进程 fuser -k 8080/tcp 杀死占用8080端口的进程  下面是来自thegeekstuff的关于fuser的一些介绍和技巧。To share and mark.
+文件或目录 $fuser . /home/mr/test: 13965c 可以看到进程ID后面跟了一个字母&rsquo;c&rsquo;，这个&rsquo;c&rsquo;其实是一个标识符，表示 这个进程把此目录作为他的当前目录。类似的还有：
+   参数 意义     c 当前目录   e 可执行文件正在运行   f 进程正在打开文件，默认省略   F 进程正在打开文件往里写入，默认省略   r 进程的根目录   m 内存映射，或者共享库    具体可以加上-v查看ACCESS详情，但是我感觉用处不大。另外-v还可以查看运行进程的用户是谁，运行的命令是什么， 这个还是很有用的。'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/fuser%E5%91%BD%E4%BB%A4%E5%92%8Clsof%E5%91%BD%E4%BB%A4/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='linux'><meta property='article:tag' content='command'><meta property='article:published_time' content='2015-08-08T00:00:00Z'/><meta property='article:modified_time' content='2015-08-08T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>fuser命令和lsof命令 • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/fuser%E5%91%BD%E4%BB%A4%E5%92%8Clsof%E5%91%BD%E4%BB%A4/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/posts'>Posts</a>
+    </li>
+  <li>
+      <a href='/tags'>Tags</a>
+    </li>
+  <li>
+      <a href='/about'>About</a>
+    </li>
+  <li>
+      <a href='/links'>Links</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>fuser命令和lsof命令</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2015-08-08T00:00:00Z'>2015, Aug 08</time>
+</span>
+
+  
+  
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<h2 id="引子">引子</h2>
+
+<p>前几天重装metasploit的时候，有几个端口一直被占用，记得以前有个命令是
+可以根据端口号来确定进程号的，搜了一下，原来是fuser命令。</p>
+
+<p>fuser - identify processes using files or sockets.</p>
+
+<p>根据占用的文件或者socket来确定进程。好东西啊。</p>
+
+<h2 id="fuser-几个常用的命令">fuser-几个常用的命令</h2>
+
+<ul>
+<li>fuser 8080/tcp  打印占用8080端口的进程</li>
+<li>fuser /etc/passwd 打印占用/etc/passwd的进程</li>
+<li>fuser -k 8080/tcp 杀死占用8080端口的进程</li>
+</ul>
+
+<p>下面是来自<a href="http://www.thegeekstuff.com/2012/02/linux-fuser-command/" target="_blank">thegeekstuff</a>的关于fuser的一些介绍和技巧。To share and mark.</p>
+
+<h4 id="文件或目录">文件或目录</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$fuser .
+/home/mr/test:       13965c</code></pre></div>
+<p>可以看到进程ID后面跟了一个字母&rsquo;c&rsquo;，这个&rsquo;c&rsquo;其实是一个标识符，表示
+这个进程把此目录作为他的当前目录。类似的还有：</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">意义</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">c</td>
+<td align="left">当前目录</td>
+</tr>
+
+<tr>
+<td align="left">e</td>
+<td align="left">可执行文件正在运行</td>
+</tr>
+
+<tr>
+<td align="left">f</td>
+<td align="left">进程正在打开文件，默认省略</td>
+</tr>
+
+<tr>
+<td align="left">F</td>
+<td align="left">进程正在打开文件往里写入，默认省略</td>
+</tr>
+
+<tr>
+<td align="left">r</td>
+<td align="left">进程的根目录</td>
+</tr>
+
+<tr>
+<td align="left">m</td>
+<td align="left"><a href="https://en.wikipedia.org/wiki/Mmap" target="_blank">内存映射</a>，或者共享库</td>
+</tr>
+</tbody>
+</table>
+
+<p>具体可以加上<strong>-v</strong>查看ACCESS详情，但是我感觉用处不大。另外<strong>-v</strong>还可以查看运行进程的用户是谁，运行的命令是什么，
+这个还是很有用的。</p>
+
+<p>给几个详细的例子：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$fuser /bin/bash
+$fuser -v /bin/cat
+$fuser -v /</code></pre></div>
+<h4 id="tcp-udp套接字">TCP/UDP套接字</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$nc -lp <span style="color:#ae81ff">8080</span>
+$fuser -vn tcp <span style="color:#ae81ff">8080</span> 或者 $fuser -v <span style="color:#ae81ff">8080</span>/tcp</code></pre></div>
+<p>正如开头所言，打印出了占用8080端口的进程号。但是有一个问题我还是不明白，nginx运行在80端口，
+但是用这个方法却检测不到nginx的进程ID，数据库也是同理，<code>$fuser -vn tcp 3306</code>并没有mysql的身影。
+很是困惑。</p>
+
+<h4 id="kill掉相关进程">kill掉相关进程</h4>
+
+<p>如果一个文件被某一个进程打开了，但是你却不知道这个进程是什么，那么查看的方法就是
+<code>fuser -v file_name</code>，如果需要kill掉这个进程，那么你可以<code>kill PID</code>，但是，fuser给了我们更
+简单的方法<strong>-k</strong>参数。上面的两步操作可以直接合并成为一个操作<code>fuser -k file_name</code> 或者 <code>fuser -k 8080/tcp</code>
+如此即可把乱七八糟的进程搞定。</p>
+
+<p>另外 <strong>-i</strong> 参数还可以交互进行kill操作，防止误杀。</p>
+
+<h2 id="lsof-几个常用的命令">lsof-几个常用的命令</h2>
+
+<p>via <a href="http://www.thegeekstuff.com/2012/08/lsof-command-examples/" target="_blank">thegeekstuff</a></p>
+
+<ul>
+<li><p><code>lsof</code>
+list all open files.
+很凶，一般都在后面加参数，因为直接敲并没有什么实际用处。</p></li>
+
+<li><p><code>lsof /bin/bash</code></p></li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">lsof /bin/bash
+COMMAND   PID USER  FD   TYPE DEVICE SIZE/OFF    NODE NAME
+bash    <span style="color:#ae81ff">21568</span>   mr txt    REG  <span style="color:#ae81ff">252</span>,1  <span style="color:#ae81ff">1021112</span> <span style="color:#ae81ff">6291459</span> /bin/bash</code></pre></div>
+<p>后面跟着一些选项，<strong>FD</strong>(file descriptor)，文件描述标志，一般有cwd（当前工作目录），txt（文本文件），mem（内存映射文件），mmap（内存映射设备），还有一种情况：
+&gt; NUMBER – Represent the actual file descriptor. The character after the number i.e ‘1u’, represents the mode in which the file is opened. r for read, w for write, u for read and write.</p>
+
+<p>我没见过这种文件，所以也不好说是啥。</p>
+
+<p><strong>TYPE</strong>(文件的类型)：REG = 一般文件； DIR = 目录文件； FIFO = 管道文件； CHR = 特殊字符文件（这个我也不知道是个啥文件，可能是其他字符集的文件？）；</p>
+
+<ul>
+<li><p><code>lsof +D /var/log/</code>
+列出在 /var/log 目录下打开的文件，其实不用加 <strong>+D</strong> 也可以，只是只能列出此目录下的文件，而不会递归的列出目录中的目录中的文件，那篇帖子里说 <strong>+D</strong> 和 <strong>+d</strong> 是不一样的， D 可以递归地列出目录中的文件，d则不能，但是我在实验过程中，D和d的结果是一样的，不知道什么原因，man手册里也是说D会根据文件树来列出文件，但是我这里就是实验不出差别。。。</p></li>
+
+<li><p><code>lsof -c init</code>
+根据进程的名字列出文件，上面这条语句是列出了所有以ssh开头的文件，另外，<strong>-c</strong>可以这样用：<code>ls-f -c ssh -c bash -c gnome</code></p></li>
+
+<li><p><code>ls /media/xx/xxx</code>
+当我们卸载某个设备的时候，有时候会遇到“Device or Resource Busy”这样的错误，那怎么办呢？</p></li>
+</ul>
+
+<p>用上面这条命令就可以显示出那些进程正在使用你的设备，xx和xxx是你的设备目录，找到这些进程，然后把他们杀掉。（其实这一条只是lsof的另一种用法罢了，额，不过话又说回来，哪条不是呢……）</p>
+
+<ul>
+<li><p><code>lsof -u root</code>
+列出某个用户打开的文件。这条语句支持 <strong>^</strong> 即‘非’ ，表示除这个用户以外的其他用户打开的文件。</p></li>
+
+<li><p><code>lsof -p 1753</code>
+列出这个进程打开的所有文件。</p></li>
+
+<li><p><code>kill -9 `lsof -t -u username`</code>
+对，就是杀掉这个用户的所有进程。（<strong>-t</strong>表示只显示进程号）</p></li>
+
+<li><p><code>lsof -u root -t -c init</code>
+把参数组合起来用。（作者在这里写上这一条，可能是给我们提个醒，比如今天晚上我遇到的<code>egerp &quot;html|png|jepg|txt&quot;</code>，打脸……）</p></li>
+
+<li><p><code>lsof -u root -r 5</code>
+lsof支持重复输出，就是每个一段时间输出结果，上一条命令表示，每过五秒就输出<code>lsof -u root</code>的结果，这对于一个写监控程序来说，是一个不错的选择。（智商不要短路哦，要记得组合参数哦，不要学我哦 :( ）</p></li>
+
+<li><p><code>lsof -i</code>
+网络相关：列出全部的网络连接，很好用哦～ <strong>-i4</strong> <strong>-i6</strong> 指定ipv4还是ipv6.</p></li>
+
+<li><p><code>lsof -i -a -p 234</code> || <code>lsof -i -a -c ssh</code>
+<strong>-a</strong> 代表逻辑操作符 “与” ，既……又……</p></li>
+</ul>
+
+<p>第一条指令是说，列出pid为234的网络连接，第二条是说，列出进程的名字开始为“ssh”的网络连接。</p>
+
+<ul>
+<li><p><code>lsof -i :25</code>
+Duang！ 列出在25端口的所有连接，很简洁，很厉害！</p></li>
+
+<li><p><code>lsof -i tcp -a -i udp</code>
+列出所有的tcp连接和udp连接，当然了，两者是可以分开的，聪明的你一定知道怎样做吧～</p></li>
+
+<li><p><code>lsof -N</code>
+列出所有的NFS(Network File System)文件，嗯……我不知道怎样形容这些文件，反正好多好多。。</p></li>
+</ul>
+
+<h2 id="ok-就到这里了">OK，就到这里了。</h2>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/linux'>Linux</a>, <a class='tag' href='/tags/command'>Command</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/posts/%E8%81%8A%E4%B8%80%E8%81%8A%E8%BD%AC%E7%A0%81/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>聊一聊转码</a>
+    </div><div class='next-entry'>
+      <a href='/posts/%E5%A6%82%E4%BD%95%E8%83%8C%E7%A8%8B%E5%BA%8F/'>
+        <span class='screen-reader'>Next post: </span>如何背程序<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+      Host with github | Build with Hugo | Theme by Minimo &copy; 2015-2017 wrfly 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

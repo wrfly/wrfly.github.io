@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='概览 先来给出几个定义，什么是cookie，session 和验证码。
+Cookie:  Cookie（复数形态Cookies），中文名称为“小型文本文件”或“小甜饼”，指某些网站为了辨别用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。
+ Session(php):  一个访问者访问你的 web 网站将被分配一个唯一的 id, 就是所谓的会话 id. 这个 id 可以存储在用户端的一个 cookie 中，也可以通过 URL 进行传递.
+ 验证码：  全自动区分计算机和人类的公开图灵测试（英语：Completely Automated Public Turing test to tell Computers and Humans Apart，简称CAPTCHA），俗称验证码，是一种区分用户是计算机或人的公共全自动程序。在CAPTCHA测试中，作为服务器的计算机会自动生成一个问题由用户来解答。这个问题可以由计算机生成并评判，但是必须只有人类才能解答。由于计算机无法解答CAPTCHA的问题，所以回答出问题的用户就可以被认为是人类。
+ 简单地说, cookie和session是用来识别用户身份的数据, cookie又可以分为保存在内存中的和保存在硬盘中的cookie, 保存在内存中的cookie在标签页关闭的时候会自动销毁, 而如果设定了cookie的过期时间, 那么cookie则会保存在硬盘中一段时间. 而且在同一浏览器中, cookie是可以共享的.
+cookie的格式:
+Set-Cookie:键1=值1;键2=值2;过期时间;作用域;作用路径;[secure]
+作用域和作用路径是用来区分cookie的, 过期时间是告诉浏览器这个cookie在什么时候过期; 而 secure 标志则是当一个请求通过 SSL 或 HTTPS 创建时，包含 secure 选项的 cookie 才能被发送至服务器.
+服务器端通过用户提供的cookie确认用户身份, 这就造成一个问题, 如果我知道你的cookie, 在cookie未过期的情况下, 那么我就可以伪造你, 而且一些敏感信息如果存放在cookie里, 就有可能通过一定的技术手段得到那些敏感信息. 因为cookie的存在是单向的. 而HTTP协议又是无状态的.'>
+
+<meta property='og:title' content='cookies-session-and-验证码 • wrfly&#39;s blog'>
+<meta property='og:description' content='概览 先来给出几个定义，什么是cookie，session 和验证码。
+Cookie:  Cookie（复数形态Cookies），中文名称为“小型文本文件”或“小甜饼”，指某些网站为了辨别用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。
+ Session(php):  一个访问者访问你的 web 网站将被分配一个唯一的 id, 就是所谓的会话 id. 这个 id 可以存储在用户端的一个 cookie 中，也可以通过 URL 进行传递.
+ 验证码：  全自动区分计算机和人类的公开图灵测试（英语：Completely Automated Public Turing test to tell Computers and Humans Apart，简称CAPTCHA），俗称验证码，是一种区分用户是计算机或人的公共全自动程序。在CAPTCHA测试中，作为服务器的计算机会自动生成一个问题由用户来解答。这个问题可以由计算机生成并评判，但是必须只有人类才能解答。由于计算机无法解答CAPTCHA的问题，所以回答出问题的用户就可以被认为是人类。
+ 简单地说, cookie和session是用来识别用户身份的数据, cookie又可以分为保存在内存中的和保存在硬盘中的cookie, 保存在内存中的cookie在标签页关闭的时候会自动销毁, 而如果设定了cookie的过期时间, 那么cookie则会保存在硬盘中一段时间. 而且在同一浏览器中, cookie是可以共享的.
+cookie的格式:
+Set-Cookie:键1=值1;键2=值2;过期时间;作用域;作用路径;[secure]
+作用域和作用路径是用来区分cookie的, 过期时间是告诉浏览器这个cookie在什么时候过期; 而 secure 标志则是当一个请求通过 SSL 或 HTTPS 创建时，包含 secure 选项的 cookie 才能被发送至服务器.
+服务器端通过用户提供的cookie确认用户身份, 这就造成一个问题, 如果我知道你的cookie, 在cookie未过期的情况下, 那么我就可以伪造你, 而且一些敏感信息如果存放在cookie里, 就有可能通过一定的技术手段得到那些敏感信息. 因为cookie的存在是单向的. 而HTTP协议又是无状态的.'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/2016-4-13-cookies-session-and-%E9%AA%8C%E8%AF%81%E7%A0%81/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='share'><meta property='article:published_time' content='2016-04-13T00:00:00Z'/><meta property='article:modified_time' content='2016-04-13T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>cookies-session-and-验证码 • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/2016-4-13-cookies-session-and-%E9%AA%8C%E8%AF%81%E7%A0%81/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/posts'>Posts</a>
+    </li>
+  <li>
+      <a href='/tags'>Tags</a>
+    </li>
+  <li>
+      <a href='/about'>About</a>
+    </li>
+  <li>
+      <a href='/links'>Links</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>cookies-session-and-验证码</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2016-04-13T00:00:00Z'>2016, Apr 13</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+2 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<h2 id="概览">概览</h2>
+
+<p>先来给出几个定义，什么是<a href="https://zh.wikipedia.org/zh-cn/Cookie" target="_blank">cookie</a>，<a href="http://php.net/manual/zh/intro.session.php" target="_blank">session</a>   和<a href="https://zh.wikipedia.org/zh-cn/%E9%AA%8C%E8%AF%81%E7%A0%81" target="_blank">验证码</a>。</p>
+
+<h3 id="cookie">Cookie:</h3>
+
+<blockquote>
+<p>Cookie（复数形态Cookies），中文名称为“小型文本文件”或“小甜饼”，指某些网站为了辨别用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。</p>
+</blockquote>
+
+<h3 id="session-php">Session(php):</h3>
+
+<blockquote>
+<p>一个访问者访问你的 web 网站将被分配一个唯一的 id, 就是所谓的会话 id. 这个 id 可以存储在用户端的一个 cookie 中，也可以通过 URL 进行传递.</p>
+</blockquote>
+
+<h3 id="验证码">验证码：</h3>
+
+<blockquote>
+<p>全自动区分计算机和人类的公开图灵测试（英语：Completely Automated Public Turing test to tell Computers and Humans Apart，简称CAPTCHA），俗称验证码，是一种区分用户是计算机或人的公共全自动程序。在CAPTCHA测试中，作为服务器的计算机会自动生成一个问题由用户来解答。这个问题可以由计算机生成并评判，但是必须只有人类才能解答。由于计算机无法解答CAPTCHA的问题，所以回答出问题的用户就可以被认为是人类。</p>
+</blockquote>
+
+<p>简单地说, cookie和session是用来识别用户身份的数据, cookie又可以分为保存在内存中的和保存在硬盘中的cookie, 保存在内存中的cookie在标签页关闭的时候会自动销毁, 而如果设定了cookie的过期时间, 那么cookie则会保存在硬盘中一段时间. 而且在同一浏览器中, cookie是可以共享的.</p>
+
+<p>cookie的格式:</p>
+
+<p>Set-Cookie:键1=值1;键2=值2;过期时间;作用域;作用路径;[secure]</p>
+
+<p>作用域和作用路径是用来区分cookie的, 过期时间是告诉浏览器这个cookie在什么时候过期; 而 secure 标志则是当一个请求通过 SSL 或 HTTPS 创建时，包含 secure 选项的 cookie 才能被发送至服务器.</p>
+
+<p>服务器端通过用户提供的cookie确认用户身份, 这就造成一个问题,  如果我知道你的cookie, 在cookie未过期的情况下, 那么我就可以伪造你, 而且一些敏感信息如果存放在cookie里, 就有可能通过一定的技术手段得到那些敏感信息. 因为cookie的存在是单向的. 而HTTP协议又是无状态的.</p>
+
+<p>引入了session解决的也是HTTP协议无状态的问题, 不过他比浏览器cookie的好的地方在于, session在用户端只有一个值, 服务器    端存放着确认用户的信息, 理论上讲, 我如果知道了某个人的session, 则也可以伪造这个人, 不过我获取不到那些敏感信息. 比如cookie里存放着用户的密码的md5, 或着用户名, 或者id, 或者乱七八糟的东西. 其实session的存在也是借助于cookie的, 不过区别是原本的浏览器存放数据, 变成了服务器存放数据.</p>
+
+<p>session在php里可以通过<code>session_start()</code>函数生成, 生成的文件一般存放在<code>/var/lib/php5/sessions</code>里面, 这个文件夹可以从<code>phpinfo()</code>(session.savepath)中找到.</p>
+
+<h2 id="验证码验证流程">验证码验证流程</h2>
+
+<ol>
+<li>生成</li>
+</ol>
+
+<p>生成验证码的开源库已经有不少了, 我们没有必要自己造新的轮子.
+这里我用的是Gautam kumar写的<a href="http://www.w3schools.in/php/captcha/" target="_blank">phptext</a>.</p>
+
+<ol>
+<li>验证</li>
+</ol>
+
+<p>2.1 表单
+这是一个index.php文件:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#75715e">&lt;!DOCTYPE html&gt;</span>
+&lt;<span style="color:#f92672">html</span>&gt;
+&lt;<span style="color:#f92672">head</span>&gt;
+	&lt;<span style="color:#f92672">title:</span> <span style="color:#a6e22e">cookies-session-and-验证码</span>
+<span style="color:#960050;background-color:#1e0010">&lt;/</span><span style="color:#a6e22e">head</span>&gt;
+&lt;<span style="color:#f92672">body</span>&gt;
+&lt;<span style="color:#f92672">form</span> <span style="color:#a6e22e">action</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;check.php&#34;</span> <span style="color:#a6e22e">method</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;POST&#34;</span>&gt;
+	&lt;<span style="color:#f92672">img</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;captcha.php?rand=&lt;?php echo rand();?&gt;&#34;</span>&gt;
+	&lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text&#34;</span> <span style="color:#a6e22e">style</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;display:inline;width:11%&#34;</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;captcha_code&#34;</span> <span style="color:#a6e22e">placeholder</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;验证码&#34;</span>/&gt;
+&lt;/<span style="color:#f92672">form</span>&gt;
+&lt;/<span style="color:#f92672">body</span>&gt;
+&lt;/<span style="color:#f92672">html</span>&gt;</code></pre></div>
+<p>然后, check.php里的是:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+<span style="color:#75715e">//phpcaptcha
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">session_start</span>();
+<span style="color:#75715e">// code for check server side validation
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span>(<span style="color:#66d9ef">empty</span>($_SESSION[<span style="color:#e6db74">&#39;captcha_code&#39;</span>] ) <span style="color:#f92672">||</span> <span style="color:#a6e22e">strcasecmp</span>($_SESSION[<span style="color:#e6db74">&#39;captcha_code&#39;</span>], $_POST[<span style="color:#e6db74">&#39;captcha_code&#39;</span>]) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>){  
+	<span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;Wrong&#34;</span>;
+}<span style="color:#66d9ef">else</span> {
+	<span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;Success&#34;</span>;
+}
+<span style="color:#75715e">?&gt;</span></code></pre></div>
+<p>我本地的文件也打包放在这里了-&gt;<a href="../../file/phpcaptcha.zip">代码文件</a></p>
+
+<p>2.2 过程</p>
+
+<p>打开主页面会有验证码和输入框:</p>
+
+<p><img src="../../img/s/pcaptcha/p-1.png" alt="初始状态" /></p>
+
+<p>然后我们故意输入一个错误的验证码提交过去:</p>
+
+<p><img src="../../img/s/pcaptcha/p-2.png" alt="验证错误" /></p>
+
+<p>输入正确的验证码:</p>
+
+<p><img src="../../img/s/pcaptcha/p-3.png" alt="验证正确" /></p>
+
+<p>大体流程就是这样.</p>
+
+<ol>
+<li>分析</li>
+</ol>
+
+<p>为什么会这样呢?</p>
+
+<p>首先我们看到, 在<code>captcha.php</code>里面:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+	<span style="color:#a6e22e">session_start</span>();
+	<span style="color:#66d9ef">include</span>(<span style="color:#e6db74">&#34;./phptextClass.php&#34;</span>);	
+	
+	<span style="color:#75715e">/*create class object*/</span>
+	$phptextObj <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">phptextClass</span>();	
+	<span style="color:#75715e">/*phptext function to genrate image with text*/</span>
+	$phptextObj<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">phpcaptcha</span>(<span style="color:#e6db74">&#39;#162453&#39;</span>,<span style="color:#e6db74">&#39;#fff&#39;</span>,<span style="color:#ae81ff">120</span>,<span style="color:#ae81ff">40</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">10</span>);	
+ <span style="color:#75715e">?&gt;</span></code></pre></div>
+<p>开启了一个session, 然后服务器就会分给我们一个唯一的php session, 并且会在<code>/var/lib/php5/sessions</code>文件夹下创建一个session文件. 在追查类文件, 会发现这样一段代码:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">if(isset($_SESSION)){
+	$_SESSION[&#39;captcha_code&#39;] = $text;/* set random text in session for captcha validation*/
+}</code></pre></div>
+<p>这样就在session文件里写入了captcha_code,内容为验证码:</p>
+
+<p><img src="../../img/s/pcaptcha/pcaptcha.png" alt="captcha" /></p>
+
+<p>然后当你输入验证码的时候, check.php 就会比较你输入的验证码和服务器中你对应的session文件存放的验证码, 如果相同, 则返回成功, 否则返回错误.</p>
+
+<h2 id="破解">破解</h2>
+
+<p>对于上述的验证码, 破解的办法无非就是识别图形中的文字. 上一篇文章中提到过识别验证码的方法, 在这里就不多说了.</p>
+
+<p>需要提的是, 有一些古老的站点还在用数字或者字母的文字验证码, 不是图片的那种的, 可以说一点安全性都没有&hellip; 直接抓出来就好了&hellip;</p>
+
+<p>还有的是在服务端存放了一些验证码的图片, 把他们都抓出来然后基于哈希表就可以搞定. 在<a href="http://downloads.kfd.me/downloads/web_for_pentester_II.iso" target="_blank">这个镜像</a>里有一些验证码的题目, 感兴趣的可以做一下, 里面不仅仅是验证码呢~</p>
+
+<h2 id="其他">其他</h2>
+
+<p>除了上述这种最基本的验证码, 还有一些别的验证码,  比入基于行为的验证码, 让鼠标点几下, 或者拖动滑块的验证码. 对于这些验证码, 就没有什么很好的破解方法了, 除非模拟鼠标的动作, 还要点击拖动, 判断图片的正确位置, 好像挺麻烦的&hellip;</p>
+
+<h2 id="参考文章">参考文章:</h2>
+
+<ul>
+<li><a href="http://bubkoo.com/2014/04/21/http-cookies-explained/" target="_blank">http://bubkoo.com/2014/04/21/http-cookies-explained/</a></li>
+<li><a href="https://www.pureweber.com/article/how-session-works/" target="_blank">https://www.pureweber.com/article/how-session-works/</a></li>
+</ul>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/share'>Share</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/posts/2016-4-10-%E6%95%B0%E5%AD%97%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>数字验证码识别</a>
+    </div><div class='next-entry'>
+      <a href='/posts/2016-4-27-ubuntu%E4%B8%8B%E6%9B%B4%E6%94%B9%E7%BD%91%E5%8D%A1%E5%90%8D%E5%AD%97%E4%BB%A5%E5%8F%8Apppoe%E9%85%8D%E7%BD%AEipv6/'>
+        <span class='screen-reader'>Next post: </span>Ubuntu下更改网卡名字以及pppoe配置IPv6<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+      Host with github | &copy; 2015-2017 wrfly | theme by minimo
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

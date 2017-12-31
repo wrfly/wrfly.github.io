@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Shell on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/shell/</link>
+    <description>Recent content in Shell on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 07 Jul 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/shell/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Bash and NC chat room</title>
+      <link>https://wrfly.kfd.me/posts/bash-and-nc-chat-room/</link>
+      <pubDate>Tue, 07 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/bash-and-nc-chat-room/</guid>
+      <description>代码 https://gist.github.com/wrfly/3cafd411dc42822a9b16
+效果 ![nchat-1/img/nchat/1.png)
+![nchat-2/img/nchat/2.png)
+![nchat-3/img/nchat/3.png)
+介绍 一开始是为了计算机网络的大作业，说是要写一个聊天软件，要用socket，但是我C学的不好，觉得要是让我写C代码，至少得一周才能吃透，所以就想了个懒办法，Bash和Ncat。
+一开始的思路是让nc建立连接，通过echo输出，read读取，但是这样只能局限于NC那个界面，而且用户之间并没有标识，negative。
+期间接触了一点点bash网络编程的相关知识，比如exec 3&amp;lt;&amp;gt; /dev/tcp/127.0.0.1/80和echo &amp;quot;balabala&amp;quot; 1&amp;gt;&amp;amp;3和cat &amp;lt;&amp;amp;3
+A$ ncat -lp 8080 B$ exec 3&amp;lt;&amp;gt; /dev/tcp/127.0.0.1/80 B$ echo &amp;#34;balabala&amp;#34; 1&amp;gt;&amp;amp;3 B$ cat &amp;lt;&amp;amp;3 通过这种方式来绑定端口或者向端口IO
+信息加密解密方法：
+en(){ echo $1|openssl aes-256-cbc -k pass -e |openssl aes-256-cbc -k pass -d; } 这个小函数是用来测试加密解密的。
+然后说下脚本的思路：
+ 登陆，确定用户身份，用户名长度要过滤，防止恶意输入 房间选择，也要过滤，因为是要创建一个新的文档，所以必须过滤掉&amp;rdquo;. / \&amp;ldquo;等一系列特殊字符，默认是public房间，即所有用户输入输出均在public文件中。 消息IO，这个是聊天的核心，但是实现起来并不是很难，tail -f一直检测文件变化，因为所有的用户输入都保存到了“chat_room”这个文件里，当有新用户发言的时候所有同一房间下的用户都会收到消息，相当于群聊。如果是想两个人聊天，就可以两个人新建一个聊天室，也就相当于一对一的聊天了。 数据包格式，这个好弄，时间，用户名，消息数据。 安全性。远程的安全性永远的不到保障，所以只能在客户端解决。Wait~ 扩展：文件传输，表情包，tmux扩展，发送图片（asciiview）  问题  进程间通信，用tail读取文件 父进程退出之后，子进程不退出（tail -f &amp;ndash;pid $$） kill 命令用法 命令行输出颜色 （echo -e &amp;ldquo;balabala&amp;rdquo;） $$ 和 $!</description>
+    </item>
+    
+    <item>
+      <title>好玩的Linux命令行_II</title>
+      <link>https://wrfly.kfd.me/posts/%E5%A5%BD%E7%8E%A9%E7%9A%84linux%E5%91%BD%E4%BB%A4%E8%A1%8C_ii/</link>
+      <pubDate>Tue, 09 Jun 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%A5%BD%E7%8E%A9%E7%9A%84linux%E5%91%BD%E4%BB%A4%E8%A1%8C_ii/</guid>
+      <description>这条网站上统计了很多很多好玩有用的命令，感兴趣的同学可以看一下哦！ http://www.commandlinefu.com/commands/browse/sort-by-votes/
+下面这些是我从上面摘抄的，但是也请转载注明出处～
+先装上pv，然后再敲这一条，会把你帅呆了的！
+echo &amp;#34;You can simulate on-screen typing just like in the movies&amp;#34; | pv -qL 10 来，测试一下咱的硬盘有多快：
+timeout 2s yes &amp;#34;hello world!&amp;#34; &amp;gt; big_file &amp;amp; watch du -h big_file 常用的20条命令++
+history | awk &amp;#39;{a[$2]++}END{for(i in a){print a[i] &amp;#34; &amp;#34; i}}&amp;#39; | sort -rn | head 文字版星球大战!!!
+telnet towel.blinkenlights.nl 在终端右上角显示个表
+去tmp目录下逛一圈再回来(小括号代表子shell)
+(cd /tmp &amp;amp;&amp;amp; ls) nc用来传文件：
+nc -v -l 80 &amp;lt; file.ext 更改文件后缀名，把wrfly.png改成wrfly.jpg：
+mv wrfly.{png,jpg} 把命令的输出内容转换成图片，超酷炫：
+ifconfig | convert label:@- ip.</description>
+    </item>
+    
+    <item>
+      <title>linux命令行工具妙用</title>
+      <link>https://wrfly.kfd.me/posts/linux%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E5%A6%99%E7%94%A8/</link>
+      <pubDate>Wed, 13 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E5%A6%99%E7%94%A8/</guid>
+      <description>Fork from:http://mingxinglai.com/cn/2012/08/toos-of-bash/
+前言：虽然现在各种动态脚本语言发展得热火朝天,一片欣欣向荣的景象,而且动态脚本语言如python确实学习成本低,入门快,虽然unix 下各种工具比我们很多人年龄都大,但是我还是相信一些有用的小工具在可预见的时间内不会消失,因为灵活运用它们能够快速解决很多小问题,而且你不大可能写出更短的代码来。
+1. 一行命令算术运算 seq 100 | echo $[ $(tr &amp;#39;\n&amp;#39; &amp;#39;+&amp;#39;) 0] seq 5 3 20 | echo $[ $(tr &amp;#39;\n&amp;#39; &amp;#39;*&amp;#39;) 1] seq 用于产生一组等差的数列,默认首项和公差都是1,所以上面的第一行代码会产生1 －－ 100 的整数,且每个数占一行,使用tr 将换行替换成＋号以后,形成如1+2+......+100+的一行字符串,所以需要在字符串最后加一个0,最后使用echo $[ ]进行算数运算,也可以通过管道使用bc来计算seq 100 | echo $(tr &#39;\n&#39; &#39;+&#39;) 0 | bc。
+2. 100的阶乘末尾有几个零？ 这是计算机专业面试的一个比较有名的题目,正确的解法答案是 n/5 + n/5/5 + n/5/5/5&amp;hellip;&amp;hellip; 下面我们写一行代码来验证一下
+echo {1..100}|tr &amp;#39; &amp;#39; &amp;#39;*&amp;#39;|bc|tr &amp;#39;1-9&amp;#39; &amp;#39;\n&amp;#39;|sort -r| head -1|awk &amp;#39;{print length($0) }&amp;#39; 这里{1..100}属于通配符,例如你要新建100个文件,就可以touch test{1..100}.txt,还可以touch test{a..z}.txt。 算后计算出1乘到100的结果,将结果中非零的数字替换成换行符在1乘到100的结果中,必然是末尾的0最多 所以我们只需要在tr &#39;1-9&#39; &#39;\n&#39;之后,找出最长的那一行就可以了,这里使用的方法是先将结果逆序排序sort -r,然后打印第一行head -,计算出第一行的长度awk &#39;{print length($0)}&#39;。</description>
+    </item>
+    
+    <item>
+      <title>Bash里面的&#34;与&#34;和&#34;或&#34;</title>
+      <link>https://wrfly.kfd.me/posts/bash%E9%87%8C%E9%9D%A2%E7%9A%84%E4%B8%8E%E5%92%8C%E6%88%96/</link>
+      <pubDate>Wed, 29 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/bash%E9%87%8C%E9%9D%A2%E7%9A%84%E4%B8%8E%E5%92%8C%E6%88%96/</guid>
+      <description>First, let&amp;rsquo;s see some interesting codes. There is a test.sh in the directory, and nothing else.
+And&amp;rdquo;|&amp;rdquo;,&amp;rdquo;||&amp;rdquo;,&amp;rdquo;&amp;amp;&amp;amp;&amp;ldquo;,&amp;rdquo;&amp;gt;&amp;ldquo;,&amp;rdquo;$?&amp;rdquo; these symbols can be easily get via google.
+When I type these commands, it&amp;rsquo;s very confused.
+$ ls | grep asda &amp;amp;&amp;amp; echo $? $ ls | grep asda || echo $? 1 $ ls | grep test || echo $? test.sh $ ls | grep test &amp;gt; /dev/null || echo $? $ ls | grep test &amp;gt; /dev/null &amp;amp;&amp;amp; echo $?</description>
+    </item>
+    
+    <item>
+      <title>一些小东西,关于alias</title>
+      <link>https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E5%B0%8F%E4%B8%9C%E8%A5%BF%E5%85%B3%E4%BA%8Ealias/</link>
+      <pubDate>Sat, 11 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E5%B0%8F%E4%B8%9C%E8%A5%BF%E5%85%B3%E4%BA%8Ealias/</guid>
+      <description>alias 是一个设置别名的小工具~
+具体可见维基百科
+但是它只会解析别名, 也就是说, 如果你告诉它, 张三跟张麻子是一个人, 你说张三, 他就知道你说的是张麻子, 但是如果你告诉他张三欠我一块钱, 那他就gg了, 人家并不能理解张麻子欠你一块钱啊. 或许他会说: 等等, 一块钱是什么?
+这里我遇到的问题是如何传递参数进去.
+curl ipinfo.io/8.8.8.8 这条命令是查看 8.8.8.8 的ip所在地, 那么, 如果我设置了
+alias ipadrs=&amp;#39;curl ipinfo.io/$1&amp;#39; 会不会成功?
+当然不会, 因为他不知道, 也无法处理你给他传进去的 ip.
+没有办法么?
+当然不是.
+这里用到的技巧是function命令.
+首先定义一个function hi() #你也可以把这个function去掉, 如果你觉得啰嗦的话,毕竟系统知道这是一个函数而不是好吃的.
+function hi(){ echo &amp;#34;Hello $1!&amp;#34; } 当然啦,你完全可以横着写:
+function hi(){ echo &amp;#34;Hello $1!&amp;#34;;} #你也可以把这个function去掉, 并不像C那样声明一下返回值 然后你在命令行里输入
+hi world 有点意思吧! 我们已经可以把参数传递进去了耶~
+且慢! 如果你关闭了这个窗口, 你就会发现, 为毛行不通了?
+那是必须的, 因为在这个shell中运行的是临时变量, 也就是说没有在文件中保存下来, 毕竟我们没有对文件进行操作啊, 所以呢, 就要把他记录下来, 然后每次运行的时候都会有这个function. 但是话又说回来, 往哪儿写呢?</description>
+    </item>
+    
+    <item>
+      <title>Bash快捷键相关</title>
+      <link>https://wrfly.kfd.me/posts/bash%E5%BF%AB%E6%8D%B7%E9%94%AE%E7%9B%B8%E5%85%B3/</link>
+      <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/bash%E5%BF%AB%E6%8D%B7%E9%94%AE%E7%9B%B8%E5%85%B3/</guid>
+      <description>bash快捷操作
+生活在 Bash shell 中，熟记以下快捷键，将极大的提高你的命令行操作效率。
+编辑命令
+Ctrl + a ：移到命令行首 Ctrl + e ：移到命令行尾 Ctrl + f ：按字符前移（右向） Ctrl + b ：按字符后移（左向） Alt + f ：按单词前移（右向） Alt + b ：按单词后移（左向） Ctrl + xx：在命令行首和光标之间移动 Ctrl + u ：从光标处删除至命令行首 Ctrl + k ：从光标处删除至命令行尾 Ctrl + w ：从光标处删除至字首 Alt + d ：从光标处删除至字尾 Ctrl + d ：删除光标处的字符 Ctrl + h ：删除光标前的字符 Ctrl + y ：粘贴至光标后 Alt + c ：从光标处更改为首字母大写的单词 Alt + u ：从光标处更改为全部大写的单词 Alt + l ：从光标处更改为全部小写的单词 Ctrl + t ：交换光标处和之前的字符 Alt + t ：交换光标处和之前的单词 Alt + Backspace：与 Ctrl + w 类似 重新执行命令</description>
+    </item>
+    
+    <item>
+      <title>一些有用的command</title>
+      <link>https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E6%9C%89%E7%94%A8%E7%9A%84command/</link>
+      <pubDate>Sat, 13 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E6%9C%89%E7%94%A8%E7%9A%84command/</guid>
+      <description>转载 + comments
+!$
+ !$ 代表上一个命令的最后一个字符串
+ 你可能会这样：
+$mkdir mydir $mv mydir yourdir $cd yourdir 可以改成：
+$mkdir mydir $mv !$ yourdir $cd !$  !! 代表上一条命令[与 !-1 等价] !-2 代表倒数第二条命令 !-3 代表倒数第三条命令 以此类推(其实完全可以按方向键搞定啊!!还有Ctrl+P!!)  cd –
+ 回到上一次的目录
+ 场景举例： 当前目录为/home/a，用cd ../b切换到/home/b。这时可以通过反复执行cd –命令在/home/a和/home/b之间来回方便的切换。 （注：cd ~ 是回到自己的Home目录，cd ~user，是进入某个用户的Home目录）详情打开 http://www.grymoire.com/Unix/Quote.html
+ALT+. or &amp;lt;ESC&amp;gt; + .
+ 热建alt+. 或 esc+. 可以把上次命令行的参数给重复出来。[注意,是参数哦~]
+ :w !sudo tee %
+ 在vi中保存一个只有root可以写的文件
+ &amp;gt; file.txt
+ 创建一个空文件，比touch短。(其实就是相当与把空格重定向给了一个文件&amp;hellip;)</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docker on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/docker/</link>
+    <description>Recent content in Docker on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 06 Dec 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>alpine-DNS-problem</title>
+      <link>https://wrfly.kfd.me/posts/alpine-dns-problem/</link>
+      <pubDate>Wed, 06 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/alpine-dns-problem/</guid>
+      <description>Many softwares use alpine as their run-time base image.
+Recently I set up a docker registry with portus as its front. But I came up with a problem that, registry won&amp;rsquo;t post date: 2017-12-06 title: alpine-DNS-problem
+Firstly I thought it was a bug of docker resigtry, but as I&amp;rsquo;m digging into its code, I found that it&amp;rsquo;s actruely a bug of alpine linux. Alpine linux doesn&amp;rsquo;t have an /etc/nsswitch.conf config file.</description>
+    </item>
+    
+  </channel>
+</rss>

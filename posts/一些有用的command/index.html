@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='转载 &#43; comments
+!$
+ !$ 代表上一个命令的最后一个字符串
+ 你可能会这样：
+$mkdir mydir $mv mydir yourdir $cd yourdir 可以改成：
+$mkdir mydir $mv !$ yourdir $cd !$  !! 代表上一条命令[与 !-1 等价] !-2 代表倒数第二条命令 !-3 代表倒数第三条命令 以此类推(其实完全可以按方向键搞定啊!!还有Ctrl&#43;P!!)  cd –
+ 回到上一次的目录
+ 场景举例： 当前目录为/home/a，用cd ../b切换到/home/b。这时可以通过反复执行cd –命令在/home/a和/home/b之间来回方便的切换。 （注：cd ~ 是回到自己的Home目录，cd ~user，是进入某个用户的Home目录）详情打开 http://www.grymoire.com/Unix/Quote.html
+ALT&#43;. or &lt;ESC&gt; &#43; .
+ 热建alt&#43;. 或 esc&#43;. 可以把上次命令行的参数给重复出来。[注意,是参数哦~]
+ :w !sudo tee %
+ 在vi中保存一个只有root可以写的文件
+ &gt; file.txt
+ 创建一个空文件，比touch短。(其实就是相当与把空格重定向给了一个文件&hellip;)'>
+
+<meta property='og:title' content='一些有用的command • wrfly&#39;s blog'>
+<meta property='og:description' content='转载 &#43; comments
+!$
+ !$ 代表上一个命令的最后一个字符串
+ 你可能会这样：
+$mkdir mydir $mv mydir yourdir $cd yourdir 可以改成：
+$mkdir mydir $mv !$ yourdir $cd !$  !! 代表上一条命令[与 !-1 等价] !-2 代表倒数第二条命令 !-3 代表倒数第三条命令 以此类推(其实完全可以按方向键搞定啊!!还有Ctrl&#43;P!!)  cd –
+ 回到上一次的目录
+ 场景举例： 当前目录为/home/a，用cd ../b切换到/home/b。这时可以通过反复执行cd –命令在/home/a和/home/b之间来回方便的切换。 （注：cd ~ 是回到自己的Home目录，cd ~user，是进入某个用户的Home目录）详情打开 http://www.grymoire.com/Unix/Quote.html
+ALT&#43;. or &lt;ESC&gt; &#43; .
+ 热建alt&#43;. 或 esc&#43;. 可以把上次命令行的参数给重复出来。[注意,是参数哦~]
+ :w !sudo tee %
+ 在vi中保存一个只有root可以写的文件
+ &gt; file.txt
+ 创建一个空文件，比touch短。(其实就是相当与把空格重定向给了一个文件&hellip;)'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E6%9C%89%E7%94%A8%E7%9A%84command/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='shell'><meta property='article:published_time' content='2014-12-13T00:00:00Z'/><meta property='article:modified_time' content='2014-12-13T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>一些有用的command • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E6%9C%89%E7%94%A8%E7%9A%84command/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/posts'>Posts</a>
+    </li>
+  <li>
+      <a href='/tags'>Tags</a>
+    </li>
+  <li>
+      <a href='/about'>About</a>
+    </li>
+  <li>
+      <a href='/links'>Links</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>一些有用的command</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2014-12-13T00:00:00Z'>2014, Dec 13</time>
+</span>
+
+  
+  
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  <p>转载 + comments</p>
+
+<p><code>!$</code></p>
+
+<blockquote>
+<p><code>!$</code> 代表上一个命令的最后一个字符串</p>
+</blockquote>
+
+<p>你可能会这样：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$mkdir mydir
+$mv mydir yourdir
+$cd yourdir</code></pre></div>
+<p>可以改成：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$mkdir mydir
+$mv !$ yourdir
+$cd !$</code></pre></div>
+<ul>
+<li><code>!!</code> 代表上一条命令[与 !-1 等价]</li>
+<li><code>!-2</code> 代表倒数第二条命令</li>
+<li><code>!-3</code> 代表倒数第三条命令</li>
+<li>以此类推(其实完全可以按方向键搞定啊!!还有Ctrl+P!!)</li>
+</ul>
+
+<p><code>cd –</code></p>
+
+<blockquote>
+<p>回到上一次的目录</p>
+</blockquote>
+
+<p>场景举例：
+当前目录为<code>/home/a</code>，用<code>cd ../b</code>切换到<code>/home/b</code>。这时可以通过反复执行<code>cd –</code>命令在<code>/home/a</code>和<code>/home/b</code>之间来回方便的切换。
+（注：<code>cd ~</code> 是回到自己的Home目录，<code>cd ~user</code>，是进入某个用户的Home目录）详情打开 <a href="http://www.grymoire.com/Unix/Quote.html" target="_blank">http://www.grymoire.com/Unix/Quote.html</a></p>
+
+<p><code>ALT+.</code> or <code>&lt;ESC&gt; + .</code></p>
+
+<blockquote>
+<p>热建alt+. 或 esc+. 可以把上次命令行的参数给重复出来。[注意,是参数哦~]</p>
+</blockquote>
+
+<p><code>:w !sudo tee %</code></p>
+
+<blockquote>
+<p>在vi中保存一个只有root可以写的文件</p>
+</blockquote>
+
+<p><code>&gt; file.txt</code></p>
+
+<blockquote>
+<p>创建一个空文件，比touch短。(其实就是相当与把空格重定向给了一个文件&hellip;)</p>
+</blockquote>
+
+<p><code>mtr 8.8.8.8</code>
+&gt; mtr命令比traceroute要好,可以实时观测ping值以及丢包率,但是你要事先安装好mtr(sudo apt-get install mtr).</p>
+
+<p><code>在命令行前加空格，该命令不会进入history里</code></p>
+
+<p>(还可以用 history -r 这条命令,目的是不记录本次session的命令内容,关闭tty后history不保存)</p>
+
+<p><code>echo &quot;ls -l&quot; | at midnight</code></p>
+
+<blockquote>
+<p>在某个时间运行某个命令。(详情请看 at 命令[man at])</p>
+</blockquote>
+
+<p><code>curl (这个命令真的很好用, 我经常用 -I 来查看网页头)</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$curl -I wrfly.github.io</code></pre></div>
+<p><code>htop 软件</code></p>
+
+<p>比top更高端一些. (atop, iftop, ntop &hellip;)</p>
+
+<p><code>man ascii</code></p>
+
+<blockquote>
+<p>显示ascii码表。内个,unix下的del和windows下的是不同的,写C的可要注意了~</p>
+</blockquote>
+
+<p><code>netstat –tlnp</code> (ss -ant)</p>
+
+<blockquote>
+<p>列出本机进程监听的端口号。（注：netstat -anop 可以显示侦听在这个端口号的进程）</p>
+</blockquote>
+
+<p><code>ssh user@server bash &lt; /path/to/local/script.sh</code></p>
+
+<blockquote>
+<p>在远程机器上运行一段脚本。这条命令最大的好处就是不用把脚本拷到远程机器上。</p>
+</blockquote>
+
+<p><code>net rpc shutdown -I ipAddressOfWindowsPC -U username%password</code></p>
+
+<blockquote>
+<p>远程关闭一台Windows的机器</p>
+</blockquote>
+
+<p><code>screen -d -m -S some_name &quot;ping my_router&quot;</code></p>
+
+<blockquote>
+<p>后台运行一段不终止的程序，并可以随时查看它的状态。-d -m参数启动&rdquo;分离&rdquo;模式，-S指定了一个session的标识。可以通过-R命令来重新&rdquo;挂载&rdquo;一个标识的session。更多细节请参考screen用法 man screen。</p>
+</blockquote>
+
+<p><code>wget --random-wait -r -p -e robots=off -U mozilla http://www.example.com</code></p>
+
+<blockquote>
+<p>下载整个www.example.com网站。(真的很好用!!!)</p>
+</blockquote>
+
+<p><code>curl ipinfo.io</code></p>
+
+<blockquote>
+<p>查看本机的外网ip地址(ipv4),并且给出ip的物理地址;</p>
+</blockquote>
+
+<p><code>curl ipinfo.io/8.8.8.8</code> 你会得到更多~</p>
+
+<p><code>lsof –i</code></p>
+
+<blockquote>
+<p>实时查看本机网络服务的活动状态。</p>
+</blockquote>
+
+<p><code>python -m SimpleHTTPServer</code>
+&gt; 一句话实现一个HTTP服务，把当前目录设为HTTP服务目录，可以通过<a href="http://localhost:8000访问" target="_blank">http://localhost:8000访问</a> 这也许是这个星球上最简单的HTTP服务器的实现了。
+&gt; python 还有好多实用的module,你可以通过 -m 然后按tab补全看一下所有的module.</p>
+
+<p>最后来一个搞笑的:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">history | <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    awk <span style="color:#e6db74">&#39;{CMD[$2]++;count++;} END { for (a in CMD )print CMD[a] &#34; &#34; CMD[a]/count*100 &#34;% &#34; a }&#39;</span> | <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    grep -v <span style="color:#e6db74">&#34;./&#34;</span> | <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    column -c3 -s <span style="color:#e6db74">&#34; &#34;</span> -t | <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    sort -nr | nl | head -n10</code></pre></div>
+<p>这行脚本能输出你最常用的十条命令，由此甚至可以洞察你是一个什么类型的程序员。</p>
+
+<p>最后还是那句Shell的至理名言： &ldquo;Where there is a shell，there is a way!&rdquo;</p>
+
+<p>本文转自 <a href="http://coolshell.cn/articles/8619.html" target="_blank">http://coolshell.cn/articles/8619.html</a> 半部分有修改.额,关于上面那句至理名言,</p>
+
+<p>我还真没找到出处&hellip;&hellip;.</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/shell'>Shell</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/posts/add-disqus-to-github-blog/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>add disqus to github blog</a>
+    </div><div class='next-entry'>
+      <a href='/posts/php%E5%8F%8D%E4%BB%A3%E7%90%86%E4%BB%A5%E5%8F%8Agoagent-php%E4%BB%A3%E7%90%86/'>
+        <span class='screen-reader'>Next post: </span>php反代理以及goagent php代理<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+      Host with github | Build with Hugo | Theme by Minimo &copy; 2015-2017 wrfly 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

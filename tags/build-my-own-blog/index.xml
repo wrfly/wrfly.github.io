@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Build-my-own-blog on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/build-my-own-blog/</link>
+    <description>Recent content in Build-my-own-blog on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 27 Dec 2014 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/build-my-own-blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Tags in jekyll(github)</title>
+      <link>https://wrfly.kfd.me/posts/tags-in-jekyllgithub/</link>
+      <pubDate>Sat, 27 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/tags-in-jekyllgithub/</guid>
+      <description>This artical helps you how to build Tag page in your own &amp;ldquo;Jekyll&amp;rdquo; blog.
+First, creat a html file in your root directory, put the code in it:
+--- layout: default title: Tags in jekyll(github) permalink: /tag/ --- {## capture tags##} {## for tag in site.tags##} {{ tag[0] }} {## endfor ##} {## endcapture ##} {## assign sortedtags= tags | split:&amp;#39; &amp;#39; | sort ##} {## for tag in sortedtags##} &amp;lt;h3 id=&amp;#34;{{ tag }}&amp;#34;&amp;gt;{{ tag }}&amp;lt;/h3&amp;gt; &amp;lt;ul&amp;gt; {## for post date: 2014-12-27 title: Tags in jekyll(github) &amp;lt;li&amp;gt;&amp;lt;a href=&amp;#34;{{ post date: 2014-12-27 title: Tags in jekyll(github) {## endfor ##} &amp;lt;/ul&amp;gt; {## endfor ##} Then, in your post date: 2014-12-27 title: Tags in jekyll(github)</description>
+    </item>
+    
+  </channel>
+</rss>

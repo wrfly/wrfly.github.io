@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='官方文档：https://docs.mongodb.com/manual/reference/operator/
+简单  use dbName 切换数据库 db.getCollectionNames() 列出数据库中的集合们 db.collctionName.insert({&quot;name&quot;:&quot;wrfly&quot;,&quot;ID&quot;:&quot;wrfly&quot;,&quot;tags&quot;:[&quot;tag1&quot;,&quot;tag2&quot;,&quot;tag3&quot;]}) 插入数据  查询  db.C.find() 查询全部数据  比较类  db.inventory.find({&quot;ID&quot;:&quot;wrfly&quot;}) 精确查询 ID 为 wrfly 的文档 或者 db.inventory.find( { &quot;ID&quot;: { $eq: &quot;wrfly&quot; } } ) 同理， $eq 还可以换成 $gt (&gt;), $gte (&gt;=), $lt(&lt;), $lte(&lt;=), $ne(!=), $in(在集合中), $nin(不在集合中) db.inventory.find ( { quantity: { $in: [20, 50] } } ) 查找 quantity在20和50之间（大于20，小于50）的数据  逻辑判断类（与或非）  db.inventory.find( { $or: [ { quantity: { $lt: 20 } }, { price: 10 } ] } ) 查询 quantity 小于20或者 price 大于10的数据 db.'>
+
+<meta property='og:title' content='MongoDB常用操作 • wrfly&#39;s blog'>
+<meta property='og:description' content='官方文档：https://docs.mongodb.com/manual/reference/operator/
+简单  use dbName 切换数据库 db.getCollectionNames() 列出数据库中的集合们 db.collctionName.insert({&quot;name&quot;:&quot;wrfly&quot;,&quot;ID&quot;:&quot;wrfly&quot;,&quot;tags&quot;:[&quot;tag1&quot;,&quot;tag2&quot;,&quot;tag3&quot;]}) 插入数据  查询  db.C.find() 查询全部数据  比较类  db.inventory.find({&quot;ID&quot;:&quot;wrfly&quot;}) 精确查询 ID 为 wrfly 的文档 或者 db.inventory.find( { &quot;ID&quot;: { $eq: &quot;wrfly&quot; } } ) 同理， $eq 还可以换成 $gt (&gt;), $gte (&gt;=), $lt(&lt;), $lte(&lt;=), $ne(!=), $in(在集合中), $nin(不在集合中) db.inventory.find ( { quantity: { $in: [20, 50] } } ) 查找 quantity在20和50之间（大于20，小于50）的数据  逻辑判断类（与或非）  db.inventory.find( { $or: [ { quantity: { $lt: 20 } }, { price: 10 } ] } ) 查询 quantity 小于20或者 price 大于10的数据 db.'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/2017-2-25-mongodb%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='mongodb'><meta property='article:published_time' content='2017-02-25T00:00:00Z'/><meta property='article:modified_time' content='2017-02-25T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>MongoDB常用操作 • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/2017-2-25-mongodb%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/posts'>Posts</a>
+    </li>
+  <li>
+      <a href='/tags'>Tags</a>
+    </li>
+  <li>
+      <a href='/about'>About</a>
+    </li>
+  <li>
+      <a href='/links'>Links</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>MongoDB常用操作</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-02-25T00:00:00Z'>2017, Feb 25</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+5 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>官方文档：<a href="https://docs.mongodb.com/manual/reference/operator/" target="_blank">https://docs.mongodb.com/manual/reference/operator/</a></p>
+
+<h1 id="简单">简单</h1>
+
+<ul>
+<li><code>use dbName</code> 切换数据库</li>
+<li><code>db.getCollectionNames()</code> 列出数据库中的集合们</li>
+<li><code>db.collctionName.insert({&quot;name&quot;:&quot;wrfly&quot;,&quot;ID&quot;:&quot;wrfly&quot;,&quot;tags&quot;:[&quot;tag1&quot;,&quot;tag2&quot;,&quot;tag3&quot;]})</code> 插入数据</li>
+</ul>
+
+<h1 id="查询">查询</h1>
+
+<ul>
+<li><code>db.C.find()</code> 查询全部数据</li>
+</ul>
+
+<h3 id="比较类">比较类</h3>
+
+<ul>
+<li><code>db.inventory.find({&quot;ID&quot;:&quot;wrfly&quot;})</code> 精确查询 <code>ID</code> 为 <code>wrfly</code> 的文档 或者 <code>db.inventory.find( { &quot;ID&quot;: { $eq: &quot;wrfly&quot; } } )</code></li>
+<li>同理， <code>$eq</code> 还可以换成 <code>$gt</code> (&gt;), <code>$gte</code> (&gt;=), <code>$lt</code>(&lt;), <code>$lte</code>(&lt;=), <code>$ne</code>(!=), <code>$in</code>(在集合中), <code>$nin</code>(不在集合中)</li>
+<li><code>db.inventory.find ( { quantity: { $in: [20, 50] } } )</code> 查找 quantity在20和50之间（大于20，小于50）的数据</li>
+</ul>
+
+<h3 id="逻辑判断类-与或非">逻辑判断类（与或非）</h3>
+
+<ul>
+<li><code>db.inventory.find( { $or: [ { quantity: { $lt: 20 } }, { price: 10 } ] } )</code> 查询 quantity 小于20或者 price 大于10的数据</li>
+<li><code>db.inventory.find( { $and: [ { price: { $ne: 1.99 } }, { price: { $exists: true } } ] } )</code> 查询 price != 1.99 并且 price 字段存在的数据</li>
+<li><code>json
+db.inventory.find( {
+$and : [
+    { $or : [ { price : 0.99 }, { price : 1.99 } ] },
+    { $or : [ { sale : true }, { qty : { $lt : 20 } } ] }
+]
+} )
+</code> 查询 price == 0.99 || price == 1.99 并且 sale == true || qty &lt; 20 的数据</li>
+<li><code>db.inventory.find( { price: { $not: { $gt: 1.99 } } } )</code> 查询 price 不大于 1.99 的数据 或者 price 字段不存在的数据</li>
+<li><code>db.inventory.find( { $nor: [ { price: 1.99 }, { sale: true } ]  } )</code> 查询 price != 1.99 &amp;&amp; sale == true， 或者 price == 1.99 &amp;&amp; sale 字段不存在，或者 price 字段不存在 &amp;&amp; sale == true, 或者 price 字段不存在 &amp;&amp; sale 字段也不存在 的数据（有点绕，需要认真读一下）</li>
+</ul>
+
+<h2 id="元素类">元素类</h2>
+
+<ul>
+<li><code>db.inventory.find( { qty: { $exists: true} } )</code> 查询 qty 字段存在的数据</li>
+</ul>
+
+<p>指定元素类型：</p>
+
+<ul>
+<li><code>db.addressBook.find( { &quot;zipCode&quot; : { $type : 2 } } )</code></li>
+<li><code>db.addressBook.find( { &quot;zipCode&quot; : { $type : &quot;string&quot; } } );</code>
+查询 zipCode 为 string 类型的文档</li>
+</ul>
+
+<p>常用元素类型表：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">Type		Number		Alias
+Double		1			“double”
+String		2			“string”
+Object		3			“object”
+Array		4			“array”
+Boolean		8			“bool”
+Timestamp	17			“timestamp”</pre></div>
+<p><a href="https://docs.mongodb.com/manual/reference/operator/query/type/#available-types" target="_blank">全部类型表</a></p>
+
+<h1 id="更新">更新</h1>
+
+<h3 id="字段类">字段类</h3>
+
+<ul>
+<li><code>$inc</code> 自增操作
+文档：
+<code>json
+{
+_id: 1,
+sku: &quot;abc123&quot;,
+quantity: 10,
+metrics: {
+orders: 2,
+ratings: 3.5
+}
+}
+</code>
+执行了自增操作：
+<code>json
+{ sku: &quot;abc123&quot; },
+{ $inc: { quantity: -2, &quot;metrics.orders&quot;: 1 } }
+)
+</code></li>
+</ul>
+
+<p>就会变成：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+   <span style="color:#f92672">&#34;_id&#34;</span> : <span style="color:#ae81ff">1</span>,
+   <span style="color:#f92672">&#34;sku&#34;</span> : <span style="color:#e6db74">&#34;abc123&#34;</span>,
+   <span style="color:#f92672">&#34;quantity&#34;</span> : <span style="color:#ae81ff">8</span>, <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#960050;background-color:#1e0010">10</span> <span style="color:#960050;background-color:#1e0010">-&gt;</span> <span style="color:#960050;background-color:#1e0010">8</span>
+   <span style="color:#f92672">&#34;metrics&#34;</span> : {
+      <span style="color:#f92672">&#34;orders&#34;</span> : <span style="color:#ae81ff">3</span>, <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#960050;background-color:#1e0010">2</span> <span style="color:#960050;background-color:#1e0010">-&gt;</span> <span style="color:#960050;background-color:#1e0010">3</span>
+      <span style="color:#f92672">&#34;ratings&#34;</span> : <span style="color:#ae81ff">3.5</span>
+   }
+}</code></pre></div>
+<ul>
+<li><code>$mul</code> 乘法操作
+文档：</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{ <span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">1,</span> <span style="color:#960050;background-color:#1e0010">item:</span> <span style="color:#f92672">&#34;ABC&#34;</span>, <span style="color:#960050;background-color:#1e0010">price:</span> <span style="color:#960050;background-color:#1e0010">10.0</span> }</code></pre></div>
+<p>经过操作：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">   { <span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">1</span> }<span style="color:#960050;background-color:#1e0010">,</span>
+   { <span style="color:#960050;background-color:#1e0010">$mul:</span> <span style="color:#960050;background-color:#1e0010">{</span> <span style="color:#960050;background-color:#1e0010">price:</span> <span style="color:#960050;background-color:#1e0010">2.0</span> } <span style="color:#960050;background-color:#1e0010">}</span>
+<span style="color:#960050;background-color:#1e0010">)</span></code></pre></div>
+<p>就会变成：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{ <span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">1,</span> <span style="color:#960050;background-color:#1e0010">item:</span> <span style="color:#f92672">&#34;ABC&#34;</span>, <span style="color:#960050;background-color:#1e0010">price:</span> <span style="color:#960050;background-color:#1e0010">20.0</span> }</code></pre></div>
+<ul>
+<li><code>$rename</code> 重命名一个字段</li>
+</ul>
+
+<p>将 <code>_id</code>=1 的文档的 <code>nickname</code> 更名为 <code>alias</code>, <code>cell</code> 更名为 <code>mobile</code></p>
+
+<ul>
+<li><code>$setOnInsert</code> 只有插入新数据的时候才会更改字段的值，否则不会</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">  { <span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">1</span> }<span style="color:#960050;background-color:#1e0010">,</span>
+  {
+     <span style="color:#960050;background-color:#1e0010">$set:</span> <span style="color:#960050;background-color:#1e0010">{</span> <span style="color:#960050;background-color:#1e0010">item:</span> <span style="color:#f92672">&#34;apple&#34;</span> }<span style="color:#960050;background-color:#1e0010">,</span>
+     <span style="color:#960050;background-color:#1e0010">$setOnInsert:</span> { <span style="color:#960050;background-color:#1e0010">defaultQty:</span> <span style="color:#960050;background-color:#1e0010">100</span> }
+  <span style="color:#960050;background-color:#1e0010">},</span>
+  { <span style="color:#960050;background-color:#1e0010">upsert:</span> <span style="color:#960050;background-color:#1e0010">true</span> }
+<span style="color:#960050;background-color:#1e0010">)</span></code></pre></div>
+<ul>
+<li><code>$set</code> 设置字段的值
+假设有如下文档：</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">100,</span>
+  <span style="color:#960050;background-color:#1e0010">sku:</span> <span style="color:#f92672">&#34;abc123&#34;</span>,
+  <span style="color:#960050;background-color:#1e0010">quantity:</span> <span style="color:#960050;background-color:#1e0010">250,</span>
+  <span style="color:#960050;background-color:#1e0010">instock:</span> <span style="color:#960050;background-color:#1e0010">true,</span>
+  <span style="color:#960050;background-color:#1e0010">reorder:</span> <span style="color:#960050;background-color:#1e0010">false,</span>
+  <span style="color:#960050;background-color:#1e0010">details:</span> <span style="color:#960050;background-color:#1e0010">{</span> <span style="color:#960050;background-color:#1e0010">model:</span> <span style="color:#f92672">&#34;14Q2&#34;</span>, <span style="color:#960050;background-color:#1e0010">make:</span> <span style="color:#f92672">&#34;xyz&#34;</span> }<span style="color:#960050;background-color:#1e0010">,</span>
+  <span style="color:#960050;background-color:#1e0010">tags:</span> [[ <span style="color:#e6db74">&#34;apparel&#34;</span>, <span style="color:#e6db74">&#34;clothing&#34;</span> ],]
+  <span style="color:#960050;background-color:#1e0010">ratings:</span> [ { <span style="color:#960050;background-color:#1e0010">by:</span> <span style="color:#f92672">&#34;ijk&#34;</span>, <span style="color:#960050;background-color:#1e0010">rating:</span> <span style="color:#960050;background-color:#1e0010">4</span> } ]
+<span style="color:#960050;background-color:#1e0010">}</span></code></pre></div>
+<p>那么在执行了下面的操作后：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">   { <span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">100</span> }<span style="color:#960050;background-color:#1e0010">,</span>
+   { <span style="color:#960050;background-color:#1e0010">$set:</span>
+      <span style="color:#960050;background-color:#1e0010">{</span>
+        <span style="color:#960050;background-color:#1e0010">quantity:</span> <span style="color:#960050;background-color:#1e0010">500,</span>
+        <span style="color:#960050;background-color:#1e0010">details:</span> <span style="color:#960050;background-color:#1e0010">{</span> <span style="color:#960050;background-color:#1e0010">model:</span> <span style="color:#f92672">&#34;14Q3&#34;</span>, <span style="color:#960050;background-color:#1e0010">make:</span> <span style="color:#f92672">&#34;xyz&#34;</span> }<span style="color:#960050;background-color:#1e0010">,</span>
+        <span style="color:#960050;background-color:#1e0010">tags:</span> [[ <span style="color:#e6db74">&#34;coats&#34;</span>, <span style="color:#e6db74">&#34;outerwear&#34;</span>, <span style="color:#e6db74">&#34;clothing&#34;</span> ]]
+      <span style="color:#960050;background-color:#1e0010">}</span>
+   <span style="color:#960050;background-color:#1e0010">}</span>
+<span style="color:#960050;background-color:#1e0010">)</span></code></pre></div>
+<p>文档就会变成：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">100,</span>
+  <span style="color:#960050;background-color:#1e0010">sku:</span> <span style="color:#f92672">&#34;abc123&#34;</span>,
+  <span style="color:#960050;background-color:#1e0010">quantity:</span> <span style="color:#960050;background-color:#1e0010">500,</span>
+  <span style="color:#960050;background-color:#1e0010">instock:</span> <span style="color:#960050;background-color:#1e0010">true,</span>
+  <span style="color:#960050;background-color:#1e0010">reorder:</span> <span style="color:#960050;background-color:#1e0010">false,</span>
+  <span style="color:#960050;background-color:#1e0010">details:</span> <span style="color:#960050;background-color:#1e0010">{</span> <span style="color:#960050;background-color:#1e0010">model:</span> <span style="color:#f92672">&#34;14Q3&#34;</span>, <span style="color:#960050;background-color:#1e0010">make:</span> <span style="color:#f92672">&#34;xyz&#34;</span> }<span style="color:#960050;background-color:#1e0010">,</span>
+  <span style="color:#960050;background-color:#1e0010">tags:</span> [[ <span style="color:#e6db74">&#34;coats&#34;</span>, <span style="color:#e6db74">&#34;outerwear&#34;</span>, <span style="color:#e6db74">&#34;clothing&#34;</span> ],]
+  <span style="color:#960050;background-color:#1e0010">ratings:</span> [ { <span style="color:#960050;background-color:#1e0010">by:</span> <span style="color:#f92672">&#34;ijk&#34;</span>, <span style="color:#960050;background-color:#1e0010">rating:</span> <span style="color:#960050;background-color:#1e0010">4</span> } ]
+<span style="color:#960050;background-color:#1e0010">}</span></code></pre></div>
+<ul>
+<li><code>$unset</code> 取消这个字段，类似于 unset 一个变量
+<code>json
+{ sku: &quot;unknown&quot; },
+{ $unset: { quantity: &quot;&quot;, instock: &quot;&quot; } }
+)
+</code></li>
+</ul>
+
+<p>匹配到 { sku: &ldquo;unknown&rdquo; } 的文档，并且 unset 他们的 quantity 和 instock 字段。</p>
+
+<ul>
+<li><p><code>$min</code> 如果字段 要设定的值 <strong>小于</strong> 当前值，那么就更新字段的值
+假设有一个这样的文档：
+<code>{ _id: 1, highScore: 800, lowScore: 200 }</code></p></li>
+
+<li><p><code>$max</code> 如果字段 要设定的值 <strong>大于</strong> 当前值，那么就更新字段的值
+道理同 <code>$min</code></p></li>
+
+<li><p><code>$currentDate</code> 设定字段为当前时间
+文档：
+<code>{ _id: 1, status: &quot;a&quot;, lastModified: ISODate(&quot;2013-10-02T01:11:18.965Z&quot;) }</code></p></li>
+</ul>
+
+<p>经过操作：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">   { <span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">1</span> }<span style="color:#960050;background-color:#1e0010">,</span>
+   {
+     <span style="color:#960050;background-color:#1e0010">$currentDate:</span> <span style="color:#960050;background-color:#1e0010">{</span>
+        <span style="color:#960050;background-color:#1e0010">lastModified:</span> <span style="color:#960050;background-color:#1e0010">true,</span>
+     }<span style="color:#960050;background-color:#1e0010">,</span>
+     <span style="color:#960050;background-color:#1e0010">$set:</span> {
+        <span style="color:#960050;background-color:#1e0010">status:</span> <span style="color:#f92672">&#34;D&#34;</span>,
+        <span style="color:#f92672">&#34;cancellation.reason&#34;</span>: <span style="color:#e6db74">&#34;user request&#34;</span>
+     }
+   <span style="color:#960050;background-color:#1e0010">}</span>
+<span style="color:#960050;background-color:#1e0010">)</span></code></pre></div>
+<p>就会变成：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+   <span style="color:#f92672">&#34;_id&#34;</span> : <span style="color:#ae81ff">1</span>,
+   <span style="color:#f92672">&#34;status&#34;</span> : <span style="color:#e6db74">&#34;D&#34;</span>,
+   <span style="color:#f92672">&#34;lastModified&#34;</span> : <span style="color:#960050;background-color:#1e0010">ISODate(</span><span style="color:#e6db74">&#34;2014-09-17T23:25:56.314Z&#34;</span><span style="color:#960050;background-color:#1e0010">)</span>,
+   <span style="color:#f92672">&#34;cancellation&#34;</span> : {
+      <span style="color:#f92672">&#34;reason&#34;</span> : <span style="color:#e6db74">&#34;user request&#34;</span>
+   }
+}</code></pre></div>
+<h3 id="数组类">数组类</h3>
+
+<ul>
+<li><code>$</code> dolor符号代表搜索到的元素，是一个 placeholder
+比如，有个这样的文档：</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{ <span style="color:#f92672">&#34;_id&#34;</span> : <span style="color:#ae81ff">1</span>, <span style="color:#f92672">&#34;grades&#34;</span> : [ <span style="color:#ae81ff">80</span>, <span style="color:#ae81ff">85</span>, <span style="color:#ae81ff">90</span> ] }
+{ <span style="color:#f92672">&#34;_id&#34;</span> : <span style="color:#ae81ff">2</span>, <span style="color:#f92672">&#34;grades&#34;</span> : [ <span style="color:#ae81ff">88</span>, <span style="color:#ae81ff">90</span>, <span style="color:#ae81ff">92</span> ] }
+{ <span style="color:#f92672">&#34;_id&#34;</span> : <span style="color:#ae81ff">3</span>, <span style="color:#f92672">&#34;grades&#34;</span> : [ <span style="color:#ae81ff">85</span>, <span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">90</span> ] }</code></pre></div>
+<p>执行：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">   { <span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">1,</span> <span style="color:#960050;background-color:#1e0010">grades:</span> <span style="color:#960050;background-color:#1e0010">80</span> }<span style="color:#960050;background-color:#1e0010">,</span>
+   { <span style="color:#960050;background-color:#1e0010">$set:</span> <span style="color:#960050;background-color:#1e0010">{</span> <span style="color:#f92672">&#34;grades.$&#34;</span> : <span style="color:#ae81ff">82</span> } <span style="color:#960050;background-color:#1e0010">}</span>
+<span style="color:#960050;background-color:#1e0010">)</span></code></pre></div>
+<p>就会把 { _id: 1, grades: 80 } 匹配到的文档的 grades 中的 80 改为 82：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{ <span style="color:#f92672">&#34;_id&#34;</span> : <span style="color:#ae81ff">1</span>, <span style="color:#f92672">&#34;grades&#34;</span> : [ <span style="color:#ae81ff">82</span>, <span style="color:#ae81ff">85</span>, <span style="color:#ae81ff">90</span> ] }</code></pre></div>
+<p>同样的，如果有个这样的文档：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">4,</span>
+  <span style="color:#960050;background-color:#1e0010">grades:</span> <span style="color:#960050;background-color:#1e0010">[</span>
+     <span style="color:#960050;background-color:#1e0010">{</span> <span style="color:#960050;background-color:#1e0010">grade:</span> <span style="color:#960050;background-color:#1e0010">80,</span> <span style="color:#960050;background-color:#1e0010">mean:</span> <span style="color:#960050;background-color:#1e0010">75,</span> <span style="color:#960050;background-color:#1e0010">std:</span> <span style="color:#960050;background-color:#1e0010">8</span> }<span style="color:#960050;background-color:#1e0010">,</span>
+     { <span style="color:#960050;background-color:#1e0010">grade:</span> <span style="color:#960050;background-color:#1e0010">85,</span> <span style="color:#960050;background-color:#1e0010">mean:</span> <span style="color:#960050;background-color:#1e0010">90,</span> <span style="color:#960050;background-color:#1e0010">std:</span> <span style="color:#960050;background-color:#1e0010">5</span> }<span style="color:#960050;background-color:#1e0010">,</span>
+     { <span style="color:#960050;background-color:#1e0010">grade:</span> <span style="color:#960050;background-color:#1e0010">90,</span> <span style="color:#960050;background-color:#1e0010">mean:</span> <span style="color:#960050;background-color:#1e0010">85,</span> <span style="color:#960050;background-color:#1e0010">std:</span> <span style="color:#960050;background-color:#1e0010">3</span> }
+  <span style="color:#960050;background-color:#1e0010">]</span>
+<span style="color:#960050;background-color:#1e0010">}</span></code></pre></div>
+<p>执行：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">   { <span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">4,</span> <span style="color:#f92672">&#34;grades.grade&#34;</span>: <span style="color:#ae81ff">85</span> }<span style="color:#960050;background-color:#1e0010">,</span>
+   { <span style="color:#960050;background-color:#1e0010">$set:</span> <span style="color:#960050;background-color:#1e0010">{</span> <span style="color:#f92672">&#34;grades.$.std&#34;</span> : <span style="color:#ae81ff">6</span> } <span style="color:#960050;background-color:#1e0010">}</span>
+<span style="color:#960050;background-color:#1e0010">)</span></code></pre></div>
+<p>则会把 grade==85 的元素的 std 改为 6：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">4,</span>
+  <span style="color:#960050;background-color:#1e0010">grades:</span> <span style="color:#960050;background-color:#1e0010">[</span>
+    <span style="color:#960050;background-color:#1e0010">{</span> <span style="color:#960050;background-color:#1e0010">grade:</span> <span style="color:#960050;background-color:#1e0010">80,</span> <span style="color:#960050;background-color:#1e0010">mean:</span> <span style="color:#960050;background-color:#1e0010">75,</span> <span style="color:#960050;background-color:#1e0010">std:</span> <span style="color:#960050;background-color:#1e0010">8</span> }<span style="color:#960050;background-color:#1e0010">,</span>
+    { <span style="color:#960050;background-color:#1e0010">grade:</span> <span style="color:#960050;background-color:#1e0010">85,</span> <span style="color:#960050;background-color:#1e0010">mean:</span> <span style="color:#960050;background-color:#1e0010">90,</span> <span style="color:#960050;background-color:#1e0010">std:</span> <span style="color:#960050;background-color:#1e0010">6</span> }<span style="color:#960050;background-color:#1e0010">,</span>
+    { <span style="color:#960050;background-color:#1e0010">grade:</span> <span style="color:#960050;background-color:#1e0010">90,</span> <span style="color:#960050;background-color:#1e0010">mean:</span> <span style="color:#960050;background-color:#1e0010">85,</span> <span style="color:#960050;background-color:#1e0010">std:</span> <span style="color:#960050;background-color:#1e0010">3</span> }
+  <span style="color:#960050;background-color:#1e0010">]</span>
+<span style="color:#960050;background-color:#1e0010">}</span></code></pre></div>
+<ul>
+<li><code>$addToSet</code> 这个操作会向数组中增加一个元素，当且仅当这个元素不存在与这个数组中。
+文档：<code>{ _id: 1, letters: [&quot;a&quot;, &quot;b&quot;] }</code></li>
+</ul>
+
+<p>经过操作：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">   { <span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">1</span> }<span style="color:#960050;background-color:#1e0010">,</span>
+   { <span style="color:#960050;background-color:#1e0010">$addToSet:</span> <span style="color:#960050;background-color:#1e0010">{letters:</span> <span style="color:#960050;background-color:#1e0010">[</span> <span style="color:#f92672">&#34;c&#34;</span>, <span style="color:#f92672">&#34;d&#34;</span> <span style="color:#960050;background-color:#1e0010">]</span> } <span style="color:#960050;background-color:#1e0010">}</span>
+<span style="color:#960050;background-color:#1e0010">)</span></code></pre></div>
+<p>就会变成： <code>{ _id: 1, letters: [ &quot;a&quot;, &quot;b&quot;, [ &quot;c&quot;, &quot;d&quot; ] ] }</code>, 注意，<strong>不是</strong> <code>{ _id: 1, letters: [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;] }</code></p>
+
+<p>文档：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{ <span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">1,</span> <span style="color:#960050;background-color:#1e0010">item:</span> <span style="color:#f92672">&#34;polarizing_filter&#34;</span>, <span style="color:#960050;background-color:#1e0010">tags:</span> <span style="color:#960050;background-color:#1e0010">[[</span> <span style="color:#f92672">&#34;electronics&#34;</span>, <span style="color:#f92672">&#34;camera&#34;</span> <span style="color:#960050;background-color:#1e0010">]</span> }<span style="color:#960050;background-color:#1e0010">]</span></code></pre></div>
+<p>经过操作：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">   { <span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">1</span> }<span style="color:#960050;background-color:#1e0010">,</span>
+   { <span style="color:#960050;background-color:#1e0010">$addToSet:</span> <span style="color:#960050;background-color:#1e0010">{</span> <span style="color:#960050;background-color:#1e0010">tags:</span> <span style="color:#960050;background-color:#1e0010">[</span><span style="color:#f92672">&#34;camera&#34;</span>  } <span style="color:#960050;background-color:#1e0010">}]</span>
+<span style="color:#960050;background-color:#1e0010">)</span></code></pre></div>
+<p>没有变化，因为 camera 已经在 tags里面了。</p>
+
+<ul>
+<li><code>$pop</code> 从数组中移除第一个或者最后一个字段
+移除第一个：</li>
+</ul>
+
+<p>移除最后一个：</p>
+
+<p><strong>注意，这里是 正负1 的差别</strong></p>
+
+<ul>
+<li><p><code>$pullAll</code> 移除数组中所有匹配到的值
+<code>{ _id: 1, scores: [ 0, 2, 5, 5, 1, 0 ] }</code></p></li>
+
+<li><p><code>$pull</code> 移除数组中匹配到的元素
+文档：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+<span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">1,</span>
+<span style="color:#960050;background-color:#1e0010">fruits:</span> <span style="color:#960050;background-color:#1e0010">[</span> <span style="color:#f92672">&#34;apples&#34;</span>, <span style="color:#f92672">&#34;pears&#34;</span>, <span style="color:#f92672">&#34;oranges&#34;</span>, <span style="color:#f92672">&#34;grapes&#34;</span>, <span style="color:#f92672">&#34;bananas&#34;</span> <span style="color:#960050;background-color:#1e0010">]</span>,
+<span style="color:#960050;background-color:#1e0010">vegetables:</span> <span style="color:#960050;background-color:#1e0010">[</span> <span style="color:#f92672">&#34;carrots&#34;</span>, <span style="color:#f92672">&#34;celery&#34;</span>, <span style="color:#f92672">&#34;squash&#34;</span>, <span style="color:#f92672">&#34;carrots&#34;</span> <span style="color:#960050;background-color:#1e0010">]</span>
+}
+{
+<span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">2,</span>
+<span style="color:#960050;background-color:#1e0010">fruits:</span> <span style="color:#960050;background-color:#1e0010">[</span> <span style="color:#f92672">&#34;plums&#34;</span>, <span style="color:#f92672">&#34;kiwis&#34;</span>, <span style="color:#f92672">&#34;oranges&#34;</span>, <span style="color:#f92672">&#34;bananas&#34;</span>, <span style="color:#f92672">&#34;apples&#34;</span> <span style="color:#960050;background-color:#1e0010">]</span>,
+<span style="color:#960050;background-color:#1e0010">vegetables:</span> <span style="color:#960050;background-color:#1e0010">[</span> <span style="color:#f92672">&#34;broccoli&#34;</span>, <span style="color:#f92672">&#34;zucchini&#34;</span>, <span style="color:#f92672">&#34;carrots&#34;</span>, <span style="color:#f92672">&#34;onions&#34;</span> <span style="color:#960050;background-color:#1e0010">]</span>
+}</code></pre></div></li>
+</ul>
+
+<p>经过操作：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">    { }<span style="color:#960050;background-color:#1e0010">,</span>
+    { <span style="color:#960050;background-color:#1e0010">$pull:</span> <span style="color:#960050;background-color:#1e0010">{</span> <span style="color:#960050;background-color:#1e0010">fruits:</span> <span style="color:#960050;background-color:#1e0010">{</span> <span style="color:#960050;background-color:#1e0010">$in:</span> <span style="color:#960050;background-color:#1e0010">[</span> <span style="color:#f92672">&#34;apples&#34;</span>, <span style="color:#f92672">&#34;oranges&#34;</span> <span style="color:#960050;background-color:#1e0010">]</span> }<span style="color:#960050;background-color:#1e0010">,</span> <span style="color:#960050;background-color:#1e0010">vegetables:</span> <span style="color:#e6db74">&#34;carrots&#34;</span> <span style="color:#960050;background-color:#1e0010">}</span> <span style="color:#960050;background-color:#1e0010">},</span>
+    { <span style="color:#960050;background-color:#1e0010">multi:</span> <span style="color:#960050;background-color:#1e0010">true</span> }
+<span style="color:#960050;background-color:#1e0010">)</span></code></pre></div>
+<p>会变成：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#f92672">&#34;_id&#34;</span> : <span style="color:#ae81ff">1</span>,
+  <span style="color:#f92672">&#34;fruits&#34;</span> : [ <span style="color:#e6db74">&#34;pears&#34;</span>, <span style="color:#e6db74">&#34;grapes&#34;</span>, <span style="color:#e6db74">&#34;bananas&#34;</span> ],
+  <span style="color:#f92672">&#34;vegetables&#34;</span> : [ <span style="color:#e6db74">&#34;celery&#34;</span>, <span style="color:#e6db74">&#34;squash&#34;</span> ]
+}
+{
+  <span style="color:#f92672">&#34;_id&#34;</span> : <span style="color:#ae81ff">2</span>,
+  <span style="color:#f92672">&#34;fruits&#34;</span> : [ <span style="color:#e6db74">&#34;plums&#34;</span>, <span style="color:#e6db74">&#34;kiwis&#34;</span>, <span style="color:#e6db74">&#34;bananas&#34;</span> ],
+  <span style="color:#f92672">&#34;vegetables&#34;</span> : [ <span style="color:#e6db74">&#34;broccoli&#34;</span>, <span style="color:#e6db74">&#34;zucchini&#34;</span>, <span style="color:#e6db74">&#34;onions&#34;</span> ]
+}</code></pre></div>
+<p>可以看到，fruits中的 &ldquo;apples&rdquo;, &ldquo;oranges&rdquo; 都没了， vegetables 中的 &ldquo;carrots&rdquo; 也都没了。</p>
+
+<ul>
+<li><p><code>$pushAll</code> 向数组中一次增加多个元素（重复）
+格式：<code>{ $pushAll: { &lt;field&gt;: [ &lt;value1&gt;, &lt;value2&gt;, ... ] } }</code></p></li>
+
+<li><p><code>$push</code> 向数组中增加一个元素</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{ <span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">1</span> }<span style="color:#960050;background-color:#1e0010">,</span>
+{ <span style="color:#960050;background-color:#1e0010">$push:</span> <span style="color:#960050;background-color:#1e0010">{</span> <span style="color:#960050;background-color:#1e0010">scores:</span> <span style="color:#960050;background-color:#1e0010">89</span> } <span style="color:#960050;background-color:#1e0010">}</span>
+<span style="color:#960050;background-color:#1e0010">)</span></code></pre></div>
+<p>这个操作向 scores 数组中 push 了一个 89.</p></li>
+</ul>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/mongodb'>Mongodb</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/posts/2017-2-3-20170203/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>20170203</a>
+    </div><div class='next-entry'>
+      <a href='/posts/2017-3-5-%E5%85%B3%E4%BA%8E%E9%9A%8F%E6%9C%BA/'>
+        <span class='screen-reader'>Next post: </span>关于随机<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+      Host with github | &copy; 2015-2017 wrfly | theme by minimo
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

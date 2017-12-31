@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='翻译自http://www.jguru.com/faq/view.jsp?EID=227532
+括号里面都是我的注释，意会就好。
+SOCKS代理 本地浏览器SOCKS服务器通常是用来做代理的，它通过TCP连接把目标主机和客户端连接在一起， 并转发所有的流量。SOCKS代理能在任何端口，任何协议下运行（额，好想有点不对， 这货是运行在session层，所以在他之下的层他就无法代理了）。SOCKS V4只支持 TCP连接，而SOCKS V5在其基础上增加了安全认证以及对UDP协议的支持（也就是说， SOCKS5支持密码认证以及转发UDP流量，注意，HTTP是不支持转发UDP的）。
+SOCKS代理在任何情况下都不会中断server与client之间的数据（这是由这种协议的 特性决定的，毕竟非明文，但是在SOCKS代理服务器上还是可以还原出TCP和UDP的原始 流量的），当你的防火墙不允许你上网的时候，你就可以通过SOCKS代理来上网（这里的 意思是，如果GFW把google屏蔽了，你就可以通过一台海外的SOCKS代理服务器上谷歌）。
+大多数的浏览器都支持SOCKS代理（这篇文章是三年前的，抱歉，谷歌第一条就是它）。（ 浏览器上网的时候需要与目标主机建立TCP连接，这个时候浏览器就会告诉SOCKS代理，它想 与目标主机进行通讯，然后SOCKS代理就会转发浏览器的数据，并向目标主机发出请求，然 后再把返回的数据转发回来。）（关于shadowsocks的一点题外话：虽然github上的源码 没了，但是耐不住民间私货多呀。shadowsocks有server端和client端，这两个都是用 来转发数据的，但是由于其所处的位置不同，所以功能也不同，client即本地运行的程序， 监听1080端口，并将数据转发到远在他乡的SOCKS服务器，由于这种转发是加密的，在会话层， 所以GFW过滤的难度很大，所以才派人巴拉巴拉让作者删除源码，嗯，一定是这样的。然后server 那边收到数据后，会原原本本的把数据再向目标请求，收到反馈后再返回给本地client的1080端口， 这样，我们向本地的1080请求资源，本地向SOCKS服务器请求资源，SOCKS服务器向目标请求资源， 这一条TCP连接就这样建立起来了。）但是，但是，但是，SOCKS代理原则上是可以还原真实数据的， 所以，第三方的代理也许不是很可靠。
+（*原来还想画张图，画着画着实在太low了，果断Alt&#43;F4*）
+HTTP代理 HTTP代理跟上面原理类似，用处也基本相同，都是让处于防火墙下的主机与外界建立连接，但是它与SOCKS代理不同的是，HTTP代理可以中断连接（即在中间截断数据流），因为HTTP代理是以HTTP请求为基础的 而这些请求大多以明文形式存在，所以HTTP代理可以在Client和下游服务器中间窃听，修改数据。但也正 由于HTTP代理只能处理HTTP请求，所以它对HTTP请求的处理也是很舒服的（原文中是smart）。而也由于 HTTP代理可以获取你的HTTP请求，所以HTTP代理服务器那边就可以根据你提交的数据来把那些资源缓存下来，提升访问的速度（用户亲密度&#43;1）。有好多ISP都用HTTP代理，而不管用户那边的浏览器是怎样配置的，因为不管用户们怎么配置，他们总是要访问80端口，而这些80端口们又掌握在ISP们的手中。（原文完全不是这样说的= =。原文是说，互联网提供商们把流量都通过了HTTP代理，这样代理服务器中就有了缓存，访问的速度会快一些。）
+（我来举个栗子：假如你的HTTP代理是Goagent，监听本地127.0.0.1:8080，此刻假设你已经把浏览器 的代理设置为：127.0.0.1:8080，那么你在浏览器中，所有的POST，GET，以及其他的请求，都会通过 本地的代理转发给远程的服务器，然后再通过远程的服务器去请求你所请求的这些资源，大家知道，HTTP协议是通过明文传输的，无论是在本地还是远程的服务器上，都是可以监听到这些流量的，所以才会有GFW的存在……HTTP协议属于应用层，而SOCKS协议属于传输层，ps：传输层在网络层之下，这就决定了两者的能力大小。）
+拓展阅读  http://man.chinaunix.net/develop/rfc/RFC1928.txt http://server.zdnet.com.cn/server/2009/0213/1342779.shtml http://www.blogjava.net/zyskm/archive/2013/03/01/395914.html http://baike.baidu.com/view/751.htm  tcpdump下观察SOCKS代理和HTTP代理 先来一张乱码压压惊：
+上面这张图是我浏览谷歌主页的时候在wireshark里面监听到的内容，可以看到，乱码。我不知道是因为https的原因还是因为socks加密的原因，但是结果都一样，看不出这是啥内容。（但尽管如此，还是可以看到Google的，是吧）
+这张，是我访问 kfd.me 主页的时候所产生的HTTP请求，可以看到，每次GET请求之前都会跟着一个socks的握手，这是因为我请求的是本地资源（在浏览器看来），要先通过SOCKS建立一条TCP连接，然后再通过这条连接产生HTTP请求，第一行，序号是103的数据包先向对方表明了自己的socks版本以及要访问目标的端口号，以此让远程服务器对自己进行认证并转发数据。细心的同学可能已经注意到，箭头的方向就是数据流的方向，在这里，56059是本地端口号，socks是本地代理，即1080端口。（当初设计这些协议的人真厉害啊！）
+然后打开其中一个数据查看其详情，这个是第212个包，我们从下往上看（不是在楼梯从下往上看啊喂！），最下面那层，是HTTP协议，在往上，是SOCKS协议，这里可以更加直观的看到，HTTP是通过SOCKS进行的，再往上是传输层（TCP），再往上是互联网层（IPV4），再往上是链路层（ethernet，以太网），最上面是wireshark的frame协议。
+再上面这一张是通过socks访问某个网站的数据流，好像是谷歌，我忘了。。中间还穿插着https这样的证书认证，hello完了才可以传输数据，也是蛮好玩的。
+而这一张呢，是通过http代理获取一张图片的数据包，看他们的协议层就可以看出，HTTP直接通过TCP协议获取数据，而且HTTP协议又是明文传输的，所以……
+下载查看数据流 这是我保存下来的整个过程，可以用sublimetext查看里面的内容，当然，有些东西是乱码也是正常的，但是提取出来就可以看到内容，因为这就是原始数据嘛。
+如果想仔细观察这些数据包的话，你可以在安装了wireshark的情况下下载这些数据'>
+
+<meta property='og:title' content='SOCKS代理和HTTP代理的区别 • wrfly&#39;s blog'>
+<meta property='og:description' content='翻译自http://www.jguru.com/faq/view.jsp?EID=227532
+括号里面都是我的注释，意会就好。
+SOCKS代理 本地浏览器SOCKS服务器通常是用来做代理的，它通过TCP连接把目标主机和客户端连接在一起， 并转发所有的流量。SOCKS代理能在任何端口，任何协议下运行（额，好想有点不对， 这货是运行在session层，所以在他之下的层他就无法代理了）。SOCKS V4只支持 TCP连接，而SOCKS V5在其基础上增加了安全认证以及对UDP协议的支持（也就是说， SOCKS5支持密码认证以及转发UDP流量，注意，HTTP是不支持转发UDP的）。
+SOCKS代理在任何情况下都不会中断server与client之间的数据（这是由这种协议的 特性决定的，毕竟非明文，但是在SOCKS代理服务器上还是可以还原出TCP和UDP的原始 流量的），当你的防火墙不允许你上网的时候，你就可以通过SOCKS代理来上网（这里的 意思是，如果GFW把google屏蔽了，你就可以通过一台海外的SOCKS代理服务器上谷歌）。
+大多数的浏览器都支持SOCKS代理（这篇文章是三年前的，抱歉，谷歌第一条就是它）。（ 浏览器上网的时候需要与目标主机建立TCP连接，这个时候浏览器就会告诉SOCKS代理，它想 与目标主机进行通讯，然后SOCKS代理就会转发浏览器的数据，并向目标主机发出请求，然 后再把返回的数据转发回来。）（关于shadowsocks的一点题外话：虽然github上的源码 没了，但是耐不住民间私货多呀。shadowsocks有server端和client端，这两个都是用 来转发数据的，但是由于其所处的位置不同，所以功能也不同，client即本地运行的程序， 监听1080端口，并将数据转发到远在他乡的SOCKS服务器，由于这种转发是加密的，在会话层， 所以GFW过滤的难度很大，所以才派人巴拉巴拉让作者删除源码，嗯，一定是这样的。然后server 那边收到数据后，会原原本本的把数据再向目标请求，收到反馈后再返回给本地client的1080端口， 这样，我们向本地的1080请求资源，本地向SOCKS服务器请求资源，SOCKS服务器向目标请求资源， 这一条TCP连接就这样建立起来了。）但是，但是，但是，SOCKS代理原则上是可以还原真实数据的， 所以，第三方的代理也许不是很可靠。
+（*原来还想画张图，画着画着实在太low了，果断Alt&#43;F4*）
+HTTP代理 HTTP代理跟上面原理类似，用处也基本相同，都是让处于防火墙下的主机与外界建立连接，但是它与SOCKS代理不同的是，HTTP代理可以中断连接（即在中间截断数据流），因为HTTP代理是以HTTP请求为基础的 而这些请求大多以明文形式存在，所以HTTP代理可以在Client和下游服务器中间窃听，修改数据。但也正 由于HTTP代理只能处理HTTP请求，所以它对HTTP请求的处理也是很舒服的（原文中是smart）。而也由于 HTTP代理可以获取你的HTTP请求，所以HTTP代理服务器那边就可以根据你提交的数据来把那些资源缓存下来，提升访问的速度（用户亲密度&#43;1）。有好多ISP都用HTTP代理，而不管用户那边的浏览器是怎样配置的，因为不管用户们怎么配置，他们总是要访问80端口，而这些80端口们又掌握在ISP们的手中。（原文完全不是这样说的= =。原文是说，互联网提供商们把流量都通过了HTTP代理，这样代理服务器中就有了缓存，访问的速度会快一些。）
+（我来举个栗子：假如你的HTTP代理是Goagent，监听本地127.0.0.1:8080，此刻假设你已经把浏览器 的代理设置为：127.0.0.1:8080，那么你在浏览器中，所有的POST，GET，以及其他的请求，都会通过 本地的代理转发给远程的服务器，然后再通过远程的服务器去请求你所请求的这些资源，大家知道，HTTP协议是通过明文传输的，无论是在本地还是远程的服务器上，都是可以监听到这些流量的，所以才会有GFW的存在……HTTP协议属于应用层，而SOCKS协议属于传输层，ps：传输层在网络层之下，这就决定了两者的能力大小。）
+拓展阅读  http://man.chinaunix.net/develop/rfc/RFC1928.txt http://server.zdnet.com.cn/server/2009/0213/1342779.shtml http://www.blogjava.net/zyskm/archive/2013/03/01/395914.html http://baike.baidu.com/view/751.htm  tcpdump下观察SOCKS代理和HTTP代理 先来一张乱码压压惊：
+上面这张图是我浏览谷歌主页的时候在wireshark里面监听到的内容，可以看到，乱码。我不知道是因为https的原因还是因为socks加密的原因，但是结果都一样，看不出这是啥内容。（但尽管如此，还是可以看到Google的，是吧）
+这张，是我访问 kfd.me 主页的时候所产生的HTTP请求，可以看到，每次GET请求之前都会跟着一个socks的握手，这是因为我请求的是本地资源（在浏览器看来），要先通过SOCKS建立一条TCP连接，然后再通过这条连接产生HTTP请求，第一行，序号是103的数据包先向对方表明了自己的socks版本以及要访问目标的端口号，以此让远程服务器对自己进行认证并转发数据。细心的同学可能已经注意到，箭头的方向就是数据流的方向，在这里，56059是本地端口号，socks是本地代理，即1080端口。（当初设计这些协议的人真厉害啊！）
+然后打开其中一个数据查看其详情，这个是第212个包，我们从下往上看（不是在楼梯从下往上看啊喂！），最下面那层，是HTTP协议，在往上，是SOCKS协议，这里可以更加直观的看到，HTTP是通过SOCKS进行的，再往上是传输层（TCP），再往上是互联网层（IPV4），再往上是链路层（ethernet，以太网），最上面是wireshark的frame协议。
+再上面这一张是通过socks访问某个网站的数据流，好像是谷歌，我忘了。。中间还穿插着https这样的证书认证，hello完了才可以传输数据，也是蛮好玩的。
+而这一张呢，是通过http代理获取一张图片的数据包，看他们的协议层就可以看出，HTTP直接通过TCP协议获取数据，而且HTTP协议又是明文传输的，所以……
+下载查看数据流 这是我保存下来的整个过程，可以用sublimetext查看里面的内容，当然，有些东西是乱码也是正常的，但是提取出来就可以看到内容，因为这就是原始数据嘛。
+如果想仔细观察这些数据包的话，你可以在安装了wireshark的情况下下载这些数据'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/2015-8-25-socks%E4%BB%A3%E7%90%86%E5%92%8Chttp%E4%BB%A3%E7%90%86%E7%9A%84%E5%8C%BA%E5%88%AB/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='linux'><meta property='article:published_time' content='2015-08-25T00:00:00Z'/><meta property='article:modified_time' content='2015-08-25T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>SOCKS代理和HTTP代理的区别 • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/2015-8-25-socks%E4%BB%A3%E7%90%86%E5%92%8Chttp%E4%BB%A3%E7%90%86%E7%9A%84%E5%8C%BA%E5%88%AB/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/posts'>Posts</a>
+    </li>
+  <li>
+      <a href='/tags'>Tags</a>
+    </li>
+  <li>
+      <a href='/about'>About</a>
+    </li>
+  <li>
+      <a href='/links'>Links</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>SOCKS代理和HTTP代理的区别</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2015-08-25T00:00:00Z'>2015, Aug 25</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+One min read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>翻译自<a href="http://www.jguru.com/faq/view.jsp?EID=227532" target="_blank">http://www.jguru.com/faq/view.jsp?EID=227532</a></p>
+
+<p>括号里面都是我的注释，意会就好。</p>
+
+<h4 id="socks代理">SOCKS代理</h4>
+
+<p>本地浏览器SOCKS服务器通常是用来做代理的，它通过TCP连接把目标主机和客户端连接在一起，
+并转发所有的流量。SOCKS代理能在任何端口，任何协议下运行（额，好想有点不对，
+这货是运行在session层，所以在他之下的层他就无法代理了）。SOCKS V4只支持
+TCP连接，而SOCKS V5在其基础上增加了安全认证以及对UDP协议的支持（也就是说，
+SOCKS5支持密码认证以及转发UDP流量，注意，HTTP是不支持转发UDP的）。</p>
+
+<p>SOCKS代理在任何情况下都不会中断server与client之间的数据（这是由这种协议的
+特性决定的，毕竟非明文，但是在SOCKS代理服务器上还是可以还原出TCP和UDP的原始
+流量的），当你的防火墙不允许你上网的时候，你就可以通过SOCKS代理来上网（这里的
+意思是，如果GFW把google屏蔽了，你就可以通过一台海外的SOCKS代理服务器上谷歌）。</p>
+
+<p>大多数的浏览器都支持SOCKS代理（这篇文章是三年前的，抱歉，谷歌第一条就是它）。（
+浏览器上网的时候需要与目标主机建立TCP连接，这个时候浏览器就会告诉SOCKS代理，它想
+与目标主机进行通讯，然后SOCKS代理就会转发浏览器的数据，并向目标主机发出请求，然
+后再把返回的数据转发回来。）（关于shadowsocks的一点题外话：虽然github上的源码
+没了，但是耐不住民间私货多呀。shadowsocks有server端和client端，这两个都是用
+来转发数据的，但是由于其所处的位置不同，所以功能也不同，client即本地运行的程序，
+监听1080端口，并将数据转发到远在他乡的SOCKS服务器，由于这种转发是加密的，在会话层，
+所以GFW过滤的难度很大，所以才派人巴拉巴拉让作者删除源码，嗯，一定是这样的。然后server
+那边收到数据后，会原原本本的把数据再向目标请求，收到反馈后再返回给本地client的1080端口，
+这样，我们向本地的1080请求资源，本地向SOCKS服务器请求资源，SOCKS服务器向目标请求资源，
+这一条TCP连接就这样建立起来了。）但是，但是，但是，SOCKS代理原则上是可以还原真实数据的，
+所以，第三方的代理也许不是很可靠。</p>
+
+<p>（*原来还想画张图，画着画着实在太low了，果断Alt+F4*）</p>
+
+<h4 id="http代理">HTTP代理</h4>
+
+<p>HTTP代理跟上面原理类似，用处也基本相同，都是让处于防火墙下的主机与外界建立连接，但是它与SOCKS代理不同的是，HTTP代理可以中断连接（即在中间截断数据流），因为HTTP代理是以HTTP请求为基础的
+而这些请求大多以明文形式存在，所以HTTP代理可以在Client和下游服务器中间窃听，修改数据。但也正
+由于HTTP代理只能处理HTTP请求，所以它对HTTP请求的处理也是很舒服的（原文中是smart）。而也由于
+HTTP代理可以获取你的HTTP请求，所以HTTP代理服务器那边就可以根据你提交的数据来把那些资源缓存下来，提升访问的速度（用户亲密度+1）。有好多ISP都用HTTP代理，而不管用户那边的浏览器是怎样配置的，因为不管用户们怎么配置，他们总是要访问80端口，而这些80端口们又掌握在ISP们的手中。（原文完全不是这样说的= =。原文是说，互联网提供商们把流量都通过了HTTP代理，这样代理服务器中就有了缓存，访问的速度会快一些。）</p>
+
+<p>（我来举个栗子：假如你的HTTP代理是Goagent，监听本地127.0.0.1:8080，此刻假设你已经把浏览器
+的代理设置为：127.0.0.1:8080，那么你在浏览器中，所有的POST，GET，以及其他的请求，都会通过
+本地的代理转发给远程的服务器，然后再通过远程的服务器去请求你所请求的这些资源，大家知道，HTTP协议是通过明文传输的，无论是在本地还是远程的服务器上，都是可以监听到这些流量的，所以才会有GFW的存在……HTTP协议属于应用层，而SOCKS协议属于传输层，ps：传输层在网络层之下，这就决定了两者的能力大小。）</p>
+
+<h4 id="拓展阅读">拓展阅读</h4>
+
+<ul>
+<li><a href="http://man.chinaunix.net/develop/rfc/RFC1928.txt" target="_blank">http://man.chinaunix.net/develop/rfc/RFC1928.txt</a></li>
+<li><a href="http://server.zdnet.com.cn/server/2009/0213/1342779.shtml" target="_blank">http://server.zdnet.com.cn/server/2009/0213/1342779.shtml</a></li>
+<li><a href="http://www.blogjava.net/zyskm/archive/2013/03/01/395914.html" target="_blank">http://www.blogjava.net/zyskm/archive/2013/03/01/395914.html</a></li>
+<li><a href="http://baike.baidu.com/view/751.htm" target="_blank">http://baike.baidu.com/view/751.htm</a></li>
+</ul>
+
+<h4 id="tcpdump下观察socks代理和http代理">tcpdump下观察SOCKS代理和HTTP代理</h4>
+
+<p>先来一张乱码压压惊：</p>
+
+<p><img src="../../img/s/socks_http_proxy/socks5_google.png" alt="" /></p>
+
+<p>上面这张图是我浏览谷歌主页的时候在wireshark里面监听到的内容，可以看到，乱码。我不知道是因为https的原因还是因为socks加密的原因，但是结果都一样，看不出这是啥内容。（但尽管如此，还是可以看到Google的，是吧）</p>
+
+<p><img src="../../img/s/socks_http_proxy/socks_get.png" alt="" /></p>
+
+<p>这张，是我访问 kfd.me 主页的时候所产生的HTTP请求，可以看到，每次GET请求之前都会跟着一个socks的握手，这是因为我请求的是本地资源（在浏览器看来），要先通过SOCKS建立一条TCP连接，然后再通过这条连接产生HTTP请求，第一行，序号是103的数据包先向对方表明了自己的socks版本以及要访问目标的端口号，以此让远程服务器对自己进行认证并转发数据。细心的同学可能已经注意到，箭头的方向就是数据流的方向，在这里，56059是本地端口号，socks是本地代理，即1080端口。（当初设计这些协议的人真厉害啊！）</p>
+
+<p><img src="../../img/s/socks_http_proxy/socks_http.png" alt="" /></p>
+
+<p>然后打开其中一个数据查看其详情，这个是第212个包，我们从下往上看（不是在楼梯从下往上看啊喂！），最下面那层，是HTTP协议，在往上，是SOCKS协议，这里可以更加直观的看到，HTTP是通过SOCKS进行的，再往上是传输层（TCP），再往上是互联网层（IPV4），再往上是链路层（ethernet，以太网），最上面是wireshark的<a href="https://wiki.wireshark.org/Protocols/frame" target="_blank">frame协议</a>。</p>
+
+<p><img src="../../img/s/socks_http_proxy/socks_tcp.png" alt="" /></p>
+
+<p>再上面这一张是通过socks访问某个网站的数据流，好像是谷歌，我忘了。。中间还穿插着https这样的证书认证，hello完了才可以传输数据，也是蛮好玩的。</p>
+
+<p><img src="../../img/s/socks_http_proxy/http_get_png.png" alt="" /></p>
+
+<p>而这一张呢，是通过http代理获取一张图片的数据包，看他们的协议层就可以看出，HTTP直接通过TCP协议获取数据，而且HTTP协议又是明文传输的，所以……</p>
+
+<p><a href="../../img/s/socks_http_proxy/http_kfd_me">下载查看数据流</a> 这是我保存下来的整个过程，可以用sublimetext查看里面的内容，当然，有些东西是乱码也是正常的，但是提取出来就可以看到内容，因为这就是原始数据嘛。</p>
+
+<p>如果想仔细观察这些数据包的话，你可以在安装了wireshark的情况下<a href="../../img/s/socks_http_proxy/tcpdump.zip">下载这些数据</a></p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/linux'>Linux</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/posts/2015-8-24-oh-123/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Oh-123</a>
+    </div><div class='next-entry'>
+      <a href='/posts/2015-8-27-%E7%99%BE%E5%BA%A6%E6%9B%B4%E6%87%82%E4%B8%AD%E6%96%87/'>
+        <span class='screen-reader'>Next post: </span>百度更懂中文？<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+      Host with github | &copy; 2015-2017 wrfly | theme by minimo
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

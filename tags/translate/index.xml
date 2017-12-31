@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Translate on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/translate/</link>
+    <description>Recent content in Translate on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 18 May 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/translate/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>linux中的tar命令</title>
+      <link>https://wrfly.kfd.me/posts/linux%E4%B8%AD%E7%9A%84tar%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Mon, 18 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux%E4%B8%AD%E7%9A%84tar%E5%91%BD%E4%BB%A4/</guid>
+      <description>原文链接：http://www.tecmint.com/18-tar-command-examples-in-linux/
+tar [-options(&amp;#34;-&amp;#34; is not necessary)] [name] [path or file(default current directory, if epmty)] 废话不多说，直接拿来用～
+创建一个tar文档（打包文档） tar -cvf [name.tar] [path or file] #c-creat v-view(show the progress) f-file(并不会解释) 创建一个tar.gz文档（打包并压缩） tar -cvzf [name.tar.gz] [path or file] #z-compress file to **gzip** 创建tar.bz2文档（压缩，另一种形式） tar cvfj [name.tar.bz2] [path or file] #这次是 **j** 解压一个tar文件 (x-extract-uncompress) tar -xvf [name.tar or name.tar.gz or name.tar.bz2] -c [path] or tar xvf [name.tar or name.tar.gz or name.tar.bz2] #empty for current directory 查看压缩文件目录(list) tar tvf name.</description>
+    </item>
+    
+  </channel>
+</rss>

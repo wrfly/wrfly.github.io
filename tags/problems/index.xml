@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Problems on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/problems/</link>
+    <description>Recent content in Problems on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 01 Jan 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/problems/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>hide unity panle when use virtualbox full screen model</title>
+      <link>https://wrfly.kfd.me/posts/hide-unity-panle-when-use-virtualbox-full-screen-model/</link>
+      <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/hide-unity-panle-when-use-virtualbox-full-screen-model/</guid>
+      <description>Question:
+Answer: &amp;gt; Disabling mini-toolbar in VMs settings is a temporary work-around. In the VirtualBox manager go to Settings-&amp;gt;General-&amp;gt;Advanced tab -&amp;gt; Mini ToolBar [] Show in Fullscreen/Seamless and make sure it is unchecked.
+在Ubuntu 下运行 VirtualBox ，开一个虚拟机，全屏模式，Unity的panle会一直显示。
+取消显示只需在虚拟机的设置里把“全屏模式下显示小工具栏”取消就可以了。
+在虚拟机的&amp;ndash;设置&amp;ndash;常规&amp;ndash;高级&amp;ndash;小工具栏。
+![setting/img/hide-unity-panle-in-virtualbox/setting.png)
+取消之前是这样的
+![before/img/hide-unity-panle-in-virtualbox/before.png)
+取消之后是这样的
+![after/img/hide-unity-panle-in-virtualbox/after.png)
+原文链接</description>
+    </item>
+    
+    <item>
+      <title>关于ubuntu下MP3文件名乱码的问题</title>
+      <link>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Eubuntu%E4%B8%8Bmp3%E6%96%87%E4%BB%B6%E5%90%8D%E4%B9%B1%E7%A0%81%E7%9A%84%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Fri, 24 Oct 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Eubuntu%E4%B8%8Bmp3%E6%96%87%E4%BB%B6%E5%90%8D%E4%B9%B1%E7%A0%81%E7%9A%84%E9%97%AE%E9%A2%98/</guid>
+      <description>我是一个linux爱好者，用的是Ubuntu，然而在播放音乐的时候却发现从我的mp3里面复制的歌曲到了电脑里面都变成乱码了，下面的文字是我从《笨兔兔的故事》中复制出来的，完美的解决了我的问题，也会解决你的问题。
+话说一个 mp3 的歌名啊,作者啊,是记录在 mp3 标签里面的。这个标签的记录方式有很多中,主要是这么几个标准:ID3v1, ID3v2 2.3,ID3v2 2.4,APEv2。
+这个 ID3v1的标签支持 ISO-8859-1 编码,这是个国际通用的编码,但是很可惜,他是不支持中文的。到 ID3v22.3 这个版本开始,增加了对 utl-16 的支持,utf-16 也是一套国际通用的编码,这里面就包含中,日,韩等等各国的文字了。到 ID3v2.4,更增加了 utf-8 的支持。utf-8 和 utf-16 都是国际通用的一套编码,所不同的是 utf-8 以字节为编码单元,而 utf-16 用双字节为编码单元,这样就有大小端问题(也就是哪个字节先传输的问题,不知道的可以 google 一下)。
+因此总的来说,utf-8 相对更受欢迎一些。ID3v22.4 支持 utf8编码,可并没有说一定要用,只是可以用 utf-8,自然也可以用其他的编码。而 APEv2标准就不同了,它规定了其编码必须同一为 utf8 编码。ISO-8859-1,utf8,utf16,这些都是国际标准的编码。但 utf8,utf16 的出现都是后来的事情了,一开始,是没有国际标准的中文编码的,那时候只有国标——国家标准，也就是我们常见的 GB2312,GBK 和 GB18030。由于这些只是国家标准,所以开源软件的作者们(多数不是中国人)自然是忽略的这些标准(当然了,每个国家都有自己的标准,听谁的阿?)。所以,如果是用 ID3v1 或者 ID3v2 类型,并且使用国家标准编码的 mp3 文件,就会出现乱码。如果是 ID3v1 或 ID3v2 类型,但是使用 utf-8, 或者utf-16 编码的,就不会乱码。如果是使用 APEv2 标准的 mp3 文件,就更不会乱码了,因为 APEv2 必须用 utf8 嘛。
+然而事实是残酷的,事实就是:国内的大多数 mp3 都使用了国家标准编码。那我们在 Linux 下就看不到了么?当然不是,编码不对的话,转换一下就好了嘛。有个软件, 叫做 mid3iconv,他就认识各种编码,让他把 mp3 的编码改成 utf-8 的,就可以了。这个软件从哪里来?</description>
+    </item>
+    
+    <item>
+      <title>去掉blogger博客中的Attribution</title>
+      <link>https://wrfly.kfd.me/posts/%E5%8E%BB%E6%8E%89blogger%E5%8D%9A%E5%AE%A2%E4%B8%AD%E7%9A%84attribution/</link>
+      <pubDate>Sat, 04 Oct 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%8E%BB%E6%8E%89blogger%E5%8D%9A%E5%AE%A2%E4%B8%AD%E7%9A%84attribution/</guid>
+      <description>所谓Attribution，就是blogger博客下面的“由Blogger强力驱动” 或者“ Simple template. Powered by Blogger. ”
+有些人会觉得烦，包括我，这篇帖子是教你怎样把页脚的Attribution去掉的。
+1.到 模板 → 修改html ### ![1/img/remove_attribution_in_blogger/remove_attribution_in_blogger.png)
+2.Ctrl + F 查找代码：### &amp;lt;b:widget id=&amp;#39;Attribution1&amp;#39; locked=&amp;#39;true&amp;#39; title: 去掉blogger博客中的Attribution ![2/img/remove_attribution_in_blogger/remove_attribution_in_blogger_2.png)
+3.找到之后，把 locked=&amp;lsquo;true&amp;rsquo; 改成 locked=&amp;lsquo;false&amp;rsquo;### ![3/img/remove_attribution_in_blogger/remove_attribution_in_blogger_3.png)
+4.保存### 5.删除### 点击 布局 → 页面元素 → 修改 Attribution → 点击删除 即可删掉“由Blogger强力驱动”
+![4/img/remove_attribution_in_blogger/remove_attribution_in_blogger_4.png)</description>
+    </item>
+    
+  </channel>
+</rss>

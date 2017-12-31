@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/alpine-dns-problem/</loc>
+    <lastmod>2017-12-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/</loc>
+    <lastmod>2017-11-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E6%8B%86%E6%8B%86%E6%8B%86/</loc>
+    <lastmod>2017-10-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/20170908/</loc>
+    <lastmod>2017-09-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E9%9D%A2%E8%AF%95%E6%9C%89%E6%84%9F/</loc>
+    <lastmod>2017-08-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E7%83%AD%E5%8D%87%E7%BA%A7/</loc>
+    <lastmod>2017-07-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/go%E7%A8%8B%E5%BA%8F%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/</loc>
+    <lastmod>2017-07-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E5%8C%86%E5%8C%86/</loc>
+    <lastmod>2017-05-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E6%A0%A1%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/</loc>
+    <lastmod>2017-04-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/shadowbroker%E5%A4%A7%E6%9D%80%E5%99%A8/</loc>
+    <lastmod>2017-04-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E8%BF%98%E6%98%AF%E4%BB%A3%E7%90%86/</loc>
+    <lastmod>2017-04-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/linux%E4%B8%8Bgates%E7%97%85%E6%AF%92/</loc>
+    <lastmod>2017-03-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/confd%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2017-03-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/etcd%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2017-03-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8E%E9%9A%8F%E6%9C%BA/</loc>
+    <lastmod>2017-03-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/mongodb%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</loc>
+    <lastmod>2017-02-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/20170203/</loc>
+    <lastmod>2017-02-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E6%A0%A1%E5%9B%ADv6/</loc>
+    <lastmod>2016-11-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/logrotate%E5%92%8Ccron/</loc>
+    <lastmod>2016-07-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E4%B8%80%E7%82%B9%E5%B0%8F%E5%B7%A5%E4%BD%9C/</loc>
+    <lastmod>2016-07-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E4%BB%8Eiso%E5%88%B0docker/</loc>
+    <lastmod>2016-06-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/daocloud-api-cli-tool/</loc>
+    <lastmod>2016-05-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/imagemagick%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/</loc>
+    <lastmod>2016-05-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E5%BE%AE%E5%AE%B9%E5%99%A8/</loc>
+    <lastmod>2016-05-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/ubuntu%E4%B8%8B%E6%9B%B4%E6%94%B9%E7%BD%91%E5%8D%A1%E5%90%8D%E5%AD%97%E4%BB%A5%E5%8F%8Apppoe%E9%85%8D%E7%BD%AEipv6/</loc>
+    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/cookies-session-and-%E9%AA%8C%E8%AF%81%E7%A0%81/</loc>
+    <lastmod>2016-04-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E6%95%B0%E5%AD%97%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB/</loc>
+    <lastmod>2016-04-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/20160329/</loc>
+    <lastmod>2016-03-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E4%B8%80%E7%82%B9%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2016-03-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E5%86%85%E6%B6%B5%E5%9B%BE%E7%BD%91%E7%AB%99/</loc>
+    <lastmod>2016-02-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/linux-101-hacks%E7%9A%84%E7%BF%BB%E8%AF%91-gitbook/</loc>
+    <lastmod>2016-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E4%B8%A4%E4%B8%AA%E8%BD%AF%E4%BB%B6%E5%92%8C%E4%B8%80%E4%B8%AArename/</loc>
+    <lastmod>2015-12-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/docker%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2015-12-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/linux-lcx/</loc>
+    <lastmod>2015-12-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E5%87%A0%E4%B8%AAhack%E5%B0%8F%E6%8A%80%E5%B7%A7/</loc>
+    <lastmod>2015-12-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/20151125/</loc>
+    <lastmod>2015-11-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E6%96%87%E4%BB%B6%E7%9A%84s%E6%A0%87%E5%BF%97%E4%BD%8D/</loc>
+    <lastmod>2015-11-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E6%8E%A5%E7%9D%80%E4%B8%8A%E4%B8%80%E7%AF%87/</loc>
+    <lastmod>2015-10-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/yepinstalled-my-ubnutu-again/</loc>
+    <lastmod>2015-10-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/20151007/</loc>
+    <lastmod>2015-10-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/linux-101-hacks/</loc>
+    <lastmod>2015-09-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E7%99%BE%E5%BA%A6%E6%9B%B4%E6%87%82%E4%B8%AD%E6%96%87/</loc>
+    <lastmod>2015-08-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/socks%E4%BB%A3%E7%90%86%E5%92%8Chttp%E4%BB%A3%E7%90%86%E7%9A%84%E5%8C%BA%E5%88%AB/</loc>
+    <lastmod>2015-08-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/oh-123/</loc>
+    <lastmod>2015-08-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E5%A6%82%E4%BD%95%E8%83%8C%E7%A8%8B%E5%BA%8F/</loc>
+    <lastmod>2015-08-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/fuser%E5%91%BD%E4%BB%A4%E5%92%8Clsof%E5%91%BD%E4%BB%A4/</loc>
+    <lastmod>2015-08-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E8%81%8A%E4%B8%80%E8%81%8A%E8%BD%AC%E7%A0%81/</loc>
+    <lastmod>2015-08-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E6%87%92/</loc>
+    <lastmod>2015-07-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/bash-and-nc-chat-room/</loc>
+    <lastmod>2015-07-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/stardicts-icon/</loc>
+    <lastmod>2015-06-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E5%A5%BD%E7%8E%A9%E7%9A%84linux%E5%91%BD%E4%BB%A4%E8%A1%8C_ii/</loc>
+    <lastmod>2015-06-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/these-days/</loc>
+    <lastmod>2015-06-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E8%AE%A9sublime-text-%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87%E8%BE%93%E5%85%A5ubuntu/</loc>
+    <lastmod>2015-06-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E4%B9%8C%E5%90%88%E4%B9%8B%E4%BC%97-%E6%95%99%E8%82%B2%E7%AF%87/</loc>
+    <lastmod>2015-05-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E4%B9%8C%E5%90%88%E4%B9%8B%E4%BC%97-%E6%95%99%E8%82%B2%E7%AF%87-%E9%A2%98%E5%A4%96%E8%AF%9D-%E4%B8%8A/</loc>
+    <lastmod>2015-05-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E4%B9%8C%E5%90%88%E4%B9%8B%E4%BC%97-%E6%95%99%E8%82%B2%E7%AF%87-%E9%A2%98%E5%A4%96%E8%AF%9D-%E4%B8%8B/</loc>
+    <lastmod>2015-05-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/screen-in-linux/</loc>
+    <lastmod>2015-05-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/php-dos/</loc>
+    <lastmod>2015-05-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/linux%E4%B8%AD%E7%9A%84tar%E5%91%BD%E4%BB%A4/</loc>
+    <lastmod>2015-05-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/linux%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E5%A6%99%E7%94%A8/</loc>
+    <lastmod>2015-05-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E5%A4%A7%E6%95%B0%E7%9A%84%E9%98%B6%E4%B9%98/</loc>
+    <lastmod>2015-05-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E5%8F%91%E7%94%9F%E5%9C%A8%E6%88%91%E5%90%8C%E5%AD%A6%E8%BA%AB%E4%B8%8A%E7%9A%84ssh-psychos/</loc>
+    <lastmod>2015-05-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/bash%E9%87%8C%E9%9D%A2%E7%9A%84%E4%B8%8E%E5%92%8C%E6%88%96/</loc>
+    <lastmod>2015-04-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/nginx%E6%90%AD%E5%BB%BA%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1/</loc>
+    <lastmod>2015-04-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/let-commmand-was-not-found-in-bash/</loc>
+    <lastmod>2015-04-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E5%B0%8F%E4%B8%9C%E8%A5%BF%E5%85%B3%E4%BA%8Ealias/</loc>
+    <lastmod>2015-04-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3rarzip%E6%96%87%E4%BB%B6/</loc>
+    <lastmod>2015-04-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/ubuntu%E5%BC%80%E5%90%AF%E4%BC%91%E7%9C%A0%E6%A8%A1%E5%BC%8F/</loc>
+    <lastmod>2015-04-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/make-a-startup-script-in-ubuntu/</loc>
+    <lastmod>2015-03-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/nginx-file-not-found-%E9%94%99%E8%AF%AF/</loc>
+    <lastmod>2015-03-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/syntax-for-socks-proxy-in-apt-conf/</loc>
+    <lastmod>2015-03-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/vps%E6%80%BB%E7%BB%93/</loc>
+    <lastmod>2015-03-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/interesting-web-cameras/</loc>
+    <lastmod>2015-02-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E8%B6%A3%E6%96%87-%E6%9C%89%E8%B6%A3%E7%9A%84-linux-%E5%91%BD%E4%BB%A4/</loc>
+    <lastmod>2015-02-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/bash-shortcuts/</loc>
+    <lastmod>2015-02-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/bash%E5%BF%AB%E6%8D%B7%E9%94%AE%E7%9B%B8%E5%85%B3/</loc>
+    <lastmod>2015-02-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E7%9A%84360wifi/</loc>
+    <lastmod>2015-02-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E7%A0%B4%E8%A7%A3wifi%E5%AF%86%E7%A0%81%E7%9A%84%E6%97%B6%E5%80%99/</loc>
+    <lastmod>2015-02-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E7%A0%B4%E8%A7%A3wifi%E5%AF%86%E7%A0%81%E7%9A%84%E6%97%B6%E5%80%99-2/</loc>
+    <lastmod>2015-02-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/hide-unity-panle-when-use-virtualbox-full-screen-model/</loc>
+    <lastmod>2015-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/kali-nginx-php/</loc>
+    <lastmod>2015-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/build-my-jekyll-blog/</loc>
+    <lastmod>2014-12-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/tags-in-jekyllgithub/</loc>
+    <lastmod>2014-12-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/20141226/</loc>
+    <lastmod>2014-12-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/guide-to-vim/</loc>
+    <lastmod>2014-12-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/ubuntu%E8%87%AA%E5%AE%9A%E4%B9%89applications/</loc>
+    <lastmod>2014-12-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E5%88%A9%E7%94%A8c%E5%AE%9E%E7%8E%B0%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E8%BF%94%E5%9B%9E%E7%9A%84%E5%8A%9F%E8%83%BD/</loc>
+    <lastmod>2014-12-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Eubuntu%E7%9A%84path/</loc>
+    <lastmod>2014-12-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/php%E5%8F%8D%E4%BB%A3%E7%90%86%E4%BB%A5%E5%8F%8Agoagent-php%E4%BB%A3%E7%90%86/</loc>
+    <lastmod>2014-12-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E6%9C%89%E7%94%A8%E7%9A%84command/</loc>
+    <lastmod>2014-12-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/add-disqus-to-github-blog/</loc>
+    <lastmod>2014-12-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/my-github/</loc>
+    <lastmod>2014-12-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Eubuntu%E4%B8%8Bmp3%E6%96%87%E4%BB%B6%E5%90%8D%E4%B9%B1%E7%A0%81%E7%9A%84%E9%97%AE%E9%A2%98/</loc>
+    <lastmod>2014-10-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/do-not-update-python-on-ubuntu/</loc>
+    <lastmod>2014-10-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/hydra%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</loc>
+    <lastmod>2014-10-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Earp%E6%AC%BA%E9%AA%97/</loc>
+    <lastmod>2014-10-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/%E5%8E%BB%E6%8E%89blogger%E5%8D%9A%E5%AE%A2%E4%B8%AD%E7%9A%84attribution/</loc>
+    <lastmod>2014-10-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/authors/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/bash/</loc>
+    <lastmod>2015-02-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/blog/</loc>
+    <lastmod>2014-12-29T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/books/</loc>
+    <lastmod>2015-05-29T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/build-my-own-blog/</loc>
+    <lastmod>2014-12-27T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/cluster/</loc>
+    <lastmod>2017-03-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/code/</loc>
+    <lastmod>2017-12-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/command/</loc>
+    <lastmod>2015-08-08T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/daily/</loc>
+    <lastmod>2017-10-19T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/design/</loc>
+    <lastmod>2017-11-27T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/docker/</loc>
+    <lastmod>2017-12-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/etcd/</loc>
+    <lastmod>2017-03-08T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/funny/</loc>
+    <lastmod>2015-02-10T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/hack/</loc>
+    <lastmod>2015-05-24T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/links/</loc>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/linux/</loc>
+    <lastmod>2015-08-25T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/mongodb/</loc>
+    <lastmod>2017-02-25T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/my-blog/</loc>
+    <lastmod>2014-12-11T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/nginx/</loc>
+    <lastmod>2015-04-25T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/ops/</loc>
+    <lastmod>2015-04-25T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/others/</loc>
+    <lastmod>2015-06-14T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/pages/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/</loc>
+    <lastmod>2017-12-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/problems/</loc>
+    <lastmod>2015-01-01T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/record/</loc>
+    <lastmod>2014-12-18T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/share/</loc>
+    <lastmod>2017-11-27T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/shell/</loc>
+    <lastmod>2015-07-07T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/</loc>
+    <lastmod>2015-02-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/translate/</loc>
+    <lastmod>2015-05-18T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/ubuntu/</loc>
+    <lastmod>2015-06-09T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/vim/</loc>
+    <lastmod>2014-12-25T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/wifi/</loc>
+    <lastmod>2015-02-04T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/wiki/</loc>
+    <lastmod>2014-10-04T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/about/</loc>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/</loc>
+    <lastmod>2017-12-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+</urlset>

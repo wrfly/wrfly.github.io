@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linux on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/linux/</link>
+    <description>Recent content in Linux on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 25 Aug 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>SOCKS代理和HTTP代理的区别</title>
+      <link>https://wrfly.kfd.me/posts/socks%E4%BB%A3%E7%90%86%E5%92%8Chttp%E4%BB%A3%E7%90%86%E7%9A%84%E5%8C%BA%E5%88%AB/</link>
+      <pubDate>Tue, 25 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/socks%E4%BB%A3%E7%90%86%E5%92%8Chttp%E4%BB%A3%E7%90%86%E7%9A%84%E5%8C%BA%E5%88%AB/</guid>
+      <description>翻译自http://www.jguru.com/faq/view.jsp?EID=227532
+括号里面都是我的注释，意会就好。
+SOCKS代理 本地浏览器SOCKS服务器通常是用来做代理的，它通过TCP连接把目标主机和客户端连接在一起， 并转发所有的流量。SOCKS代理能在任何端口，任何协议下运行（额，好想有点不对， 这货是运行在session层，所以在他之下的层他就无法代理了）。SOCKS V4只支持 TCP连接，而SOCKS V5在其基础上增加了安全认证以及对UDP协议的支持（也就是说， SOCKS5支持密码认证以及转发UDP流量，注意，HTTP是不支持转发UDP的）。
+SOCKS代理在任何情况下都不会中断server与client之间的数据（这是由这种协议的 特性决定的，毕竟非明文，但是在SOCKS代理服务器上还是可以还原出TCP和UDP的原始 流量的），当你的防火墙不允许你上网的时候，你就可以通过SOCKS代理来上网（这里的 意思是，如果GFW把google屏蔽了，你就可以通过一台海外的SOCKS代理服务器上谷歌）。
+大多数的浏览器都支持SOCKS代理（这篇文章是三年前的，抱歉，谷歌第一条就是它）。（ 浏览器上网的时候需要与目标主机建立TCP连接，这个时候浏览器就会告诉SOCKS代理，它想 与目标主机进行通讯，然后SOCKS代理就会转发浏览器的数据，并向目标主机发出请求，然 后再把返回的数据转发回来。）（关于shadowsocks的一点题外话：虽然github上的源码 没了，但是耐不住民间私货多呀。shadowsocks有server端和client端，这两个都是用 来转发数据的，但是由于其所处的位置不同，所以功能也不同，client即本地运行的程序， 监听1080端口，并将数据转发到远在他乡的SOCKS服务器，由于这种转发是加密的，在会话层， 所以GFW过滤的难度很大，所以才派人巴拉巴拉让作者删除源码，嗯，一定是这样的。然后server 那边收到数据后，会原原本本的把数据再向目标请求，收到反馈后再返回给本地client的1080端口， 这样，我们向本地的1080请求资源，本地向SOCKS服务器请求资源，SOCKS服务器向目标请求资源， 这一条TCP连接就这样建立起来了。）但是，但是，但是，SOCKS代理原则上是可以还原真实数据的， 所以，第三方的代理也许不是很可靠。
+（*原来还想画张图，画着画着实在太low了，果断Alt+F4*）
+HTTP代理 HTTP代理跟上面原理类似，用处也基本相同，都是让处于防火墙下的主机与外界建立连接，但是它与SOCKS代理不同的是，HTTP代理可以中断连接（即在中间截断数据流），因为HTTP代理是以HTTP请求为基础的 而这些请求大多以明文形式存在，所以HTTP代理可以在Client和下游服务器中间窃听，修改数据。但也正 由于HTTP代理只能处理HTTP请求，所以它对HTTP请求的处理也是很舒服的（原文中是smart）。而也由于 HTTP代理可以获取你的HTTP请求，所以HTTP代理服务器那边就可以根据你提交的数据来把那些资源缓存下来，提升访问的速度（用户亲密度+1）。有好多ISP都用HTTP代理，而不管用户那边的浏览器是怎样配置的，因为不管用户们怎么配置，他们总是要访问80端口，而这些80端口们又掌握在ISP们的手中。（原文完全不是这样说的= =。原文是说，互联网提供商们把流量都通过了HTTP代理，这样代理服务器中就有了缓存，访问的速度会快一些。）
+（我来举个栗子：假如你的HTTP代理是Goagent，监听本地127.0.0.1:8080，此刻假设你已经把浏览器 的代理设置为：127.0.0.1:8080，那么你在浏览器中，所有的POST，GET，以及其他的请求，都会通过 本地的代理转发给远程的服务器，然后再通过远程的服务器去请求你所请求的这些资源，大家知道，HTTP协议是通过明文传输的，无论是在本地还是远程的服务器上，都是可以监听到这些流量的，所以才会有GFW的存在……HTTP协议属于应用层，而SOCKS协议属于传输层，ps：传输层在网络层之下，这就决定了两者的能力大小。）
+拓展阅读  http://man.chinaunix.net/develop/rfc/RFC1928.txt http://server.zdnet.com.cn/server/2009/0213/1342779.shtml http://www.blogjava.net/zyskm/archive/2013/03/01/395914.html http://baike.baidu.com/view/751.htm  tcpdump下观察SOCKS代理和HTTP代理 先来一张乱码压压惊：
+上面这张图是我浏览谷歌主页的时候在wireshark里面监听到的内容，可以看到，乱码。我不知道是因为https的原因还是因为socks加密的原因，但是结果都一样，看不出这是啥内容。（但尽管如此，还是可以看到Google的，是吧）
+这张，是我访问 kfd.me 主页的时候所产生的HTTP请求，可以看到，每次GET请求之前都会跟着一个socks的握手，这是因为我请求的是本地资源（在浏览器看来），要先通过SOCKS建立一条TCP连接，然后再通过这条连接产生HTTP请求，第一行，序号是103的数据包先向对方表明了自己的socks版本以及要访问目标的端口号，以此让远程服务器对自己进行认证并转发数据。细心的同学可能已经注意到，箭头的方向就是数据流的方向，在这里，56059是本地端口号，socks是本地代理，即1080端口。（当初设计这些协议的人真厉害啊！）
+然后打开其中一个数据查看其详情，这个是第212个包，我们从下往上看（不是在楼梯从下往上看啊喂！），最下面那层，是HTTP协议，在往上，是SOCKS协议，这里可以更加直观的看到，HTTP是通过SOCKS进行的，再往上是传输层（TCP），再往上是互联网层（IPV4），再往上是链路层（ethernet，以太网），最上面是wireshark的frame协议。
+再上面这一张是通过socks访问某个网站的数据流，好像是谷歌，我忘了。。中间还穿插着https这样的证书认证，hello完了才可以传输数据，也是蛮好玩的。
+而这一张呢，是通过http代理获取一张图片的数据包，看他们的协议层就可以看出，HTTP直接通过TCP协议获取数据，而且HTTP协议又是明文传输的，所以……
+下载查看数据流 这是我保存下来的整个过程，可以用sublimetext查看里面的内容，当然，有些东西是乱码也是正常的，但是提取出来就可以看到内容，因为这就是原始数据嘛。
+如果想仔细观察这些数据包的话，你可以在安装了wireshark的情况下下载这些数据</description>
+    </item>
+    
+    <item>
+      <title>fuser命令和lsof命令</title>
+      <link>https://wrfly.kfd.me/posts/fuser%E5%91%BD%E4%BB%A4%E5%92%8Clsof%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Sat, 08 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/fuser%E5%91%BD%E4%BB%A4%E5%92%8Clsof%E5%91%BD%E4%BB%A4/</guid>
+      <description>引子 前几天重装metasploit的时候，有几个端口一直被占用，记得以前有个命令是 可以根据端口号来确定进程号的，搜了一下，原来是fuser命令。
+fuser - identify processes using files or sockets.
+根据占用的文件或者socket来确定进程。好东西啊。
+fuser-几个常用的命令  fuser 8080/tcp 打印占用8080端口的进程 fuser /etc/passwd 打印占用/etc/passwd的进程 fuser -k 8080/tcp 杀死占用8080端口的进程  下面是来自thegeekstuff的关于fuser的一些介绍和技巧。To share and mark.
+文件或目录 $fuser . /home/mr/test: 13965c 可以看到进程ID后面跟了一个字母&amp;rsquo;c&amp;rsquo;，这个&amp;rsquo;c&amp;rsquo;其实是一个标识符，表示 这个进程把此目录作为他的当前目录。类似的还有：
+   参数 意义     c 当前目录   e 可执行文件正在运行   f 进程正在打开文件，默认省略   F 进程正在打开文件往里写入，默认省略   r 进程的根目录   m 内存映射，或者共享库    具体可以加上-v查看ACCESS详情，但是我感觉用处不大。另外-v还可以查看运行进程的用户是谁，运行的命令是什么， 这个还是很有用的。</description>
+    </item>
+    
+    <item>
+      <title>screen in linux</title>
+      <link>https://wrfly.kfd.me/posts/screen-in-linux/</link>
+      <pubDate>Thu, 28 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/screen-in-linux/</guid>
+      <description>本文转自IBM developterWorks
+你是不是经常需要 SSH 或者 telent 远程登录到 Linux 服务器？你是不是经常为一些长时间运行的任务而头疼，比如系统备份、ftp 传输等等。通常情况下我们都是为每一个这样的任务开一个远程终端窗口，因为他们执行的时间太长了。必须等待它执行完毕，在此期间可不能关掉窗口或者断开连接，否则这个任务就会被杀掉，一切半途而废了。
+元凶：SIGHUP 信号 让我们来看看为什么关掉窗口/断开连接会使得正在运行的程序死掉。
+在Linux/Unix中，有这样几个概念：
+ 进程组（process group）：一个或多个进程的集合，每一个进程组有唯一一个进程组ID，即进程组长进程的ID。 会话期（session）：一个或多个进程组的集合，有唯一一个会话期首进程（session leader）。会话期ID为首进程的ID。 会话期可以有一个单独的控制终端（controlling terminal）。与控制终端连接的会话期首进程叫做控制进程（controlling process）。当前与终端交互的进程称为前台进程组。其余进程组称为后台进程组。
+ 根据POSIX.1定义：
+ 挂断信号（SIGHUP）默认的动作是终止程序。
+当终端接口检测到网络连接断开，将挂断信号发送给控制进程（会话期首进程）。 如果会话期首进程终止，则该信号发送到该会话期前台进程组。 一个进程退出导致一个孤儿进程组中产生时，如果任意一个孤儿进程组进程处于STOP状态，发送SIGHUP和SIGCONT信号到该进程组中所有进程。
+ 因此当网络断开或终端窗口关闭后，控制进程收到SIGHUP信号退出，会导致该会话期内其他进程退出。
+我们来看一个例子。打开两个SSH终端窗口，在其中一个运行top命令。
+[root@tivf09 root]# top 在另一个终端窗口，找到top的进程ID为5180，其父进程ID为5128，即登录shell。
+[root@tivf09 root]# ps -ef|grep top root 5180 5128 0 01:03 pts/0 00:00:02 top root 5857 3672 0 01:12 pts/2 00:00:00 grep top 使用pstree命令可以更清楚地看到这个关系：
+[root@tivf09 root]# pstree -H 5180|grep top |-sshd-+-sshd---bash---top 使用ps-xj命令可以看到，登录shell（PID 5128）和top在同一个会话期，shell为会话期首进程，所在进程组PGID为5128，top所在进程组PGID为5180，为前台进程组。
+[root@tivf09 root]# ps -xj|grep 5128 5126 5128 5128 5128 pts/0 5180 S 0 0:00 -bash 5128 5180 5180 5128 pts/0 5180 S 0 0:50 top 3672 18095 18094 3672 pts/2 18094 S 0 0:00 grep 5128 关闭第一个SSH窗口，在另一个窗口中可以看到top也被杀掉了。</description>
+    </item>
+    
+    <item>
+      <title>linux下暴力破解rar，zip文件</title>
+      <link>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3rarzip%E6%96%87%E4%BB%B6/</link>
+      <pubDate>Tue, 07 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3rarzip%E6%96%87%E4%BB%B6/</guid>
+      <description>Linux暴力破解RAR，ZIP，7Z压缩包
+rarcrack,其官方主页：http://rarcrack.sourceforge.net/
+该软件用于暴力破解压缩文件的密码，但仅支持RAR, ZIP, 7Z这三种类型，其特点是可以使用多线程而且可以暂停与继续(会在当前目录生成一个xml文件，里面显示了正在尝试的一个密码)。
+安装方法
+首先从官网下载安装包，然后执行如下命令
+$ tar -xjf rarcrack-0.2.tar.bz2 $ cd rarcrack-0.2.tar.bz2 $ make $ make install 使用方法
+rarcrack 文件名 [--threads thread_num] [--type rar|zip|7z] 该软件还自带了测试样例，该目录内，执行 rarcrack test.rar &amp;ndash;threads 4 &amp;ndash;type rar ，等待一会儿即可得到结果。
+如果要改变尝试的位置可以直接打开xml，修改当前密码那一行即可。
+如果出现如下错误：
+gcc -pthread rarcrack.c xml2-config --libs --cflags -O2 -o rarcrack /bin/sh: 1: xml2-config: not found In file included from rarcrack.c:21:0: rarcrack.h:25:48: 致命错误： libxml/xmlmemory.h：没有那个文件或目录 编译中断。 make: *** [all] 错误 1 则执行：
+sudo apt-get install libxml2-dev libxslt-dev 安装相应的依赖包。</description>
+    </item>
+    
+  </channel>
+</rss>

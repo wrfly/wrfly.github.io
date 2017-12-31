@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mongodb on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/mongodb/</link>
+    <description>Recent content in Mongodb on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 25 Feb 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/mongodb/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>MongoDB常用操作</title>
+      <link>https://wrfly.kfd.me/posts/mongodb%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</link>
+      <pubDate>Sat, 25 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/mongodb%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</guid>
+      <description>官方文档：https://docs.mongodb.com/manual/reference/operator/
+简单  use dbName 切换数据库 db.getCollectionNames() 列出数据库中的集合们 db.collctionName.insert({&amp;quot;name&amp;quot;:&amp;quot;wrfly&amp;quot;,&amp;quot;ID&amp;quot;:&amp;quot;wrfly&amp;quot;,&amp;quot;tags&amp;quot;:[&amp;quot;tag1&amp;quot;,&amp;quot;tag2&amp;quot;,&amp;quot;tag3&amp;quot;]}) 插入数据  查询  db.C.find() 查询全部数据  比较类  db.inventory.find({&amp;quot;ID&amp;quot;:&amp;quot;wrfly&amp;quot;}) 精确查询 ID 为 wrfly 的文档 或者 db.inventory.find( { &amp;quot;ID&amp;quot;: { $eq: &amp;quot;wrfly&amp;quot; } } ) 同理， $eq 还可以换成 $gt (&amp;gt;), $gte (&amp;gt;=), $lt(&amp;lt;), $lte(&amp;lt;=), $ne(!=), $in(在集合中), $nin(不在集合中) db.inventory.find ( { quantity: { $in: [20, 50] } } ) 查找 quantity在20和50之间（大于20，小于50）的数据  逻辑判断类（与或非）  db.inventory.find( { $or: [ { quantity: { $lt: 20 } }, { price: 10 } ] } ) 查询 quantity 小于20或者 price 大于10的数据 db.</description>
+    </item>
+    
+  </channel>
+</rss>
