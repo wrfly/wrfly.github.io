@@ -3,13 +3,25 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://wrfly.kfd.me/posts/last-day-of-2017/</loc>
+    <loc>https://wrfly.kfd.me/tags/</loc>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/</loc>
     <lastmod>2017-12-31T22:13:35+08:00</lastmod>
   </url>
   
   <url>
+    <loc>https://wrfly.kfd.me/links/</loc>
+  </url>
+  
+  <url>
     <loc>https://wrfly.kfd.me/about/</loc>
-    <lastmod>2017-12-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/last-day-of-2017/</loc>
+    <lastmod>2017-12-31T22:13:35+08:00</lastmod>
   </url>
   
   <url>
@@ -539,13 +551,13 @@
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/categories/daily/</loc>
+    <loc>https://wrfly.kfd.me/tags/daily/</loc>
     <lastmod>2017-12-31T22:13:35+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/tags/daily/</loc>
+    <loc>https://wrfly.kfd.me/categories/daily/</loc>
     <lastmod>2017-12-31T22:13:35+08:00</lastmod>
     <priority>0</priority>
   </url>
@@ -578,10 +590,6 @@
     <loc>https://wrfly.kfd.me/tags/hack/</loc>
     <lastmod>2015-05-24T00:00:00+00:00</lastmod>
     <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wrfly.kfd.me/links/</loc>
   </url>
   
   <url>
@@ -621,14 +629,7 @@
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/pages/</loc>
-    <lastmod>2017-12-31T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://wrfly.kfd.me/posts/</loc>
-    <lastmod>2017-12-31T22:13:35+08:00</lastmod>
+    <loc>https://wrfly.kfd.me/page/</loc>
     <priority>0</priority>
   </url>
   

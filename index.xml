@@ -11,6 +11,42 @@
     
     
     <item>
+      <title></title>
+      <link>https://wrfly.kfd.me/tags/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://wrfly.kfd.me/links/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/links/</guid>
+      <description> BigTang 离别歌 简庐 LarryXi  </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://wrfly.kfd.me/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/about/</guid>
+      <description>“你永远不知道未来的自己有多强大” — 鲁迅
+ 好像介绍自己的套路都是先从名字开始的。
+关于 wrfly 这个名字，依稀记得是在大一时候的某个图书馆的下午想出来的。因为很喜欢Mr这个前缀，而且曾经听过一首 Mr.Lonely 的歌，所以一度称自己为 mr.lonely ，但由于这个名字太过通用，一搜一大把的 mr.lonely ，而我又不想跟别人一样（话说ID这东西跟别人一样就太low了），恰好看高数看的不耐烦，就在纸上乱划，将我的F和初恋的L拼成了一个fly，然后强行加上一个mr的前缀 &amp;ndash; mrfly ，还发了朋友圈2333，当时的英语老师评论说是“苍蝇先生”，就很尴尬，于是乎就把mr变成了wr，这才有了 wrfly。ID嘛，将自己赋予给某个无意义的字符串，就有了意义。
+（话说当时跟英语老师关系还不错，人家还请我吃过饭，然后大二下学期的时候，觉着英语课实在无聊，就翘了一学期英语，然后老师就把我微信拉黑了&amp;hellip;期末考试给了59算是报复应）
+关于博客，从14年底断断续续写了一些，当时对git还没个了解，改动一个东西为了看效果就commit到github，以致当时每天几十个commit的产出，从那时候起，博客的装潢就没变过，黑底绿线白字，大家都说丑。
+直到前几天看别人博客怎么这么好看，发现了hugo这个项目，就找了个简单的主题，倒腾了半天，算是改版了。至于旧版本，原来想保留一个/old的目录，然后弄了半天，一是嫌麻烦（其实是没弄成），二是想留着也没用（就跟留了那么多旧照片，还不是没工夫看），不如直接上新的算了，所以，旧版本算是没了（有一个backup的branch）。新博客看起来漂亮多了，感谢Hugo和Minimo的开发者们和Github。
+曾经想着是作为技术博客存在，但鄙人技术一般，聊天水平也有限，常常写的不知所云，所以经过这次改版也算认清了自己，就当个备忘录写吧。有时候感觉，有些见解没地方说，说了别人也没个共鸣，发个朋友圈还要考虑给不给别人看，用lofter吧广告一大堆，索性就在这里胡言乱语好了。至少没人审查，也不用考虑他人的感受（话说也没人看呐），也没广告烦恼。
+如果有人给咱评论呢，开心了就交个朋友，不开心就置之不理，也不会有心里负担233。
+话说咱已经从脚本小子变成小程序员啦～
+wrfly - 2017/12/31 - Beijing</description>
+    </item>
+    
+    <item>
       <title>Last-Day-of-2017</title>
       <link>https://wrfly.kfd.me/posts/last-day-of-2017/</link>
       <pubDate>Sun, 31 Dec 2017 22:13:35 +0800</pubDate>
@@ -24,24 +60,6 @@ Tags的问题 Jekyll的tags可以用空格区分，但是在这里换成了hugo�
 --- tags: - daily - blog --- Title和创建时间的问题 以前写的东西，都是以文件名作为标题和创建时间，但在这里也得先在header中声明，老办法行不通了，必须要这样：
 --- date: &amp;#34;2017-12-31T22:13:35+08:00&amp;#34; title: &amp;#34;Last-Day-of-2017&amp;#34; categories: - daily tags: - daily - blog --- 解决问题 原先的文件中是没有声明这些东西的，所以就的批量修改，一般没毛病的话，sed就能解决了：
 # 增加date和title for f in *;do export T=&amp;#34;`echo &amp;#34;$f&amp;#34; | cut -d &amp;#34;-&amp;#34; -f4 | cut -d &amp;#34;.&amp;#34; -f1`&amp;#34; export D=$(date --date=`echo &amp;#34;$f&amp;#34; | cut -d &amp;#34;-&amp;#34; -f -3` +&amp;#34;%Y-%m-%d&amp;#34;) sed -i &amp;#34;s/post/post\ndate: $D\ntitle: $T/1&amp;#34; $f done #把原先的layout删掉 for f in *;do sed -i &amp;#34;1,10{/layout/d}&amp;#34; $f done # 把tags用[]括起来 for f in *;do cat &amp;#34;$f&amp;#34; | head -n10| grep &amp;#34;tags: &amp;#34; | grep -v &amp;#34;\[&amp;#34; &amp;amp;&amp;amp; echo $f &amp;amp;&amp;amp; sed -i &amp;#34;s/\(tags: \)\(.</description>
-    </item>
-    
-    <item>
-      <title>about</title>
-      <link>https://wrfly.kfd.me/about/</link>
-      <pubDate>Sun, 31 Dec 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://wrfly.kfd.me/about/</guid>
-      <description>“你永远不知道未来的自己有多强大” — 鲁迅
- 好像介绍自己的套路都是先从名字开始的。
-关于 wrfly 这个名字，依稀记得是在大一时候的某个图书馆的下午想出来的。因为很喜欢Mr这个前缀，而且曾经听过一首 Mr.Lonely 的歌，所以一度称自己为 mr.lonely ，但由于这个名字太过通用，一搜一大把的 mr.lonely ，而我又不想跟别人一样（话说ID这东西跟别人一样就太low了），恰好看高数看的不耐烦，就在纸上乱划，将我的F和初恋的L拼成了一个fly，然后强行加上一个mr的前缀 &amp;ndash; mrfly ，还发了朋友圈2333，当时的英语老师评论说是“苍蝇先生”，就很尴尬，于是乎就把mr变成了wr，这才有了 wrfly。ID嘛，将自己赋予给某个无意义的字符串，就有了意义。
-（话说当时跟英语老师关系还不错，人家还请我吃过饭，然后大二下学期的时候，觉着英语课实在无聊，就翘了一学期英语，然后老师就把我微信拉黑了&amp;hellip;期末考试给了59算是报复应）
-关于博客，从14年底断断续续写了一些，当时对git还没个了解，改动一个东西为了看效果就commit到github，以致当时每天几十个commit的产出，从那时候起，博客的装潢就没变过，黑底绿线白字，大家都说丑。
-直到前几天看别人博客怎么这么好看，发现了hugo这个项目，就找了个简单的主题，倒腾了半天，算是改版了。至于旧版本，原来想保留一个/old的目录，然后弄了半天，一是嫌麻烦（其实是没弄成），二是想留着也没用（就跟留了那么多旧照片，还不是没工夫看），不如直接上新的算了，所以，旧版本算是没了（有一个backup的branch）。新博客看起来漂亮多了，感谢Hugo和Minimo的开发者们和Github。
-曾经想着是作为技术博客存在，但鄙人技术一般，聊天水平也有限，常常写的不知所云，所以经过这次改版也算认清了自己，就当个备忘录写吧。有时候感觉，有些见解没地方说，说了别人也没个共鸣，发个朋友圈还要考虑给不给别人看，用lofter吧广告一大堆，索性就在这里胡言乱语好了。至少没人审查，也不用考虑他人的感受（话说也没人看呐），也没广告烦恼。
-如果有人给咱评论呢，开心了就交个朋友，不开心就置之不理，也不会有心里负担233。
-话说咱已经从脚本小子变成小程序员啦～
-wrfly - 2017/12/31 - Beijing</description>
     </item>
     
     <item>
@@ -1900,15 +1918,6 @@ ettercap 这个软件就是个好东西了，用鼠标就能搞定一切，包�
 3.找到之后，把 locked=&amp;lsquo;true&amp;rsquo; 改成 locked=&amp;lsquo;false&amp;rsquo;### ![3/img/remove_attribution_in_blogger/remove_attribution_in_blogger_3.png)
 4.保存### 5.删除### 点击 布局 → 页面元素 → 修改 Attribution → 点击删除 即可删掉“由Blogger强力驱动”
 ![4/img/remove_attribution_in_blogger/remove_attribution_in_blogger_4.png)</description>
-    </item>
-    
-    <item>
-      <title>Links</title>
-      <link>https://wrfly.kfd.me/links/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://wrfly.kfd.me/links/</guid>
-      <description> BigTang 离别歌 简庐 LarryXi  </description>
     </item>
     
   </channel>

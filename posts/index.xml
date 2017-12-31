@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on wrfly&#39;s blog</title>
+    <title>wrfly&#39;s blog</title>
     <link>https://wrfly.kfd.me/posts/</link>
-    <description>Recent content in Posts on wrfly&#39;s blog</description>
+    <description>Recent content on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Sun, 31 Dec 2017 22:13:35 +0800</lastBuildDate>
     
