@@ -8,7 +8,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/posts/</loc>
-    <lastmod>2017-12-31T22:13:35+08:00</lastmod>
+    <lastmod>2018-01-02T00:18:50+08:00</lastmod>
   </url>
   
   <url>
@@ -17,6 +17,11 @@
   
   <url>
     <loc>https://wrfly.kfd.me/about/</loc>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/global-counter-in-programming/</loc>
+    <lastmod>2018-01-02T00:18:50+08:00</lastmod>
   </url>
   
   <url>
@@ -540,7 +545,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/tags/code/</loc>
-    <lastmod>2017-12-06T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-02T00:18:50+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -551,13 +556,13 @@
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/tags/daily/</loc>
+    <loc>https://wrfly.kfd.me/categories/daily/</loc>
     <lastmod>2017-12-31T22:13:35+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/categories/daily/</loc>
+    <loc>https://wrfly.kfd.me/tags/daily/</loc>
     <lastmod>2017-12-31T22:13:35+08:00</lastmod>
     <priority>0</priority>
   </url>
@@ -583,6 +588,12 @@
   <url>
     <loc>https://wrfly.kfd.me/tags/funny/</loc>
     <lastmod>2015-02-10T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/go/</loc>
+    <lastmod>2018-01-02T00:18:50+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -613,6 +624,12 @@
   <url>
     <loc>https://wrfly.kfd.me/tags/nginx/</loc>
     <lastmod>2015-04-25T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/categories/notes/</loc>
+    <lastmod>2018-01-02T00:18:50+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -695,7 +712,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/</loc>
-    <lastmod>2017-12-31T22:13:35+08:00</lastmod>
+    <lastmod>2018-01-02T00:18:50+08:00</lastmod>
     <priority>0</priority>
   </url>
   

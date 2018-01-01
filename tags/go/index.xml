@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Go on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/go/</link>
+    <description>Recent content in Go on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 02 Jan 2018 00:18:50 +0800</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Global-Counter-in-Programming</title>
+      <link>https://wrfly.kfd.me/posts/global-counter-in-programming/</link>
+      <pubDate>Tue, 02 Jan 2018 00:18:50 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/global-counter-in-programming/</guid>
+      <description>今天去颐和园玩来着，看到官方开的溜冰场，虽然50一位，但也值了。非常开心。 &amp;mdash; 我
+ 前些日子给QiMen添加新功能，需要统计实时状态，状态中有个请求数量，所以需要一个计数器。
+如果是一般的计数器还好，写一个全局变量一个一个加就可以了，但是由于是高并发的服务，很多线程都回去加加减减，所以全局变量的方法是不可取的。
+那既然有高并发，我给这个变量加个锁好了。也不可以，因为是高并发，可以假设每秒有10k请求，那就需要Lock Unlock 10k次，显然是对资源的浪费，很没有必要。 所以加锁的方案也不可行。
+既然这样，那不如加个队列吧，一头写，另一头读。这个方案貌似可以，但计数器的实现就变成了“队列”+“计数器”，感觉工程量有点大。所以还是pass了。
+emmm，今天吃饭等号的时候，跟阿杰讨论了下，他说他们的方案有一种是依靠外部redis单线程的优势，用redis的counter来加加减减。好像能够解决问题，毕竟redis还是靠得住的，然而，网络IO貌似有点高，而且引入了新的redis组件，如果排除掉网络IO的影响，如果有10个QiMen，每个QiMen每秒10k的消息，那就是每秒100k的操作，不知道redis能不能抗住。（也不确定redis cluster搞不搞的定这个counter）可能是大家的业务场景不一样，所以杰师傅考虑的“统计数据外置”在我的情境下是没必要的，因为我只需要一个总的结果，每隔一段时间反馈给我就好。但大多数情况下，统计数据外置还是政治正确的，这样可以解耦数据，使服务无状态。
+然后在golang example中其实就有一个counter，用的是atomic的原子特性。（话说这里有一个插曲，golang的playground中，给每个程序限制了一个线程运行，因为每次跑goroutine都会得到正确的结果，不论加不加锁，也不论加不加atomic，猜测playground在运行时添加了 GOMAXPROCS=1）
+var counter uint64 = 0 atomic.AddUint64(&amp;amp;counter, 1) 但这个counter也不能满足我的要求，因为我其实是不知道有多少个counter的，比如请求来源有10个（以IP划分），那我就有10个counter，所以在事先不知道有多少个counter的情况下，这种方案也“貌似”被pass了。（其实在prometheus中，exporter所用的counter内部实现也是atomic）
+第一反应是用map:
+counter := make(map[string]uint64, 0) if _, ok := counter[source]; !ok { counter[source] = 0 } c := counter[source] atomic.AddUint64(&amp;amp;c, 1) // error here 然而，map里面不让取地址，因为是哈希表，里面的东西会经常变，没有一个准确的地址。（可以搜一下大佬们对此的讨论，如果感兴趣的话）
+但是。凡事总有个但是。imcom哥提供了这样一种方案。
+counter := make(map[string]*uint64, 0) 最终的counter还是哈希表，但内容是一个指针，这样atomic就可以对其操作。如果想读取值的话，就atomic.LoadUint64一下。还可以在上层封装一个，在一个struct中既创建一个普通的map，又创建一个指针的map，增删全在指针map上进行，读取呢，则先Load到普通的map，然后就可以进行之后的操作了，比如映射json。
+type Counter struct{ IP	map[string]uint64 `json:&amp;#34;ip&amp;#34;` IPCounter map[string]*uint64 `json:&amp;#34;-&amp;#34;` } 问题解决。
+对于atomic的扩展阅读：sync/atomic - 原子操作</description>
+    </item>
+    
+  </channel>
+</rss>
