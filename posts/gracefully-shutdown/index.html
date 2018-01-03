@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='时间是宇宙唯一的资源 &mdash; 我
+ 因为上周准备code review的时候遇到了这个问题，大家也给出了一些建议，和imcom哥也进行了一番讨论，了解了golang中context的一些用法，在这里记录备份一下，也希望对别人有所帮助。
+首先简单的阐述一下问题是什么。golang编程，经常会go出去一些goroutine，抛出去不难，关键要看怎么收回来，因为程序不仅有启动，还要有退出，不管是正常退出还是非正常退出，总得有一个clean up的过程，不然就会导致程序不可控，引发非正常退出，数据丢失或者脏数据等一些乱七八糟的问题。
+所以我们要在程序退出的时候对申请的资源进行释放，主动关闭已经建立的连接，完成正在进行的工作，然后退出程序。
+github上有很多公开的让http服务graceful退出的lib，好像某些框架也提供了gracefulstop的方法。其本质就是停止服务，关闭端口，拒绝了新来的请求，然后把手头正在进行的请求处理完，或者设置一个超时时间强制结束正在进行的请求，然后server就stop了。这里我不谈论这个，因为有很多框架都自带了这个功能，而且不限于http服务。
+但有个东西是要参考的，golang中的context。写过http服务的人都知道，每个请求的request中都带了一个context，一开始我是不知道这是做什么用的，但每个东西都有其用法，这个context的用法就是让server端和client联系起来的一个上下文，也可以理解为纽带。最基础的，比如client发出了一个请求，但是由于某种原因（网络断了，链接丢了，客户端主动关闭了，Ctrl&#43;C了），这个连接断了，那么server端还要继续处理么，肯定不要了嘛，不然发给谁，给鬼啊，所以server就要根据这个context进行下一步处理，如果context已经done了，那么这个请求就可以直接return了。
+说起来会很枯燥，看代码（跟上面说的server无关了哈，有点偏）：
+package main import ( &#34;context&#34; &#34;fmt&#34; &#34;sync&#34; &#34;time&#34; ) var wg sync.WaitGroup func main() { ctx, cancel := context.WithCancel(context.Background()) defer cancel() n := 3 wg.Add(n) for i := 0; i &lt; n; i&#43;&#43; { go testContext(ctx) } time.Sleep(2100 * time.Millisecond) cancel() wg.Wait() } func testContext(ctx context.Context) { defer wg.Done() defer fmt.Println(&#34;stop&#34;) tk := time.NewTicker(time.Second) defer tk.Stop() for { select { case &lt;-ctx.'>
+
+<meta property='og:title' content='Gracefully-Shutdown • wrfly&#39;s blog'>
+<meta property='og:description' content='时间是宇宙唯一的资源 &mdash; 我
+ 因为上周准备code review的时候遇到了这个问题，大家也给出了一些建议，和imcom哥也进行了一番讨论，了解了golang中context的一些用法，在这里记录备份一下，也希望对别人有所帮助。
+首先简单的阐述一下问题是什么。golang编程，经常会go出去一些goroutine，抛出去不难，关键要看怎么收回来，因为程序不仅有启动，还要有退出，不管是正常退出还是非正常退出，总得有一个clean up的过程，不然就会导致程序不可控，引发非正常退出，数据丢失或者脏数据等一些乱七八糟的问题。
+所以我们要在程序退出的时候对申请的资源进行释放，主动关闭已经建立的连接，完成正在进行的工作，然后退出程序。
+github上有很多公开的让http服务graceful退出的lib，好像某些框架也提供了gracefulstop的方法。其本质就是停止服务，关闭端口，拒绝了新来的请求，然后把手头正在进行的请求处理完，或者设置一个超时时间强制结束正在进行的请求，然后server就stop了。这里我不谈论这个，因为有很多框架都自带了这个功能，而且不限于http服务。
+但有个东西是要参考的，golang中的context。写过http服务的人都知道，每个请求的request中都带了一个context，一开始我是不知道这是做什么用的，但每个东西都有其用法，这个context的用法就是让server端和client联系起来的一个上下文，也可以理解为纽带。最基础的，比如client发出了一个请求，但是由于某种原因（网络断了，链接丢了，客户端主动关闭了，Ctrl&#43;C了），这个连接断了，那么server端还要继续处理么，肯定不要了嘛，不然发给谁，给鬼啊，所以server就要根据这个context进行下一步处理，如果context已经done了，那么这个请求就可以直接return了。
+说起来会很枯燥，看代码（跟上面说的server无关了哈，有点偏）：
+package main import ( &#34;context&#34; &#34;fmt&#34; &#34;sync&#34; &#34;time&#34; ) var wg sync.WaitGroup func main() { ctx, cancel := context.WithCancel(context.Background()) defer cancel() n := 3 wg.Add(n) for i := 0; i &lt; n; i&#43;&#43; { go testContext(ctx) } time.Sleep(2100 * time.Millisecond) cancel() wg.Wait() } func testContext(ctx context.Context) { defer wg.Done() defer fmt.Println(&#34;stop&#34;) tk := time.NewTicker(time.Second) defer tk.Stop() for { select { case &lt;-ctx.'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/gracefully-shutdown/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='code'><meta property='article:tag' content='golang'><meta property='article:published_time' content='2018-01-03T23:03:07&#43;08:00'/><meta property='article:modified_time' content='2018-01-03T23:03:07&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>Gracefully-Shutdown • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/gracefully-shutdown/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/tags/'>tags</a>
+    </li>
+  <li>
+      <a href='/posts/'>posts</a>
+    </li>
+  <li>
+      <a href='/links/'>links</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Gracefully-Shutdown</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2018-01-03T23:03:07&#43;08:00'>2018, Jan 03</time>
+</span>
+
+  
+  
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  <blockquote>
+<p>时间是宇宙唯一的资源 &mdash; 我</p>
+</blockquote>
+
+<p>因为上周准备code review的时候遇到了这个问题，大家也给出了一些建议，和imcom哥也进行了一番讨论，了解了golang中context的一些用法，在这里记录备份一下，也希望对别人有所帮助。</p>
+
+<p>首先简单的阐述一下问题是什么。golang编程，经常会go出去一些goroutine，抛出去不难，关键要看怎么收回来，因为程序不仅有启动，还要有退出，不管是正常退出还是非正常退出，总得有一个clean up的过程，不然就会导致程序不可控，引发非正常退出，数据丢失或者脏数据等一些乱七八糟的问题。</p>
+
+<p>所以我们要在程序退出的时候对申请的资源进行释放，主动关闭已经建立的连接，完成正在进行的工作，然后退出程序。</p>
+
+<p>github上有很多公开的让http服务graceful退出的lib，好像某些框架也提供了gracefulstop的方法。其本质就是停止服务，关闭端口，拒绝了新来的请求，然后把手头正在进行的请求处理完，或者设置一个超时时间强制结束正在进行的请求，然后server就stop了。这里我不谈论这个，因为有很多框架都自带了这个功能，而且不限于http服务。</p>
+
+<p>但有个东西是要参考的，golang中的<strong>context</strong>。写过http服务的人都知道，每个请求的request中都带了一个context，一开始我是不知道这是做什么用的，但每个东西都有其用法，这个context的用法就是让server端和client联系起来的一个上下文，也可以理解为纽带。最基础的，比如client发出了一个请求，但是由于某种原因（网络断了，链接丢了，客户端主动关闭了，Ctrl+C了），这个连接断了，那么server端还要继续处理么，肯定不要了嘛，不然发给谁，给鬼啊，所以server就要根据这个context进行下一步处理，如果context已经done了，那么这个请求就可以直接return了。</p>
+
+<p>说起来会很枯燥，看代码（跟上面说的server无关了哈，有点偏）：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+
+<span style="color:#f92672">import</span> (
+	<span style="color:#e6db74">&#34;context&#34;</span>
+	<span style="color:#e6db74">&#34;fmt&#34;</span>
+	<span style="color:#e6db74">&#34;sync&#34;</span>
+	<span style="color:#e6db74">&#34;time&#34;</span>
+)
+
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">wg</span> <span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">WaitGroup</span>
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">cancel</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">WithCancel</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Background</span>())
+	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">cancel</span>()
+
+	<span style="color:#a6e22e">n</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">3</span>
+	<span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#a6e22e">n</span>)
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">n</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+		<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">testContext</span>(<span style="color:#a6e22e">ctx</span>)
+	}
+
+	<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#ae81ff">2100</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Millisecond</span>)
+	<span style="color:#a6e22e">cancel</span>()
+
+	<span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Wait</span>()
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">testContext</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>) {
+	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Done</span>()
+	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;stop&#34;</span>)
+
+	<span style="color:#a6e22e">tk</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">NewTicker</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>)
+	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">tk</span>.<span style="color:#a6e22e">Stop</span>()
+	<span style="color:#66d9ef">for</span> {
+		<span style="color:#66d9ef">select</span> {
+		<span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Done</span>():
+			<span style="color:#66d9ef">return</span>
+		<span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">tk</span>.<span style="color:#a6e22e">C</span>:
+			<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;tick&#34;</span>)
+		}
+	}
+}</code></pre></div>
+<p><a href="https://play.golang.org/p/Y3X-f_jP_mZ" target="_blank">https://play.golang.org/p/Y3X-f_jP_mZ</a></p>
+
+<p>或者我的短域名hhh -&gt; <a href="https://u.kfd.me/00000f" target="_blank">https://u.kfd.me/00000f</a></p>
+
+<p>把一个函数go出去，如果不管他的话，程序退出的时候可以靠GC去清理，但在一个长期运行的服务里，不知道要go出去多少协程，如果不去管理，随着时间的增长，机器很快就会撑不住，性能受影响不说，业务也受影响，这是不允许的。</p>
+
+<p>所以在上面的例子中可以看到，go出去的协程接收了一个context作为其参数，并且监听这个context的变化。context在这里要说明一点的是，context是可以衍生出新的“自己”的，即每个context都是由<code>context.Background()</code>衍生出来的。更具体的解释可以看<a href="https://blog.golang.org/context" title="golang context" target="_blank">这篇文章</a>。父context生成（<code>context.WithCancel()</code>或者别的）出来的context还可以继续生成新的。而且子context被cancel了之后，父context不受影响，但父context“退出”之后，所有的子context以及子context生成的context也都会done。这就给我们程序分层带来了好处。主进程有一个大的context，由于某种原因退出后，context自动cancel掉，然后子服务随即退出。或者，如果一个程序需要提供多种服务，那么每个子服务就要select这个context，然后主程序g掉之后，自动clean up。</p>
+
+<p>这里有个选择，就是当我们初始化一个service的时候，假设这个service有两个方法，<code>Serve</code>和<code>Shutdown</code>，那么还有必要主动Shutdown吗。我个人认为哈，在select了context之后，是没必要主动shutdown服务的，因为在初始化的时候就（或许，全凭个人）已经挂上了clean up的操作，只要context done了就进行，所以Shutdown的接口有点多余了。</p>
+
+<p>但如果在初始化的时候没有利用context去管理退出之后的清理工作，而是利用这个context进行了别的操作，放到了别的goroutine当中，那么还是有必要加一个Shutdown的接口，手动退出的。</p>
+
+<p>接下来还一个问题，如何知道main中的所有service都退出了。或者说，如何知道某一个service已经graceful shutdown了。</p>
+
+<p>这就需要一个<strong>wait group</strong>。</p>
+
+<p>我们可以在每个service中添加一个local的wait group，每go出去一个函数，都在wg里加一，然后退出（<code>GracefulShutdown()</code>）的时候就有数了。这里要注意的一个问题是错误处理，如果在退出的时候出现了异常，即如果有的goroutine没能退出，那么在shutdown的时候就要直接<code>return error</code>而不是继续<code>wg.Wait()</code>了，因为出现了错误，service永远不会（可能，也许，大概，全凭个人怎么写，也可以加上重试机制，或者强制退出，时间超时等等）优雅退出了。</p>
+
+<p>其实还是将wait group在main里的用法，扩展到了每一个package，每个package负责自己的context，自己的wait group，不论是初始化还是退出，个人管个人的，不建议有全局的wait group，不方便管理，而且逻辑上也不好区分和分层。</p>
+
+<p>有了<code>context</code>作为退出信号的发起者，<code>wait group</code>作为保证，那么基本上可以放心的让程序退出了。</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/develop'>Develop</a></div>
+<div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/code'>Code</a>, <a class='tag' href='/tags/golang'>Golang</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav' style="float: left;"><div class='prev-entry' style="float: left;">
+      <a href='/posts/global-counter-in-programming/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Global-Counter-in-Programming</a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+       &copy; 2014-2018 wrfly 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

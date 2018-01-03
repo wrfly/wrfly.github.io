@@ -5,10 +5,26 @@
     <link>https://wrfly.kfd.me/tags/code/</link>
     <description>Recent content in Code on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 02 Jan 2018 00:18:50 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 03 Jan 2018 23:03:07 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/tags/code/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Gracefully-Shutdown</title>
+      <link>https://wrfly.kfd.me/posts/gracefully-shutdown/</link>
+      <pubDate>Wed, 03 Jan 2018 23:03:07 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/gracefully-shutdown/</guid>
+      <description>时间是宇宙唯一的资源 &amp;mdash; 我
+ 因为上周准备code review的时候遇到了这个问题，大家也给出了一些建议，和imcom哥也进行了一番讨论，了解了golang中context的一些用法，在这里记录备份一下，也希望对别人有所帮助。
+首先简单的阐述一下问题是什么。golang编程，经常会go出去一些goroutine，抛出去不难，关键要看怎么收回来，因为程序不仅有启动，还要有退出，不管是正常退出还是非正常退出，总得有一个clean up的过程，不然就会导致程序不可控，引发非正常退出，数据丢失或者脏数据等一些乱七八糟的问题。
+所以我们要在程序退出的时候对申请的资源进行释放，主动关闭已经建立的连接，完成正在进行的工作，然后退出程序。
+github上有很多公开的让http服务graceful退出的lib，好像某些框架也提供了gracefulstop的方法。其本质就是停止服务，关闭端口，拒绝了新来的请求，然后把手头正在进行的请求处理完，或者设置一个超时时间强制结束正在进行的请求，然后server就stop了。这里我不谈论这个，因为有很多框架都自带了这个功能，而且不限于http服务。
+但有个东西是要参考的，golang中的context。写过http服务的人都知道，每个请求的request中都带了一个context，一开始我是不知道这是做什么用的，但每个东西都有其用法，这个context的用法就是让server端和client联系起来的一个上下文，也可以理解为纽带。最基础的，比如client发出了一个请求，但是由于某种原因（网络断了，链接丢了，客户端主动关闭了，Ctrl+C了），这个连接断了，那么server端还要继续处理么，肯定不要了嘛，不然发给谁，给鬼啊，所以server就要根据这个context进行下一步处理，如果context已经done了，那么这个请求就可以直接return了。
+说起来会很枯燥，看代码（跟上面说的server无关了哈，有点偏）：
+package main import ( &amp;#34;context&amp;#34; &amp;#34;fmt&amp;#34; &amp;#34;sync&amp;#34; &amp;#34;time&amp;#34; ) var wg sync.WaitGroup func main() { ctx, cancel := context.WithCancel(context.Background()) defer cancel() n := 3 wg.Add(n) for i := 0; i &amp;lt; n; i++ { go testContext(ctx) } time.Sleep(2100 * time.Millisecond) cancel() wg.Wait() } func testContext(ctx context.Context) { defer wg.Done() defer fmt.Println(&amp;#34;stop&amp;#34;) tk := time.NewTicker(time.Second) defer tk.Stop() for { select { case &amp;lt;-ctx.</description>
+    </item>
     
     <item>
       <title>Global-Counter-in-Programming</title>
