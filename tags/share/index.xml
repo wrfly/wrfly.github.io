@@ -109,6 +109,23 @@ backend = &amp;#34;etcd&amp;#34; confdir = &amp;#34;/etc/confd&amp;#34; log-leve
     </item>
     
     <item>
+      <title>logrotate和cron</title>
+      <link>https://wrfly.kfd.me/posts/logrotate%E5%92%8Ccron/</link>
+      <pubDate>Thu, 21 Jul 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/logrotate%E5%92%8Ccron/</guid>
+      <description>来公司实习了四天了，遇到了一些大大小小的问题，写脚本遇到的就不详细说了，说一下定时任务和logrotate（日志滚转）。
+两篇文章介绍logrotate：http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-1
+http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-2
+说的很详细，具体文件可以参考 /etc/logrotate.d/ 目录下的内容。
+给出一个范本：
+/var/log/test/*.log { hourly rotate 4 missingok size 10M notifempty compress create } 从/var/log/test/目录下查找所有的以.log结尾的文件，每小时轮回一次，保存最近的四个，如果文件不存在也OK，限定大小是超过10M的文件，这里要注意的是，如果文件大小已经超过10M了，那下次logrotate运行的时候，就会忽略上面的hourly，直接rotate，notifempty的意思是，如果文件是空的，则不进行rotate，默认情况是进行的，可以查看man手册查阅详细的说明。压缩，并创建一个新的空文件，防止依赖日志文件的应用报错。
+还需要把logrotate放到cron.hourly目录下，这样配置的hourly才会生效。
+还要说的是，可以使用logrotate -f来强制执行轮回。
+在这里实习很好玩，真的有很多事情可以做。</description>
+    </item>
+    
+    <item>
       <title>Ubuntu下更改网卡名字以及pppoe配置IPv6</title>
       <link>https://wrfly.kfd.me/posts/ubuntu%E4%B8%8B%E6%9B%B4%E6%94%B9%E7%BD%91%E5%8D%A1%E5%90%8D%E5%AD%97%E4%BB%A5%E5%8F%8Apppoe%E9%85%8D%E7%BD%AEipv6/</link>
       <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Devops on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/tags/devops/</link>
+    <description>Recent content in Devops on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 08 Jan 2018 20:59:37 +0800</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/tags/devops/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Logrotate-Problem</title>
+      <link>https://wrfly.kfd.me/posts/logrotate-problem/</link>
+      <pubDate>Mon, 08 Jan 2018 20:59:37 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/logrotate-problem/</guid>
+      <description>今天遇到一个logrotate的问题。
+现象是配置不生效（其实也不是完全不生效，只是每小时的滚转策略变成一天了）。
+配置文件：
+# see &amp;#34;man logrotate&amp;#34; for details # rotate log files weekly weekly # keep 4 weeks worth of backlogs rotate 4 # create new (empty) log files after rotating old ones create # use date as a suffix of the rotated file dateext # uncomment this if you want your log files compressed #compress # packages drop log rotation information into this directory include /etc/logrotate.d$ ls -l /etc/cron.</description>
+    </item>
+    
+    <item>
+      <title>logrotate和cron</title>
+      <link>https://wrfly.kfd.me/posts/logrotate%E5%92%8Ccron/</link>
+      <pubDate>Thu, 21 Jul 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/logrotate%E5%92%8Ccron/</guid>
+      <description>来公司实习了四天了，遇到了一些大大小小的问题，写脚本遇到的就不详细说了，说一下定时任务和logrotate（日志滚转）。
+两篇文章介绍logrotate：http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-1
+http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-2
+说的很详细，具体文件可以参考 /etc/logrotate.d/ 目录下的内容。
+给出一个范本：
+/var/log/test/*.log { hourly rotate 4 missingok size 10M notifempty compress create } 从/var/log/test/目录下查找所有的以.log结尾的文件，每小时轮回一次，保存最近的四个，如果文件不存在也OK，限定大小是超过10M的文件，这里要注意的是，如果文件大小已经超过10M了，那下次logrotate运行的时候，就会忽略上面的hourly，直接rotate，notifempty的意思是，如果文件是空的，则不进行rotate，默认情况是进行的，可以查看man手册查阅详细的说明。压缩，并创建一个新的空文件，防止依赖日志文件的应用报错。
+还需要把logrotate放到cron.hourly目录下，这样配置的hourly才会生效。
+还要说的是，可以使用logrotate -f来强制执行轮回。
+在这里实习很好玩，真的有很多事情可以做。</description>
+    </item>
+    
+  </channel>
+</rss>

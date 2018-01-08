@@ -5,7 +5,7 @@
     <link>https://wrfly.kfd.me/</link>
     <description>Recent content on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 06 Jan 2018 20:39:56 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 08 Jan 2018 20:59:37 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/index.xml" rel="self" type="application/rss+xml" />
     
@@ -44,6 +44,18 @@
 如果有人给咱评论呢，开心了就交个朋友，不开心就置之不理，也不会有心里负担233。
 话说咱已经从脚本小子变成小程序员啦～
 wrfly - 2017/12/31 - Beijing</description>
+    </item>
+    
+    <item>
+      <title>Logrotate-Problem</title>
+      <link>https://wrfly.kfd.me/posts/logrotate-problem/</link>
+      <pubDate>Mon, 08 Jan 2018 20:59:37 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/logrotate-problem/</guid>
+      <description>今天遇到一个logrotate的问题。
+现象是配置不生效（其实也不是完全不生效，只是每小时的滚转策略变成一天了）。
+配置文件：
+# see &amp;#34;man logrotate&amp;#34; for details # rotate log files weekly weekly # keep 4 weeks worth of backlogs rotate 4 # create new (empty) log files after rotating old ones create # use date as a suffix of the rotated file dateext # uncomment this if you want your log files compressed #compress # packages drop log rotation information into this directory include /etc/logrotate.d$ ls -l /etc/cron.</description>
     </item>
     
     <item>
@@ -570,7 +582,7 @@ Docker啊Docker。我离安全的路是越走越远了。
       <pubDate>Thu, 21 Jul 2016 00:00:00 +0000</pubDate>
       
       <guid>https://wrfly.kfd.me/posts/logrotate%E5%92%8Ccron/</guid>
-      <description>来公司实习了四天了，遇到了一些大大小小的问题，写脚本遇到的就不详细说了，说一下定时任务和logrotate（日志轮回）。
+      <description>来公司实习了四天了，遇到了一些大大小小的问题，写脚本遇到的就不详细说了，说一下定时任务和logrotate（日志滚转）。
 两篇文章介绍logrotate：http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-1
 http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-2
 说的很详细，具体文件可以参考 /etc/logrotate.d/ 目录下的内容。
