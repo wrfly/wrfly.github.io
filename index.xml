@@ -5,7 +5,7 @@
     <link>https://wrfly.kfd.me/</link>
     <description>Recent content on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 14 Jan 2018 01:07:51 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 20 Jan 2018 14:52:01 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/index.xml" rel="self" type="application/rss+xml" />
     
@@ -44,6 +44,19 @@
 如果有人给咱评论呢，开心了就交个朋友，不开心就置之不理，也不会有心里负担233。
 话说咱已经从脚本小子变成小程序员啦～
 wrfly - 2017/12/31 - Beijing</description>
+    </item>
+    
+    <item>
+      <title>Token-Bucket-II</title>
+      <link>https://wrfly.kfd.me/posts/token-bucket-ii/</link>
+      <pubDate>Sat, 20 Jan 2018 14:52:01 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/token-bucket-ii/</guid>
+      <description>昨天公司年会上中了一部iPhoneX，感觉用尽了积攒了二十多年的运气。
+ 上回说到用ticker的方式后台fill令牌桶的效率是最高的，然后鄙人就很奇怪，所以就又刨根问底测试了一下，发现在单核的情况下（用docker的方式绑定CPU到容器），如果有大于100个协程在run的话，性能的确会受影响。
+代码: https://gist.github.com/wrfly/3f2b23b20d53fbe5f9fee8e8f89fe861
+CPU: Intel(R) Core(TM) i7-7600U CPU @ 2.80GHz
+多核情况下的性能对比: ➜ ratelimit ./ratelimit 2018/01/20 15:10:28 start testing... 2018/01/20 15:10:28 5s test 2018/01/20 15:10:33 juju[lock]: 5.000108905 2018/01/20 15:10:33 take: 6000 2018/01/20 15:10:33 drop: 35740301 2018/01/20 15:10:33 2018/01/20 15:10:38 bsm[atomic]: 5.000146318 2018/01/20 15:10:38 take: 6000 2018/01/20 15:10:38 drop: 57423059 2018/01/20 15:10:38 2018/01/20 15:10:43 wrfly: 5.000100057 2018/01/20 15:10:43 take: 5000 2018/01/20 15:10:43 drop: 116287439 2018/01/20 15:10:43 2018/01/20 15:10:48 tb: 5.</description>
     </item>
     
     <item>
