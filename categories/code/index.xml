@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Code on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/categories/code/</link>
+    <description>Recent content in Code on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 24 Jan 2018 20:38:42 +0800</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/categories/code/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Go-TrimLeft-and-TrimPrefix</title>
+      <link>https://wrfly.kfd.me/posts/go-trimleft-and-trimprefix/</link>
+      <pubDate>Wed, 24 Jan 2018 20:38:42 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/go-trimleft-and-trimprefix/</guid>
+      <description>今天忽然发现了一个bug，其实是我自己的错误啦，不过也可以甩锅给文档……
+简而言之，是用法错误，看这样一个例子：
+package main import ( &amp;#34;fmt&amp;#34; &amp;#34;strings&amp;#34; ) func main() { str := &amp;#34;/some/key&amp;#34; fmt.Println(strings.TrimLeft(str, &amp;#34;/some&amp;#34;)) }key Program exited. https://play.golang.org/p/Hn8-iVEUi-W
+没毛病是吧？
+如果你也觉着没毛病，那你也错啦！
+package main import ( &amp;#34;fmt&amp;#34; &amp;#34;strings&amp;#34; ) func main() { str := &amp;#34;/some/sugar&amp;#34; fmt.Println(strings.TrimLeft(str, &amp;#34;/some&amp;#34;)) }ugar Program exited. https://play.golang.org/p/_-3V1PgLwjh
+喂喂喂！怎么把我的sugar的s给吃了，这是bug吧！
+嗯。的确是bug，不过，“凡事总要先从自身找原因”:
+ func TrimLeft
+func TrimLeft(s string, cutset string) string
+TrimLeft returns a slice of the string s with all leading Unicode code points contained in cutset removed.</description>
+    </item>
+    
+  </channel>
+</rss>

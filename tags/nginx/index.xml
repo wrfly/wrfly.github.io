@@ -5,10 +5,23 @@
     <link>https://wrfly.kfd.me/tags/nginx/</link>
     <description>Recent content in Nginx on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 25 Apr 2015 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 24 Jan 2018 21:09:11 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/tags/nginx/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kafka-Timestamp-and-Nginx-Udp-Proxy</title>
+      <link>https://wrfly.kfd.me/posts/kafka-timestamp-and-nginx-udp-proxy/</link>
+      <pubDate>Wed, 24 Jan 2018 21:09:11 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/kafka-timestamp-and-nginx-udp-proxy/</guid>
+      <description>昨天遇到一个kafka lib的问题, 明明kafka版本是1.0, 发消息的时候也带上时间戳了, 但接收的时候就是看不到时间戳, timestamp为-1.
+如果你也是用的sarama, 记着要在配置的时候制定kafka版本,不然就默认用最小的版本了, 而最小版本(0.8)是没有时间戳功能的, 所以即使后台的kafka是最新的1.0, 那也收不到timestamp, 因为sarama发的时候就没带, 协议版本里没有.
+解决方法是, 指定kafka的版本:
+config := sarama.NewConfig() config.Version = sarama.V1_0_0_0 // HERE! // sarama.WaitForLocal sarama.WaitForAll sarama.NoResponse config.Producer.RequiredAcks = conf.AckMode 还需要注意的一点是:
+// Timestamp is the timestamp assigned to the message by the broker. This // is only guaranteed to be defined if the message was successfully // delivered, RequiredAcks is not NoResponse, and the Kafka broker is at // least version 0.</description>
+    </item>
     
     <item>
       <title>Nginx搭建反向代理服务</title>

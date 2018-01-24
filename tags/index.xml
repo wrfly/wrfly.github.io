@@ -83,6 +83,15 @@
     </item>
     
     <item>
+      <title>Dev</title>
+      <link>https://wrfly.kfd.me/tags/dev/</link>
+      <pubDate>Wed, 24 Jan 2018 21:09:11 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/dev/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Devops</title>
       <link>https://wrfly.kfd.me/tags/devops/</link>
       <pubDate>Mon, 08 Jan 2018 20:59:37 +0800</pubDate>
@@ -121,7 +130,7 @@
     <item>
       <title>Go</title>
       <link>https://wrfly.kfd.me/tags/go/</link>
-      <pubDate>Tue, 02 Jan 2018 00:18:50 +0800</pubDate>
+      <pubDate>Wed, 24 Jan 2018 20:38:42 +0800</pubDate>
       
       <guid>https://wrfly.kfd.me/tags/go/</guid>
       <description></description>
@@ -175,7 +184,7 @@
     <item>
       <title>Nginx</title>
       <link>https://wrfly.kfd.me/tags/nginx/</link>
-      <pubDate>Sat, 25 Apr 2015 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 24 Jan 2018 21:09:11 +0800</pubDate>
       
       <guid>https://wrfly.kfd.me/tags/nginx/</guid>
       <description></description>
