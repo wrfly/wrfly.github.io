@@ -5,10 +5,27 @@
     <link>https://wrfly.kfd.me/tags/dev/</link>
     <description>Recent content in Dev on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 24 Jan 2018 21:09:11 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 02 Feb 2018 19:17:28 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/tags/dev/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Read-and-Write-in-High-Concurrency</title>
+      <link>https://wrfly.kfd.me/posts/read-and-write-in-high-concurrency/</link>
+      <pubDate>Fri, 02 Feb 2018 19:17:28 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/read-and-write-in-high-concurrency/</guid>
+      <description>问题 今天遇到一个高并发读写的问题。
+具体的场景是，有一个“策略”的集合，然后每秒有很多消息进来，每一条消息都要匹配有没有对应的策略，如果有的话就应用策略（更改消息的某个属性），没有的话就返回。
+抽象来看，就是在N多读的同时，怎样去写数据。
+一开始我的方法是策略存在数组里，消息来了就去遍历数组，如果匹配到了就返回对应的规则。这种方法最笨，因为每一条消息过来，我都要去循环遍历整个数组，如果数组很长的话（有很多规则），那么带来的无谓开销会很大，复杂度为O(n)。
+而且还一个问题，如果在range数组的时候，数组发生了变化，那么就会读到错误的值，或者崩溃。
+一种解决的方法是，在遍历之前，首先拷贝一份新的，遍历新的策略数组，而不是原有的全局变量。这种方法的问题在于，每次匹配规则的时候，都要进行一次拷贝，虽然简单，也能解决问题，但，太浪费资源，而且很丑。
+最终的思路是，用哈希表的方式去匹配策略，从复杂度上来看是O(1)的操作，但问题在于并发读写哈希表。
+复现 为了更容易的表示问题，用了大量的并发读写（实际情况没有下面那么频繁，写操作要比读操作少得多得多）：
+package main import ( &amp;#34;fmt&amp;#34; &amp;#34;time&amp;#34; ) var biu map[int]int func read() { for i := 0; i &amp;lt; len(biu); i++ { if biu[i] != i { fmt.Printf(&amp;#34;%d != %d\n&amp;#34;, biu[i], i) panic(&amp;#34;!&amp;#34;) } } } func write() { for i := 0; i &amp;lt; time.Now().Second(); i++ { biu[i] = i } } func main() { biu = make(map[int]int) go func() { for { go write() time.</description>
+    </item>
     
     <item>
       <title>Kafka-Timestamp-and-Nginx-Udp-Proxy</title>
