@@ -5,10 +5,20 @@
     <link>https://wrfly.kfd.me/tags/code/</link>
     <description>Recent content in Code on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 14 Jan 2018 01:07:51 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 03 Feb 2018 20:34:48 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/tags/code/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>RWMutex-and-sync.Map</title>
+      <link>https://wrfly.kfd.me/posts/rwmutex-and-sync.map/</link>
+      <pubDate>Sat, 03 Feb 2018 20:34:48 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/rwmutex-and-sync.map/</guid>
+      <description>In the last post, I noted a problem of read-and-write in high-cocurrency situation and finally chose to use sync.Map. This post I will make a comparation between map with RWMutex and sync.Map.
+Read-or-Write Test Code package main import ( &amp;#34;fmt&amp;#34; &amp;#34;sync&amp;#34; &amp;#34;time&amp;#34; ) type rwMap struct { data map[int]int m sync.RWMutex } var ( rwm = rwMap{data: make(map[int]int)} end = int(1e7) syncM sync.Map ) func main() { fmt.Println(&amp;#34;write test&amp;#34;) // rw map 	start := time.</description>
+    </item>
     
     <item>
       <title>Token-Bucket</title>
