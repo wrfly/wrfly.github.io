@@ -5,10 +5,28 @@
     <link>https://wrfly.kfd.me/categories/dev/</link>
     <description>Recent content in Dev on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 03 Feb 2018 20:34:48 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 20 Feb 2018 20:05:06 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/categories/dev/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Discover-sync.Pool</title>
+      <link>https://wrfly.kfd.me/posts/discover-sync.pool/</link>
+      <pubDate>Tue, 20 Feb 2018 20:05:06 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/discover-sync.pool/</guid>
+      <description>其实很久之前就用到了这个东西，起因是collecter程序占用太多内存了，然后就用sync.Pool复用额外消耗的一次性内存，避免GC周期太长使内存来不及释放而导致的OOM。
+https://golang.org/pkg/sync/#Pool
+简单的说，就是在一个池子里放了一些“东西”，这些东西是某种特殊的类型，用的时候需要指定。
+池子会随着你的取用而扩张，比如说，池子里面放了扳手（扳手池），现在有10个工人依次取用，当第一个人取的时候，“扳手池”发现没有扳手，ok，new一个出来; 当第一个工人用完了的时候，把扳手放回扳手池，然后第二个人取的时候，扳手池就直接返回那个扳手就可以了。嗯……如果第一个工人没有归还呢，那么扳手池就要重新new一个扳手了，也就是这种情况：10个工人同时取用扳手，那么扳手池就得new10个新的出来了。
+一个测试：
+https://gist.github.com/wrfly/7de7f1e0c87860aa2f92dc6ed64cb75b
+Makefile：
+.PHONY: build run test NAME := $(shell basename `pwd`) build: go build run: ./$(NAME) test: build run go tool pprof -lines $(NAME) mem.porf  上面那个gist中，有几个测试，在这种情况下：
+wg.Add(alloc) for i := 0; i &amp;lt; alloc; i++ { go func(num int) { // justMake() 	// bufPoolGet() 	bufPoolGetAndPut(num) // bufPoolSleepAndGetAndPut(num) 	wg.Done() }(i) } 也就是拿了接着放回去的时候，结果如下：
+➜ syncPool_mem_usage_test make run go build ./syncPool_mem_usage_test newmake: 4 reused: 9996 reused slice(maybe equal to newmake) len: 0 ➜ syncPool_mem_usage_test  也就是说，新分配了4个1e6长度的[]byte，其余的都是复用的。</description>
+    </item>
     
     <item>
       <title>RWMutex-and-sync.Map</title>
