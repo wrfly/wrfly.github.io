@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='翻译自: http://morsmachine.dk/go-scheduler
+虽然是13年的一篇文章, 但还是值得一读的.
+介绍 Go 1.1版本一个大的改动是由Dmitry Vyukov做的新的调度器. 新的调度器在性能上为go程序并行提供了&rdquo;戏剧性&rdquo;的提升(总之是很牛), 然后自己又没别的事情做, 就想着写一写这个新的调度器(或者说思路, 方法, 概念 balabala).
+这篇文章中的大部分内容都在这个原始文档中提出了, 这个文档写的很全面, 但是太&rdquo;技术&rdquo;了. (我感觉也太技术了, 云里雾里的, 所以作者在这里打算通俗的讲一讲)
+关于新的调度器, 你需要知道的都在那篇原始文档里, 但是这篇文章有图~ 所以更清晰一点.
+带有调度器的Go运行时(go runtime)需要什么 在我们深入了解调度器之前, 我们需要理解为什么它是必须的. 为什么在操作系统可以帮你调度线程的时候, 你仍然需要一个用户空间下的调度器.
+POSIX线程API对于现存的Unix进程模型来说更像是一个逻辑扩展, 于此, 对于线程的控制, 更接近与对进程的控制. 线程拥有其自己的信号标志位, 可以被CPU协同分配, 可以被放进cgroups中管理, 可以被查询其所用的资源等. 这些控件对于go程序调度goroutine来说, 增加了很多无谓的功能和开销, 并且当线程数达到100,000时, 开销会迅速增加.
+另一个问题是, 基于Go的语言模型, 系统不能创建可被通知的调度决定(informed scheduling decisions). 比如, Go在垃圾回收时, 需要让所有线程停止, 并且线程使用的内存需要连贯. 这就涉及到, 等到所有正在运行的线程达到一个能使内存连贯的点.
+当你有很多线程需要被调度到一个随机的点的时候, 唯一的机会是你要等到大多数线程都达到某个内存连贯的点. 对于Go调度器来说, 它知道哪里的内存是连续的, 所以就能作出这样的决定. 这就意味着, 当gc的时候(stw), 我们只需要等待那些正在被CPU运行的线程即可.
+角色一览 对于线程来说, 有三种常见的模型. 一个是 N:1, 即多个用户空间下的线程运行在同一个CPU核心上. 这种模型的优点是, 可以在多个线程间快速的切换上下文, 但缺点也很明显, 无法利用多核系统的优点.'>
+
+<meta property='og:title' content='Go-Scheduler • wrfly&#39;s blog'>
+<meta property='og:description' content='翻译自: http://morsmachine.dk/go-scheduler
+虽然是13年的一篇文章, 但还是值得一读的.
+介绍 Go 1.1版本一个大的改动是由Dmitry Vyukov做的新的调度器. 新的调度器在性能上为go程序并行提供了&rdquo;戏剧性&rdquo;的提升(总之是很牛), 然后自己又没别的事情做, 就想着写一写这个新的调度器(或者说思路, 方法, 概念 balabala).
+这篇文章中的大部分内容都在这个原始文档中提出了, 这个文档写的很全面, 但是太&rdquo;技术&rdquo;了. (我感觉也太技术了, 云里雾里的, 所以作者在这里打算通俗的讲一讲)
+关于新的调度器, 你需要知道的都在那篇原始文档里, 但是这篇文章有图~ 所以更清晰一点.
+带有调度器的Go运行时(go runtime)需要什么 在我们深入了解调度器之前, 我们需要理解为什么它是必须的. 为什么在操作系统可以帮你调度线程的时候, 你仍然需要一个用户空间下的调度器.
+POSIX线程API对于现存的Unix进程模型来说更像是一个逻辑扩展, 于此, 对于线程的控制, 更接近与对进程的控制. 线程拥有其自己的信号标志位, 可以被CPU协同分配, 可以被放进cgroups中管理, 可以被查询其所用的资源等. 这些控件对于go程序调度goroutine来说, 增加了很多无谓的功能和开销, 并且当线程数达到100,000时, 开销会迅速增加.
+另一个问题是, 基于Go的语言模型, 系统不能创建可被通知的调度决定(informed scheduling decisions). 比如, Go在垃圾回收时, 需要让所有线程停止, 并且线程使用的内存需要连贯. 这就涉及到, 等到所有正在运行的线程达到一个能使内存连贯的点.
+当你有很多线程需要被调度到一个随机的点的时候, 唯一的机会是你要等到大多数线程都达到某个内存连贯的点. 对于Go调度器来说, 它知道哪里的内存是连续的, 所以就能作出这样的决定. 这就意味着, 当gc的时候(stw), 我们只需要等待那些正在被CPU运行的线程即可.
+角色一览 对于线程来说, 有三种常见的模型. 一个是 N:1, 即多个用户空间下的线程运行在同一个CPU核心上. 这种模型的优点是, 可以在多个线程间快速的切换上下文, 但缺点也很明显, 无法利用多核系统的优点.'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/go-scheduler/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='go'><meta property='article:tag' content='translate'><meta property='article:published_time' content='2018-02-22T18:13:29&#43;08:00'/><meta property='article:modified_time' content='2018-02-22T18:13:29&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>Go-Scheduler • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/go-scheduler/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/tags/'>tags</a>
+    </li>
+  <li>
+      <a href='/posts/'>posts</a>
+    </li>
+  <li>
+      <a href='/links/'>links</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Go-Scheduler</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2018-02-22T18:13:29&#43;08:00'>2018, Feb 22</time>
+</span>
+
+  
+  
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>翻译自: <a href="http://morsmachine.dk/go-scheduler" target="_blank">http://morsmachine.dk/go-scheduler</a></p>
+
+<p>虽然是13年的一篇文章, 但还是值得一读的.</p>
+
+<h3 id="介绍">介绍</h3>
+
+<p>Go 1.1版本一个大的改动是由<code>Dmitry Vyukov</code>做的新的调度器. 新的调度器在性能上为go程序并行提供了&rdquo;戏剧性&rdquo;的提升(总之是很牛), 然后自己又没别的事情做, 就想着写一写这个新的调度器(或者说思路, 方法, 概念 balabala).</p>
+
+<p>这篇文章中的大部分内容都在这个<a href="https://docs.google.com/document/d/1TTj4T2JO42uD5ID9e89oa0sLKhJYD0Y_kqxDv3I3XMw" target="_blank">原始文档</a>中提出了, 这个文档写的很全面, 但是太&rdquo;技术&rdquo;了. (我感觉也太技术了, 云里雾里的, 所以作者在这里打算通俗的讲一讲)</p>
+
+<p>关于新的调度器, 你需要知道的都在那篇原始文档里, 但是这篇文章有图~ 所以更清晰一点.</p>
+
+<h4 id="带有调度器的go运行时-go-runtime-需要什么">带有调度器的Go运行时(go runtime)需要什么</h4>
+
+<p>在我们深入了解调度器之前, 我们需要理解为什么它是必须的. 为什么在操作系统可以帮你调度线程的时候, 你仍然需要一个用户空间下的调度器.</p>
+
+<p>POSIX线程API对于现存的Unix进程模型来说更像是一个逻辑扩展, 于此, 对于线程的控制, 更接近与对进程的控制. 线程拥有其自己的信号标志位, 可以被CPU协同分配, 可以被放进cgroups中管理, 可以被查询其所用的资源等. 这些控件对于go程序调度goroutine来说, 增加了很多无谓的功能和开销, 并且当线程数达到100,000时, 开销会迅速增加.</p>
+
+<p>另一个问题是, 基于Go的语言模型, 系统不能创建可被通知的调度决定(informed scheduling decisions). 比如, Go在垃圾回收时, 需要让所有线程停止, 并且线程使用的内存需要连贯. 这就涉及到, 等到所有正在运行的线程达到一个能使内存连贯的点.</p>
+
+<p>当你有很多线程需要被调度到一个随机的点的时候, 唯一的机会是你要等到大多数线程都达到某个内存连贯的点. 对于Go调度器来说, 它知道哪里的内存是连续的, 所以就能作出这样的决定. 这就意味着, 当gc的时候(stw), 我们只需要等待那些正在被CPU运行的线程即可.</p>
+
+<h4 id="角色一览">角色一览</h4>
+
+<p>对于线程来说, 有三种常见的模型. 一个是 N:1, 即多个用户空间下的线程运行在同一个CPU核心上. 这种模型的优点是, 可以在多个线程间快速的切换上下文, 但缺点也很明显, 无法利用多核系统的优点. 另一个模型是 1:1, 即一个CPU上面只跑一个线程. 这样做的优点是能够利用机器的多个核心, 但缺点与第一种的优点对应: 线程间切换很慢, 因为需要通过操作系统来调度(trap through the OS).</p>
+
+<p>Go语言尝试将以上两种方法组合起来, 使用 M:N 的模型. 也就是 在N个核心上运行M个线程. M和N都是任意的. 这样就能利用以上两种模型的优点: 既能快速切换上下文, 又能将多核都利用起来. 唯一的缺点是, 它增加了调度器的复杂性. (虽然说simple is good, 但复杂真的能解决问题)</p>
+
+<p>为了完成这样一个调度器, Go用了以下三种不同的实体:</p>
+
+<p><img src="/img/go-scheduler/our-cast.jpg" alt="out-cast" /></p>
+
+<p>三角形的M代表了一个OS线程; 它是被OS运行的线程, 运行起来也很像一个标准的POSIX线程. 在运行时中, 它被称为M(machine).</p>
+
+<p>圆形的G代表一个goroutine. 包含了栈, 指令指针以及其他对于调度来说的重要信息, 比如阻塞goroutine的一些channel. (额, 在这里需要对goroutine有一个简单的了解, 对比process, thread和goroutine, 知道thread和goroutine的差别, 以及goroutine和thread是怎样产生的, 还要对比fork, clone等一些syscall. 我会抽空写一下三者的差别, 毕竟已经拖了几个月了&hellip;) 在运行时中, 它被称为G(goroutine).</p>
+
+<p>正方形代表了调度的内容. 你可以将其视为在一个单一的线程中运行go程序的本地化版本的调度器. 这一部分对于我们把N:1变成M:N是至关重要的. 在运行时中, 它被称为P(processor).</p>
+
+<p>关于这部分的更多内容, 可以看下图:</p>
+
+<p><img src="/img/go-scheduler/in-motion.jpg" alt="in-motion" /></p>
+
+<p>这里我们可以看到, 有两个OS线程M, 每一个都有自己的上下文(P), 也都运行了一个goroutine(G). 为了运行goroutine, 线程必须要有自己的上下文(context).</p>
+
+<p>上下文内容(contexts)的数量, 由启动时候的参数设定, 可以通过环境变量<code>GOMAXPROCS</code>, 也可以通过函数<code>runtime.GOMAXPROCS()</code>. 一般来讲, 这个值在程序运行期间都是不变的. 也正是由于这一点, 在程序运行的时候, 只有<code>GOMAXPROCS</code>这么多的P能够同时运行G. 我们可以利用这个值来调节在电脑上运行的Go进程数量. 比如说, 电脑的CPU有四个核心, 那么就运行四个线程.</p>
+
+<p>上图中, 那些灰色的goroutine是不在运行中的, 但是却准备好被调度. 他们在一个称为<code>runqueues</code>的队列中组织起来. 当有一个<code>go</code>声明的时候(即在程序中有一个 <code>go func()</code>), 就会有一个goroutine被追加到运行队列的尾部. 当context运行到goroutine的调度的时候(比如<code>time.Sleep</code>, 或者<code>runtime.Gosched()</code>), P就会从运行队列中pop一个新的goroutine出来, 设定好堆栈信息, 指令指针(也就是从哪里运行, 可以看下clone的系统调用), 然后就开始跑这个goroutine.</p>
+
+<p>为了避免互斥器的争夺, 每一个context都有自己的本地运行队列. 在之前的go调度器中, 有一个全局的运行队列(runqueue)和一个全局锁(或者叫互斥器)来保护这个队列. 基于此, 线程们常常等待这个mutex解锁. 这样的做法是有点糟糕的, 尤其是当你有一个32核的机器, 你想榨干这台猛兽的每一份资源的时候.</p>
+
+<p>只要context有goroutine运行, go调度器就会保持这种稳定的调度方式. 然而, 有一些情况会改变这种状态.</p>
+
+<h4 id="who-you-gonna-sys-call">Who you gonna (sys)call?</h4>
+
+<p>你或许会问, 为神马要有一个上下文(context)呢? 我们能不能直接把runqueue应用于线程从而摆脱context? 或许并不能. 我们之所以需要context, 是因为在某些情况下, 我们需要将其交付给其他线程, 如果正在运行的线程因为某些原因需要被阻塞的话.</p>
+
+<p>一个阻塞的例子是, goroutine进行了一次系统调用的时候. 因为一个线程不能同时&rdquo;阻塞在系统调用上&rdquo;和&rdquo;执行&rdquo;, 所以我们需要将context交付出去, 以保持正常调度.</p>
+
+<p><img src="/img/go-scheduler/syscall.jpg" alt="syscall" /></p>
+
+<p>在这里我们可以看到, 有一个线程放弃了自己的context, 以便其他线程可以运行. 调度器会确保有足够的线程来运行context. 在上面的插图中, M1或许就是被创建出来处理这个syscall的, 或者其来自于一个线程缓存(thread cache). 正在执行syscall的线程依旧会保留那个产生syscall的goroutine, 因为从技术层面上看这个goroutine仍在执行, 尽管它在系统层面上是被阻塞的.</p>
+
+<p>当这个syscall执行完毕并返回时, 这个线程就要去获得曾经给出去的context, 以执行剩余的goroutine的代码. 常见的操作是从其他的线程中将context偷出来. 如果搞不定的话, 线程就会将这个goroutine放入全局的运行队列(runqueue)中, 把自己让到线程缓存中, 然后滚去休眠(go to sleep).</p>
+
+<p>全局运行队列是这样一个队列: 他有着一些contexts, 当P的本地runqueue跑完了的时候, 就会从全局运行队列中找活干.  Contexts们也会定期检查这个全局队列中的goroutine. 否则的话, 全局队列中goroutine会因为&rdquo;饥饿&rdquo;而永不执行.</p>
+
+<p>这种处理syscall的方式就是为什么Go程序会运行多个线程, 即使<code>GOMAXPROCS</code>等于1(即只有一个P). 运行时使用调用syscall的goroutine，从而留下线程。</p>
+
+<h4 id="stealing-work">Stealing work</h4>
+
+<p>另一种改变系统稳定状态的情况是, 调度器跑完了context上的goroutine. 这种情景会发生在conetxt的runqueue分配不均衡的情况下. 然后就会导致, 虽然一部分context运行结束了, 但系统中还有一些没干完的活(goroutine). 为了保持代码的持续运行, 一个context会从全局runqueue中拿goroutine来跑, 但如果全局运行队列中也没有goroutine的话, 它也会从别处拿(下文会说是哪儿)</p>
+
+<p><img src="/img/go-scheduler/steal.jpg" alt="steal" /></p>
+
+<p>&ldquo;别处&rdquo;就是其他的context. 当一个context跑完自己的goroutine时, 如果全局运行队列中也没了goroutine, 那么他就会尝试从别的context的runqueue中偷一部分goroutie来执行. 这就保证了没一个context(或者叫P)都有活干, 从而能够充分利用CPU资源, 让每个线程都动起来.</p>
+
+<h4 id="接下来">接下来</h4>
+
+<p>对于调度器, 还有其他很多细节, 比如cgo线程, <code>LockOSThread()</code> 函数, 与网络轮询器(network poller)集成等. 这些超出了本文的范围, 但也非常值得学习. 我接下来或许会写一写. 在go的运行库中有很多很多有趣的东西值得研究学习.</p>
+
+<p><em>By Daniel Morsing</em></p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/go'>Go</a></div>
+<div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/go'>Go</a>, <a class='tag' href='/tags/translate'>Translate</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav' style="float: left;"><div class='prev-entry' style="float: left;">
+      <a href='/posts/discover-sync.pool/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Discover-sync.Pool</a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+       &copy; 2014-2018 wrfly 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script></body>
+
+</html>
+

@@ -47,13 +47,13 @@ wrfly - 2017/12/31 - Beijing</description>
     </item>
     
     <item>
-      <title>Golang的调度 (翻译)</title>
-      <link>https://wrfly.kfd.me/posts/golang%E7%9A%84%E8%B0%83%E5%BA%A6-%E7%BF%BB%E8%AF%91/</link>
+      <title>Go-Scheduler</title>
+      <link>https://wrfly.kfd.me/posts/go-scheduler/</link>
       <pubDate>Thu, 22 Feb 2018 18:13:29 +0800</pubDate>
       
-      <guid>https://wrfly.kfd.me/posts/golang%E7%9A%84%E8%B0%83%E5%BA%A6-%E7%BF%BB%E8%AF%91/</guid>
+      <guid>https://wrfly.kfd.me/posts/go-scheduler/</guid>
       <description>翻译自: http://morsmachine.dk/go-scheduler
-虽然是13年的一篇文章, 但还是值得一读的. 为了
+虽然是13年的一篇文章, 但还是值得一读的.
 介绍 Go 1.1版本一个大的改动是由Dmitry Vyukov做的新的调度器. 新的调度器在性能上为go程序并行提供了&amp;rdquo;戏剧性&amp;rdquo;的提升(总之是很牛), 然后自己又没别的事情做, 就想着写一写这个新的调度器(或者说思路, 方法, 概念 balabala).
 这篇文章中的大部分内容都在这个原始文档中提出了, 这个文档写的很全面, 但是太&amp;rdquo;技术&amp;rdquo;了. (我感觉也太技术了, 云里雾里的, 所以作者在这里打算通俗的讲一讲)
 关于新的调度器, 你需要知道的都在那篇原始文档里, 但是这篇文章有图~ 所以更清晰一点.
