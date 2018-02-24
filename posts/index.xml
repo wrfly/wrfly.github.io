@@ -5,10 +5,28 @@
     <link>https://wrfly.kfd.me/posts/</link>
     <description>Recent content on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 20 Feb 2018 20:05:06 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 22 Feb 2018 18:13:29 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Golang的调度 (翻译)</title>
+      <link>https://wrfly.kfd.me/posts/golang%E7%9A%84%E8%B0%83%E5%BA%A6-%E7%BF%BB%E8%AF%91/</link>
+      <pubDate>Thu, 22 Feb 2018 18:13:29 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/golang%E7%9A%84%E8%B0%83%E5%BA%A6-%E7%BF%BB%E8%AF%91/</guid>
+      <description>翻译自: http://morsmachine.dk/go-scheduler
+虽然是13年的一篇文章, 但还是值得一读的. 为了
+介绍 Go 1.1版本一个大的改动是由Dmitry Vyukov做的新的调度器. 新的调度器在性能上为go程序并行提供了&amp;rdquo;戏剧性&amp;rdquo;的提升(总之是很牛), 然后自己又没别的事情做, 就想着写一写这个新的调度器(或者说思路, 方法, 概念 balabala).
+这篇文章中的大部分内容都在这个原始文档中提出了, 这个文档写的很全面, 但是太&amp;rdquo;技术&amp;rdquo;了. (我感觉也太技术了, 云里雾里的, 所以作者在这里打算通俗的讲一讲)
+关于新的调度器, 你需要知道的都在那篇原始文档里, 但是这篇文章有图~ 所以更清晰一点.
+带有调度器的Go运行时(go runtime)需要什么 在我们深入了解调度器之前, 我们需要理解为什么它是必须的. 为什么在操作系统可以帮你调度线程的时候, 你仍然需要一个用户空间下的调度器.
+POSIX线程API对于现存的Unix进程模型来说更像是一个逻辑扩展, 于此, 对于线程的控制, 更接近与对进程的控制. 线程拥有其自己的信号标志位, 可以被CPU协同分配, 可以被放进cgroups中管理, 可以被查询其所用的资源等. 这些控件对于go程序调度goroutine来说, 增加了很多无谓的功能和开销, 并且当线程数达到100,000时, 开销会迅速增加.
+另一个问题是, 基于Go的语言模型, 系统不能创建可被通知的调度决定(informed scheduling decisions). 比如, Go在垃圾回收时, 需要让所有线程停止, 并且线程使用的内存需要连贯. 这就涉及到, 等到所有正在运行的线程达到一个能使内存连贯的点.
+当你有很多线程需要被调度到一个随机的点的时候, 唯一的机会是你要等到大多数线程都达到某个内存连贯的点. 对于Go调度器来说, 它知道哪里的内存是连续的, 所以就能作出这样的决定. 这就意味着, 当gc的时候(stw), 我们只需要等待那些正在被CPU运行的线程即可.
+角色一览 对于线程来说, 有三种常见的模型. 一个是 N:1, 即多个用户空间下的线程运行在同一个CPU核心上. 这种模型的优点是, 可以在多个线程间快速的切换上下文, 但缺点也很明显, 无法利用多核系统的优点.</description>
+    </item>
     
     <item>
       <title>Discover-sync.Pool</title>
