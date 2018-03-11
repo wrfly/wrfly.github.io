@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='I&rsquo;m not going to talk about the panic in golang, I&rsquo;m talking about panic in our life.
+ 今天偶然看到又一个研究生想要退学的消息. 评论也都是一边倒, 痛诉学校的种种不是, 制度的种种不好. 其实有点好笑, 因为很像键盘侠, 但的确又做不了什么, 更或者还会是委曲求全的那一群. &ldquo;委曲求全&rdquo; 这个词, 不知道在国外有没有, 又或者是中国人独特的发明创造, 我们五千年的文明历史, 的确是总结了一些经验, 和一大批丰富的词语.
+想当初我还在学校论坛上发表过痛诉学校制度的帖子, 随声附和的人也不少, 批评我的也有很多, 现象很正常, 但我在想, 为什么没有第二个帖子, 为什么是我. 怎么也没有结论. 一来, 我不特殊, 二来我又穷苦出身, 三来还学习不好, 真真比不上其他的同学. 现在想想, 引用前几天别人对我的一个评价, &ldquo;耿直&rdquo;. 什么都往外说. 可我也好奇, 别人心里都在想什么. 忽然又想到, 很久没和别人谈心了.
+再来说恐慌.
+厌学也好, 退学也罢, 总之是不想继续下去了. 有点类似&rdquo;周一不想上班&rdquo;. 可能是学的东西没有成就感, 也或许是对未来没有希望, 反正, 看不到头. 我们总是对未知恐慌, 因为不知道前面是什么, 就像恐惧黑暗. 那位学长好像是因为导师的原因, 吐槽了导师的脾气, 经常换研究方向, 以及学术上的无所事事和&rdquo;抢功劳&rdquo;.'>
+
+<meta property='og:title' content='Panic • wrfly&#39;s blog'>
+<meta property='og:description' content='I&rsquo;m not going to talk about the panic in golang, I&rsquo;m talking about panic in our life.
+ 今天偶然看到又一个研究生想要退学的消息. 评论也都是一边倒, 痛诉学校的种种不是, 制度的种种不好. 其实有点好笑, 因为很像键盘侠, 但的确又做不了什么, 更或者还会是委曲求全的那一群. &ldquo;委曲求全&rdquo; 这个词, 不知道在国外有没有, 又或者是中国人独特的发明创造, 我们五千年的文明历史, 的确是总结了一些经验, 和一大批丰富的词语.
+想当初我还在学校论坛上发表过痛诉学校制度的帖子, 随声附和的人也不少, 批评我的也有很多, 现象很正常, 但我在想, 为什么没有第二个帖子, 为什么是我. 怎么也没有结论. 一来, 我不特殊, 二来我又穷苦出身, 三来还学习不好, 真真比不上其他的同学. 现在想想, 引用前几天别人对我的一个评价, &ldquo;耿直&rdquo;. 什么都往外说. 可我也好奇, 别人心里都在想什么. 忽然又想到, 很久没和别人谈心了.
+再来说恐慌.
+厌学也好, 退学也罢, 总之是不想继续下去了. 有点类似&rdquo;周一不想上班&rdquo;. 可能是学的东西没有成就感, 也或许是对未来没有希望, 反正, 看不到头. 我们总是对未知恐慌, 因为不知道前面是什么, 就像恐惧黑暗. 那位学长好像是因为导师的原因, 吐槽了导师的脾气, 经常换研究方向, 以及学术上的无所事事和&rdquo;抢功劳&rdquo;.'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/panic/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='daily'><meta property='article:tag' content='thought'><meta property='article:published_time' content='2018-03-11T23:12:32&#43;08:00'/><meta property='article:modified_time' content='2018-03-11T23:12:32&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.31" />
+
+  <title>Panic • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/panic/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/tags/'>tags</a>
+    </li>
+  <li>
+      <a href='/posts/'>posts</a>
+    </li>
+  <li>
+      <a href='/links/'>links</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Panic</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2018-03-11T23:12:32&#43;08:00'>2018, Mar 11</time>
+</span>
+
+  
+  
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  <blockquote>
+<p>I&rsquo;m not going to talk about the panic in golang,
+I&rsquo;m talking about panic in our life.</p>
+</blockquote>
+
+<p>今天偶然看到又一个研究生想要退学的消息. 评论也都是一边倒, 痛诉学校的种种不是, 制度的种种不好. 其实有点好笑, 因为很像键盘侠, 但的确又做不了什么, 更或者还会是委曲求全的那一群. &ldquo;委曲求全&rdquo; 这个词, 不知道在国外有没有, 又或者是中国人独特的发明创造, 我们五千年的文明历史, 的确是总结了一些经验, 和一大批丰富的词语.</p>
+
+<p>想当初我还在学校论坛上发表过痛诉学校制度的帖子, 随声附和的人也不少, 批评我的也有很多, 现象很正常, 但我在想, 为什么没有第二个帖子, 为什么是我. 怎么也没有结论. 一来, 我不特殊, 二来我又穷苦出身, 三来还学习不好, 真真比不上其他的同学. 现在想想, 引用前几天别人对我的一个评价, &ldquo;耿直&rdquo;. 什么都往外说. 可我也好奇, 别人心里都在想什么. 忽然又想到, 很久没和别人谈心了.</p>
+
+<p>再来说恐慌.</p>
+
+<p>厌学也好, 退学也罢, 总之是不想继续下去了. 有点类似&rdquo;周一不想上班&rdquo;. 可能是学的东西没有成就感, 也或许是对未来没有希望, 反正, 看不到头. 我们总是对未知恐慌, 因为不知道前面是什么, 就像恐惧黑暗. 那位学长好像是因为导师的原因, 吐槽了导师的脾气, 经常换研究方向, 以及学术上的无所事事和&rdquo;抢功劳&rdquo;. 就现象而言, 恐怕不是唯一. 因为有很多人也是一股脑的读研, 饥不择食的选导师, 或者没认清事实, 不知道真相, 没有人带路, 从而&rdquo;上了贼船&rdquo;.</p>
+
+<p>为什么去读研呢? 可能还是因为恐慌. 本科期间没有学到什么技能, 找不到工作, 毕业就等于失业. 又没有别的路好走, 所以只能选择读研了, 起码未来三年是已知的, 至少知道自己在哪儿. 可万万没想到, 读研之后更恐慌了, 方向变来变去, 又没人指导, 发表论文遥遥无期, 还得偷偷摸摸学Java, 而且也不比本科期间的悠闲自在, 被老板催, 挨骂, 是个人都会受不了. 姑且称之为, &ldquo;雪崩恐慌&rdquo;.</p>
+
+<p>可能, 他们还没有找到方向吧. 虽然这东西也不是那么好找. 可以是个小目标, 一个亿太多了, 就一百万吧. 也可以是个很抽象的词, 比如, 快乐. 开心了就去做, 不开心了就睡觉. &ldquo;我这个人很有原则的, 我的原则是: 看心情.&rdquo;</p>
+
+<p>好像在人生的每个阶段都会有恐慌. 小宝宝恐慌找不到大人, 小学生恐慌挨爸妈的揍, 中学生恐慌老师布置的作业和训斥, 高中生恐慌考不上大学, 大学生恐慌找不到工作, 而工作以后又恐慌手里的薪水, 自己的住处, 未来的女朋友, 以及高高在上的房价. 后面的, 我不敢想, 总之, 越来越恐慌.</p>
+
+<p>所谓, &ldquo;人无远虑, 必有近忧.&rdquo; (看吧, 我国古人就是总结的多.)</p>
+
+<p>好像也没有什么办法去应对, 所以说, 活着不容易, 且活且珍惜.</p>
+
+<p>目前我的做法是, 找一份能养活自己, 并且自己也喜欢的工作, 然后课余时间就, 玩. 哈哈哈, 我的玩也包括写代码啦. 喜欢写一些能够帮助别人的东西, 刚洗澡还在想, 怎样让代码永远保存, 咱又不能也写到宪法里, 是吧.</p>
+
+<p>既然未来总是恐慌的, 那就不如走一步看一步, 制定一个计划, 然后慢慢修改计划~
+至少让自己的人生看起来不那么后悔, 回首往事不至于&rdquo;无可奉告&rdquo;.</p>
+
+<p>学着让自己快乐, 也许是你的一种选择.</p>
+
+<p>最后, 一首普希金的 &ldquo;假如生活欺骗了你&rdquo; (查良铮[译]) 送给大家:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">Если жизнь тебя обманет,
+假如生活欺骗了你
+
+Не печался,не сердись,
+不要悲伤，不要心急
+
+В день уныния смирись,
+忧郁的日子里须要镇静
+
+Динь веселья,верь настанет,
+相信吧，快乐的日子将会来临
+
+Сердце в будущем живёт,
+心儿永远向往着未来
+
+Настоящее уныло
+现在却常是忧郁
+
+всё мгновено,всё пройдёт
+一切都是瞬息，一切都将会过去
+
+Что пройдёт,то будет мило!
+而那过去了的，就会成为亲切的回忆</pre></div>
+<p>愿每个人都会有亲切的回忆.</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/daily'>Daily</a></div>
+<div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/daily'>Daily</a>, <a class='tag' href='/tags/thought'>Thought</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav' style="float: left;"><div class='prev-entry' style="float: left;">
+      <a href='/posts/go-scheduler/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Go-Scheduler</a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+       &copy; 2014-2018 wrfly 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script></body>
+
+</html>
+
