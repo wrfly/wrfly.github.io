@@ -5,7 +5,7 @@
     <link>https://wrfly.kfd.me/tags/</link>
     <description>Recent content in Tags on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 06 Feb 2015 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 13 Mar 2018 22:31:28 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -13,7 +13,7 @@
     <item>
       <title>Bash</title>
       <link>https://wrfly.kfd.me/tags/bash/</link>
-      <pubDate>Fri, 06 Feb 2015 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 13 Mar 2018 22:31:28 +0800</pubDate>
       
       <guid>https://wrfly.kfd.me/tags/bash/</guid>
       <description></description>
@@ -70,6 +70,15 @@
       <pubDate>Sun, 11 Mar 2018 23:12:32 +0800</pubDate>
       
       <guid>https://wrfly.kfd.me/tags/daily/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Debug</title>
+      <link>https://wrfly.kfd.me/tags/debug/</link>
+      <pubDate>Tue, 13 Mar 2018 22:31:28 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/debug/</guid>
       <description></description>
     </item>
     

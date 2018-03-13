@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Bash on wrfly&#39;s blog</title>
-    <link>https://wrfly.kfd.me/tags/bash/</link>
-    <description>Recent content in Bash on wrfly&#39;s blog</description>
+    <title>Debug on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/categories/debug/</link>
+    <description>Recent content in Debug on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Tue, 13 Mar 2018 22:31:28 +0800</lastBuildDate>
     
-	<atom:link href="https://wrfly.kfd.me/tags/bash/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://wrfly.kfd.me/categories/debug/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -25,16 +25,6 @@
 有个老哥也遇到坑了: /usr/bin/python: bad interpreter: Permission denied error
 解决方案是, 在tox的配置文件里指定command而不是用它自己生成的python或者pip:
 [tox] # List the environment that will be run by default minversion = 1.6 envlist = py27,pep8 skipsdist = True [testenv] setenv = VIRTUAL_ENV={envdir} LANG=en_US.</description>
-    </item>
-    
-    <item>
-      <title>Bash-Shortcuts</title>
-      <link>https://wrfly.kfd.me/posts/bash-shortcuts/</link>
-      <pubDate>Fri, 06 Feb 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://wrfly.kfd.me/posts/bash-shortcuts/</guid>
-      <description>The shortcuts listed here are based on GNU bash version 3.00. The abbreviation of &amp;ldquo;CTRL-a&amp;rdquo; means to press and hold down the Control key and press &amp;lsquo; a &amp;rsquo; once. The shortcuts should be the same for most other shells.
-The basic moving shortcuts allow movement to the end of the line, to the start of the line or to step through by character. The commands come in really handy when editing different file in another directory or copying files.</description>
     </item>
     
   </channel>

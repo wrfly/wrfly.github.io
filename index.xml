@@ -5,7 +5,7 @@
     <link>https://wrfly.kfd.me/</link>
     <description>Recent content on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 11 Mar 2018 23:12:32 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 13 Mar 2018 22:31:28 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/index.xml" rel="self" type="application/rss+xml" />
     
@@ -44,6 +44,23 @@
 如果有人给咱评论呢，开心了就交个朋友，不开心就置之不理，也不会有心里负担233。
 话说咱已经从脚本小子变成小程序员啦～
 wrfly - 2017/12/31 - Beijing</description>
+    </item>
+    
+    <item>
+      <title>Max-Length-in-Shebang</title>
+      <link>https://wrfly.kfd.me/posts/max-length-in-shebang/</link>
+      <pubDate>Tue, 13 Mar 2018 22:31:28 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/max-length-in-shebang/</guid>
+      <description>Life is full of surprises.
+ 昨天遇到一个Jenkins CI中执行tox出错的问题, 说 interpreter not found, 仔细debug了一番, 最终发现是shebang太长了.
+然后就找到了对应的解释: shebang-line-limit-in-bash-and-linux-kernel
+原因是在执行tox的过程中, tox没有使用系统自带的python 或者 pip, 而是自己下载了一个, 放到 $YOUR_PROJECT/.tox/bin/py27/pip 里面, 然后这个pip文件里的开头是 #!$YOUR_PROJECT/.tox/bin/py27/python2.7, 如果你的project名字太长, 导致这一行超过了128个字符的话, 那么就gg.
+这个问题会经常出现在Jenkins的python项目里, 因为jenkins在CI的过程中会自动扩展你项目的名字, 让他变得很长, 很大概率超过128个, 比如我们项目的 #!/var/jenkins_home/workspace/srv_feature_PLATFORMDEV-581-QM1COB64VSWGD5RGAT631CKDKW3TXH2CEI0XKLJZICJXXBM8SF9A@2/.tox/py27/bin/python2.7 根本tmd不能用. 报错信息: bad interpreter: Permission denied
+还有一些人在讨论: https://github.com/pypa/pip/issues/1773 然而他们好久没有发布新版本出来了&amp;hellip;
+有个老哥也遇到坑了: /usr/bin/python: bad interpreter: Permission denied error
+解决方案是, 在tox的配置文件里指定command而不是用它自己生成的python或者pip:
+[tox] # List the environment that will be run by default minversion = 1.6 envlist = py27,pep8 skipsdist = True [testenv] setenv = VIRTUAL_ENV={envdir} LANG=en_US.</description>
     </item>
     
     <item>
