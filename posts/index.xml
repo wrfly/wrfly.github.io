@@ -5,10 +5,27 @@
     <link>https://wrfly.kfd.me/posts/</link>
     <description>Recent content on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 13 Mar 2018 22:31:28 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 22 Apr 2018 22:18:19 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Another-K8s-Installation</title>
+      <link>https://wrfly.kfd.me/posts/another-k8s-installation/</link>
+      <pubDate>Sun, 22 Apr 2018 22:18:19 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/another-k8s-installation/</guid>
+      <description>额额, 又是一篇kubernetes的安装指南.
+不过我这一篇有点短, emm:
+bash &amp;lt;(curl -fSsL https://git.io/vpY6k) 好了, 正文就写完了.
+P.S. 项目在这里 https://github.com/wrfly/k8s-install.sh.
+然后说点闲话.
+这两天借着彭老板的门票, 去听了QCon. 虽然外面下着小雨, 但会场内人超多, 也没有空调, 很热. 昨天早上还去错了地方, 在&amp;rdquo;国际会议中心&amp;rdquo;, 然后去了&amp;rdquo;国家会议中心&amp;rdquo;. 其实凭良心讲, &amp;ldquo;国际&amp;rdquo; 还不如 &amp;ldquo;国家&amp;rdquo; 的富丽堂皇, 倒像是上世纪的样子.
+可能是咱才疏学浅, 有些主讲人说的云里雾里的, 有的是推销自家产品, 有的是念PPT, &amp;ldquo;参差不齐&amp;rdquo;这话说出来就显得我有点狂妄, 不过还是觉得有些内容枯燥无聊, 没啥干货. TiDB的大哥讲的还是很好的, 开源路上的教训比如, 先跑起来,不要过早优化; 测试的重要性; 工具的重要性; 监控的重要性等等. 获益匪浅. 然后还有一场百度网盘的, 但是当我看到他前面介绍网盘客户端的时候, 出现了 &amp;ldquo;Iphone&amp;rdquo;, &amp;ldquo;Ipad&amp;rdquo;的时候, 我就给他打负分了, 然后后面也在念PPT, 我就走了. 但听彭老板说, 百度的人讲BRPC的时候, 还是很牛逼的. 然后还听了刘超老师讲了Service Mesh, 很早就关注了他的公众号, 干货满满.
+晚上跟彭老板和孙老板吃了烤鸭hhh, 听了不少教诲, 对于自己的未来发展有了一点思考, 希望有一天能够望其项背.
+自己还是太菜了. 还要努力才能在以后毫不费力. 现在太安逸的话, 以后可就要吃苦了.</description>
+    </item>
     
     <item>
       <title>Max-Length-in-Shebang</title>
