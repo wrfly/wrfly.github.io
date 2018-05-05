@@ -5,7 +5,7 @@
     <link>https://wrfly.kfd.me/</link>
     <description>Recent content on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 22 Apr 2018 22:18:19 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 05 May 2018 21:19:55 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/index.xml" rel="self" type="application/rss+xml" />
     
@@ -44,6 +44,20 @@
 如果有人给咱评论呢，开心了就交个朋友，不开心就置之不理，也不会有心里负担233。
 话说咱已经从脚本小子变成小程序员啦～
 wrfly - 2017/12/31 - Beijing</description>
+    </item>
+    
+    <item>
+      <title>Signals-in-Container</title>
+      <link>https://wrfly.kfd.me/posts/signals-in-container/</link>
+      <pubDate>Sat, 05 May 2018 21:19:55 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/signals-in-container/</guid>
+      <description>可能因为天气变热, 最近几天有些烦躁不安. 一个大脑的我, 果真处理不了多任务.
+ 这篇博客讲一下docker对于容器的信号处理, 包括 docker stop, docker kill, 以及docker挂掉的时候, 容器会产生什么样的反映.
+起因 事情的起因是前天晚上公司大楼电力检修, 机房停机了, 第二天上班的时候, 有同事问我, docker stop的时候, 容器没有正常关闭是为什么, 关机是正常关机, docker服务也都是正常停的(service docker stop),但是有一个mysql的容器没有正常停, 里面的数据没有落盘就死了, 导致了数据丢失和脏数据.
+我一时半会儿还真没法回答, 之前有看过相关知识, 说docker停止容器会向进程号为1的进程发送SIGTERM,但还真不知道机器停止的时候是怎样一种情况, 毕竟理论是理论, 实践才出真知.
+经过 然后就做了这样一个容器实验:
+FROMgolang:alpineCOPY main.go /RUN go build -o /bin/sig /main.goCMDsigpackage main import ( &amp;#34;log&amp;#34; &amp;#34;os&amp;#34; &amp;#34;os/signal&amp;#34; &amp;#34;syscall&amp;#34; ) func main() { log.Printf(&amp;#34;Service started, pid: [ %d ]&amp;#34;, os.Getpid()) defer log.Println(&amp;#34;Service stopped&amp;#34;) sigChan := make(chan os.Signal) signal.Ignore() signal.</description>
     </item>
     
     <item>

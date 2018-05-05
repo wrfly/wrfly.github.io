@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Docker on wrfly&#39;s blog</title>
-    <link>https://wrfly.kfd.me/tags/docker/</link>
+    <link>https://wrfly.kfd.me/categories/docker/</link>
     <description>Recent content in Docker on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Sat, 05 May 2018 21:19:55 +0800</lastBuildDate>
     
-	<atom:link href="https://wrfly.kfd.me/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://wrfly.kfd.me/categories/docker/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -22,17 +22,6 @@
 我一时半会儿还真没法回答, 之前有看过相关知识, 说docker停止容器会向进程号为1的进程发送SIGTERM,但还真不知道机器停止的时候是怎样一种情况, 毕竟理论是理论, 实践才出真知.
 经过 然后就做了这样一个容器实验:
 FROMgolang:alpineCOPY main.go /RUN go build -o /bin/sig /main.goCMDsigpackage main import ( &amp;#34;log&amp;#34; &amp;#34;os&amp;#34; &amp;#34;os/signal&amp;#34; &amp;#34;syscall&amp;#34; ) func main() { log.Printf(&amp;#34;Service started, pid: [ %d ]&amp;#34;, os.Getpid()) defer log.Println(&amp;#34;Service stopped&amp;#34;) sigChan := make(chan os.Signal) signal.Ignore() signal.</description>
-    </item>
-    
-    <item>
-      <title>alpine-DNS-problem</title>
-      <link>https://wrfly.kfd.me/posts/alpine-dns-problem/</link>
-      <pubDate>Wed, 06 Dec 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://wrfly.kfd.me/posts/alpine-dns-problem/</guid>
-      <description>Many softwares use alpine as their run-time base image.
-Recently I set up a docker registry with portus as its front. But I came up with a problem that, registry won&amp;rsquo;t post date: 2017-12-06 title: alpine-DNS-problem
-Firstly I thought it was a bug of docker resigtry, but as I&amp;rsquo;m digging into its code, I found that it&amp;rsquo;s actruely a bug of alpine linux. Alpine linux doesn&amp;rsquo;t have an /etc/nsswitch.conf config file.</description>
     </item>
     
   </channel>
