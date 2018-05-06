@@ -242,9 +242,7 @@ sig
 2018/05/05 15:08:57 quit
 2018/05/05 15:08:57 Service stopped
 ➜  signal </code></pre></div>
-<p>###</p>
-
-<p>在来看下<code>docker stop sig</code>:</p>
+<p>再来看下<code>docker stop sig</code>:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  signal docker logs -f sig &amp;&amp; date +%T
 2018/05/05 15:31:52 Service started, pid: [ 1 ]
 2018/05/05 15:33:05 Got signal [ terminated ]
@@ -338,6 +336,25 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 <li><a href="https://www.ctl.io/developers/blog/post/gracefully-stopping-docker-containers/" target="_blank">Gracefully Stopping Docker Containers</a></li>
 <li><a href="https://docs.docker.com/config/containers/live-restore/#enable-live-restore" target="_blank">Keep containers alive during daemon downtime</a></li>
 </ul>
+
+<h2 id="更新">更新</h2>
+
+<p>刚认真读了一下扩展阅读的第一篇文章, 发现人家还提到了一种方法:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> golang:alpine</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>COPY main.go /<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> go build -o /bin/sig /main.go<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span><span style="color:#e6db74"> [&#34;sig&#34;]</span></code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  signal docker ps 
+CONTAINER ID        IMAGE               COMMAND             CREATED              STATUS              PORTS               NAMES
+713d16b31033        signal-test         &#34;sig&#34;               About a minute ago   Up About a minute                       sig
+➜  signal
+➜  signal docker exec sig ps aux                                                                     
+PID   USER     TIME   COMMAND
+    1 root       0:00 sig
+   17 root       0:00 ps aux
+➜  signal </code></pre></div>
+<p>可以看到容器内部的root进程是sig, CMD也是sig, 同样达到了 <code>exec sig</code> 的效果, 可以说是非常简单明了了.</p>
+
+<p>所以在这里又得出一条结论, 使用CMD的时候(推荐使用CMD而不是ENTRYPOINT), 将命令和参数用<code>[]</code>包裹起来, 这样docker执行的时候就会使用你指定的命令. 需要注意的一点是, 被执行的文件需要有可执行权限, <code>chmod +x</code>一下.</p>
 
 </div>
 

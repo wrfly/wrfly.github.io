@@ -624,14 +624,14 @@
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/tags/code/</loc>
-    <lastmod>2018-02-03T20:34:48+08:00</lastmod>
+    <loc>https://wrfly.kfd.me/categories/code/</loc>
+    <lastmod>2018-01-24T20:38:42+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/categories/code/</loc>
-    <lastmod>2018-01-24T20:38:42+08:00</lastmod>
+    <loc>https://wrfly.kfd.me/tags/code/</loc>
+    <lastmod>2018-02-03T20:34:48+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -642,25 +642,25 @@
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/tags/daily/</loc>
-    <lastmod>2018-03-11T23:12:32+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://wrfly.kfd.me/categories/daily/</loc>
     <lastmod>2018-03-11T23:12:32+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/tags/debug/</loc>
-    <lastmod>2018-03-13T22:31:28+08:00</lastmod>
+    <loc>https://wrfly.kfd.me/tags/daily/</loc>
+    <lastmod>2018-03-11T23:12:32+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://wrfly.kfd.me/categories/debug/</loc>
+    <lastmod>2018-03-13T22:31:28+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/debug/</loc>
     <lastmod>2018-03-13T22:31:28+08:00</lastmod>
     <priority>0</priority>
   </url>
@@ -672,14 +672,14 @@
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/tags/dev/</loc>
-    <lastmod>2018-02-02T19:17:28+08:00</lastmod>
+    <loc>https://wrfly.kfd.me/categories/dev/</loc>
+    <lastmod>2018-02-20T20:05:06+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/categories/dev/</loc>
-    <lastmod>2018-02-20T20:05:06+08:00</lastmod>
+    <loc>https://wrfly.kfd.me/tags/dev/</loc>
+    <lastmod>2018-02-02T19:17:28+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -696,13 +696,13 @@
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/tags/docker/</loc>
+    <loc>https://wrfly.kfd.me/categories/docker/</loc>
     <lastmod>2018-05-05T21:19:55+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/categories/docker/</loc>
+    <loc>https://wrfly.kfd.me/tags/docker/</loc>
     <lastmod>2018-05-05T21:19:55+08:00</lastmod>
     <priority>0</priority>
   </url>
@@ -720,13 +720,13 @@
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/tags/go/</loc>
+    <loc>https://wrfly.kfd.me/categories/go/</loc>
     <lastmod>2018-02-22T18:13:29+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/categories/go/</loc>
+    <loc>https://wrfly.kfd.me/tags/go/</loc>
     <lastmod>2018-02-22T18:13:29+08:00</lastmod>
     <priority>0</priority>
   </url>
@@ -744,13 +744,13 @@
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/tags/k8s/</loc>
+    <loc>https://wrfly.kfd.me/categories/k8s/</loc>
     <lastmod>2018-04-22T22:18:19+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/categories/k8s/</loc>
+    <loc>https://wrfly.kfd.me/tags/k8s/</loc>
     <lastmod>2018-04-22T22:18:19+08:00</lastmod>
     <priority>0</priority>
   </url>
@@ -815,13 +815,13 @@
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/tags/share/</loc>
+    <loc>https://wrfly.kfd.me/categories/share/</loc>
     <lastmod>2018-02-20T20:05:06+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/categories/share/</loc>
+    <loc>https://wrfly.kfd.me/tags/share/</loc>
     <lastmod>2018-02-20T20:05:06+08:00</lastmod>
     <priority>0</priority>
   </url>
