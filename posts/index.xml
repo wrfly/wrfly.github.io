@@ -5,10 +5,25 @@
     <link>https://wrfly.kfd.me/posts/</link>
     <description>Recent content on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 05 May 2018 21:19:55 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 08 May 2018 22:51:57 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Happy-Birthday</title>
+      <link>https://wrfly.kfd.me/posts/happy-birthday/</link>
+      <pubDate>Tue, 08 May 2018 22:51:57 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/happy-birthday/</guid>
+      <description>不如意事十八九, 可与人言无二三.
+ 今天又是寻常的一天, 只不过有点倒霉.
+要租我房子的小姐姐变卦了, 所以我也只能跟我的新房东变卦. 可是我已经交了1k的定金, 所以就弄得很尴尬, 而且还白跑了一趟. 到现在也没个回复, 我想, 至少也能退个八百吧.
+怪自己太心急, 看房子不到十分钟就匆匆忙忙的给了钱, 凭什么呀, 凭什么让我给定金我就给啊, 又不是我要被轰走, 我完全可以慢慢找房子的呀. 包子了这次.
+而且也没跟新租户要定金什么的, 所以导致了这次很被动. 其实被动也不仅于此, 还在于, 我把定金给的太早, 房子确实好, 也大, 但6个人, 生活质量肯定会下降吧. 而且, 还没有桌子椅子, 如果在给钱之前把这些条件都提出来, 势必会好一些, 因为主动权在我这里, 我有谈判的资本. 但当一切都敲定的时候, 我就被踢出谈判桌了. 太年轻啊太年轻.
+而且也怪自己太穷, 想方设法找到便宜而又近的房子. 但是每天一小时的通勤时间我完全可以承受啊, 相比每个月多300的房租, 与五个陌生人相处, 新的环境, 还要买桌子椅子, 我还是讨厌这些麻烦. 所以现在只好期待房东能给我一个好消息, 至少别是个坏消息.
+主动权是个好东西啊, 受制于人很难受很难受, 各种憋屈, 各种委屈. 虽说人在江湖, 身不由己, 但还是要对自己好一点啊, 为了几百块钱而惆怅, 发怒, 真是蠢死了, 不值. 现在明白为什么大哥们总喜欢掌控一些事情了, 因为你只有拥有主动权, 你才有谈判的话语权, 别人才会尊重你, 尊重你的意见和想法, 不然, 别人凭什么跟你谈判呢, 你算什么呢. 讲理吗, 凭什么讲理啊. Naive!</description>
+    </item>
     
     <item>
       <title>Signals-in-Container</title>
