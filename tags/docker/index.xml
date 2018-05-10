@@ -5,10 +5,34 @@
     <link>https://wrfly.kfd.me/tags/docker/</link>
     <description>Recent content in Docker on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 05 May 2018 21:19:55 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 10 May 2018 23:40:26 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Docker-Registry-Redirect-to-S3</title>
+      <link>https://wrfly.kfd.me/posts/docker-registry-redirect-to-s3/</link>
+      <pubDate>Thu, 10 May 2018 23:40:26 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/docker-registry-redirect-to-s3/</guid>
+      <description>不要让别人冲毁你的时间.
+ 事情的起因是, 办公室里从AWS上的docker registry拉镜像太慢, 用了kcp也不管用. 但是BBR又不能随便开, 那台机器不能关机重启. 所以只好折中, 在另一台机器上insmod tcp_bbr然后在上面跑一个nginx tcp reverse proxy, 代理一下真正的registry.
+emm, 但是事情并没有按照想象中的那样顺利.
+具体表现为, 本地到中转server的速度很快, 中转server到register的速度也不慢. 但是本地从中转上拉镜像就特别慢. TCP的window很小.
+很奇怪啊很奇怪.
+虽然也有用tcpdump抓包观察, 但是, 诶, 等等. 为什么出现了一个莫名的IP? 在tcpdump的流量中, 经验出现了 s3-1-w.aws~~~.com 的流量!
+我明明是从registry server上拉的镜像, 为什么会跟S3交互呢?
+会不会是, registry认证通过后, 直接给重定向到S3了!
+所以本地即使配置了中转服务器作为代理, 但实际上还是从S3下载文件! 嗯, 很有道理的样子.
+于是就搜了一下, 嘿, 真叫我蒙对了&amp;hellip;
+https://docs.docker.com/registry/configuration/#redirect
+这个开关是默认打开的(disable: false), 显然没有考虑我天朝行情.
+我们的registry后端存储用的是S3, 所以这里就直接redirect到S3了. 在国外这种默认是没问题的, 把流量全都丢给S3, registry上就不会有带宽瓶颈了. 但是在国内&amp;hellip;
+解决方法就是, 把这个开关设置成true.
+这里不得不吐槽一下这个配置, 因为:
+sotage: ... delete: enabled: true redirect: disable: false 也不知道是谁设计了这样的开关, 就不能统一一下么.</description>
+    </item>
     
     <item>
       <title>Signals-in-Container</title>
