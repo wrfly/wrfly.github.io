@@ -5,10 +5,24 @@
     <link>https://wrfly.kfd.me/tags/go/</link>
     <description>Recent content in Go on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 22 Feb 2018 18:13:29 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 07 Jun 2018 21:53:55 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/tags/go/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Golang-Maaaap</title>
+      <link>https://wrfly.kfd.me/posts/golang-maaaap/</link>
+      <pubDate>Thu, 07 Jun 2018 21:53:55 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/golang-maaaap/</guid>
+      <description>下周出去玩.
+ 从备忘里翻出一个话题. 也是曾经遇到的问题. 在这里记录一下, 希望能给他人帮助.
+https://stackoverflow.com/questions/32751537/why-do-i-get-a-cannot-assign-error-when-setting-value-to-a-struct-as-a-value-i
+https://stackoverflow.com/questions/17438253/access-struct-in-map-without-copying
+Problem 先来看一段小代码:
+package main import &amp;#34;fmt&amp;#34; type person struct { name string age int } func main() { m := map[int]person{} for i := 0; i &amp;lt; 5; i++ { m[i] = person{ name: fmt.Sprintf(&amp;#34;person:%d&amp;#34;, i), } } for i := 0; i &amp;lt; 5; i++ { m[i].age = i } for _, p := range m { fmt.Println(p.name, p.age) } } https://play.</description>
+    </item>
     
     <item>
       <title>Go-Scheduler</title>
