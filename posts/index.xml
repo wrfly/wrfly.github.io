@@ -5,10 +5,28 @@
     <link>https://wrfly.kfd.me/posts/</link>
     <description>Recent content on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 07 Jun 2018 21:53:55 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 24 Jun 2018 21:26:01 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Golang-Append</title>
+      <link>https://wrfly.kfd.me/posts/golang-append/</link>
+      <pubDate>Sun, 24 Jun 2018 21:26:01 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/golang-append/</guid>
+      <description>这几天在准备面试, 想起之前被问到的一个全排序的问题, 今天用golang写了一遍, 无意中发现了一个冷门的知识(或者叫坑).
+看下面一段代码:
+var NUMS = []int{1, 2, 3} func main() { x1 := NUMS[:1] x2 := NUMS[2:] fmt.Println(x1, x2, NUMS) fmt.Println(append(x1, x2...)) fmt.Println(x1, x2, NUMS) } 大脑编译一下, 结果会是什么?
+[1] [3] [1 2 3] [1 3] [1] [3] [1 2 3] 是上面这样吗?
+首先截取了 NUMS 的第一个作为 x1(1), 然后截取 NUMS 的第二个之后的, 作为 x2(3), 然后输出 x1, x2 和 NUMS; 然后将 x1 x2 连接起来输出(1 3); 然后重复第一次的输出.
+好像没问题吧?
+但是.
+https://play.golang.org/p/CugWJ9tP34Q
+结果却有点出人意料:
+[1] [3] [1 2 3] [1 3] [1] [3] [1 3 3] 为什么 NUMS 会被修改呢?</description>
+    </item>
     
     <item>
       <title>Golang-Maaaap</title>

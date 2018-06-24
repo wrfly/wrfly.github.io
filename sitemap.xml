@@ -8,7 +8,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/posts/</loc>
-    <lastmod>2018-06-07T21:53:55+08:00</lastmod>
+    <lastmod>2018-06-24T21:26:01+08:00</lastmod>
   </url>
   
   <url>
@@ -17,6 +17,11 @@
   
   <url>
     <loc>https://wrfly.kfd.me/about/</loc>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/golang-append/</loc>
+    <lastmod>2018-06-24T21:26:01+08:00</lastmod>
   </url>
   
   <url>
@@ -640,13 +645,13 @@
   
   <url>
     <loc>https://wrfly.kfd.me/categories/code/</loc>
-    <lastmod>2018-01-24T20:38:42+08:00</lastmod>
+    <lastmod>2018-06-24T21:26:01+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://wrfly.kfd.me/tags/code/</loc>
-    <lastmod>2018-02-03T20:34:48+08:00</lastmod>
+    <lastmod>2018-06-24T21:26:01+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -742,7 +747,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/tags/go/</loc>
-    <lastmod>2018-06-07T21:53:55+08:00</lastmod>
+    <lastmod>2018-06-24T21:26:01+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -891,7 +896,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/</loc>
-    <lastmod>2018-06-07T21:53:55+08:00</lastmod>
+    <lastmod>2018-06-24T21:26:01+08:00</lastmod>
     <priority>0</priority>
   </url>
   

