@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='拖延了很久的一篇. 借面试的机会, 梳理一遍.
+ init and pstree 在系统中, 所有的执行和操作都是通过进程实现的. 当我们按下电源按钮的那一刻, 就相当于盘古开天辟地了, 从此, 所有的进程都会&rdquo;依附于&rdquo;一个叫init进程的特殊进程. 关于Linux初始化init进程, 可以看下这一个系列:
+浅析 Linux 初始化 init 系统:
+ Sysvinit UpStart Systemd  我们可以通过 pstree 来查看进程之间的关系.
+Process and Thread 严格意义上讲, 并没有进程,线程的区别, Linus 在一篇邮件中表达了自己的观点: http://lkml.iu.edu/hypermail/linux/kernel/9608/0191.html
+不管是Process,还是Threads, 都是一些可被执行的实体,context of execution (COE) or independent sequences of execution.
+但如果说区别, 进程之间不会共享内存(一般来讲), 而线程之间则会共享进程的内存. 线程是进程资源的子集, 他们唯一的区别在于是否共享了资源.
+ That state includes things like CPU state (registers etc), MMU state (page mappings), permission state (uid, gid) and various &ldquo;communication states&rdquo; (open files, signal handlers etc).'>
+
+<meta property='og:title' content='What-is-a-Goroutine, seriously • wrfly&#39;s blog'>
+<meta property='og:description' content='拖延了很久的一篇. 借面试的机会, 梳理一遍.
+ init and pstree 在系统中, 所有的执行和操作都是通过进程实现的. 当我们按下电源按钮的那一刻, 就相当于盘古开天辟地了, 从此, 所有的进程都会&rdquo;依附于&rdquo;一个叫init进程的特殊进程. 关于Linux初始化init进程, 可以看下这一个系列:
+浅析 Linux 初始化 init 系统:
+ Sysvinit UpStart Systemd  我们可以通过 pstree 来查看进程之间的关系.
+Process and Thread 严格意义上讲, 并没有进程,线程的区别, Linus 在一篇邮件中表达了自己的观点: http://lkml.iu.edu/hypermail/linux/kernel/9608/0191.html
+不管是Process,还是Threads, 都是一些可被执行的实体,context of execution (COE) or independent sequences of execution.
+但如果说区别, 进程之间不会共享内存(一般来讲), 而线程之间则会共享进程的内存. 线程是进程资源的子集, 他们唯一的区别在于是否共享了资源.
+ That state includes things like CPU state (registers etc), MMU state (page mappings), permission state (uid, gid) and various &ldquo;communication states&rdquo; (open files, signal handlers etc).'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/what-is-a-goroutine-seriously/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='go'><meta property='article:published_time' content='2018-07-02T12:29:07&#43;08:00'/><meta property='article:modified_time' content='2018-07-02T12:29:07&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.40.1" />
+
+  <title>What-is-a-Goroutine, seriously • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/what-is-a-goroutine-seriously/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/tags/'>tags</a>
+    </li>
+  <li>
+      <a href='/posts/'>posts</a>
+    </li>
+  <li>
+      <a href='/links/'>links</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>What-is-a-Goroutine, seriously</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2018-07-02T12:29:07&#43;08:00'>2018, Jul 02</time>
+</span>
+
+  
+  
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<blockquote>
+<p>拖延了很久的一篇. 借面试的机会, 梳理一遍.</p>
+</blockquote>
+
+<h2 id="init-and-pstree">init and <code>pstree</code></h2>
+
+<p>在系统中, 所有的执行和操作都是通过进程实现的. 当我们按下电源按钮的那一刻, 就相当于盘古开天辟地了, 从此, 所有的进程都会&rdquo;依附于&rdquo;一个叫init进程的特殊进程. 关于Linux初始化init进程, 可以看下这一个系列:</p>
+
+<p><strong>浅析 Linux 初始化 init 系统</strong>:</p>
+
+<ul>
+<li><a href="https://www.ibm.com/developerworks/cn/linux/1407_liuming_init1/index.html" target="_blank">Sysvinit</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/linux/1407_liuming_init2/index.html" target="_blank">UpStart</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/linux/1407_liuming_init3/index.html" target="_blank">Systemd</a></li>
+</ul>
+
+<p>我们可以通过 <code>pstree</code> 来查看进程之间的关系.</p>
+
+<h2 id="process-and-thread">Process and Thread</h2>
+
+<p>严格意义上讲, 并没有进程,线程的区别, Linus 在一篇邮件中表达了自己的观点: <a href="http://lkml.iu.edu/hypermail/linux/kernel/9608/0191.html" target="_blank">http://lkml.iu.edu/hypermail/linux/kernel/9608/0191.html</a></p>
+
+<p>不管是Process,还是Threads, 都是一些可被执行的实体,<code>context of execution (COE)</code> or <code>independent sequences of execution</code>.</p>
+
+<p>但如果说区别, 进程之间不会共享内存(一般来讲), 而线程之间则会共享进程的内存.
+线程是进程资源的子集, 他们唯一的区别在于是否共享了资源.</p>
+
+<blockquote>
+<p>That state includes things like CPU state (registers etc), MMU state (page mappings), permission state (uid, gid) and various &ldquo;communication states&rdquo; (open files, signal handlers etc).</p>
+</blockquote>
+
+<p>一个进程所包含的资源(或者称之为状态)有, CPU状态(比如寄存器), 内存状态(Memory management unit, 内存映射), 权限状态(用户是谁, 在哪个组里), 以及一些其他的可通信的状态, 比如打开的文件, 接受的信号等.</p>
+
+<p>在threads之间, 以上这些状态都是共享的. 而不同的processes之间则是相互独立的.</p>
+
+<p>如果说进程是线程的容器, 也能讲得通, 因为在大多数现代操作系统中(面向线程设计的系统), 一个进程最少包含了一个线程, 这里的包含, 就有包容, 容纳的意思. 进程就是线程执行的容器和&rdquo;载体&rdquo;.</p>
+
+<p>&ldquo;进程/线程&rdquo;状态变化:</p>
+
+<p><img src="https://www.ibm.com/developerworks/cn/linux/l-task-killable/figure1.gif" alt="task state" /></p>
+
+<p>关系图:</p>
+
+<p><img src="https://i.stack.imgur.com/NVNge.jpg" alt="" /></p>
+
+<blockquote>
+<ul>
+<li>Every process is a thread (primary thread).</li>
+<li>But every thread is not a process. It is a part(entity) of a process.</li>
+</ul>
+</blockquote>
+
+<p>总的来说, 进程独立拥有&rdquo;进行操作&rdquo;所需要的全部资源, 而线程共享他们. 进程可以在 <code>/proc</code>目录下发现, 线程则不会. 进程是通过<code>fork</code>或<code>exec</code>创建出来的, 而线程是通过<code>clone</code>创建出来的. 但本质上, 两者都是可以被执行的实体, 或者叫 <code>task</code>, 是被CPU调度的单位.</p>
+
+<p>另外, 一个process在内存中分为了几个部分: <strong>Text Segment</strong>, <strong>Data Segment</strong>, <strong>Stack Segment</strong>, 具体的细节和解释可以看这里: <a href="http://www.hep.wisc.edu/~pinghc/Process_Memory.htm" target="_blank">Process and Memory</a></p>
+
+<h2 id="fork-vfork-exec-clone">fork/vfork/exec/clone</h2>
+
+<p><strong><code>fork</code></strong>: 对当前进程进行复制, 复制出来的进程几乎跟原始进程一摸一样. 新的进程(子进程)拥有一个新的ID (PID), 他的 &ldquo;parent proess ID&rdquo; (PPID) 是其原始进程的PID. 因为这两个进程运行的代码是一摸一样的, 他们可以相互区分开来, 通过 fork 调用. 原始进程的fork会返回子进程的PID, 而子进程则会返回0. 如果在fork中有异常发生, 那么父进程则不会得到子进程的ID(而是得到一个错误码), 子进程也不会被创建.</p>
+
+<p><strong><code>vfork</code></strong>: <code>vfork</code> 和 <code>fork</code> 的区别在于, 当父进程调用了<code>vfork</code>的时候, 其本身会被suspended(临时), 即不再RUNNING. 子进程则会借用父进程的地址空间. 这种奇怪的状态将会一直持续到子进程调用了 <code>execve</code>或者退出. 然后父进程接着执行.
+这就意味着, 由<code>vfork</code>产生的子进程必须要格外的小心, 以避免对父进程变量的异常操作. 而且子进程也不应该直接<code>exit()</code>, 而是要 <code>_exit()</code>.</p>
+
+<p><strong><code>exec</code></strong>: 这是用来替换当前进程的一个调用. 它将程序加载到当前进程的空间内, 并从入口处开始执行. 除非<code>exec</code>有错误产生, 否则控制权就不会交给原先的进程了.</p>
+
+<p><strong><code>clone</code></strong>: 类似于<code>fork</code>, 都是创建一个新的进程. 但是与<code>fork</code>不同的是, <code>clone</code>允许创建出来的新的进程共享其父进程的一部分资源(这里创建出来的新的进程, 也可以被称作线程, 或者协程, 因为他们共享资源了). 这些资源包括, 内存空间, 文件描述符(们), 接受的信号(们), 等.</p>
+
+<p>当子进程(线程/协程)通过<code>clone</code>创建出来的时候, 他们执行的是某个具体的function(<code>fn(arg)</code>), 这一点就与<code>fork</code>不同了, 因为<code>fork</code>执行的是整个程序, 是从程序的入口处开始执行的. 这个function是一个指向某个函数的指针, 这个指针由子进程执行(作为子进程的entrypoint). <code>fn(arg)</code> arg作为参数传递给子进程(线程/协程).</p>
+
+<p>当这个<code>fn(arg)</code>函数返回的时候, 子进程也就结束了. <code>fn(arg)</code>的返回码就是子进程的退出状态码.</p>
+
+<p>在底层, <code>fork</code>也是由<code>clone</code>产生的, 只不过参数不同. 不同的参数让<code>clone</code>能够复制进程, 或者创造线程.</p>
+
+<h2 id="goroutine">Goroutine</h2>
+
+<p>综上来看, 进程, 线程, 都是一些有资源(内存, 文件描述符, CPU状态), 可以被执行的实体. 那么goroutine也不例外.</p>
+
+<p>本质上, goroutine也是通过<code>clone</code>产生的, 其也共享了进程的各种资源, 但是又比线程更轻量, 因为相比于thread的内存占用(≥ 1MB), goroutine要小很多(2KB).</p>
+
+<p>而且thread是由OS管理的, 这就给系统带来了开销, 而goroutine是由Go的Runtime管理的, go有自己的一套调度模型, 这也减少了对系统的负担.</p>
+
+<p>&hellip; 心情不好, 以后再填.</p>
+
+<h2 id="refs">Refs</h2>
+
+<ul>
+<li><a href="https://go101.org/article/control-flows-more.html" target="_blank">#Goroutines</a></li>
+<li><a href="https://stackoverflow.com/questions/200469/what-is-the-difference-between-a-process-and-a-thread" target="_blank">the-difference-between-a-process-and-a-thread</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Process_(computing)" target="_blank">wiki/Process</a></li>
+<li><a href="https://stackoverflow.com/questions/2483041/what-is-the-difference-between-fork-and-thread" target="_blank">the-difference-between-fork-and-thread</a></li>
+<li><a href="https://know-embedded.blogspot.com/2014/12/the-difference-between-fork-vfork-exec.html" target="_blank">the-difference-between-fork-vfork-exec</a></li>
+<li><a href="https://stackoverflow.com/questions/4856255/the-difference-between-fork-vfork-exec-and-clone" target="_blank">fork-vfork-exec-and-clone</a></li>
+<li><a href="http://www.hep.wisc.edu/~pinghc/Process_Memory.htm" target="_blank">Process and Memory</a></li>
+<li><a href="https://stackoverflow.com/questions/18904292/is-it-true-that-fork-calls-clone-internally" target="_blank">is-it-true-that-fork-calls-clone-internally</a></li>
+<li><a href="http://tleyden.github.io/blog/2014/10/30/goroutines-vs-threads/" target="_blank">Goroutines vs Threads</a></li>
+<li><a href="https://codeburst.io/why-goroutines-are-not-lightweight-threads-7c460c1f155f" target="_blank">Why goroutines are not lightweight threads?</a></li>
+<li><a href="https://www.tutorialspoint.com/operating_system/os_processes.htm" target="_blank">Operating System - Processes</a></li>
+</ul>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/go'>Go</a>, <a class='category' href='/categories/wiki'>Wiki</a></div>
+<div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/go'>Go</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav' style="float: left;"><div class='prev-entry' style="float: left;">
+      <a href='/posts/golang-append/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Golang-Append</a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+       &copy; 2014-2018 wrfly 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script></body>
+
+</html>
+

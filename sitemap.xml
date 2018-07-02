@@ -8,7 +8,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/posts/</loc>
-    <lastmod>2018-06-24T21:26:01+08:00</lastmod>
+    <lastmod>2018-07-02T12:29:07+08:00</lastmod>
   </url>
   
   <url>
@@ -17,6 +17,11 @@
   
   <url>
     <loc>https://wrfly.kfd.me/about/</loc>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/what-is-a-goroutine-seriously/</loc>
+    <lastmod>2018-07-02T12:29:07+08:00</lastmod>
   </url>
   
   <url>
@@ -741,13 +746,13 @@
   
   <url>
     <loc>https://wrfly.kfd.me/categories/go/</loc>
-    <lastmod>2018-06-07T21:53:55+08:00</lastmod>
+    <lastmod>2018-07-02T12:29:07+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://wrfly.kfd.me/tags/go/</loc>
-    <lastmod>2018-06-24T21:26:01+08:00</lastmod>
+    <lastmod>2018-07-02T12:29:07+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -889,6 +894,12 @@
   </url>
   
   <url>
+    <loc>https://wrfly.kfd.me/categories/wiki/</loc>
+    <lastmod>2018-07-02T12:29:07+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://wrfly.kfd.me/tags/wiki/</loc>
     <lastmod>2014-10-04T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -896,7 +907,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/</loc>
-    <lastmod>2018-06-24T21:26:01+08:00</lastmod>
+    <lastmod>2018-07-02T12:29:07+08:00</lastmod>
     <priority>0</priority>
   </url>
   

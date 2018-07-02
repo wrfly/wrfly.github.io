@@ -5,10 +5,26 @@
     <link>https://wrfly.kfd.me/categories/go/</link>
     <description>Recent content in Go on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 07 Jun 2018 21:53:55 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 02 Jul 2018 12:29:07 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/categories/go/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>What-is-a-Goroutine, seriously</title>
+      <link>https://wrfly.kfd.me/posts/what-is-a-goroutine-seriously/</link>
+      <pubDate>Mon, 02 Jul 2018 12:29:07 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/what-is-a-goroutine-seriously/</guid>
+      <description>拖延了很久的一篇. 借面试的机会, 梳理一遍.
+ init and pstree 在系统中, 所有的执行和操作都是通过进程实现的. 当我们按下电源按钮的那一刻, 就相当于盘古开天辟地了, 从此, 所有的进程都会&amp;rdquo;依附于&amp;rdquo;一个叫init进程的特殊进程. 关于Linux初始化init进程, 可以看下这一个系列:
+浅析 Linux 初始化 init 系统:
+ Sysvinit UpStart Systemd  我们可以通过 pstree 来查看进程之间的关系.
+Process and Thread 严格意义上讲, 并没有进程,线程的区别, Linus 在一篇邮件中表达了自己的观点: http://lkml.iu.edu/hypermail/linux/kernel/9608/0191.html
+不管是Process,还是Threads, 都是一些可被执行的实体,context of execution (COE) or independent sequences of execution.
+但如果说区别, 进程之间不会共享内存(一般来讲), 而线程之间则会共享进程的内存. 线程是进程资源的子集, 他们唯一的区别在于是否共享了资源.
+ That state includes things like CPU state (registers etc), MMU state (page mappings), permission state (uid, gid) and various &amp;ldquo;communication states&amp;rdquo; (open files, signal handlers etc).</description>
+    </item>
     
     <item>
       <title>Golang-Maaaap</title>
