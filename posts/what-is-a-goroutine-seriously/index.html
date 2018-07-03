@@ -201,22 +201,32 @@ ga('send', 'pageview');
 
 <p>而且thread是由OS管理的, 这就给系统带来了开销, 而goroutine是由Go的Runtime管理的, go有自己的一套调度模型, 这也减少了对系统的负担.</p>
 
-<p>&hellip; 心情不好, 以后再填.</p>
+<p>那么为什么goroutine的内存占用会小很多呢? 可以参见 <strong><a href="https://dave.cheney.net/2014/06/07/five-things-that-make-go-fast" target="_blank">five-things-that-make-go-fast</a></strong> 的第五部分.</p>
+
+<p>大致上是说, 因为thread之间需要一个<code>guard page</code>来避免stack和heap之间的内存碰撞(如果碰撞了, 程序就退出). 因为threads很难预测自己的内存使用, 所以就需要预留一些内存给每个thread的stack以及其gard page(为了不让stack和heap碰撞), 这就造成了thread的&rdquo;内存浪费&rdquo;(也不能说是浪费, 因为是没办法的事情). 这个内存大概是&rdquo;兆级别&rdquo;的.</p>
+
+<p>而goroutine在这一方面则有很大不同. 首先就是取消了<code>gard page</code>. go runtime在每个函数执行之前都会检查一下是否有足够的stack供其使用, 如果没有, runtime就会分配更多内存给它. 因为有这样一种检查机制, goroutine的初始stack就可以变得很小(不够了再分配), 就可以省下很多资源. goroutine结束的时候, 再将内存释放回heap.</p>
+
+<p>而go runtime的调度, 可以看一下我之前的一篇<a href="https://wrfly.kfd.me/posts/go-scheduler/" target="_blank">翻译</a>.</p>
+
+<p>另外, 下面的参考链接中都说了很多, 非常建议感兴趣的同学读一下.</p>
 
 <h2 id="refs">Refs</h2>
 
 <ul>
-<li><a href="https://go101.org/article/control-flows-more.html" target="_blank">#Goroutines</a></li>
+<li><a href="https://go101.org/article/control-flows-more.html" target="_blank">goroutines</a></li>
 <li><a href="https://stackoverflow.com/questions/200469/what-is-the-difference-between-a-process-and-a-thread" target="_blank">the-difference-between-a-process-and-a-thread</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Process_(computing)" target="_blank">wiki/Process</a></li>
 <li><a href="https://stackoverflow.com/questions/2483041/what-is-the-difference-between-fork-and-thread" target="_blank">the-difference-between-fork-and-thread</a></li>
 <li><a href="https://know-embedded.blogspot.com/2014/12/the-difference-between-fork-vfork-exec.html" target="_blank">the-difference-between-fork-vfork-exec</a></li>
 <li><a href="https://stackoverflow.com/questions/4856255/the-difference-between-fork-vfork-exec-and-clone" target="_blank">fork-vfork-exec-and-clone</a></li>
-<li><a href="http://www.hep.wisc.edu/~pinghc/Process_Memory.htm" target="_blank">Process and Memory</a></li>
+<li><a href="http://www.hep.wisc.helloedu/~pinghc/Process_Memory.htm" target="_blank">Process and Memory</a></li>
 <li><a href="https://stackoverflow.com/questions/18904292/is-it-true-that-fork-calls-clone-internally" target="_blank">is-it-true-that-fork-calls-clone-internally</a></li>
 <li><a href="http://tleyden.github.io/blog/2014/10/30/goroutines-vs-threads/" target="_blank">Goroutines vs Threads</a></li>
 <li><a href="https://codeburst.io/why-goroutines-are-not-lightweight-threads-7c460c1f155f" target="_blank">Why goroutines are not lightweight threads?</a></li>
 <li><a href="https://www.tutorialspoint.com/operating_system/os_processes.htm" target="_blank">Operating System - Processes</a></li>
+<li><strong><a href="https://dave.cheney.net/2014/06/07/five-things-that-make-go-fast" target="_blank">five-things-that-make-go-fast</a></strong></li>
+<li><a href="https://dave.cheney.net/2013/06/02/why-is-a-goroutines-stack-infinite" target="_blank">why-is-a-goroutines-stack-infinite</a></li>
 </ul>
 
 </div>
