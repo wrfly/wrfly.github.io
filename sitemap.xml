@@ -8,7 +8,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/posts/</loc>
-    <lastmod>2018-07-02T12:29:07+08:00</lastmod>
+    <lastmod>2018-07-28T23:29:49+08:00</lastmod>
   </url>
   
   <url>
@@ -17,6 +17,11 @@
   
   <url>
     <loc>https://wrfly.kfd.me/about/</loc>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/go-tips-token-bucket/</loc>
+    <lastmod>2018-07-28T23:29:49+08:00</lastmod>
   </url>
   
   <url>
@@ -746,13 +751,13 @@
   
   <url>
     <loc>https://wrfly.kfd.me/categories/go/</loc>
-    <lastmod>2018-07-02T12:29:07+08:00</lastmod>
+    <lastmod>2018-07-28T23:29:49+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://wrfly.kfd.me/tags/go/</loc>
-    <lastmod>2018-07-02T12:29:07+08:00</lastmod>
+    <lastmod>2018-07-28T23:29:49+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -870,6 +875,12 @@
   </url>
   
   <url>
+    <loc>https://wrfly.kfd.me/tags/tips/</loc>
+    <lastmod>2018-07-28T23:29:49+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://wrfly.kfd.me/tags/translate/</loc>
     <lastmod>2018-02-22T18:13:29+08:00</lastmod>
     <priority>0</priority>
@@ -907,7 +918,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/</loc>
-    <lastmod>2018-07-02T12:29:07+08:00</lastmod>
+    <lastmod>2018-07-28T23:29:49+08:00</lastmod>
     <priority>0</priority>
   </url>
   
