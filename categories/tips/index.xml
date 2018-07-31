@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tips on wrfly&#39;s blog</title>
-    <link>https://wrfly.kfd.me/tags/tips/</link>
+    <link>https://wrfly.kfd.me/categories/tips/</link>
     <description>Recent content in Tips on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Tue, 31 Jul 2018 23:00:06 +0800</lastBuildDate>
     
-	<atom:link href="https://wrfly.kfd.me/tags/tips/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://wrfly.kfd.me/categories/tips/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -24,19 +24,6 @@ alpine由于是个小巧的linux系统, 里面没有 /etc/nsswitch.conf 文件, 
 关于nsswitch.conf的详细介绍, 可以看这里 man 或者 man nsswitch.conf
 实验验证 下面有个小实验:
 package main import &amp;#34;net&amp;#34; const host = &amp;#34;www.google.com&amp;#34; func main() { println(host) ips, err := net.LookupIP(host) if err != nil { panic(err) } for _, ip := range ips { println(&amp;#34;lookup:&amp;#34; + ip.</description>
-    </item>
-    
-    <item>
-      <title>Go-Tips-Token-Bucket</title>
-      <link>https://wrfly.kfd.me/posts/go-tips-token-bucket/</link>
-      <pubDate>Sat, 28 Jul 2018 23:29:49 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/posts/go-tips-token-bucket/</guid>
-      <description>前几天写了一个docker registry的lib https://github.com/wrfly/reglib
-然后在写example的时候发现并发太高, 把registry搞得502了, 然后就想办法怎么限制一下这个并发. 其实这个问题在之前面试的时候被问到过, 当时回答的不好. 因为一般的限流令牌桶的话都是有一个时间往里补充的, 我当时还没接触过别的, 所以就比较尴尬.
-但是那天下午忽然就想到可以用channel去实现这个令牌桶, 但是操作恰好相反, 操作的时候不是取出令牌再进行下一步, 而是往里放, 对应的, 操作完成也不是再还回令牌, 而是取出.
-可以看一个简单的例子:
-package main import ( &amp;#34;fmt&amp;#34; &amp;#34;sync&amp;#34; &amp;#34;time&amp;#34; ) func main() { count := 15 limit := 5 var wg sync.WaitGroup wg.Add(count) tbChan := make(chan struct{}, limit) for index := 0; index &amp;lt; count; index++ { go func(index int) { tbChan &amp;lt;- struct{}{} defer func() { &amp;lt;-tbChan }() defer wg.Done() fmt.Printf(&amp;#34;this is %d\n&amp;#34;, index) time.</description>
     </item>
     
   </channel>

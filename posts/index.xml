@@ -5,10 +5,26 @@
     <link>https://wrfly.kfd.me/posts/</link>
     <description>Recent content on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 28 Jul 2018 23:29:49 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 31 Jul 2018 23:00:06 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>golang: netgo vs cgo</title>
+      <link>https://wrfly.kfd.me/posts/golang-netgo-vs-cgo/</link>
+      <pubDate>Tue, 31 Jul 2018 23:00:06 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/golang-netgo-vs-cgo/</guid>
+      <description>由于alpine很小巧, 其经常被拿来当作容器应用运行时的基础镜像, 但是稍不注意, 就会踩一个坑.
+一般来讲, 如果我们想改变某个域名的地址, 除了更改DNS记录, 那就只有更改hosts文件了, 由于容器的便捷性, 我们总是会更改容器的hosts文件, 不管是通过 --add-host也好, 挂载hosts文件进去也好, 总之, 是更改这个文件.
+问题发现 然鹅! 有时候竟然会出现更改hosts文件无效的情况! 明明在里面ping是可以的呀! 为什么程序就不走这个IP呢? (默认golang程序)
+经过仔细的排查发现, 是golang程序的问题&amp;hellip; 中间过程略去不表&amp;hellip;
+alpine由于是个小巧的linux系统, 里面没有 /etc/nsswitch.conf 文件, 默认编译的go程序(netgo)会首先去查找这个文件, 判断dns查找顺序, 如果找不到这个文件, 那就 &amp;ldquo;自行决断&amp;rdquo;, 去DNS服务器里查找了. 所以如果想解决这个问题, 可以在image里面把这个文件给 &amp;ldquo;补上&amp;rdquo;: 可以看这个PR
+关于nsswitch.conf的详细介绍, 可以看这里 man 或者 man nsswitch.conf
+实验验证 下面有个小实验:
+package main import &amp;#34;net&amp;#34; const host = &amp;#34;www.google.com&amp;#34; func main() { println(host) ips, err := net.LookupIP(host) if err != nil { panic(err) } for _, ip := range ips { println(&amp;#34;lookup:&amp;#34; + ip.</description>
+    </item>
     
     <item>
       <title>Go-Tips-Token-Bucket</title>

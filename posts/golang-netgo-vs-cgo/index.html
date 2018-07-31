@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='由于alpine很小巧, 其经常被拿来当作容器应用运行时的基础镜像, 但是稍不注意, 就会踩一个坑.
+一般来讲, 如果我们想改变某个域名的地址, 除了更改DNS记录, 那就只有更改hosts文件了, 由于容器的便捷性, 我们总是会更改容器的hosts文件, 不管是通过 --add-host也好, 挂载hosts文件进去也好, 总之, 是更改这个文件.
+问题发现 然鹅! 有时候竟然会出现更改hosts文件无效的情况! 明明在里面ping是可以的呀! 为什么程序就不走这个IP呢? (默认golang程序)
+经过仔细的排查发现, 是golang程序的问题&hellip; 中间过程略去不表&hellip;
+alpine由于是个小巧的linux系统, 里面没有 /etc/nsswitch.conf 文件, 默认编译的go程序(netgo)会首先去查找这个文件, 判断dns查找顺序, 如果找不到这个文件, 那就 &ldquo;自行决断&rdquo;, 去DNS服务器里查找了. 所以如果想解决这个问题, 可以在image里面把这个文件给 &ldquo;补上&rdquo;: 可以看这个PR
+关于nsswitch.conf的详细介绍, 可以看这里 man 或者 man nsswitch.conf
+实验验证 下面有个小实验:
+package main import &#34;net&#34; const host = &#34;www.google.com&#34; func main() { println(host) ips, err := net.LookupIP(host) if err != nil { panic(err) } for _, ip := range ips { println(&#34;lookup:&#34; &#43; ip.'>
+
+<meta property='og:title' content='golang: netgo vs cgo • wrfly&#39;s blog'>
+<meta property='og:description' content='由于alpine很小巧, 其经常被拿来当作容器应用运行时的基础镜像, 但是稍不注意, 就会踩一个坑.
+一般来讲, 如果我们想改变某个域名的地址, 除了更改DNS记录, 那就只有更改hosts文件了, 由于容器的便捷性, 我们总是会更改容器的hosts文件, 不管是通过 --add-host也好, 挂载hosts文件进去也好, 总之, 是更改这个文件.
+问题发现 然鹅! 有时候竟然会出现更改hosts文件无效的情况! 明明在里面ping是可以的呀! 为什么程序就不走这个IP呢? (默认golang程序)
+经过仔细的排查发现, 是golang程序的问题&hellip; 中间过程略去不表&hellip;
+alpine由于是个小巧的linux系统, 里面没有 /etc/nsswitch.conf 文件, 默认编译的go程序(netgo)会首先去查找这个文件, 判断dns查找顺序, 如果找不到这个文件, 那就 &ldquo;自行决断&rdquo;, 去DNS服务器里查找了. 所以如果想解决这个问题, 可以在image里面把这个文件给 &ldquo;补上&rdquo;: 可以看这个PR
+关于nsswitch.conf的详细介绍, 可以看这里 man 或者 man nsswitch.conf
+实验验证 下面有个小实验:
+package main import &#34;net&#34; const host = &#34;www.google.com&#34; func main() { println(host) ips, err := net.LookupIP(host) if err != nil { panic(err) } for _, ip := range ips { println(&#34;lookup:&#34; &#43; ip.'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/golang-netgo-vs-cgo/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='go'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2018-07-31T23:00:06&#43;08:00'/><meta property='article:modified_time' content='2018-07-31T23:00:06&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.40.1" />
+
+  <title>golang: netgo vs cgo • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/golang-netgo-vs-cgo/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/tags/'>tags</a>
+    </li>
+  <li>
+      <a href='/posts/'>posts</a>
+    </li>
+  <li>
+      <a href='/links/'>links</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>golang: netgo vs cgo</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2018-07-31T23:00:06&#43;08:00'>2018, Jul 31</time>
+</span>
+
+  
+  
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>由于alpine很小巧, 其经常被拿来当作容器应用运行时的基础镜像, 但是稍不注意, 就会踩一个坑.</p>
+
+<p>一般来讲, 如果我们想改变某个域名的地址, 除了更改DNS记录, 那就只有更改hosts文件了, 由于容器的便捷性, 我们总是会更改容器的hosts文件, 不管是通过 <code>--add-host</code>也好, 挂载hosts文件进去也好, 总之, 是更改这个文件.</p>
+
+<h3 id="问题发现">问题发现</h3>
+
+<p>然鹅! 有时候竟然会出现更改hosts文件无效的情况! 明明在里面ping是可以的呀! 为什么程序就不走这个IP呢? (默认golang程序)</p>
+
+<p>经过仔细的排查发现, 是golang程序的问题&hellip; 中间过程略去不表&hellip;</p>
+
+<p>alpine由于是个小巧的linux系统, 里面没有 <code>/etc/nsswitch.conf</code> 文件, 默认编译的go程序(netgo)会首先去查找这个文件, 判断dns查找顺序, 如果找不到这个文件, 那就 &ldquo;自行决断&rdquo;, 去DNS服务器里查找了. 所以如果想解决这个问题, 可以在image里面把这个文件给 &ldquo;补上&rdquo;: <a href="https://github.com/docker/distribution-library-image/pull/66" target="_blank">可以看这个PR</a></p>
+
+<p>关于<code>nsswitch.conf</code>的详细介绍, 可以看这里 <a href="http://man7.org/linux/man-pages/man5/nsswitch.conf.5.html" target="_blank">man</a> 或者 <code>man nsswitch.conf</code></p>
+
+<h3 id="实验验证">实验验证</h3>
+
+<p>下面有个小实验:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+
+<span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;net&#34;</span>
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">host</span> = <span style="color:#e6db74">&#34;www.google.com&#34;</span>
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+	println(<span style="color:#a6e22e">host</span>)
+
+	<span style="color:#a6e22e">ips</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">net</span>.<span style="color:#a6e22e">LookupIP</span>(<span style="color:#a6e22e">host</span>)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		panic(<span style="color:#a6e22e">err</span>)
+	}
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">ip</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">ips</span> {
+		println(<span style="color:#e6db74">&#34;lookup:&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">ip</span>.<span style="color:#a6e22e">String</span>())
+		<span style="color:#66d9ef">return</span>
+	}
+}</code></pre></div>
+<p>这个程序会查找google的IP地址并打印出来.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> golang:alpine</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># remove this file</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> rm /etc/nsswitch.conf<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>COPY main.go /root<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> go build -o /bin/ncgo /root/main.go<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span><span style="color:#e6db74"> [ &#34;/bin/ncgo&#34; ]</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># GODEBUG=netdns=go /bin/ncgo</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># GODEBUG=netdns=cgo /bin/ncgo</span></code></pre></div>
+<p>这个dockerfile会编译这个文件, 并首先删除系统里的nsswitch.conf(alpine默认是没有的, golang后来添加的)</p>
+
+<p>然后我们构建这个镜像并运行一下:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"><span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo docker build -t netgo_cgo .
+Sending build context to Docker daemon  <span style="color:#ae81ff">5</span>.<span style="color:#ae81ff">408</span>MB
+Step <span style="color:#ae81ff">1</span>/5 <span style="color:#f92672">:</span> FROM golang<span style="color:#f92672">:</span>alpine
+ ---<span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">05</span>fe62871090
+Step <span style="color:#ae81ff">2</span>/5 <span style="color:#f92672">:</span> RUN rm /etc/nsswitch.conf
+ ---<span style="color:#f92672">&gt;</span> Using <span style="color:#a6e22e">cache</span>
+ ---<span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">3</span>a553930831f
+Step <span style="color:#ae81ff">3</span>/5 <span style="color:#f92672">:</span> COPY main.go /root
+ ---<span style="color:#f92672">&gt;</span> Using <span style="color:#a6e22e">cache</span>
+ ---<span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">458</span>ea03b7b0c
+Step <span style="color:#ae81ff">4</span>/5 <span style="color:#f92672">:</span> RUN go build -o /bin/ncgo /root/main.go
+ ---<span style="color:#f92672">&gt;</span> Using <span style="color:#a6e22e">cache</span>
+ ---<span style="color:#f92672">&gt;</span> daa8a0fc89ae
+Step <span style="color:#ae81ff">5</span>/5 <span style="color:#f92672">:</span> CMD /bin/ncgo
+ ---<span style="color:#f92672">&gt;</span> Running in <span style="color:#ae81ff">49</span>e471837516
+ ---<span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">7</span>fc1a4c16d04
+Removing intermediate container <span style="color:#ae81ff">49</span>e471837516
+Successfully built <span style="color:#ae81ff">7</span>fc1a4c16d04
+Successfully tagged netgo_cgo<span style="color:#f92672">:</span>latest
+<span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo docker run --rm -ti --add-host www.google.com<span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span> -e GODEBUG<span style="color:#f92672">=</span>netdns<span style="color:#f92672">=</span>go netgo_cgo 
+www.google.com
+lookup<span style="color:#f92672">:</span><span style="color:#ae81ff">69</span>.<span style="color:#ae81ff">171</span>.<span style="color:#ae81ff">245</span>.<span style="color:#ae81ff">84</span>
+<span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo docker run --rm -ti --add-host www.google.com<span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span> -e GODEBUG<span style="color:#f92672">=</span>netdns<span style="color:#f92672">=</span>cgo netgo_cgo 
+www.google.com
+lookup<span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span>
+<span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo</code></pre></div>
+<p>可以看到, 使用go默认的resolver会忽略hosts文件种的内容, 而使用cgo则读取了hosts文件中的内容.</p>
+
+<p>这种使用环境变量去设定程序resolver的方式, 也可以在build的时候添加tag来实现:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">go build --tags netcgo -o netcgo
+go build --tags netgo -o netgo</code></pre></div>
+<p>那么, 这两个tag还有什么不同呢?</p>
+
+<h3 id="深入研究">深入研究</h3>
+
+<p>我们加上调试参数来看看:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"><span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo go build -x --tags netcgo -o netcgo
+WORK<span style="color:#f92672">=</span>/tmp/go-build691479627
+mkdir -p <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/net/_obj/
+</span><span style="color:#e6db74"></span>mkdir -p <span style="color:#960050;background-color:#1e0010">$</span>WORK/
+cd /opt/go/src/net
+CGO_LDFLAGS<span style="color:#f92672">=</span>&#34;-g&#34; &#34;-O2&#34; /opt/go/pkg/tool/linux_amd64/cgo -objdir <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/ -importpath net -- -I <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/ -g -O2 cgo_linux.go cgo_resnew.go cgo_socknew.go cgo_unix.go conf_netcgo.go
+cd <span style="color:#960050;background-color:#1e0010">$</span>WORK
+gcc -fdebug-prefix-map<span style="color:#f92672">=</span>a<span style="color:#f92672">=</span>b -c trivial.c
+gcc -gno-record-gcc-switches -c trivial.c
+cd <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/net/_obj
+</span><span style="color:#e6db74"></span>gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./_cgo_export.o -c _cgo_export.c
+gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./cgo_linux.cgo2.o -c cgo_linux.cgo2.c
+gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./cgo_resnew.cgo2.o -c cgo_resnew.cgo2.c
+gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./cgo_socknew.cgo2.o -c cgo_socknew.cgo2.c
+gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./cgo_unix.cgo2.o -c cgo_unix.cgo2.c
+gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./conf_netcgo.cgo2.o -c conf_netcgo.cgo2.c
+gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./_cgo_main.o -c _cgo_main.c
+cd /opt/go/src/net
+gcc -I . -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/_cgo_.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/_cgo_main.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/_cgo_export.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_linux.cgo2.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_resnew.cgo2.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_socknew.cgo2.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_unix.cgo2.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/conf_netcgo.cgo2.o -g -O2
+/opt/go/pkg/tool/linux_amd64/cgo -dynpackage net -dynimport <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/_cgo_.o -dynout <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/net/_obj/_cgo_import.go
+</span><span style="color:#e6db74"></span>cd <span style="color:#960050;background-color:#1e0010">$</span>WORK
+gcc -no-pie -c trivial.c
+cd /opt/go/src/net
+gcc -I . -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/_all.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/_cgo_export.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_linux.cgo2.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_resnew.cgo2.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_socknew.cgo2.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_unix.cgo2.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/conf_netcgo.cgo2.o -g -O2 -Wl,-r -nostdlib -no-pie -Wl,--build-id<span style="color:#f92672">=</span>none
+/opt/go/pkg/tool/linux_amd64/compile -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net.a -trimpath <span style="color:#960050;background-color:#1e0010">$</span>WORK -goversion go1.<span style="color:#ae81ff">9</span>.<span style="color:#ae81ff">2</span> -p net -std -buildid <span style="color:#ae81ff">1</span>d8743e51666b2f6e7dca905f790949850fff2bb -D _/opt/go/src/net -I <span style="color:#960050;background-color:#1e0010">$</span>WORK -pack ./addrselect.go ./conf.go ./dial.go ./dnsclient.go ./dnsclient_unix.go ./dnsconfig_unix.go ./dnsmsg.go ./error_posix.go ./fd_unix.go ./file.go ./file_unix.go ./hook.go ./hook_unix.go ./hosts.go ./interface.go ./interface_linux.go ./ip.go ./iprawsock.go ./iprawsock_posix.go ./ipsock.go ./ipsock_posix.go ./lookup.go ./lookup_unix.go ./mac.go ./net.go ./nss.go ./parse.go ./pipe.go ./port.go ./port_unix.go ./rawconn.go ./sendfile_linux.go ./sock_cloexec.go ./sock_linux.go ./sock_posix.go ./sockopt_linux.go ./sockopt_posix.go ./sockoptip_linux.go ./sockoptip_posix.go ./tcpsock.go ./tcpsock_posix.go ./tcpsockopt_posix.go ./tcpsockopt_unix.go ./udpsock.go ./udpsock_posix.go ./unixsock.go ./unixsock_posix.go ./writev_unix.go <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/_cgo_gotypes.go <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_linux.cgo1.go <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_resnew.cgo1.go <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_socknew.cgo1.go <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_unix.cgo1.go <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/conf_netcgo.cgo1.go <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/net/_obj/_cgo_import.go
+</span><span style="color:#e6db74"></span>pack r <span style="color:#960050;background-color:#1e0010">$</span>WORK/net.a <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/_all.o <span style="color:#75715e"># internal</span>
+mkdir -p <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo/_obj/
+</span><span style="color:#e6db74"></span>mkdir -p <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/
+</span><span style="color:#e6db74"></span>cd /home/mr/test/go/netgo_cgo
+/opt/go/pkg/tool/linux_amd64/compile -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo.a -trimpath <span style="color:#960050;background-color:#1e0010">$</span>WORK -goversion go1.<span style="color:#ae81ff">9</span>.<span style="color:#ae81ff">2</span> -p main -complete -buildid eb016ff3c1708c2bfbf31469f574aff99c045d11 -D _/home/mr/test/go/netgo_cgo -I <span style="color:#960050;background-color:#1e0010">$</span>WORK -pack ./main.go
+cd .
+/opt/go/pkg/tool/linux_amd64/link -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out -L <span style="color:#960050;background-color:#1e0010">$</span>WORK -extld<span style="color:#f92672">=</span>gcc -buildmode<span style="color:#f92672">=</span>exe -buildid<span style="color:#f92672">=</span>eb016ff3c1708c2bfbf31469f574aff99c045d11 <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo.a
+</span><span style="color:#e6db74"></span>cp <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out netcgo</code></pre></div>
+<p>好长一大串!</p>
+
+<p>可以看到, golang使用了gcc去编译这个文件.</p>
+
+<p>那么换成<code>netgo</code>呢?</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"><span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo go build -x --tags netgo -o netgo 
+WORK<span style="color:#f92672">=</span>/tmp/go-build857020109
+mkdir -p <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/net/_obj/
+</span><span style="color:#e6db74"></span>mkdir -p <span style="color:#960050;background-color:#1e0010">$</span>WORK/
+cd /opt/go/src/net
+/opt/go/pkg/tool/linux_amd64/compile -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net.a -trimpath <span style="color:#960050;background-color:#1e0010">$</span>WORK -goversion go1.<span style="color:#ae81ff">9</span>.<span style="color:#ae81ff">2</span> -p net -std -buildid <span style="color:#ae81ff">12048</span>e0b22a06eafa34fe1b04bfee87c29b39979 -D _/opt/go/src/net -I <span style="color:#960050;background-color:#1e0010">$</span>WORK -pack ./addrselect.go ./cgo_stub.go ./conf.go ./dial.go ./dnsclient.go ./dnsclient_unix.go ./dnsconfig_unix.go ./dnsmsg.go ./error_posix.go ./fd_unix.go ./file.go ./file_unix.go ./hook.go ./hook_unix.go ./hosts.go ./interface.go ./interface_linux.go ./ip.go ./iprawsock.go ./iprawsock_posix.go ./ipsock.go ./ipsock_posix.go ./lookup.go ./lookup_unix.go ./mac.go ./net.go ./nss.go ./parse.go ./pipe.go ./port.go ./port_unix.go ./rawconn.go ./sendfile_linux.go ./sock_cloexec.go ./sock_linux.go ./sock_posix.go ./sockopt_linux.go ./sockopt_posix.go ./sockoptip_linux.go ./sockoptip_posix.go ./tcpsock.go ./tcpsock_posix.go ./tcpsockopt_posix.go ./tcpsockopt_unix.go ./udpsock.go ./udpsock_posix.go ./unixsock.go ./unixsock_posix.go ./writev_unix.go
+mkdir -p <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo/_obj/
+</span><span style="color:#e6db74"></span>mkdir -p <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/
+</span><span style="color:#e6db74"></span>cd /home/mr/test/go/netgo_cgo
+/opt/go/pkg/tool/linux_amd64/compile -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo.a -trimpath <span style="color:#960050;background-color:#1e0010">$</span>WORK -goversion go1.<span style="color:#ae81ff">9</span>.<span style="color:#ae81ff">2</span> -p main -complete -buildid a0e2e67cde44dfa98c4ccaf123bd7ff6ae1370f8 -D _/home/mr/test/go/netgo_cgo -I <span style="color:#960050;background-color:#1e0010">$</span>WORK -pack ./main.go
+cd .
+/opt/go/pkg/tool/linux_amd64/link -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out -L <span style="color:#960050;background-color:#1e0010">$</span>WORK -extld<span style="color:#f92672">=</span>gcc -buildmode<span style="color:#f92672">=</span>exe -buildid<span style="color:#f92672">=</span>a0e2e67cde44dfa98c4ccaf123bd7ff6ae1370f8 <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo.a
+</span><span style="color:#e6db74"></span>cp <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out netgo
+<span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo </code></pre></div>
+<p>就短多了, 可以看到用的是 <code>/opt/go/pkg/tool/linux_amd64/compile</code></p>
+
+<p>在来看一下默认的build:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"><span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo go build -x
+WORK<span style="color:#f92672">=</span>/tmp/go-build285258876
+mkdir -p <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo/_obj/
+</span><span style="color:#e6db74"></span>mkdir -p <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/
+</span><span style="color:#e6db74"></span>cd /home/mr/test/go/netgo_cgo
+/opt/go/pkg/tool/linux_amd64/compile -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo.a -trimpath <span style="color:#960050;background-color:#1e0010">$</span>WORK -goversion go1.<span style="color:#ae81ff">9</span>.<span style="color:#ae81ff">2</span> -p main -complete -buildid <span style="color:#ae81ff">137</span>ba24345f4e3075192f2afe0e3b5aad76f10b7 -D _/home/mr/test/go/netgo_cgo -I <span style="color:#960050;background-color:#1e0010">$</span>WORK -pack ./main.go
+cd .
+/opt/go/pkg/tool/linux_amd64/link -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out -L <span style="color:#960050;background-color:#1e0010">$</span>WORK -extld<span style="color:#f92672">=</span>gcc -buildmode<span style="color:#f92672">=</span>exe -buildid<span style="color:#f92672">=</span><span style="color:#ae81ff">137</span>ba24345f4e3075192f2afe0e3b5aad76f10b7 <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo.a
+</span><span style="color:#e6db74"></span>cp <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out netgo_cgo
+<span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo</code></pre></div>
+<p>然后我们对比一下这些二进制文件:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">➜  netgo_cgo ll
+total <span style="color:#ae81ff">8004</span>
+drwxrwxr-x  <span style="color:#ae81ff">2</span> mr mr    <span style="color:#ae81ff">4096</span> Jul <span style="color:#ae81ff">31</span> <span style="color:#ae81ff">23</span>:31 ./
+drwxr-xr-x <span style="color:#ae81ff">46</span> mr mr   <span style="color:#ae81ff">12288</span> Jul <span style="color:#ae81ff">31</span> <span style="color:#ae81ff">22</span>:19 ../
+-rw-r--r--  <span style="color:#ae81ff">1</span> mr mr     <span style="color:#ae81ff">206</span> Jul <span style="color:#ae81ff">31</span> <span style="color:#ae81ff">23</span>:18 Dockerfile
+-rw-rw-r--  <span style="color:#ae81ff">1</span> mr mr     <span style="color:#ae81ff">229</span> Jul <span style="color:#ae81ff">31</span> <span style="color:#ae81ff">23</span>:17 main.go
+-rwxr-xr-x  <span style="color:#ae81ff">1</span> mr mr <span style="color:#ae81ff">2726957</span> Jul <span style="color:#ae81ff">31</span> <span style="color:#ae81ff">23</span>:30 netcgo*
+-rwxr-xr-x  <span style="color:#ae81ff">1</span> mr mr <span style="color:#ae81ff">2672063</span> Jul <span style="color:#ae81ff">31</span> <span style="color:#ae81ff">23</span>:31 netgo*
+-rwxr-xr-x  <span style="color:#ae81ff">1</span> mr mr <span style="color:#ae81ff">2726922</span> Jul <span style="color:#ae81ff">31</span> <span style="color:#ae81ff">23</span>:31 netgo_cgo*</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">➜  netgo_cgo ls
+Dockerfile  main.go  netcgo  netgo  netgo_cgo
+➜  netgo_cgo ldd net*
+netcgo:
+	linux-vdso.so.1 <span style="color:#f92672">(</span>0x00007ffe718f9000<span style="color:#f92672">)</span>
+	libpthread.so.0 <span style="color:#f92672">=</span>&gt; /lib/x86_64-linux-gnu/libpthread.so.0 <span style="color:#f92672">(</span>0x00007efd89078000<span style="color:#f92672">)</span>
+	libc.so.6 <span style="color:#f92672">=</span>&gt; /lib/x86_64-linux-gnu/libc.so.6 <span style="color:#f92672">(</span>0x00007efd88c87000<span style="color:#f92672">)</span>
+	/lib64/ld-linux-x86-64.so.2 <span style="color:#f92672">(</span>0x00007efd89297000<span style="color:#f92672">)</span>
+netgo:
+	not a dynamic executable
+netgo_cgo:
+	linux-vdso.so.1 <span style="color:#f92672">(</span>0x00007fff56818000<span style="color:#f92672">)</span>
+	libpthread.so.0 <span style="color:#f92672">=</span>&gt; /lib/x86_64-linux-gnu/libpthread.so.0 <span style="color:#f92672">(</span>0x00007f4d7ad12000<span style="color:#f92672">)</span>
+	libc.so.6 <span style="color:#f92672">=</span>&gt; /lib/x86_64-linux-gnu/libc.so.6 <span style="color:#f92672">(</span>0x00007f4d7a921000<span style="color:#f92672">)</span>
+	/lib64/ld-linux-x86-64.so.2 <span style="color:#f92672">(</span>0x00007f4d7af31000<span style="color:#f92672">)</span>
+➜  netgo_cgo </code></pre></div>
+<p>在容器内部可以看到:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">➜  netgo_cgo docker run --rm -ti netgo_cgo ldd /bin/ncgo
+	/lib/ld-musl-x86_64.so.1 <span style="color:#f92672">(</span>0x7f0567c59000<span style="color:#f92672">)</span>
+	libc.musl-x86_64.so.1 <span style="color:#f92672">=</span>&gt; /lib/ld-musl-x86_64.so.1 <span style="color:#f92672">(</span>0x7f0567c59000<span style="color:#f92672">)</span>
+➜  netgo_cgo</code></pre></div>
+<p>然后再看一下其他信息:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">➜  netgo_cgo readelf -d netcgo
+
+Dynamic section at offset 0x1a9120 contains <span style="color:#ae81ff">19</span> entries:
+  Tag        Type                         Name/Value
+ 0x0000000000000004 <span style="color:#f92672">(</span>HASH<span style="color:#f92672">)</span>               0x535060
+ 0x0000000000000006 <span style="color:#f92672">(</span>SYMTAB<span style="color:#f92672">)</span>             0x535500
+ 0x000000000000000b <span style="color:#f92672">(</span>SYMENT<span style="color:#f92672">)</span>             <span style="color:#ae81ff">24</span> <span style="color:#f92672">(</span>bytes<span style="color:#f92672">)</span>
+ 0x0000000000000005 <span style="color:#f92672">(</span>STRTAB<span style="color:#f92672">)</span>             0x5352a0
+ 0x000000000000000a <span style="color:#f92672">(</span>STRSZ<span style="color:#f92672">)</span>              <span style="color:#ae81ff">579</span> <span style="color:#f92672">(</span>bytes<span style="color:#f92672">)</span>
+ 0x0000000000000007 <span style="color:#f92672">(</span>RELA<span style="color:#f92672">)</span>               0x534c40
+ 0x0000000000000008 <span style="color:#f92672">(</span>RELASZ<span style="color:#f92672">)</span>             <span style="color:#ae81ff">24</span> <span style="color:#f92672">(</span>bytes<span style="color:#f92672">)</span>
+ 0x0000000000000009 <span style="color:#f92672">(</span>RELAENT<span style="color:#f92672">)</span>            <span style="color:#ae81ff">24</span> <span style="color:#f92672">(</span>bytes<span style="color:#f92672">)</span>
+ 0x0000000000000003 <span style="color:#f92672">(</span>PLTGOT<span style="color:#f92672">)</span>             0x5a9000
+ 0x0000000000000015 <span style="color:#f92672">(</span>DEBUG<span style="color:#f92672">)</span>              0x0
+ 0x0000000000000001 <span style="color:#f92672">(</span>NEEDED<span style="color:#f92672">)</span>             Shared library: <span style="color:#f92672">[</span>libpthread.so.0<span style="color:#f92672">]</span>
+ 0x0000000000000001 <span style="color:#f92672">(</span>NEEDED<span style="color:#f92672">)</span>             Shared library: <span style="color:#f92672">[</span>libc.so.6<span style="color:#f92672">]</span>
+ 0x000000006ffffffe <span style="color:#f92672">(</span>VERNEED<span style="color:#f92672">)</span>            0x534fe0
+ 0x000000006fffffff <span style="color:#f92672">(</span>VERNEEDNUM<span style="color:#f92672">)</span>         <span style="color:#ae81ff">2</span>
+ 0x000000006ffffff0 <span style="color:#f92672">(</span>VERSYM<span style="color:#f92672">)</span>             0x534f80
+ 0x0000000000000014 <span style="color:#f92672">(</span>PLTREL<span style="color:#f92672">)</span>             RELA
+ 0x0000000000000002 <span style="color:#f92672">(</span>PLTRELSZ<span style="color:#f92672">)</span>           <span style="color:#ae81ff">792</span> <span style="color:#f92672">(</span>bytes<span style="color:#f92672">)</span>
+ 0x0000000000000017 <span style="color:#f92672">(</span>JMPREL<span style="color:#f92672">)</span>             0x534c58
+ 0x0000000000000000 <span style="color:#f92672">(</span>NULL<span style="color:#f92672">)</span>               0x0
+➜  netgo_cgo readelf -d netgo_cgo 
+
+Dynamic section at offset 0x1a9120 contains <span style="color:#ae81ff">19</span> entries:
+  Tag        Type                         Name/Value
+ 0x0000000000000004 <span style="color:#f92672">(</span>HASH<span style="color:#f92672">)</span>               0x535060
+ 0x0000000000000006 <span style="color:#f92672">(</span>SYMTAB<span style="color:#f92672">)</span>             0x535500
+ 0x000000000000000b <span style="color:#f92672">(</span>SYMENT<span style="color:#f92672">)</span>             <span style="color:#ae81ff">24</span> <span style="color:#f92672">(</span>bytes<span style="color:#f92672">)</span>
+ 0x0000000000000005 <span style="color:#f92672">(</span>STRTAB<span style="color:#f92672">)</span>             0x5352a0
+ 0x000000000000000a <span style="color:#f92672">(</span>STRSZ<span style="color:#f92672">)</span>              <span style="color:#ae81ff">579</span> <span style="color:#f92672">(</span>bytes<span style="color:#f92672">)</span>
+ 0x0000000000000007 <span style="color:#f92672">(</span>RELA<span style="color:#f92672">)</span>               0x534c40
+ 0x0000000000000008 <span style="color:#f92672">(</span>RELASZ<span style="color:#f92672">)</span>             <span style="color:#ae81ff">24</span> <span style="color:#f92672">(</span>bytes<span style="color:#f92672">)</span>
+ 0x0000000000000009 <span style="color:#f92672">(</span>RELAENT<span style="color:#f92672">)</span>            <span style="color:#ae81ff">24</span> <span style="color:#f92672">(</span>bytes<span style="color:#f92672">)</span>
+ 0x0000000000000003 <span style="color:#f92672">(</span>PLTGOT<span style="color:#f92672">)</span>             0x5a9000
+ 0x0000000000000015 <span style="color:#f92672">(</span>DEBUG<span style="color:#f92672">)</span>              0x0
+ 0x0000000000000001 <span style="color:#f92672">(</span>NEEDED<span style="color:#f92672">)</span>             Shared library: <span style="color:#f92672">[</span>libpthread.so.0<span style="color:#f92672">]</span>
+ 0x0000000000000001 <span style="color:#f92672">(</span>NEEDED<span style="color:#f92672">)</span>             Shared library: <span style="color:#f92672">[</span>libc.so.6<span style="color:#f92672">]</span>
+ 0x000000006ffffffe <span style="color:#f92672">(</span>VERNEED<span style="color:#f92672">)</span>            0x534fe0
+ 0x000000006fffffff <span style="color:#f92672">(</span>VERNEEDNUM<span style="color:#f92672">)</span>         <span style="color:#ae81ff">2</span>
+ 0x000000006ffffff0 <span style="color:#f92672">(</span>VERSYM<span style="color:#f92672">)</span>             0x534f80
+ 0x0000000000000014 <span style="color:#f92672">(</span>PLTREL<span style="color:#f92672">)</span>             RELA
+ 0x0000000000000002 <span style="color:#f92672">(</span>PLTRELSZ<span style="color:#f92672">)</span>           <span style="color:#ae81ff">792</span> <span style="color:#f92672">(</span>bytes<span style="color:#f92672">)</span>
+ 0x0000000000000017 <span style="color:#f92672">(</span>JMPREL<span style="color:#f92672">)</span>             0x534c58
+ 0x0000000000000000 <span style="color:#f92672">(</span>NULL<span style="color:#f92672">)</span>               0x0
+➜  netgo_cgo file net*
+netcgo:    ELF <span style="color:#ae81ff">64</span>-bit LSB executable, x86-64, version <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>SYSV<span style="color:#f92672">)</span>, dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, with debug_info, not stripped
+netgo:     ELF <span style="color:#ae81ff">64</span>-bit LSB executable, x86-64, version <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>SYSV<span style="color:#f92672">)</span>, statically linked, with debug_info, not stripped
+netgo_cgo: ELF <span style="color:#ae81ff">64</span>-bit LSB executable, x86-64, version <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>SYSV<span style="color:#f92672">)</span>, dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, with debug_info, not stripped</code></pre></div>
+<p>再来strace一下, 找一找关键的点:</p>
+
+<p>&hellip; cogo的太长了, 感兴趣的自己对比吧, 大体意思就是, <code>netcgo</code>的调了各种lib,open这个那个的, 而<code>netgo</code>的是静态文件, 用了几个我不认识的调用就完事儿了:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">...
+...
+futex<span style="color:#e6db74">(</span><span style="color:#ae81ff">0xc420032490</span>, FUTEX_WAKE, <span style="color:#ae81ff">1</span><span style="color:#e6db74">)</span>      <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+epoll_wait<span style="color:#e6db74">(</span><span style="color:#ae81ff">4</span>, <span style="color:#e6db74">[]</span>, <span style="color:#ae81ff">128</span>, <span style="color:#ae81ff">0</span><span style="color:#e6db74">)</span>               <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+futex<span style="color:#e6db74">(</span><span style="color:#ae81ff">0x5b5b50</span>, FUTEX_WAIT, <span style="color:#ae81ff">0</span>, NULL<span style="color:#e6db74">)</span>    <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+epoll_wait<span style="color:#e6db74">(</span><span style="color:#ae81ff">4</span>, <span style="color:#e6db74">[{</span>EPOLLIN<span style="color:#f92672">|</span>EPOLLOUT, <span style="color:#e6db74">{</span>u32<span style="color:#f92672">=</span><span style="color:#ae81ff">4131852144</span>, u64<span style="color:#f92672">=</span><span style="color:#ae81ff">140363663085424</span><span style="color:#e6db74">}}]</span>, <span style="color:#ae81ff">128</span>, <span style="color:#ae81ff">0</span><span style="color:#e6db74">)</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+read<span style="color:#e6db74">(</span><span style="color:#ae81ff">3</span>, &#34;M<span style="color:#e6db74">\</span><span style="color:#ae81ff">335</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">201</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">200</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">1</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">1</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">3</span>www<span style="color:#e6db74">\</span><span style="color:#ae81ff">6</span>google<span style="color:#e6db74">\</span><span style="color:#ae81ff">3</span>com<span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">34</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">1</span>&#34;..., <span style="color:#ae81ff">512</span><span style="color:#e6db74">)</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">60</span>
+epoll_ctl<span style="color:#e6db74">(</span><span style="color:#ae81ff">4</span>, EPOLL_CTL_DEL, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">0xc420045b14</span><span style="color:#e6db74">)</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+close<span style="color:#e6db74">(</span><span style="color:#ae81ff">3</span><span style="color:#e6db74">)</span>                                <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+rt_sigprocmask<span style="color:#e6db74">(</span>SIG_SETMASK, <span style="color:#960050;background-color:#1e0010">~</span><span style="color:#e6db74">[]</span>, <span style="color:#e6db74">[]</span>, <span style="color:#ae81ff">8</span><span style="color:#e6db74">)</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+clone<span style="color:#e6db74">(</span>lookup<span style="color:#f92672">:</span><span style="color:#ae81ff">69</span>.<span style="color:#ae81ff">171</span>.<span style="color:#ae81ff">245</span>.<span style="color:#ae81ff">84</span>
+ <span style="color:#e6db74">&lt;unfinished</span> <span style="color:#e6db74">...&gt;</span><span style="color:#e6db74">)</span>                <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">?</span>
+<span style="color:#f92672">+++</span> exited with <span style="color:#ae81ff">0</span> <span style="color:#f92672">+++</span></code></pre></div>
+<p>所以, 得出的结论是, 使用cgo编译的程序(或者运行时为cgo), 运行的时候会调用系统的libc, 在alpine中, 虽然它的libc是精简过的, 但人家好歹也是读了hosts文件, 所以会达到预期的效果.</p>
+
+<h3 id="解决方案">解决方案</h3>
+
+<ol>
+<li>在alpine镜像中添加<code>/etc/nsswitch.conf</code>文件</li>
+<li>使用netcgo编译</li>
+<li>增加一个GODEBUG环境变量, 强制使用netcgo</li>
+</ol>
+
+<h3 id="known-issues">known issues</h3>
+
+<ul>
+<li><a href="https://github.com/docker/distribution/issues/2467" target="_blank">https://github.com/docker/distribution/issues/2467</a></li>
+<li><a href="https://github.com/gliderlabs/docker-alpine/issues/367" target="_blank">https://github.com/gliderlabs/docker-alpine/issues/367</a></li>
+</ul>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/tips'>Tips</a></div>
+<div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/go'>Go</a>, <a class='tag' href='/tags/tips'>Tips</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav' style="float: left;"><div class='prev-entry' style="float: left;">
+      <a href='/posts/go-tips-token-bucket/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Go-Tips-Token-Bucket</a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+       &copy; 2014-2018 wrfly 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script></body>
+
+</html>
+
