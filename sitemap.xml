@@ -8,7 +8,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/posts/</loc>
-    <lastmod>2018-07-31T23:00:06+08:00</lastmod>
+    <lastmod>2018-08-05T18:15:30+08:00</lastmod>
   </url>
   
   <url>
@@ -17,6 +17,11 @@
   
   <url>
     <loc>https://wrfly.kfd.me/about/</loc>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/the-meanings-of-travel/</loc>
+    <lastmod>2018-08-05T18:15:30+08:00</lastmod>
   </url>
   
   <url>
@@ -678,13 +683,13 @@
   
   <url>
     <loc>https://wrfly.kfd.me/categories/daily/</loc>
-    <lastmod>2018-05-08T22:51:57+08:00</lastmod>
+    <lastmod>2018-08-05T18:15:30+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://wrfly.kfd.me/tags/daily/</loc>
-    <lastmod>2018-05-08T22:51:57+08:00</lastmod>
+    <lastmod>2018-08-05T18:15:30+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -898,6 +903,12 @@
   </url>
   
   <url>
+    <loc>https://wrfly.kfd.me/categories/travel/</loc>
+    <lastmod>2018-08-05T18:15:30+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://wrfly.kfd.me/tags/ubuntu/</loc>
     <lastmod>2015-06-09T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -929,7 +940,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/</loc>
-    <lastmod>2018-07-31T23:00:06+08:00</lastmod>
+    <lastmod>2018-08-05T18:15:30+08:00</lastmod>
     <priority>0</priority>
   </url>
   
