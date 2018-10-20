@@ -5,7 +5,7 @@
     <link>https://wrfly.kfd.me/</link>
     <description>Recent content on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 16 Sep 2018 17:03:44 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 21 Oct 2018 01:01:50 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/index.xml" rel="self" type="application/rss+xml" />
     
@@ -53,6 +53,16 @@ wrfly - 2017/12/31 - Beijing</description>
       
       <guid>https://wrfly.kfd.me/repos/</guid>
       <description> ecp Envoronment config parser reglib Docker registry library yasuser URL shortener web-dns Query DNS via HTTP container-web-tty Connect to your containers via a web browser gus-proxy An union proxy crs Container reverse search k8s-install.sh Instal k8s in China (behind the GFW) testing-kit Testing tools bash_aliases Some bash aliases hovers Setup a HTTP proxy via your socks5 proxy api-exporter go-gin API exporter mock-dockerd Mock docker client shadowbroker-auto Auto execute shadowbroker scripts captcha_verify Break simple captchas  </description>
+    </item>
+    
+    <item>
+      <title>Crontab-Trivia</title>
+      <link>https://wrfly.kfd.me/posts/crontab-trivia/</link>
+      <pubDate>Sun, 21 Oct 2018 01:01:50 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/crontab-trivia/</guid>
+      <description>Recently I have to use crontab to run a script at midnight (a Hadoop job in our office cluster to collect some tracking data). To follow the script&amp;rsquo;s log, I use tee to fork the log to some log file named with the date. But after the day I set the cronjob, I found nothing in the grafana neither of the HDFS, this means the job didn&amp;rsquo;t run.
+I wrote the job command as follows:</description>
     </item>
     
     <item>

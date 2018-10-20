@@ -8,7 +8,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/posts/</loc>
-    <lastmod>2018-09-16T17:03:44+08:00</lastmod>
+    <lastmod>2018-10-21T01:01:50+08:00</lastmod>
   </url>
   
   <url>
@@ -21,6 +21,11 @@
   
   <url>
     <loc>https://wrfly.kfd.me/repos/</loc>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/crontab-trivia/</loc>
+    <lastmod>2018-10-21T01:01:50+08:00</lastmod>
   </url>
   
   <url>
@@ -810,6 +815,12 @@
   </url>
   
   <url>
+    <loc>https://wrfly.kfd.me/categories/linux/</loc>
+    <lastmod>2018-10-21T01:01:50+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://wrfly.kfd.me/tags/linux/</loc>
     <lastmod>2015-08-25T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -929,6 +940,12 @@
   </url>
   
   <url>
+    <loc>https://wrfly.kfd.me/tags/trivia/</loc>
+    <lastmod>2018-10-21T01:01:50+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://wrfly.kfd.me/tags/ubuntu/</loc>
     <lastmod>2015-06-09T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -960,7 +977,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/</loc>
-    <lastmod>2018-09-16T17:03:44+08:00</lastmod>
+    <lastmod>2018-10-21T01:01:50+08:00</lastmod>
     <priority>0</priority>
   </url>
   

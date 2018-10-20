@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linux on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/categories/linux/</link>
+    <description>Recent content in Linux on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 21 Oct 2018 01:01:50 +0800</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Crontab-Trivia</title>
+      <link>https://wrfly.kfd.me/posts/crontab-trivia/</link>
+      <pubDate>Sun, 21 Oct 2018 01:01:50 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/crontab-trivia/</guid>
+      <description>Recently I have to use crontab to run a script at midnight (a Hadoop job in our office cluster to collect some tracking data). To follow the script&amp;rsquo;s log, I use tee to fork the log to some log file named with the date. But after the day I set the cronjob, I found nothing in the grafana neither of the HDFS, this means the job didn&amp;rsquo;t run.
+I wrote the job command as follows:</description>
+    </item>
+    
+  </channel>
+</rss>
