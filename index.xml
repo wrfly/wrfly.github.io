@@ -5,7 +5,7 @@
     <link>https://wrfly.kfd.me/</link>
     <description>Recent content on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 21 Oct 2018 01:01:50 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 25 Nov 2018 14:34:14 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/index.xml" rel="self" type="application/rss+xml" />
     
@@ -53,6 +53,18 @@ wrfly - 2017/12/31 - Beijing</description>
       
       <guid>https://wrfly.kfd.me/repos/</guid>
       <description> ecp Envoronment config parser reglib Docker registry library yasuser URL shortener web-dns Query DNS via HTTP container-web-tty Connect to your containers via a web browser gus-proxy An union proxy crs Container reverse search k8s-install.sh Instal k8s in China (behind the GFW) testing-kit Testing tools bash_aliases Some bash aliases hovers Setup a HTTP proxy via your socks5 proxy api-exporter go-gin API exporter mock-dockerd Mock docker client shadowbroker-auto Auto execute shadowbroker scripts captcha_verify Break simple captchas  </description>
+    </item>
+    
+    <item>
+      <title>Golang-For-Loop</title>
+      <link>https://wrfly.kfd.me/posts/golang-for-loop/</link>
+      <pubDate>Sun, 25 Nov 2018 14:34:14 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/golang-for-loop/</guid>
+      <description>😀
+Recently my colleague meets a problem with golang for loop. He ranged an array of User, wanted to filter some user and append them (use pointer to get their address) to another user array, but finally got an array contains the same user.
+Some thing like this:
+newUsers := []*User{} for _, u := range UserArray{ if checkFailed(u){ continue } newUsers = append(newUsers, &amp;amp;u) } The newUsers got the same user with different indexes.</description>
     </item>
     
     <item>

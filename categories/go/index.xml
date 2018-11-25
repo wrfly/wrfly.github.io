@@ -5,10 +5,22 @@
     <link>https://wrfly.kfd.me/categories/go/</link>
     <description>Recent content in Go on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 28 Jul 2018 23:29:49 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 25 Nov 2018 14:34:14 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/categories/go/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Golang-For-Loop</title>
+      <link>https://wrfly.kfd.me/posts/golang-for-loop/</link>
+      <pubDate>Sun, 25 Nov 2018 14:34:14 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/golang-for-loop/</guid>
+      <description>😀
+Recently my colleague meets a problem with golang for loop. He ranged an array of User, wanted to filter some user and append them (use pointer to get their address) to another user array, but finally got an array contains the same user.
+Some thing like this:
+newUsers := []*User{} for _, u := range UserArray{ if checkFailed(u){ continue } newUsers = append(newUsers, &amp;amp;u) } The newUsers got the same user with different indexes.</description>
+    </item>
     
     <item>
       <title>Go-Tips-Token-Bucket</title>
