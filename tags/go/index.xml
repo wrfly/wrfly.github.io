@@ -5,10 +5,21 @@
     <link>https://wrfly.kfd.me/tags/go/</link>
     <description>Recent content in Go on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 31 Jul 2018 23:00:06 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 08 Dec 2018 16:48:09 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/tags/go/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Multi-Error-Handling</title>
+      <link>https://wrfly.kfd.me/posts/multi-error-handling/</link>
+      <pubDate>Sat, 08 Dec 2018 16:48:09 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/multi-error-handling/</guid>
+      <description>Several weeks ago, I was asked to implement a &amp;ldquo;checker&amp;rdquo; that should check multiple errors (or conditions) at one time, once there is an error returned by one of the check, the whole check process should be terminated and returns the error (the first error).
+Then after I wrote it in the project, I refactored it and published in github, https://github.com/wrfly/check
+This package is quite simple, https://godoc.org/github.com/wrfly/check, it only got two functions:</description>
+    </item>
     
     <item>
       <title>golang: netgo vs cgo</title>

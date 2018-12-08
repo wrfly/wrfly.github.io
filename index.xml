@@ -5,7 +5,7 @@
     <link>https://wrfly.kfd.me/</link>
     <description>Recent content on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 25 Nov 2018 14:34:14 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 08 Dec 2018 16:48:09 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/index.xml" rel="self" type="application/rss+xml" />
     
@@ -53,6 +53,17 @@ wrfly - 2017/12/31 - Beijing</description>
       
       <guid>https://wrfly.kfd.me/repos/</guid>
       <description> ecp Envoronment config parser reglib Docker registry library yasuser URL shortener web-dns Query DNS via HTTP container-web-tty Connect to your containers via a web browser gus-proxy An union proxy crs Container reverse search k8s-install.sh Instal k8s in China (behind the GFW) testing-kit Testing tools bash_aliases Some bash aliases hovers Setup a HTTP proxy via your socks5 proxy api-exporter go-gin API exporter mock-dockerd Mock docker client shadowbroker-auto Auto execute shadowbroker scripts captcha_verify Break simple captchas  </description>
+    </item>
+    
+    <item>
+      <title>Multi-Error-Handling</title>
+      <link>https://wrfly.kfd.me/posts/multi-error-handling/</link>
+      <pubDate>Sat, 08 Dec 2018 16:48:09 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/multi-error-handling/</guid>
+      <description>Several weeks ago, I was asked to implement a &amp;ldquo;checker&amp;rdquo; that should check multiple errors (or conditions) at one time, once there is an error returned by one of the check, the whole check process should be terminated and returns the error (the first error).
+Then after I wrote it in the project, I refactored it and published in github, https://github.com/wrfly/check
+This package is quite simple, https://godoc.org/github.com/wrfly/check, it only got two functions:</description>
     </item>
     
     <item>

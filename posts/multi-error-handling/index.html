@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Several weeks ago, I was asked to implement a &ldquo;checker&rdquo; that should check multiple errors (or conditions) at one time, once there is an error returned by one of the check, the whole check process should be terminated and returns the error (the first error).
+Then after I wrote it in the project, I refactored it and published in github, https://github.com/wrfly/check
+This package is quite simple, https://godoc.org/github.com/wrfly/check, it only got two functions:'>
+
+<meta property='og:title' content='Multi-Error-Handling • wrfly&#39;s blog'>
+<meta property='og:description' content='Several weeks ago, I was asked to implement a &ldquo;checker&rdquo; that should check multiple errors (or conditions) at one time, once there is an error returned by one of the check, the whole check process should be terminated and returns the error (the first error).
+Then after I wrote it in the project, I refactored it and published in github, https://github.com/wrfly/check
+This package is quite simple, https://godoc.org/github.com/wrfly/check, it only got two functions:'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/multi-error-handling/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='go'><meta property='article:published_time' content='2018-12-08T16:48:09&#43;08:00'/><meta property='article:modified_time' content='2018-12-08T16:48:09&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.40.1" />
+
+  <title>Multi-Error-Handling • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/multi-error-handling/'>
+  
+  
+  <link rel='icon' href='/favicon.svg'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/tags/'>tags</a>
+    </li>
+  <li>
+      <a href='/posts/'>posts</a>
+    </li>
+  <li>
+      <a href='/links/'>links</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  <li>
+      <a href='/repos/'>Repos</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Multi-Error-Handling</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2018-12-08T16:48:09&#43;08:00'>2018, Dec 08</time>
+</span>
+
+  
+  
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  <p>Several weeks ago, I was asked to implement a &ldquo;checker&rdquo; that should check multiple errors (or conditions) at one time, once there is an error returned by one of the check, the whole check process should be terminated and returns the error (the first error).</p>
+
+<p>Then after I wrote it in the project, I refactored it and published in github, <a href="https://github.com/wrfly/check" target="_blank">https://github.com/wrfly/check</a></p>
+
+<p>This package is quite simple, <a href="https://godoc.org/github.com/wrfly/check" target="_blank">https://godoc.org/github.com/wrfly/check</a>, it only got two functions:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#a6e22e">NoError</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">checkPoints</span> []<span style="color:#a6e22e">CheckErrFunc</span>) <span style="color:#66d9ef">error</span>
+<span style="color:#a6e22e">Passed</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">checkPoints</span> []<span style="color:#a6e22e">CheckFunc</span>) <span style="color:#66d9ef">bool</span></code></pre></div>
+<p><code>NoError</code> tells you that the check points got no error, and <code>Passed</code> tells you all the checkpoints is passed.</p>
+
+<p>And the check point functions are quite simple too:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">CheckErrFunc</span> <span style="color:#66d9ef">func</span>() <span style="color:#66d9ef">error</span>
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">CheckFunc</span> <span style="color:#66d9ef">func</span>() <span style="color:#66d9ef">bool</span></code></pre></div>
+<p>You can wrap your functions in these check functions, for example:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">checkSomething</span>() <span style="color:#66d9ef">bool</span>{
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">myCheck</span>(<span style="color:#a6e22e">a</span>,<span style="color:#a6e22e">b</span>,<span style="color:#a6e22e">c</span>,<span style="color:#a6e22e">d</span>) <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span>
+}
+
+<span style="color:#75715e">// or
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">checkSomethingError</span>() <span style="color:#66d9ef">error</span>{
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">myCheck</span>(<span style="color:#a6e22e">a</span>,<span style="color:#a6e22e">b</span>,<span style="color:#a6e22e">c</span>,<span style="color:#a6e22e">d</span>)
+}
+
+<span style="color:#75715e">// myCheck() only returns an error in this
+</span><span style="color:#75715e">// example, but you can still use more
+</span><span style="color:#75715e"></span><span style="color:#f92672">//</span> <span style="color:#a6e22e">complicated</span> <span style="color:#a6e22e">functions</span> <span style="color:#a6e22e">as</span> <span style="color:#a6e22e">you</span> <span style="color:#a6e22e">want</span></code></pre></div>
+<p>This lib use empty channels to notify the caller by close
+the empty channel (in <code>Passed</code>), and its well tested. (at lease in
+my opinion.)</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/dev'>Dev</a></div>
+<div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/go'>Go</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav' style="float: left;"><div class='prev-entry' style="float: left;">
+      <a href='/posts/golang-for-loop/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Golang-For-Loop</a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+       &copy; 2014-2018 wrfly 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script></body>
+
+</html>
+
