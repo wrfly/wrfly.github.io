@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='我信奉真理胜过一切。
+ 我是一个嫉恶如仇的人，眼里容不下一点沙子，看不惯别人错误的行为，看不下项目里垃圾的代码。
+我是一个程序员，这就意味着我以写代码为生，我用键盘敲出代码，为PM实现功能，给公司带来利益，以换取微薄的收入，支撑我生活所需的食物和水。但与此同时，我又跟别的程序员不太一样，我对代码质量的要求特别高，我怕犯错，每当有别人指出我的错误，我就谨小慎微，毕恭毕敬，有则改之，无则加勉，因为要对自己的每一行代码负责，所以每写一点东西，都会写上注释，文档，不确定的函数写好单元测试，还安装了拼写插件，以检查英语单词的拼写错误，代码超过两遍复用就抽象，类型定义和命名仔细斟酌，不写无用的代码，不写复杂的代码，如果我的代码别人看不懂，那么我首先要承担一半责任，我还对CI/CD特别挑剔，对commit message也异常执着，项目里总是要写一个Makefile和README，每个包里都用interface定义好接口，中规中矩，兢兢业业，如履薄冰，生怕自己的代码被别人鄙视，成为别人眼中的垃圾代码。
+这种习惯是从小就养成的，每当错了一道题，如果是第二遍犯错，内心就会很自责，承受不住内心的拷问，所以我会把错误记在本子上，记在脑子里，就差刻在手臂上，告诫自己以后不要再犯。近乎自负。
+可是并不是每个人都如此的对待错误，甚至不认为是错误。他们有他们自己的价值观，工作观，代码观。我不应该将自己苛刻的代码洁癖强加到别人身上，哪怕，写的是同一个项目里的代码。他们不写文档，不写注释，不写测试，不做抽象和重构，只是他们自己的事，跟任何人（除了项目负责人，因为他要合并PR和review代码）无关，当然其他人也要review代码，但，“严于律己，宽以待人”这句老祖宗留下来的经验教训应时刻被牢记，看到不爽的，睁一只眼闭一只眼也就过去了，生那个气干嘛。
+就像有人喜欢把家里收拾的整整齐齐，干干净净；有人就是喜欢乱扔袜子，不打扫卫生，不整理衣柜；咱不能看见别人没擦嘴就强行按住人家给他擦嘴不是？
+我对待生活的洁癖已经好一些了，但是对与代码的洁癖，还需要缓解缓解，不能因为别人写的不好还不改正就批评他，一是没资格，二是犯不上。不是有首歌：小燕子，穿花衣，年年春天来这里，我问燕子为什么，燕子说，管好你自己。
+工作而已，完成任务就行了，还真以为有“全局观”，“大局意识”，“主人翁意识”，老板就会给你加钱？老板认识你是谁呐？要想升职加薪，跳槽才是最有效的方式，除此之外，就是站队和吹逼。
+每天上班，下班，规划好工作，写好自己的代码就完事儿了，再怎么加班领导也不会给你发红包啊，每个公司都有自己的薪酬体系，哪那么容易啊。还有，没到手的承诺，千万别信，就像前女友说的爱你一样。
+想到这里，心里就开朗了，工作嘛，没必要锱铢必较，“能者多劳”是资本家骗小孩子的，提高自身修养，跳出自己的安逸圈，做更好的自己，才是王道。
+不懂的就问，不会的就学，合理安排自己的时间，一门心思扑在工作上不是啥值得骄傲的事儿。
+加班？放他娘的臭狗屁！'>
+
+<meta property='og:title' content='Change-My-Attitude-Towards-Work • wrfly&#39;s blog'>
+<meta property='og:description' content='我信奉真理胜过一切。
+ 我是一个嫉恶如仇的人，眼里容不下一点沙子，看不惯别人错误的行为，看不下项目里垃圾的代码。
+我是一个程序员，这就意味着我以写代码为生，我用键盘敲出代码，为PM实现功能，给公司带来利益，以换取微薄的收入，支撑我生活所需的食物和水。但与此同时，我又跟别的程序员不太一样，我对代码质量的要求特别高，我怕犯错，每当有别人指出我的错误，我就谨小慎微，毕恭毕敬，有则改之，无则加勉，因为要对自己的每一行代码负责，所以每写一点东西，都会写上注释，文档，不确定的函数写好单元测试，还安装了拼写插件，以检查英语单词的拼写错误，代码超过两遍复用就抽象，类型定义和命名仔细斟酌，不写无用的代码，不写复杂的代码，如果我的代码别人看不懂，那么我首先要承担一半责任，我还对CI/CD特别挑剔，对commit message也异常执着，项目里总是要写一个Makefile和README，每个包里都用interface定义好接口，中规中矩，兢兢业业，如履薄冰，生怕自己的代码被别人鄙视，成为别人眼中的垃圾代码。
+这种习惯是从小就养成的，每当错了一道题，如果是第二遍犯错，内心就会很自责，承受不住内心的拷问，所以我会把错误记在本子上，记在脑子里，就差刻在手臂上，告诫自己以后不要再犯。近乎自负。
+可是并不是每个人都如此的对待错误，甚至不认为是错误。他们有他们自己的价值观，工作观，代码观。我不应该将自己苛刻的代码洁癖强加到别人身上，哪怕，写的是同一个项目里的代码。他们不写文档，不写注释，不写测试，不做抽象和重构，只是他们自己的事，跟任何人（除了项目负责人，因为他要合并PR和review代码）无关，当然其他人也要review代码，但，“严于律己，宽以待人”这句老祖宗留下来的经验教训应时刻被牢记，看到不爽的，睁一只眼闭一只眼也就过去了，生那个气干嘛。
+就像有人喜欢把家里收拾的整整齐齐，干干净净；有人就是喜欢乱扔袜子，不打扫卫生，不整理衣柜；咱不能看见别人没擦嘴就强行按住人家给他擦嘴不是？
+我对待生活的洁癖已经好一些了，但是对与代码的洁癖，还需要缓解缓解，不能因为别人写的不好还不改正就批评他，一是没资格，二是犯不上。不是有首歌：小燕子，穿花衣，年年春天来这里，我问燕子为什么，燕子说，管好你自己。
+工作而已，完成任务就行了，还真以为有“全局观”，“大局意识”，“主人翁意识”，老板就会给你加钱？老板认识你是谁呐？要想升职加薪，跳槽才是最有效的方式，除此之外，就是站队和吹逼。
+每天上班，下班，规划好工作，写好自己的代码就完事儿了，再怎么加班领导也不会给你发红包啊，每个公司都有自己的薪酬体系，哪那么容易啊。还有，没到手的承诺，千万别信，就像前女友说的爱你一样。
+想到这里，心里就开朗了，工作嘛，没必要锱铢必较，“能者多劳”是资本家骗小孩子的，提高自身修养，跳出自己的安逸圈，做更好的自己，才是王道。
+不懂的就问，不会的就学，合理安排自己的时间，一门心思扑在工作上不是啥值得骄傲的事儿。
+加班？放他娘的臭狗屁！'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/change-my-attitude-towards-work/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='daily'><meta property='article:tag' content='work'><meta property='article:tag' content='code'><meta property='article:published_time' content='2018-12-28T21:31:54&#43;08:00'/><meta property='article:modified_time' content='2018-12-28T21:31:54&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.40.1" />
+
+  <title>Change-My-Attitude-Towards-Work • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/change-my-attitude-towards-work/'>
+  
+  
+  <link rel='icon' href='/favicon.svg'>
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-62244864-7', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-posts'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/tags/'>tags</a>
+    </li>
+  <li>
+      <a href='/posts/'>posts</a>
+    </li>
+  <li>
+      <a href='/links/'>links</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  <li>
+      <a href='/repos/'>Repos</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Change-My-Attitude-Towards-Work</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2018-12-28T21:31:54&#43;08:00'>2018, Dec 28</time>
+</span>
+
+  
+  
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  <blockquote>
+<p>我信奉真理胜过一切。</p>
+</blockquote>
+
+<p>我是一个嫉恶如仇的人，眼里容不下一点沙子，看不惯别人错误的行为，看不下项目里垃圾的代码。</p>
+
+<p>我是一个程序员，这就意味着我以写代码为生，我用键盘敲出代码，为PM实现功能，给公司带来利益，以换取微薄的收入，支撑我生活所需的食物和水。但与此同时，我又跟别的程序员不太一样，我对代码质量的要求特别高，我怕犯错，每当有别人指出我的错误，我就谨小慎微，毕恭毕敬，有则改之，无则加勉，因为要对自己的每一行代码负责，所以每写一点东西，都会写上注释，文档，不确定的函数写好单元测试，还安装了拼写插件，以检查英语单词的拼写错误，代码超过两遍复用就抽象，类型定义和命名仔细斟酌，不写无用的代码，不写复杂的代码，如果我的代码别人看不懂，那么我首先要承担一半责任，我还对CI/CD特别挑剔，对commit message也异常执着，项目里总是要写一个Makefile和README，每个包里都用interface定义好接口，中规中矩，兢兢业业，如履薄冰，生怕自己的代码被别人鄙视，成为别人眼中的垃圾代码。</p>
+
+<p>这种习惯是从小就养成的，每当错了一道题，如果是第二遍犯错，内心就会很自责，承受不住内心的拷问，所以我会把错误记在本子上，记在脑子里，就差刻在手臂上，告诫自己以后不要再犯。近乎自负。</p>
+
+<p>可是并不是每个人都如此的对待错误，甚至不认为是错误。他们有他们自己的价值观，工作观，代码观。我不应该将自己苛刻的代码洁癖强加到别人身上，哪怕，写的是同一个项目里的代码。他们不写文档，不写注释，不写测试，不做抽象和重构，只是他们自己的事，跟任何人（除了项目负责人，因为他要合并PR和review代码）无关，当然其他人也要review代码，但，“严于律己，宽以待人”这句老祖宗留下来的经验教训应时刻被牢记，看到不爽的，睁一只眼闭一只眼也就过去了，生那个气干嘛。</p>
+
+<p>就像有人喜欢把家里收拾的整整齐齐，干干净净；有人就是喜欢乱扔袜子，不打扫卫生，不整理衣柜；咱不能看见别人没擦嘴就强行按住人家给他擦嘴不是？</p>
+
+<p>我对待生活的洁癖已经好一些了，但是对与代码的洁癖，还需要缓解缓解，不能因为别人写的不好还不改正就批评他，一是没资格，二是犯不上。不是有首歌：小燕子，穿花衣，年年春天来这里，我问燕子为什么，燕子说，管好你自己。</p>
+
+<p>工作而已，完成任务就行了，还真以为有“全局观”，“大局意识”，“主人翁意识”，老板就会给你加钱？老板认识你是谁呐？要想升职加薪，跳槽才是最有效的方式，除此之外，就是站队和吹逼。</p>
+
+<p>每天上班，下班，规划好工作，写好自己的代码就完事儿了，再怎么加班领导也不会给你发红包啊，每个公司都有自己的薪酬体系，哪那么容易啊。还有，没到手的承诺，千万别信，就像前女友说的爱你一样。</p>
+
+<p>想到这里，心里就开朗了，工作嘛，没必要锱铢必较，“能者多劳”是资本家骗小孩子的，提高自身修养，跳出自己的安逸圈，做更好的自己，才是王道。</p>
+
+<p>不懂的就问，不会的就学，合理安排自己的时间，一门心思扑在工作上不是啥值得骄傲的事儿。</p>
+
+<p>加班？放他娘的臭狗屁！</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/daily'>Daily</a></div>
+<div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/daily'>Daily</a>, <a class='tag' href='/tags/work'>Work</a>, <a class='tag' href='/tags/code'>Code</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav' style="float: left;"><div class='prev-entry' style="float: left;">
+      <a href='/posts/multi-error-handling/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Multi-Error-Handling</a>
+    </div></div>
+</nav>
+
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+
+       &copy; 2014-2018 wrfly 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script></body>
+
+</html>
+
