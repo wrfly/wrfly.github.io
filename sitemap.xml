@@ -8,7 +8,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/posts/</loc>
-    <lastmod>2018-12-28T21:31:54+08:00</lastmod>
+    <lastmod>2019-01-02T00:11:29+08:00</lastmod>
   </url>
   
   <url>
@@ -21,6 +21,11 @@
   
   <url>
     <loc>https://wrfly.kfd.me/repos/</loc>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/2019-1-1/</loc>
+    <lastmod>2019-01-02T00:11:29+08:00</lastmod>
   </url>
   
   <url>
@@ -717,13 +722,13 @@
   
   <url>
     <loc>https://wrfly.kfd.me/categories/daily/</loc>
-    <lastmod>2018-12-28T21:31:54+08:00</lastmod>
+    <lastmod>2019-01-02T00:11:29+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://wrfly.kfd.me/tags/daily/</loc>
-    <lastmod>2018-12-28T21:31:54+08:00</lastmod>
+    <lastmod>2019-01-02T00:11:29+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -998,7 +1003,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/</loc>
-    <lastmod>2018-12-28T21:31:54+08:00</lastmod>
+    <lastmod>2019-01-02T00:11:29+08:00</lastmod>
     <priority>0</priority>
   </url>
   
