@@ -51,7 +51,7 @@ wrfly - 2017/12/31 - Beijing</description>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://wrfly.kfd.me/repos/</guid>
-      <description> ecp Envoronment config parser reglib Docker registry library yasuser URL shortener web-dns Query DNS via HTTP container-web-tty Connect to your containers via a web browser gus-proxy An union proxy crs Container reverse search k8s-install.sh Instal k8s in China (behind the GFW) testing-kit Testing tools bash_aliases Some bash aliases hovers Setup a HTTP proxy via your socks5 proxy api-exporter go-gin API exporter mock-dockerd Mock docker client shadowbroker-auto Auto execute shadowbroker scripts captcha_verify Break simple captchas  </description>
+      <description> Libiaries  ecp Envoronment config parser bindata Golang embedded data reglib Docker registry library check Check multiple errors in once  Projects  et Email Tracker yasuser URL shortener web-dns Query DNS via HTTP gus-proxy An union proxy container-web-tty Connect to your containers via a web browser  Tiny things  crs Container reverse search k8s-install.sh Instal k8s in China (behind the GFW) gRPC-echo Simple gRPC CS example, with gRPC LB testing-kit Testing tools (and some libs) hovers Convert a socks5 proxy to an HTTP proxy mock-dockerd Mock docker client bash-aliases Some bash aliases shadowbroker-auto Auto execute shadowbroker scripts captcha-verify Break simple captchas  </description>
     </item>
     
   </channel>
