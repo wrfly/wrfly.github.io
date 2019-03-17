@@ -5,10 +5,23 @@
     <link>https://wrfly.kfd.me/posts/</link>
     <description>Recent content on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 22 Jan 2019 21:43:01 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 16 Mar 2019 00:32:21 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>gRPC-LoadBalancer</title>
+      <link>https://wrfly.kfd.me/posts/grpc-loadbalancer/</link>
+      <pubDate>Sat, 16 Mar 2019 00:32:21 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/grpc-loadbalancer/</guid>
+      <description>gRPC Load Balancer (with etcd) 引子 两个月之前，我们组想脱离公司全局的 Nginx 代理（毕竟 Nginx 的 TCP 代理用来做 gRPC 的负载均衡有很多问题），使用 gRPC 自带的负载均衡，调研了一圈开源的实现，有用consul的， 有用旧版本API实现的（方法将要被弃用），不得已，只能自己翻文档实现。
+弊端 且说一下 Nginx 作为 gRPC 服务的负载均衡的问题，由于 Nginx 作为中间件，gRPC 的 client 是不知道后端有多少服务的，它只认 Nginx 的地址，所有的服务发现和负载均衡由Nginx统一处理， 默认的负载方式是轮询。
+连接池 初始阶段，client 建立N多链接到 Nginx（N的数量取决于 pool 的大小，也就是人工实现一个连接池， 其实根本没必要，但为了让流量均衡的发送到后端所有服务上必须要这样），但这个N的数字其实很有讲究， 如果N小于后端服务的数量，那么后端真实server收到的请求是不均匀的，在仅有一个 client，10个 server 的情况下，如果 client 建立5条连接到 Nginx，然后 Nginx 分别转发给后端的每一个 server， 那么就会有5个 server 收不到连接，白干。如果增加 client的数量，2x5=10，后端的10个 server 都收到了请求，才均匀。
+但，这个pool大小的设定实在玄学，client的数量也会变更，鬼知道哪些server收到的请求多，哪些 server收到的请求少？
+又，gRPC 是建立在 TCP 上的，每条连接可处理的请求能到 1w+ qps 以上，client 端建立几十几百个 连接到Nginx，Nginx 又转发这些到后端的N个 server 实例，看起来实在很傻逼。</description>
+    </item>
     
     <item>
       <title>An-Accident-Triggered-by-a-String</title>
