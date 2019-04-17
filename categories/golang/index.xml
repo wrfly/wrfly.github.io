@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Golang on wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/categories/golang/</link>
+    <description>Recent content in Golang on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 16 Apr 2019 22:13:25 +0800</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/categories/golang/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Golang-Open-File</title>
+      <link>https://wrfly.kfd.me/posts/golang-open-file/</link>
+      <pubDate>Tue, 16 Apr 2019 22:13:25 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/golang-open-file/</guid>
+      <description>很久之前遇到的问题了，清任务的时候这个write排第一，就写一下。
+起因 要做一个临时的告警系统，又不想引入DB，也不想用bolt，不想引入额外的包，所以就傻了吧唧的自己用文件实现一个简单的DB。
+（现在回想起来真的很没必要，老老实实用boltdb多好，简单快速搞得定）
+每一条告警都有自己的hash，如果在文件中没有发现这条hash，则发送告警并将hash写入文件，如果发现了则跳过，目的是防止重复告警。
+很简单的逻辑，但bug是，还是会发送重复的告警，也就是说，如果这条告警半小时之前发过了，那么半小时之后还会再发。（程序是用cron job跑的，每半小时跑一次，查询各个状态，如果指标低于阈值则告警）
+经过 程序的某个部分是这样写的：
+fileName := &amp;#34;/tmp/alert-history.txt&amp;#34; f, err := os.OpenFile(fileName, os.O_RDWR, 0644) if err != os.ErrNotExist { panic(fmt.Sprintf(&amp;#34;open file %s error: %s&amp;#34;, fileName, err)) } else { f, err = os.Create(fileName) if err != nil { panic(fmt.Sprintf(&amp;#34;create file %s error: %s&amp;#34;, fileName, err)) } } defer f.Close() // detect alarm 	// ...  // if alarm not in file 	// then send alarm and 	// write its hash to the file 	// .</description>
+    </item>
+    
+  </channel>
+</rss>

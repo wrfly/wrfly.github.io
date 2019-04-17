@@ -8,7 +8,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/posts/</loc>
-    <lastmod>2019-04-12T22:05:57+08:00</lastmod>
+    <lastmod>2019-04-16T22:13:25+08:00</lastmod>
   </url>
   
   <url>
@@ -21,6 +21,11 @@
   
   <url>
     <loc>https://wrfly.kfd.me/repos/</loc>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/posts/golang-open-file/</loc>
+    <lastmod>2019-04-16T22:13:25+08:00</lastmod>
   </url>
   
   <url>
@@ -779,7 +784,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/tags/dev/</loc>
-    <lastmod>2019-03-16T00:32:21+08:00</lastmod>
+    <lastmod>2019-04-16T22:13:25+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -832,8 +837,14 @@
   </url>
   
   <url>
+    <loc>https://wrfly.kfd.me/categories/golang/</loc>
+    <lastmod>2019-04-16T22:13:25+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://wrfly.kfd.me/tags/golang/</loc>
-    <lastmod>2018-11-25T14:34:14+08:00</lastmod>
+    <lastmod>2019-04-16T22:13:25+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -1036,7 +1047,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/</loc>
-    <lastmod>2019-04-12T22:05:57+08:00</lastmod>
+    <lastmod>2019-04-16T22:13:25+08:00</lastmod>
     <priority>0</priority>
   </url>
   
