@@ -5,10 +5,24 @@
     <link>https://wrfly.kfd.me/posts/</link>
     <description>Recent content on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 16 Apr 2019 22:13:25 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 16 May 2019 21:15:45 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Etcd-Authentication</title>
+      <link>https://wrfly.kfd.me/posts/etcd-authentication/</link>
+      <pubDate>Thu, 16 May 2019 21:15:45 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/etcd-authentication/</guid>
+      <description>起因 今早上我们的某个程序升级了，负责升级的哥们儿没有检查QPS就去睡觉了（当然检查了也没用，除了尽早发现bug然后把大家喊起来），然后我们的搜索出了问题（好久），直到上班才发现，然后重启解决（Thanks Dat）。
+问题是啥？
+升级后，新的instance没有请求，依赖这个服务的所有service都连着旧的地址（在mesos上重新部署之后地址和端口都变了），但这些instance都是通过etcd作服务发现的，把自己注册到etcd上，而且etcd上也的确看到了新的地址，但是为什么那些server还抓着旧地址不放呢？（讲道理我写的lib没问题啊）而且重启之后就能拿到新的地址了，也有请求到升级之后的instance上去了。
+经过 Dat在群里贴了这样一段，取自etcd官方文档：
+ At first, a client must create a gRPC connection only to authenticate its user ID and password. An etcd server will respond with an authentication reply. The reponse will be an authentication token on success or an error on failure. The client can use its authentication token to present its credentials to etcd when making API requests.
+The client connection used to request the authentication token is typically thrown away; it cannot carry the new token&amp;rsquo;s credentials.</description>
+    </item>
     
     <item>
       <title>Golang-Open-File</title>
