@@ -24,7 +24,7 @@ Finally I found all my files without filenames&hellip;.'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='daily'><meta property='article:published_time' content='2015-06-07T00:00:00Z'/><meta property='article:modified_time' content='2015-06-07T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.40.1" />
+<meta name="generator" content="Hugo 0.52" />
 
   <title>These-days • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/these-days/'>
@@ -32,12 +32,16 @@ Finally I found all my files without filenames&hellip;.'>
   
   <link rel='icon' href='/favicon.svg'>
 <link rel='stylesheet' href='/assets/css/main.c54db339.css'>
-<script>
-window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-ga('create', 'UA-62244864-7', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-62244864-7', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
-<script async src='//www.google-analytics.com/analytics.js'></script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 </head>
 
@@ -151,8 +155,8 @@ file_info<span style="color:#f92672">=</span><span style="color:#e6db74">`</span
     mv $file_name $file_name.jpg
     <span style="color:#66d9ef">elif</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">`</span>echo $file_info | grep <span style="color:#e6db74">&#39;gzip&#39;</span><span style="color:#e6db74">`</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
         mv $file_name $file_name.tar.gz
-    <span style="color:#66d9ef">elif</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">`</span>echo $file_info | grep <span style="color:#e6db74">&#39;Matroska data&#39;</span><span style="color:#e6db74">`</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span> <span style="color:#75715e"># mv 2 floders
-</span><span style="color:#75715e"></span>        mv $file_name Matroska_data/
+    <span style="color:#66d9ef">elif</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">`</span>echo $file_info | grep <span style="color:#e6db74">&#39;Matroska data&#39;</span><span style="color:#e6db74">`</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span> <span style="color:#75715e"># mv 2 floders</span>
+        mv $file_name Matroska_data/
     <span style="color:#66d9ef">elif</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">`</span>echo $file_info | grep <span style="color:#e6db74">&#39;ISO Media, MPEG v4 system, iTunes AAC-LC&#39;</span><span style="color:#e6db74">`</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
             mv $file_name ISO_media_iTunes/
     <span style="color:#66d9ef">elif</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">`</span>echo $file_info | grep <span style="color:#e6db74">&#39;kbps&#39;</span><span style="color:#e6db74">`</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
@@ -250,15 +254,14 @@ file_info<span style="color:#f92672">=</span><span style="color:#e6db74">`</span
     
 <footer class='entry-footer-container'>
   <div class='entry-footer'>
-  <div class='tags'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  <div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
   <line x1="7" y1="7" x2="7" y2="7"/>
   
 </svg>
-</span>
-  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/daily'>Daily</a></div>
+<span class='screen-reader-text'>Tags: </span></div>
+
 
   </div>
 </footer>
@@ -293,7 +296,7 @@ file_info<span style="color:#f92672">=</span><span style="color:#e6db74">`</span
   
 <div class='comments-container'>
   <div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     

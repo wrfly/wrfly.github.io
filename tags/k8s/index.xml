@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>K8s on wrfly&#39;s blog</title>
+    <title>k8s on wrfly&#39;s blog</title>
     <link>https://wrfly.kfd.me/tags/k8s/</link>
-    <description>Recent content in K8s on wrfly&#39;s blog</description>
+    <description>Recent content in k8s on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Sun, 22 Apr 2018 22:18:19 +0800</lastBuildDate>
     

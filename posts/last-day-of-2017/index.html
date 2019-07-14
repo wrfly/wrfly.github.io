@@ -26,7 +26,7 @@ Tags的问题 Jekyll的tags可以用空格区分，但是在这里换成了hugo�
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='daily'><meta property='article:tag' content='blog'><meta property='article:published_time' content='2017-12-31T22:13:35&#43;08:00'/><meta property='article:modified_time' content='2017-12-31T22:13:35&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.40.1" />
+<meta name="generator" content="Hugo 0.52" />
 
   <title>Last-Day-of-2017 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/last-day-of-2017/'>
@@ -34,12 +34,16 @@ Tags的问题 Jekyll的tags可以用空格区分，但是在这里换成了hugo�
   
   <link rel='icon' href='/favicon.svg'>
 <link rel='stylesheet' href='/assets/css/main.c54db339.css'>
-<script>
-window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-ga('create', 'UA-62244864-7', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-62244864-7', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
-<script async src='//www.google-analytics.com/analytics.js'></script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 </head>
 
@@ -157,20 +161,20 @@ tags:
 <h3 id="解决问题">解决问题</h3>
 
 <p>原先的文件中是没有声明这些东西的，所以就的批量修改，一般没毛病的话，<code>sed</code>就能解决了：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># 增加date和title
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> f in *;<span style="color:#66d9ef">do</span>             
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># 增加date和title</span>
+<span style="color:#66d9ef">for</span> f in *;<span style="color:#66d9ef">do</span>             
 export T<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;`echo &#34;</span>$f<span style="color:#e6db74">&#34; | cut -d &#34;</span>-<span style="color:#e6db74">&#34; -f4 | cut -d &#34;</span>.<span style="color:#e6db74">&#34; -f1`&#34;</span>
 export D<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>date --date<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>echo <span style="color:#e6db74">&#34;</span>$f<span style="color:#e6db74">&#34;</span> | cut -d <span style="color:#e6db74">&#34;-&#34;</span> -f -3<span style="color:#e6db74">`</span> +<span style="color:#e6db74">&#34;%Y-%m-%d&#34;</span><span style="color:#66d9ef">)</span>
 sed -i <span style="color:#e6db74">&#34;s/post/post\ndate: </span>$D<span style="color:#e6db74">\ntitle: </span>$T<span style="color:#e6db74">/1&#34;</span> $f
 <span style="color:#66d9ef">done</span>
 
-<span style="color:#75715e">#把原先的layout删掉
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> f in *;<span style="color:#66d9ef">do</span>
+<span style="color:#75715e">#把原先的layout删掉</span>
+<span style="color:#66d9ef">for</span> f in *;<span style="color:#66d9ef">do</span>
 sed -i <span style="color:#e6db74">&#34;1,10{/layout/d}&#34;</span> $f
 <span style="color:#66d9ef">done</span>
 
-<span style="color:#75715e"># 把tags用[]括起来
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> f in *;<span style="color:#66d9ef">do</span>
+<span style="color:#75715e"># 把tags用[]括起来</span>
+<span style="color:#66d9ef">for</span> f in *;<span style="color:#66d9ef">do</span>
 cat <span style="color:#e6db74">&#34;</span>$f<span style="color:#e6db74">&#34;</span> | head -n10| grep <span style="color:#e6db74">&#34;tags: &#34;</span> | grep -v <span style="color:#e6db74">&#34;\[&#34;</span> <span style="color:#f92672">&amp;&amp;</span> echo $f <span style="color:#f92672">&amp;&amp;</span> sed -i <span style="color:#e6db74">&#34;s/\(tags: \)\(.*\)/\1\[\2\]/1&#34;</span> $f
 <span style="color:#66d9ef">done</span></code></pre></div>
 <p>有个好玩的地方是，如果在<code>for</code>中用<code>ls</code>的话，即：</p>
@@ -208,23 +212,21 @@ cat <span style="color:#e6db74">&#34;</span>$f<span style="color:#e6db74">&#34;<
     
 <footer class='entry-footer-container'>
   <div class='entry-footer'>
-  <div class='categories'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  <div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
   
 </svg>
-</span>
-  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/daily'>Daily</a></div>
-<div class='tags'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+<span class='screen-reader-text'>Categories: </span></div>
+
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
   <line x1="7" y1="7" x2="7" y2="7"/>
   
 </svg>
-</span>
-  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/daily'>Daily</a>, <a class='tag' href='/tags/blog'>Blog</a></div>
+<span class='screen-reader-text'>Tags: </span>, </div>
+
 
   </div>
 </footer>
@@ -259,7 +261,7 @@ cat <span style="color:#e6db74">&#34;</span>$f<span style="color:#e6db74">&#34;<
   
 <div class='comments-container'>
   <div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     

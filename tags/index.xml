@@ -5,13 +5,12 @@
     <link>https://wrfly.kfd.me/tags/</link>
     <description>Recent content in Tags on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 13 Mar 2018 22:31:28 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Bash</title>
+      <title>bash</title>
       <link>https://wrfly.kfd.me/tags/bash/</link>
       <pubDate>Tue, 13 Mar 2018 22:31:28 +0800</pubDate>
       
@@ -20,7 +19,7 @@
     </item>
     
     <item>
-      <title>Blog</title>
+      <title>blog</title>
       <link>https://wrfly.kfd.me/tags/blog/</link>
       <pubDate>Sun, 31 Dec 2017 22:13:35 +0800</pubDate>
       
@@ -29,7 +28,7 @@
     </item>
     
     <item>
-      <title>Books</title>
+      <title>books</title>
       <link>https://wrfly.kfd.me/tags/books/</link>
       <pubDate>Fri, 29 May 2015 00:00:00 +0000</pubDate>
       
@@ -38,7 +37,7 @@
     </item>
     
     <item>
-      <title>Cluster</title>
+      <title>cluster</title>
       <link>https://wrfly.kfd.me/tags/cluster/</link>
       <pubDate>Sun, 12 Mar 2017 00:00:00 +0000</pubDate>
       
@@ -47,7 +46,7 @@
     </item>
     
     <item>
-      <title>Code</title>
+      <title>code</title>
       <link>https://wrfly.kfd.me/tags/code/</link>
       <pubDate>Fri, 28 Dec 2018 21:31:54 +0800</pubDate>
       
@@ -56,7 +55,7 @@
     </item>
     
     <item>
-      <title>Coding</title>
+      <title>coding</title>
       <link>https://wrfly.kfd.me/tags/coding/</link>
       <pubDate>Sat, 16 Mar 2019 00:32:21 +0800</pubDate>
       
@@ -65,7 +64,7 @@
     </item>
     
     <item>
-      <title>Command</title>
+      <title>command</title>
       <link>https://wrfly.kfd.me/tags/command/</link>
       <pubDate>Sat, 08 Aug 2015 00:00:00 +0000</pubDate>
       
@@ -74,7 +73,7 @@
     </item>
     
     <item>
-      <title>Daily</title>
+      <title>daily</title>
       <link>https://wrfly.kfd.me/tags/daily/</link>
       <pubDate>Fri, 12 Apr 2019 22:05:57 +0800</pubDate>
       
@@ -83,7 +82,7 @@
     </item>
     
     <item>
-      <title>Debug</title>
+      <title>debug</title>
       <link>https://wrfly.kfd.me/tags/debug/</link>
       <pubDate>Thu, 10 May 2018 23:40:26 +0800</pubDate>
       
@@ -92,7 +91,7 @@
     </item>
     
     <item>
-      <title>Design</title>
+      <title>design</title>
       <link>https://wrfly.kfd.me/tags/design/</link>
       <pubDate>Mon, 27 Nov 2017 00:00:00 +0000</pubDate>
       
@@ -101,16 +100,16 @@
     </item>
     
     <item>
-      <title>Dev</title>
+      <title>dev</title>
       <link>https://wrfly.kfd.me/tags/dev/</link>
-      <pubDate>Thu, 16 May 2019 21:15:45 +0800</pubDate>
+      <pubDate>Sun, 07 Jul 2019 13:53:31 +0800</pubDate>
       
       <guid>https://wrfly.kfd.me/tags/dev/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Devops</title>
+      <title>devops</title>
       <link>https://wrfly.kfd.me/tags/devops/</link>
       <pubDate>Mon, 08 Jan 2018 20:59:37 +0800</pubDate>
       
@@ -119,7 +118,7 @@
     </item>
     
     <item>
-      <title>Docker</title>
+      <title>docker</title>
       <link>https://wrfly.kfd.me/tags/docker/</link>
       <pubDate>Thu, 10 May 2018 23:40:26 +0800</pubDate>
       
@@ -128,7 +127,7 @@
     </item>
     
     <item>
-      <title>Etcd</title>
+      <title>etcd</title>
       <link>https://wrfly.kfd.me/tags/etcd/</link>
       <pubDate>Thu, 16 May 2019 21:15:45 +0800</pubDate>
       
@@ -137,7 +136,7 @@
     </item>
     
     <item>
-      <title>Funny</title>
+      <title>funny</title>
       <link>https://wrfly.kfd.me/tags/funny/</link>
       <pubDate>Tue, 10 Feb 2015 00:00:00 +0000</pubDate>
       
@@ -146,7 +145,7 @@
     </item>
     
     <item>
-      <title>Go</title>
+      <title>go</title>
       <link>https://wrfly.kfd.me/tags/go/</link>
       <pubDate>Sat, 08 Dec 2018 16:48:09 +0800</pubDate>
       
@@ -155,16 +154,16 @@
     </item>
     
     <item>
-      <title>Golang</title>
+      <title>golang</title>
       <link>https://wrfly.kfd.me/tags/golang/</link>
-      <pubDate>Tue, 16 Apr 2019 22:13:25 +0800</pubDate>
+      <pubDate>Sun, 07 Jul 2019 13:53:31 +0800</pubDate>
       
       <guid>https://wrfly.kfd.me/tags/golang/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Hack</title>
+      <title>hack</title>
       <link>https://wrfly.kfd.me/tags/hack/</link>
       <pubDate>Sun, 24 May 2015 00:00:00 +0000</pubDate>
       
@@ -173,7 +172,7 @@
     </item>
     
     <item>
-      <title>K8s</title>
+      <title>k8s</title>
       <link>https://wrfly.kfd.me/tags/k8s/</link>
       <pubDate>Sun, 22 Apr 2018 22:18:19 +0800</pubDate>
       
@@ -182,7 +181,7 @@
     </item>
     
     <item>
-      <title>Linux</title>
+      <title>linux</title>
       <link>https://wrfly.kfd.me/tags/linux/</link>
       <pubDate>Tue, 25 Aug 2015 00:00:00 +0000</pubDate>
       
@@ -191,7 +190,7 @@
     </item>
     
     <item>
-      <title>Mongodb</title>
+      <title>mongodb</title>
       <link>https://wrfly.kfd.me/tags/mongodb/</link>
       <pubDate>Sat, 25 Feb 2017 00:00:00 +0000</pubDate>
       
@@ -200,7 +199,7 @@
     </item>
     
     <item>
-      <title>My-blog</title>
+      <title>my-blog</title>
       <link>https://wrfly.kfd.me/tags/my-blog/</link>
       <pubDate>Thu, 11 Dec 2014 00:00:00 +0000</pubDate>
       
@@ -209,7 +208,7 @@
     </item>
     
     <item>
-      <title>Nginx</title>
+      <title>nginx</title>
       <link>https://wrfly.kfd.me/tags/nginx/</link>
       <pubDate>Wed, 24 Jan 2018 21:09:11 +0800</pubDate>
       
@@ -218,7 +217,7 @@
     </item>
     
     <item>
-      <title>Ops</title>
+      <title>ops</title>
       <link>https://wrfly.kfd.me/tags/ops/</link>
       <pubDate>Sat, 25 Apr 2015 00:00:00 +0000</pubDate>
       
@@ -227,7 +226,7 @@
     </item>
     
     <item>
-      <title>Others</title>
+      <title>others</title>
       <link>https://wrfly.kfd.me/tags/others/</link>
       <pubDate>Sun, 14 Jun 2015 00:00:00 +0000</pubDate>
       
@@ -236,7 +235,7 @@
     </item>
     
     <item>
-      <title>Problems</title>
+      <title>problems</title>
       <link>https://wrfly.kfd.me/tags/problems/</link>
       <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
       
@@ -245,7 +244,7 @@
     </item>
     
     <item>
-      <title>Record</title>
+      <title>record</title>
       <link>https://wrfly.kfd.me/tags/record/</link>
       <pubDate>Thu, 18 Dec 2014 00:00:00 +0000</pubDate>
       
@@ -254,7 +253,7 @@
     </item>
     
     <item>
-      <title>Share</title>
+      <title>share</title>
       <link>https://wrfly.kfd.me/tags/share/</link>
       <pubDate>Tue, 20 Feb 2018 20:05:06 +0800</pubDate>
       
@@ -263,7 +262,7 @@
     </item>
     
     <item>
-      <title>Shell</title>
+      <title>shell</title>
       <link>https://wrfly.kfd.me/tags/shell/</link>
       <pubDate>Tue, 07 Jul 2015 00:00:00 +0000</pubDate>
       
@@ -272,7 +271,7 @@
     </item>
     
     <item>
-      <title>Singapore</title>
+      <title>singapore</title>
       <link>https://wrfly.kfd.me/tags/singapore/</link>
       <pubDate>Sun, 16 Sep 2018 17:03:44 +0800</pubDate>
       
@@ -281,7 +280,7 @@
     </item>
     
     <item>
-      <title>Thought</title>
+      <title>thought</title>
       <link>https://wrfly.kfd.me/tags/thought/</link>
       <pubDate>Sun, 11 Mar 2018 23:12:32 +0800</pubDate>
       
@@ -290,7 +289,7 @@
     </item>
     
     <item>
-      <title>Tips</title>
+      <title>tips</title>
       <link>https://wrfly.kfd.me/tags/tips/</link>
       <pubDate>Tue, 31 Jul 2018 23:00:06 +0800</pubDate>
       
@@ -299,7 +298,7 @@
     </item>
     
     <item>
-      <title>Translate</title>
+      <title>translate</title>
       <link>https://wrfly.kfd.me/tags/translate/</link>
       <pubDate>Thu, 22 Feb 2018 18:13:29 +0800</pubDate>
       
@@ -308,7 +307,7 @@
     </item>
     
     <item>
-      <title>Trivia</title>
+      <title>trivia</title>
       <link>https://wrfly.kfd.me/tags/trivia/</link>
       <pubDate>Sun, 21 Oct 2018 01:01:50 +0800</pubDate>
       
@@ -317,7 +316,7 @@
     </item>
     
     <item>
-      <title>Ubuntu</title>
+      <title>ubuntu</title>
       <link>https://wrfly.kfd.me/tags/ubuntu/</link>
       <pubDate>Tue, 09 Jun 2015 00:00:00 +0000</pubDate>
       
@@ -326,7 +325,7 @@
     </item>
     
     <item>
-      <title>Vim</title>
+      <title>vim</title>
       <link>https://wrfly.kfd.me/tags/vim/</link>
       <pubDate>Thu, 25 Dec 2014 00:00:00 +0000</pubDate>
       
@@ -335,7 +334,7 @@
     </item>
     
     <item>
-      <title>Wifi</title>
+      <title>wifi</title>
       <link>https://wrfly.kfd.me/tags/wifi/</link>
       <pubDate>Wed, 04 Feb 2015 00:00:00 +0000</pubDate>
       
@@ -344,7 +343,7 @@
     </item>
     
     <item>
-      <title>Wiki</title>
+      <title>wiki</title>
       <link>https://wrfly.kfd.me/tags/wiki/</link>
       <pubDate>Sat, 04 Oct 2014 00:00:00 +0000</pubDate>
       
@@ -353,7 +352,7 @@
     </item>
     
     <item>
-      <title>Work</title>
+      <title>work</title>
       <link>https://wrfly.kfd.me/tags/work/</link>
       <pubDate>Tue, 22 Jan 2019 21:43:01 +0800</pubDate>
       

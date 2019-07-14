@@ -22,7 +22,7 @@ FROMgolang:alpineCOPY main.go /RUN go build -o /bin/sig /main.goCMDsigpackage ma
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='docker'><meta property='article:published_time' content='2018-05-05T21:19:55&#43;08:00'/><meta property='article:modified_time' content='2018-05-05T21:19:55&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.40.1" />
+<meta name="generator" content="Hugo 0.52" />
 
   <title>Signals-in-Container • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/signals-in-container/'>
@@ -30,12 +30,16 @@ FROMgolang:alpineCOPY main.go /RUN go build -o /bin/sig /main.goCMDsigpackage ma
   
   <link rel='icon' href='/favicon.svg'>
 <link rel='stylesheet' href='/assets/css/main.c54db339.css'>
-<script>
-window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-ga('create', 'UA-62244864-7', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-62244864-7', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
-<script async src='//www.google-analytics.com/analytics.js'></script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 </head>
 
@@ -184,13 +188,13 @@ Successfully built fe7caf1222ab
 Successfully tagged signal-test:latest
 ➜  signal</code></pre></div>
 <h3 id="跑起来">跑起来:</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"><span style="color:#960050;background-color:#1e0010">➜</span>  signal docker run --rm -ti --name sig signal-test
-<span style="color:#ae81ff">2018</span>/05/05 <span style="color:#ae81ff">14</span><span style="color:#f92672">:</span><span style="color:#ae81ff">58</span><span style="color:#f92672">:</span><span style="color:#ae81ff">11</span> Service started, pid<span style="color:#f92672">:</span> <span style="color:#e6db74">[</span> <span style="color:#ae81ff">6</span> <span style="color:#e6db74">]</span>
-<span style="color:#ae81ff">2018</span>/05/05 <span style="color:#ae81ff">14</span><span style="color:#f92672">:</span><span style="color:#ae81ff">58</span><span style="color:#f92672">:</span><span style="color:#ae81ff">11</span> Got signal <span style="color:#e6db74">[</span> window changed <span style="color:#e6db74">]</span>
-<span style="color:#960050;background-color:#1e0010">^</span>C2018/05/05 <span style="color:#ae81ff">14</span><span style="color:#f92672">:</span><span style="color:#ae81ff">58</span><span style="color:#f92672">:</span><span style="color:#ae81ff">13</span> Got signal <span style="color:#e6db74">[</span> interrupt <span style="color:#e6db74">]</span>
-<span style="color:#960050;background-color:#1e0010">^</span>C2018/05/05 <span style="color:#ae81ff">14</span><span style="color:#f92672">:</span><span style="color:#ae81ff">58</span><span style="color:#f92672">:</span><span style="color:#ae81ff">14</span> Got signal <span style="color:#e6db74">[</span> interrupt <span style="color:#e6db74">]</span>
-<span style="color:#960050;background-color:#1e0010">^</span>C2018/05/05 <span style="color:#ae81ff">14</span><span style="color:#f92672">:</span><span style="color:#ae81ff">58</span><span style="color:#f92672">:</span><span style="color:#ae81ff">14</span> Got signal <span style="color:#e6db74">[</span> interrupt <span style="color:#e6db74">]</span>
-<span style="color:#960050;background-color:#1e0010">➜</span>  signal </code></pre></div>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  signal docker run --rm -ti --name sig signal-test
+2018/05/05 14:58:11 Service started, pid: [ 6 ]
+2018/05/05 14:58:11 Got signal [ window changed ]
+^C2018/05/05 14:58:13 Got signal [ interrupt ]
+^C2018/05/05 14:58:14 Got signal [ interrupt ]
+^C2018/05/05 14:58:14 Got signal [ interrupt ]
+➜  signal </code></pre></div>
 <p>直接Ctrl+C是不管用的, 停止的话需要kill: <code>docker kill sig</code></p>
 
 <p><strong>发现了两个问题:</strong></p>
@@ -201,12 +205,12 @@ Successfully tagged signal-test:latest
 </ol>
 
 <p>然后就忽然意识到!!! 用CMD启动的时候, 其实是sh调用命令执行的!</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"><span style="color:#960050;background-color:#1e0010">➜</span>  signal docker exec sig ps aux
-PID   <span style="color:#a6e22e">USER</span>     TIME   COMMAND
-    <span style="color:#ae81ff">1</span> root       <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">00</span> /bin/sh -c sig
-    <span style="color:#ae81ff">6</span> root       <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">00</span> sig
-   <span style="color:#ae81ff">12</span> root       <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">00</span> ps aux
-<span style="color:#960050;background-color:#1e0010">➜</span>  signal </code></pre></div>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  signal docker exec sig ps aux
+PID   USER     TIME   COMMAND
+    1 root       0:00 /bin/sh -c sig
+    6 root       0:00 sig
+   12 root       0:00 ps aux
+➜  signal </code></pre></div>
 <p>所以, 任何信号都是发给了sh, 而不是sig程序, 而sh又不会将信号传递给sig, 所以就相当于, sh在这里劫持了所有docker daemon发来的signal, 容器内的进程也就不会正常退出了.</p>
 
 <p><strong>说到这里, 其实问题已经得到解决, 更改dockerfile:</strong></p>
@@ -234,23 +238,23 @@ sig
 sig
 ➜  signal </code></pre></div>
 <p>首先可以看到, 容器内的确是两个进程了, 然后观察一下日志:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"><span style="color:#960050;background-color:#1e0010">➜</span>  signal docker run --rm -ti --name sig signal-test
-<span style="color:#ae81ff">2018</span>/05/05 <span style="color:#ae81ff">15</span><span style="color:#f92672">:</span><span style="color:#ae81ff">08</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span> Service started, pid<span style="color:#f92672">:</span> <span style="color:#e6db74">[</span> <span style="color:#ae81ff">1</span> <span style="color:#e6db74">]</span>
-<span style="color:#ae81ff">2018</span>/05/05 <span style="color:#ae81ff">15</span><span style="color:#f92672">:</span><span style="color:#ae81ff">08</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span> Got signal <span style="color:#e6db74">[</span> window changed <span style="color:#e6db74">]</span>
-<span style="color:#ae81ff">2018</span>/05/05 <span style="color:#ae81ff">15</span><span style="color:#f92672">:</span><span style="color:#ae81ff">08</span><span style="color:#f92672">:</span><span style="color:#ae81ff">33</span> Got signal <span style="color:#e6db74">[</span> interrupt <span style="color:#e6db74">]</span>
-<span style="color:#ae81ff">2018</span>/05/05 <span style="color:#ae81ff">15</span><span style="color:#f92672">:</span><span style="color:#ae81ff">08</span><span style="color:#f92672">:</span><span style="color:#ae81ff">42</span> Got signal <span style="color:#e6db74">[</span> aborted <span style="color:#e6db74">]</span>
-<span style="color:#ae81ff">2018</span>/05/05 <span style="color:#ae81ff">15</span><span style="color:#f92672">:</span><span style="color:#ae81ff">08</span><span style="color:#f92672">:</span><span style="color:#ae81ff">47</span> Got signal <span style="color:#e6db74">[</span> hangup <span style="color:#e6db74">]</span>
-<span style="color:#ae81ff">2018</span>/05/05 <span style="color:#ae81ff">15</span><span style="color:#f92672">:</span><span style="color:#ae81ff">08</span><span style="color:#f92672">:</span><span style="color:#ae81ff">54</span> Got signal <span style="color:#e6db74">[</span> user defined signal <span style="color:#ae81ff">1</span> <span style="color:#e6db74">]</span>
-<span style="color:#ae81ff">2018</span>/05/05 <span style="color:#ae81ff">15</span><span style="color:#f92672">:</span><span style="color:#ae81ff">08</span><span style="color:#f92672">:</span><span style="color:#ae81ff">57</span> Got signal <span style="color:#e6db74">[</span> user defined signal <span style="color:#ae81ff">2</span> <span style="color:#e6db74">]</span>
-<span style="color:#ae81ff">2018</span>/05/05 <span style="color:#ae81ff">15</span><span style="color:#f92672">:</span><span style="color:#ae81ff">08</span><span style="color:#f92672">:</span><span style="color:#ae81ff">57</span> quit
-<span style="color:#ae81ff">2018</span>/05/05 <span style="color:#ae81ff">15</span><span style="color:#f92672">:</span><span style="color:#ae81ff">08</span><span style="color:#f92672">:</span><span style="color:#ae81ff">57</span> Service stopped
-<span style="color:#960050;background-color:#1e0010">➜</span>  signal </code></pre></div>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  signal docker run --rm -ti --name sig signal-test
+2018/05/05 15:08:05 Service started, pid: [ 1 ]
+2018/05/05 15:08:05 Got signal [ window changed ]
+2018/05/05 15:08:33 Got signal [ interrupt ]
+2018/05/05 15:08:42 Got signal [ aborted ]
+2018/05/05 15:08:47 Got signal [ hangup ]
+2018/05/05 15:08:54 Got signal [ user defined signal 1 ]
+2018/05/05 15:08:57 Got signal [ user defined signal 2 ]
+2018/05/05 15:08:57 quit
+2018/05/05 15:08:57 Service stopped
+➜  signal </code></pre></div>
 <p>再来看下<code>docker stop sig</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"><span style="color:#960050;background-color:#1e0010">➜</span>  signal docker logs -f sig &amp;&amp; date <span style="color:#f92672">+%</span>T
-<span style="color:#ae81ff">2018</span>/05/05 <span style="color:#ae81ff">15</span><span style="color:#f92672">:</span><span style="color:#ae81ff">31</span><span style="color:#f92672">:</span><span style="color:#ae81ff">52</span> Service started, pid<span style="color:#f92672">:</span> <span style="color:#e6db74">[</span> <span style="color:#ae81ff">1</span> <span style="color:#e6db74">]</span>
-<span style="color:#ae81ff">2018</span>/05/05 <span style="color:#ae81ff">15</span><span style="color:#f92672">:</span><span style="color:#ae81ff">33</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span> Got signal <span style="color:#e6db74">[</span> terminated <span style="color:#e6db74">]</span>
-<span style="color:#ae81ff">23</span><span style="color:#f92672">:</span><span style="color:#ae81ff">33</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>
-<span style="color:#960050;background-color:#1e0010">➜</span>  signal </code></pre></div>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  signal docker logs -f sig &amp;&amp; date +%T
+2018/05/05 15:31:52 Service started, pid: [ 1 ]
+2018/05/05 15:33:05 Got signal [ terminated ]
+23:33:15
+➜  signal </code></pre></div>
 <p>可以看到, 在收到sigterm后, 经过了20s, 容器直接停掉了.</p>
 
 <p>在来指定一下参数:</p>
@@ -283,42 +287,42 @@ killed at <span style="color:#ae81ff">23</span>:42:58
 <p><strong>那如果是重启呢?</strong></p>
 
 <p>用虚拟机试一下:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"><span style="color:#960050;background-color:#1e0010">➜</span>  signal sssh root<span style="color:#960050;background-color:#1e0010">@</span><span style="color:#ae81ff">192</span>.<span style="color:#ae81ff">168</span>.<span style="color:#ae81ff">57</span>.<span style="color:#ae81ff">3</span>
-Last login<span style="color:#f92672">:</span> Sat May  <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">12</span><span style="color:#f92672">:</span><span style="color:#ae81ff">09</span><span style="color:#f92672">:</span><span style="color:#ae81ff">06</span> <span style="color:#ae81ff">2018</span> from <span style="color:#ae81ff">192</span>.<span style="color:#ae81ff">168</span>.<span style="color:#ae81ff">57</span>.<span style="color:#ae81ff">1</span>
-<span style="color:#e6db74">[</span>root<span style="color:#960050;background-color:#1e0010">@</span>localhost <span style="color:#960050;background-color:#1e0010">~</span><span style="color:#e6db74">]</span><span style="color:#75715e"># mkdir signal &amp;&amp; cd signal &amp;&amp; vi main.go Dockerfile</span>
-<span style="color:#ae81ff">2</span> files to edit
-<span style="color:#e6db74">[</span>root<span style="color:#960050;background-color:#1e0010">@</span>localhost signal<span style="color:#e6db74">]</span><span style="color:#75715e"># docker build -t sig-img . &amp;&amp; docker run -dti --name sig --restart=always sig-img</span>
-Sending build context to Docker daemon  <span style="color:#ae81ff">3</span>.<span style="color:#ae81ff">072</span>kB
-Step <span style="color:#ae81ff">1</span>/4 <span style="color:#f92672">:</span> FROM golang<span style="color:#f92672">:</span>alpine
- ---<span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">05</span>fe62871090
-Step <span style="color:#ae81ff">2</span>/4 <span style="color:#f92672">:</span> COPY main.go /
- ---<span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">7</span>bd40c0c5f8e
-Step <span style="color:#ae81ff">3</span>/4 <span style="color:#f92672">:</span> RUN go build -o /bin/sig /main.go
- ---<span style="color:#f92672">&gt;</span> Running in fc07155af69a
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  signal sssh root@192.168.57.3
+Last login: Sat May  5 12:09:06 2018 from 192.168.57.1
+[root@localhost ~]# mkdir signal &amp;&amp; cd signal &amp;&amp; vi main.go Dockerfile
+2 files to edit
+[root@localhost signal]# docker build -t sig-img . &amp;&amp; docker run -dti --name sig --restart=always sig-img
+Sending build context to Docker daemon  3.072kB
+Step 1/4 : FROM golang:alpine
+ ---&gt; 05fe62871090
+Step 2/4 : COPY main.go /
+ ---&gt; 7bd40c0c5f8e
+Step 3/4 : RUN go build -o /bin/sig /main.go
+ ---&gt; Running in fc07155af69a
 Removing intermediate container fc07155af69a
- ---<span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span>f3c9e87653d
-Step <span style="color:#ae81ff">4</span>/4 <span style="color:#f92672">:</span> CMD exec sig
- ---<span style="color:#f92672">&gt;</span> Running in <span style="color:#ae81ff">43</span>c09f16fc8f
-Removing intermediate container <span style="color:#ae81ff">43</span>c09f16fc8f
- ---<span style="color:#f92672">&gt;</span> b4a3e72e0298
+ ---&gt; 2f3c9e87653d
+Step 4/4 : CMD exec sig
+ ---&gt; Running in 43c09f16fc8f
+Removing intermediate container 43c09f16fc8f
+ ---&gt; b4a3e72e0298
 Successfully built b4a3e72e0298
-Successfully tagged sig-img<span style="color:#f92672">:</span>latest
+Successfully tagged sig-img:latest
 bb9d116d1f86c0ced4fa66a74cc6283c46d2b76cb3df82e851a498b141c3c337
-<span style="color:#e6db74">[</span>root<span style="color:#960050;background-color:#1e0010">@</span>localhost signal<span style="color:#e6db74">]</span><span style="color:#75715e"># docker logs sig</span>
-<span style="color:#ae81ff">2018</span>/05/05 <span style="color:#ae81ff">16</span><span style="color:#f92672">:</span><span style="color:#ae81ff">21</span><span style="color:#f92672">:</span><span style="color:#ae81ff">17</span> Service started, pid<span style="color:#f92672">:</span> <span style="color:#e6db74">[</span> <span style="color:#ae81ff">1</span> <span style="color:#e6db74">]</span>
-<span style="color:#e6db74">[</span>root<span style="color:#960050;background-color:#1e0010">@</span>localhost signal<span style="color:#e6db74">]</span><span style="color:#75715e"># reboot</span>
-Shared connection to <span style="color:#ae81ff">192</span>.<span style="color:#ae81ff">168</span>.<span style="color:#ae81ff">57</span>.<span style="color:#ae81ff">3</span> closed.
-<span style="color:#960050;background-color:#1e0010">➜</span>  signal </code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"><span style="color:#960050;background-color:#1e0010">➜</span>  signal sssh root<span style="color:#960050;background-color:#1e0010">@</span><span style="color:#ae81ff">192</span>.<span style="color:#ae81ff">168</span>.<span style="color:#ae81ff">57</span>.<span style="color:#ae81ff">3</span>
-root<span style="color:#960050;background-color:#1e0010">@</span><span style="color:#ae81ff">192</span>.<span style="color:#ae81ff">168</span>.<span style="color:#ae81ff">57</span>.<span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">&#39;</span>s password<span style="color:#f92672">:</span> 
-Last login<span style="color:#f92672">:</span> Sat May  <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">12</span><span style="color:#f92672">:</span><span style="color:#ae81ff">23</span><span style="color:#f92672">:</span><span style="color:#ae81ff">08</span> <span style="color:#ae81ff">2018</span>
-<span style="color:#e6db74">[</span>root<span style="color:#960050;background-color:#1e0010">@</span>localhost <span style="color:#960050;background-color:#1e0010">~</span><span style="color:#e6db74">]</span><span style="color:#75715e"># docker ps</span>
-CONTAINER ID        <span style="color:#a6e22e">IMAGE</span>               COMMAND                  CREATED             STATUS              PORTS               NAMES
-<span style="color:#ae81ff">6</span>b1b466ddd23        sig-img             &#34;/bin/sh -c <span style="color:#960050;background-color:#1e0010">&#39;</span>exec si<span style="color:#960050;background-color:#1e0010">…</span>&#34;   <span style="color:#ae81ff">2</span> minutes ago       Up <span style="color:#ae81ff">55</span> seconds                           sig
-<span style="color:#e6db74">[</span>root<span style="color:#960050;background-color:#1e0010">@</span>localhost <span style="color:#960050;background-color:#1e0010">~</span><span style="color:#e6db74">]</span><span style="color:#75715e"># docker logs sig</span>
-<span style="color:#ae81ff">2018</span>/05/05 <span style="color:#ae81ff">16</span><span style="color:#f92672">:</span><span style="color:#ae81ff">21</span><span style="color:#f92672">:</span><span style="color:#ae81ff">17</span> Service started, pid<span style="color:#f92672">:</span> <span style="color:#e6db74">[</span> <span style="color:#ae81ff">1</span> <span style="color:#e6db74">]</span>
-<span style="color:#ae81ff">2018</span>/05/05 <span style="color:#ae81ff">16</span><span style="color:#f92672">:</span><span style="color:#ae81ff">22</span><span style="color:#f92672">:</span><span style="color:#ae81ff">10</span> Got signal <span style="color:#e6db74">[</span> terminated <span style="color:#e6db74">]</span>
-<span style="color:#ae81ff">2018</span>/05/05 <span style="color:#ae81ff">16</span><span style="color:#f92672">:</span><span style="color:#ae81ff">22</span><span style="color:#f92672">:</span><span style="color:#ae81ff">48</span> Service started, pid<span style="color:#f92672">:</span> <span style="color:#e6db74">[</span> <span style="color:#ae81ff">1</span> <span style="color:#e6db74">]</span>
-<span style="color:#e6db74">[</span>root<span style="color:#960050;background-color:#1e0010">@</span>localhost <span style="color:#960050;background-color:#1e0010">~</span><span style="color:#e6db74">]</span><span style="color:#75715e"># </span></code></pre></div>
+[root@localhost signal]# docker logs sig
+2018/05/05 16:21:17 Service started, pid: [ 1 ]
+[root@localhost signal]# reboot
+Shared connection to 192.168.57.3 closed.
+➜  signal </code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  signal sssh root@192.168.57.3
+root@192.168.57.3&#39;s password: 
+Last login: Sat May  5 12:23:08 2018
+[root@localhost ~]# docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+6b1b466ddd23        sig-img             &#34;/bin/sh -c &#39;exec si…&#34;   2 minutes ago       Up 55 seconds                           sig
+[root@localhost ~]# docker logs sig
+2018/05/05 16:21:17 Service started, pid: [ 1 ]
+2018/05/05 16:22:10 Got signal [ terminated ]
+2018/05/05 16:22:48 Service started, pid: [ 1 ]
+[root@localhost ~]# </code></pre></div>
 <p>也可以看到, 机器重启的时候, dockerd首先会向容器发送SIGTERM, 超时kill.</p>
 
 <h2 id="结果">结果</h2>
@@ -346,15 +350,15 @@ CONTAINER ID        <span style="color:#a6e22e">IMAGE</span>               COMMA
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> golang:alpine</span><span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span>COPY main.go /<span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> go build -o /bin/sig /main.go<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span><span style="color:#e6db74"> [&#34;sig&#34;]</span></code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"><span style="color:#960050;background-color:#1e0010">➜</span>  signal docker ps 
-CONTAINER ID        <span style="color:#a6e22e">IMAGE</span>               COMMAND             CREATED              STATUS              PORTS               NAMES
-<span style="color:#ae81ff">713</span>d16b31033        signal-test         &#34;sig&#34;               About a minute ago   Up About a minute                       sig
-<span style="color:#960050;background-color:#1e0010">➜</span>  signal
-<span style="color:#960050;background-color:#1e0010">➜</span>  signal docker exec sig ps aux                                                                     
-PID   <span style="color:#a6e22e">USER</span>     TIME   COMMAND
-    <span style="color:#ae81ff">1</span> root       <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">00</span> sig
-   <span style="color:#ae81ff">17</span> root       <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">00</span> ps aux
-<span style="color:#960050;background-color:#1e0010">➜</span>  signal </code></pre></div>
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span><span style="color:#e6db74"> [&#34;sig&#34;]</span></code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  signal docker ps 
+CONTAINER ID        IMAGE               COMMAND             CREATED              STATUS              PORTS               NAMES
+713d16b31033        signal-test         &#34;sig&#34;               About a minute ago   Up About a minute                       sig
+➜  signal
+➜  signal docker exec sig ps aux                                                                     
+PID   USER     TIME   COMMAND
+    1 root       0:00 sig
+   17 root       0:00 ps aux
+➜  signal </code></pre></div>
 <p>可以看到容器内部的root进程是sig, CMD也是sig, 同样达到了 <code>exec sig</code> 的效果, 可以说是非常简单明了了.</p>
 
 <p>所以在这里又得出一条结论, 使用CMD的时候(推荐使用CMD而不是ENTRYPOINT), 将命令和参数用<code>[]</code>包裹起来, 这样docker执行的时候就会使用你指定的命令. 需要注意的一点是, 被执行的文件需要有可执行权限, <code>chmod +x</code>一下.</p>
@@ -364,23 +368,21 @@ PID   <span style="color:#a6e22e">USER</span>     TIME   COMMAND
     
 <footer class='entry-footer-container'>
   <div class='entry-footer'>
-  <div class='categories'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  <div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
   
 </svg>
-</span>
-  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/docker'>Docker</a></div>
-<div class='tags'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+<span class='screen-reader-text'>Categories: </span></div>
+
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
   <line x1="7" y1="7" x2="7" y2="7"/>
   
 </svg>
-</span>
-  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/docker'>Docker</a></div>
+<span class='screen-reader-text'>Tags: </span></div>
+
 
   </div>
 </footer>
@@ -415,7 +417,7 @@ PID   <span style="color:#a6e22e">USER</span>     TIME   COMMAND
   
 <div class='comments-container'>
   <div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     

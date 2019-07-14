@@ -16,7 +16,7 @@ chmod &#43;x your_script.sh Be sure that you have write a ** absolute path ** in
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='ubuntu'><meta property='article:published_time' content='2015-03-23T00:00:00Z'/><meta property='article:modified_time' content='2015-03-23T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.40.1" />
+<meta name="generator" content="Hugo 0.52" />
 
   <title>Make-a-startup-script-in-Ubuntu • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/make-a-startup-script-in-ubuntu/'>
@@ -24,12 +24,16 @@ chmod &#43;x your_script.sh Be sure that you have write a ** absolute path ** in
   
   <link rel='icon' href='/favicon.svg'>
 <link rel='stylesheet' href='/assets/css/main.c54db339.css'>
-<script>
-window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-ga('create', 'UA-62244864-7', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-62244864-7', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
-<script async src='//www.google-analytics.com/analytics.js'></script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 </head>
 
@@ -123,16 +127,16 @@ ga('send', 'pageview');
 
 <p>This is a sample init_script blow:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><span style="color:#75715e">#! /bin/sh
-</span><span style="color:#75715e"></span><span style="color:#75715e">### BEGIN INIT INFO
-</span><span style="color:#75715e"># Provides:          Shadowsocks
-</span><span style="color:#75715e"># Required-Start:    $remote_fs $syslog
-</span><span style="color:#75715e"># Required-Stop:     $remote_fs $syslog
-</span><span style="color:#75715e"># Default-Start:     2 3 4 5
-</span><span style="color:#75715e"># Default-Stop:      0 1 6
-</span><span style="color:#75715e"># Short-Description: Start ssserver at boot time
-</span><span style="color:#75715e"># Description:       shadowsocks server.
-</span><span style="color:#75715e">### END INIT INFO
-</span><span style="color:#75715e"></span>dir<span style="color:#f92672">=</span>/opt/shadowsocks
+</span><span style="color:#75715e"></span><span style="color:#75715e">### BEGIN INIT INFO</span>
+<span style="color:#75715e"># Provides:          Shadowsocks</span>
+<span style="color:#75715e"># Required-Start:    $remote_fs $syslog</span>
+<span style="color:#75715e"># Required-Stop:     $remote_fs $syslog</span>
+<span style="color:#75715e"># Default-Start:     2 3 4 5</span>
+<span style="color:#75715e"># Default-Stop:      0 1 6</span>
+<span style="color:#75715e"># Short-Description: Start ssserver at boot time</span>
+<span style="color:#75715e"># Description:       shadowsocks server.</span>
+<span style="color:#75715e">### END INIT INFO</span>
+dir<span style="color:#f92672">=</span>/opt/shadowsocks
 <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span> in
   start<span style="color:#f92672">)</span>
     nohup /usr/local/bin/ssserver -c <span style="color:#e6db74">${</span>dir<span style="color:#e6db74">}</span>/config.json &gt; <span style="color:#e6db74">${</span>dir<span style="color:#e6db74">}</span>/log &amp;
@@ -154,15 +158,14 @@ ga('send', 'pageview');
     
 <footer class='entry-footer-container'>
   <div class='entry-footer'>
-  <div class='tags'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  <div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
   <line x1="7" y1="7" x2="7" y2="7"/>
   
 </svg>
-</span>
-  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/ubuntu'>Ubuntu</a></div>
+<span class='screen-reader-text'>Tags: </span></div>
+
 
   </div>
 </footer>
@@ -197,7 +200,7 @@ ga('send', 'pageview');
   
 <div class='comments-container'>
   <div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     

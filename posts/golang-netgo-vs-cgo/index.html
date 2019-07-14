@@ -26,7 +26,7 @@ package main import &#34;net&#34; const host = &#34;www.google.com&#34; func mai
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='go'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2018-07-31T23:00:06&#43;08:00'/><meta property='article:modified_time' content='2018-07-31T23:00:06&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.40.1" />
+<meta name="generator" content="Hugo 0.52" />
 
   <title>golang: netgo vs cgo • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/golang-netgo-vs-cgo/'>
@@ -34,12 +34,16 @@ package main import &#34;net&#34; const host = &#34;www.google.com&#34; func mai
   
   <link rel='icon' href='/favicon.svg'>
 <link rel='stylesheet' href='/assets/css/main.c54db339.css'>
-<script>
-window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-ga('create', 'UA-62244864-7', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-62244864-7', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
-<script async src='//www.google-analytics.com/analytics.js'></script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 </head>
 
@@ -172,32 +176,32 @@ ga('send', 'pageview');
 <p>这个dockerfile会编译这个文件, 并首先删除系统里的nsswitch.conf(alpine默认是没有的, golang后来添加的)</p>
 
 <p>然后我们构建这个镜像并运行一下:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"><span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo docker build -t netgo_cgo .
-Sending build context to Docker daemon  <span style="color:#ae81ff">5</span>.<span style="color:#ae81ff">408</span>MB
-Step <span style="color:#ae81ff">1</span>/5 <span style="color:#f92672">:</span> FROM golang<span style="color:#f92672">:</span>alpine
- ---<span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">05</span>fe62871090
-Step <span style="color:#ae81ff">2</span>/5 <span style="color:#f92672">:</span> RUN rm /etc/nsswitch.conf
- ---<span style="color:#f92672">&gt;</span> Using <span style="color:#a6e22e">cache</span>
- ---<span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">3</span>a553930831f
-Step <span style="color:#ae81ff">3</span>/5 <span style="color:#f92672">:</span> COPY main.go /root
- ---<span style="color:#f92672">&gt;</span> Using <span style="color:#a6e22e">cache</span>
- ---<span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">458</span>ea03b7b0c
-Step <span style="color:#ae81ff">4</span>/5 <span style="color:#f92672">:</span> RUN go build -o /bin/ncgo /root/main.go
- ---<span style="color:#f92672">&gt;</span> Using <span style="color:#a6e22e">cache</span>
- ---<span style="color:#f92672">&gt;</span> daa8a0fc89ae
-Step <span style="color:#ae81ff">5</span>/5 <span style="color:#f92672">:</span> CMD /bin/ncgo
- ---<span style="color:#f92672">&gt;</span> Running in <span style="color:#ae81ff">49</span>e471837516
- ---<span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">7</span>fc1a4c16d04
-Removing intermediate container <span style="color:#ae81ff">49</span>e471837516
-Successfully built <span style="color:#ae81ff">7</span>fc1a4c16d04
-Successfully tagged netgo_cgo<span style="color:#f92672">:</span>latest
-<span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo docker run --rm -ti --add-host www.google.com<span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span> -e GODEBUG<span style="color:#f92672">=</span>netdns<span style="color:#f92672">=</span>go netgo_cgo 
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  netgo_cgo docker build -t netgo_cgo .
+Sending build context to Docker daemon  5.408MB
+Step 1/5 : FROM golang:alpine
+ ---&gt; 05fe62871090
+Step 2/5 : RUN rm /etc/nsswitch.conf
+ ---&gt; Using cache
+ ---&gt; 3a553930831f
+Step 3/5 : COPY main.go /root
+ ---&gt; Using cache
+ ---&gt; 458ea03b7b0c
+Step 4/5 : RUN go build -o /bin/ncgo /root/main.go
+ ---&gt; Using cache
+ ---&gt; daa8a0fc89ae
+Step 5/5 : CMD /bin/ncgo
+ ---&gt; Running in 49e471837516
+ ---&gt; 7fc1a4c16d04
+Removing intermediate container 49e471837516
+Successfully built 7fc1a4c16d04
+Successfully tagged netgo_cgo:latest
+➜  netgo_cgo docker run --rm -ti --add-host www.google.com:1.1.1.1 -e GODEBUG=netdns=go netgo_cgo 
 www.google.com
-lookup<span style="color:#f92672">:</span><span style="color:#ae81ff">69</span>.<span style="color:#ae81ff">171</span>.<span style="color:#ae81ff">245</span>.<span style="color:#ae81ff">84</span>
-<span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo docker run --rm -ti --add-host www.google.com<span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span> -e GODEBUG<span style="color:#f92672">=</span>netdns<span style="color:#f92672">=</span>cgo netgo_cgo 
+lookup:69.171.245.84
+➜  netgo_cgo docker run --rm -ti --add-host www.google.com:1.1.1.1 -e GODEBUG=netdns=cgo netgo_cgo 
 www.google.com
-lookup<span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">1</span>
-<span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo</code></pre></div>
+lookup:1.1.1.1
+➜  netgo_cgo</code></pre></div>
 <p>可以看到, 使用go默认的resolver会忽略hosts文件种的内容, 而使用cgo则读取了hosts文件中的内容.</p>
 
 <p>这种使用环境变量去设定程序resolver的方式, 也可以在build的时候添加tag来实现:</p>
@@ -208,71 +212,71 @@ go build --tags netgo -o netgo</code></pre></div>
 <h3 id="深入研究">深入研究</h3>
 
 <p>我们加上调试参数来看看:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"><span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo go build -x --tags netcgo -o netcgo
-WORK<span style="color:#f92672">=</span>/tmp/go-build691479627
-mkdir -p <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/net/_obj/
-</span><span style="color:#e6db74"></span>mkdir -p <span style="color:#960050;background-color:#1e0010">$</span>WORK/
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  netgo_cgo go build -x --tags netcgo -o netcgo
+WORK=/tmp/go-build691479627
+mkdir -p $WORK/net/_obj/
+mkdir -p $WORK/
 cd /opt/go/src/net
-CGO_LDFLAGS<span style="color:#f92672">=</span>&#34;-g&#34; &#34;-O2&#34; /opt/go/pkg/tool/linux_amd64/cgo -objdir <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/ -importpath net -- -I <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/ -g -O2 cgo_linux.go cgo_resnew.go cgo_socknew.go cgo_unix.go conf_netcgo.go
-cd <span style="color:#960050;background-color:#1e0010">$</span>WORK
-gcc -fdebug-prefix-map<span style="color:#f92672">=</span>a<span style="color:#f92672">=</span>b -c trivial.c
+CGO_LDFLAGS=&#34;-g&#34; &#34;-O2&#34; /opt/go/pkg/tool/linux_amd64/cgo -objdir $WORK/net/_obj/ -importpath net -- -I $WORK/net/_obj/ -g -O2 cgo_linux.go cgo_resnew.go cgo_socknew.go cgo_unix.go conf_netcgo.go
+cd $WORK
+gcc -fdebug-prefix-map=a=b -c trivial.c
 gcc -gno-record-gcc-switches -c trivial.c
-cd <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/net/_obj
-</span><span style="color:#e6db74"></span>gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./_cgo_export.o -c _cgo_export.c
-gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./cgo_linux.cgo2.o -c cgo_linux.cgo2.c
-gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./cgo_resnew.cgo2.o -c cgo_resnew.cgo2.c
-gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./cgo_socknew.cgo2.o -c cgo_socknew.cgo2.c
-gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./cgo_unix.cgo2.o -c cgo_unix.cgo2.c
-gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./conf_netcgo.cgo2.o -c conf_netcgo.cgo2.c
-gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./_cgo_main.o -c _cgo_main.c
+cd $WORK/net/_obj
+gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length=0 -fdebug-prefix-map=$WORK=/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./_cgo_export.o -c _cgo_export.c
+gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length=0 -fdebug-prefix-map=$WORK=/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./cgo_linux.cgo2.o -c cgo_linux.cgo2.c
+gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length=0 -fdebug-prefix-map=$WORK=/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./cgo_resnew.cgo2.o -c cgo_resnew.cgo2.c
+gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length=0 -fdebug-prefix-map=$WORK=/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./cgo_socknew.cgo2.o -c cgo_socknew.cgo2.c
+gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length=0 -fdebug-prefix-map=$WORK=/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./cgo_unix.cgo2.o -c cgo_unix.cgo2.c
+gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length=0 -fdebug-prefix-map=$WORK=/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./conf_netcgo.cgo2.o -c conf_netcgo.cgo2.c
+gcc -I /opt/go/src/net -fPIC -m64 -pthread -fmessage-length=0 -fdebug-prefix-map=$WORK=/tmp/go-build -gno-record-gcc-switches -I ./ -g -O2 -o ./_cgo_main.o -c _cgo_main.c
 cd /opt/go/src/net
-gcc -I . -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/_cgo_.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/_cgo_main.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/_cgo_export.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_linux.cgo2.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_resnew.cgo2.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_socknew.cgo2.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_unix.cgo2.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/conf_netcgo.cgo2.o -g -O2
-/opt/go/pkg/tool/linux_amd64/cgo -dynpackage net -dynimport <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/_cgo_.o -dynout <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/net/_obj/_cgo_import.go
-</span><span style="color:#e6db74"></span>cd <span style="color:#960050;background-color:#1e0010">$</span>WORK
+gcc -I . -fPIC -m64 -pthread -fmessage-length=0 -fdebug-prefix-map=$WORK=/tmp/go-build -gno-record-gcc-switches -o $WORK/net/_obj/_cgo_.o $WORK/net/_obj/_cgo_main.o $WORK/net/_obj/_cgo_export.o $WORK/net/_obj/cgo_linux.cgo2.o $WORK/net/_obj/cgo_resnew.cgo2.o $WORK/net/_obj/cgo_socknew.cgo2.o $WORK/net/_obj/cgo_unix.cgo2.o $WORK/net/_obj/conf_netcgo.cgo2.o -g -O2
+/opt/go/pkg/tool/linux_amd64/cgo -dynpackage net -dynimport $WORK/net/_obj/_cgo_.o -dynout $WORK/net/_obj/_cgo_import.go
+cd $WORK
 gcc -no-pie -c trivial.c
 cd /opt/go/src/net
-gcc -I . -fPIC -m64 -pthread -fmessage-length<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -fdebug-prefix-map<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>WORK<span style="color:#f92672">=</span>/tmp/go-build -gno-record-gcc-switches -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/_all.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/_cgo_export.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_linux.cgo2.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_resnew.cgo2.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_socknew.cgo2.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_unix.cgo2.o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/conf_netcgo.cgo2.o -g -O2 -Wl,-r -nostdlib -no-pie -Wl,--build-id<span style="color:#f92672">=</span>none
-/opt/go/pkg/tool/linux_amd64/compile -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net.a -trimpath <span style="color:#960050;background-color:#1e0010">$</span>WORK -goversion go1.<span style="color:#ae81ff">9</span>.<span style="color:#ae81ff">2</span> -p net -std -buildid <span style="color:#ae81ff">1</span>d8743e51666b2f6e7dca905f790949850fff2bb -D _/opt/go/src/net -I <span style="color:#960050;background-color:#1e0010">$</span>WORK -pack ./addrselect.go ./conf.go ./dial.go ./dnsclient.go ./dnsclient_unix.go ./dnsconfig_unix.go ./dnsmsg.go ./error_posix.go ./fd_unix.go ./file.go ./file_unix.go ./hook.go ./hook_unix.go ./hosts.go ./interface.go ./interface_linux.go ./ip.go ./iprawsock.go ./iprawsock_posix.go ./ipsock.go ./ipsock_posix.go ./lookup.go ./lookup_unix.go ./mac.go ./net.go ./nss.go ./parse.go ./pipe.go ./port.go ./port_unix.go ./rawconn.go ./sendfile_linux.go ./sock_cloexec.go ./sock_linux.go ./sock_posix.go ./sockopt_linux.go ./sockopt_posix.go ./sockoptip_linux.go ./sockoptip_posix.go ./tcpsock.go ./tcpsock_posix.go ./tcpsockopt_posix.go ./tcpsockopt_unix.go ./udpsock.go ./udpsock_posix.go ./unixsock.go ./unixsock_posix.go ./writev_unix.go <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/_cgo_gotypes.go <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_linux.cgo1.go <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_resnew.cgo1.go <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_socknew.cgo1.go <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/cgo_unix.cgo1.go <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/conf_netcgo.cgo1.go <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/net/_obj/_cgo_import.go
-</span><span style="color:#e6db74"></span>pack r <span style="color:#960050;background-color:#1e0010">$</span>WORK/net.a <span style="color:#960050;background-color:#1e0010">$</span>WORK/net/_obj/_all.o <span style="color:#75715e"># internal</span>
-mkdir -p <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo/_obj/
-</span><span style="color:#e6db74"></span>mkdir -p <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/
-</span><span style="color:#e6db74"></span>cd /home/mr/test/go/netgo_cgo
-/opt/go/pkg/tool/linux_amd64/compile -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo.a -trimpath <span style="color:#960050;background-color:#1e0010">$</span>WORK -goversion go1.<span style="color:#ae81ff">9</span>.<span style="color:#ae81ff">2</span> -p main -complete -buildid eb016ff3c1708c2bfbf31469f574aff99c045d11 -D _/home/mr/test/go/netgo_cgo -I <span style="color:#960050;background-color:#1e0010">$</span>WORK -pack ./main.go
+gcc -I . -fPIC -m64 -pthread -fmessage-length=0 -fdebug-prefix-map=$WORK=/tmp/go-build -gno-record-gcc-switches -o $WORK/net/_obj/_all.o $WORK/net/_obj/_cgo_export.o $WORK/net/_obj/cgo_linux.cgo2.o $WORK/net/_obj/cgo_resnew.cgo2.o $WORK/net/_obj/cgo_socknew.cgo2.o $WORK/net/_obj/cgo_unix.cgo2.o $WORK/net/_obj/conf_netcgo.cgo2.o -g -O2 -Wl,-r -nostdlib -no-pie -Wl,--build-id=none
+/opt/go/pkg/tool/linux_amd64/compile -o $WORK/net.a -trimpath $WORK -goversion go1.9.2 -p net -std -buildid 1d8743e51666b2f6e7dca905f790949850fff2bb -D _/opt/go/src/net -I $WORK -pack ./addrselect.go ./conf.go ./dial.go ./dnsclient.go ./dnsclient_unix.go ./dnsconfig_unix.go ./dnsmsg.go ./error_posix.go ./fd_unix.go ./file.go ./file_unix.go ./hook.go ./hook_unix.go ./hosts.go ./interface.go ./interface_linux.go ./ip.go ./iprawsock.go ./iprawsock_posix.go ./ipsock.go ./ipsock_posix.go ./lookup.go ./lookup_unix.go ./mac.go ./net.go ./nss.go ./parse.go ./pipe.go ./port.go ./port_unix.go ./rawconn.go ./sendfile_linux.go ./sock_cloexec.go ./sock_linux.go ./sock_posix.go ./sockopt_linux.go ./sockopt_posix.go ./sockoptip_linux.go ./sockoptip_posix.go ./tcpsock.go ./tcpsock_posix.go ./tcpsockopt_posix.go ./tcpsockopt_unix.go ./udpsock.go ./udpsock_posix.go ./unixsock.go ./unixsock_posix.go ./writev_unix.go $WORK/net/_obj/_cgo_gotypes.go $WORK/net/_obj/cgo_linux.cgo1.go $WORK/net/_obj/cgo_resnew.cgo1.go $WORK/net/_obj/cgo_socknew.cgo1.go $WORK/net/_obj/cgo_unix.cgo1.go $WORK/net/_obj/conf_netcgo.cgo1.go $WORK/net/_obj/_cgo_import.go
+pack r $WORK/net.a $WORK/net/_obj/_all.o # internal
+mkdir -p $WORK/_/home/mr/test/go/netgo_cgo/_obj/
+mkdir -p $WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/
+cd /home/mr/test/go/netgo_cgo
+/opt/go/pkg/tool/linux_amd64/compile -o $WORK/_/home/mr/test/go/netgo_cgo.a -trimpath $WORK -goversion go1.9.2 -p main -complete -buildid eb016ff3c1708c2bfbf31469f574aff99c045d11 -D _/home/mr/test/go/netgo_cgo -I $WORK -pack ./main.go
 cd .
-/opt/go/pkg/tool/linux_amd64/link -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out -L <span style="color:#960050;background-color:#1e0010">$</span>WORK -extld<span style="color:#f92672">=</span>gcc -buildmode<span style="color:#f92672">=</span>exe -buildid<span style="color:#f92672">=</span>eb016ff3c1708c2bfbf31469f574aff99c045d11 <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo.a
-</span><span style="color:#e6db74"></span>cp <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out netcgo</code></pre></div>
+/opt/go/pkg/tool/linux_amd64/link -o $WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out -L $WORK -extld=gcc -buildmode=exe -buildid=eb016ff3c1708c2bfbf31469f574aff99c045d11 $WORK/_/home/mr/test/go/netgo_cgo.a
+cp $WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out netcgo</code></pre></div>
 <p>好长一大串!</p>
 
 <p>可以看到, golang使用了gcc去编译这个文件.</p>
 
 <p>那么换成<code>netgo</code>呢?</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"><span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo go build -x --tags netgo -o netgo 
-WORK<span style="color:#f92672">=</span>/tmp/go-build857020109
-mkdir -p <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/net/_obj/
-</span><span style="color:#e6db74"></span>mkdir -p <span style="color:#960050;background-color:#1e0010">$</span>WORK/
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  netgo_cgo go build -x --tags netgo -o netgo 
+WORK=/tmp/go-build857020109
+mkdir -p $WORK/net/_obj/
+mkdir -p $WORK/
 cd /opt/go/src/net
-/opt/go/pkg/tool/linux_amd64/compile -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/net.a -trimpath <span style="color:#960050;background-color:#1e0010">$</span>WORK -goversion go1.<span style="color:#ae81ff">9</span>.<span style="color:#ae81ff">2</span> -p net -std -buildid <span style="color:#ae81ff">12048</span>e0b22a06eafa34fe1b04bfee87c29b39979 -D _/opt/go/src/net -I <span style="color:#960050;background-color:#1e0010">$</span>WORK -pack ./addrselect.go ./cgo_stub.go ./conf.go ./dial.go ./dnsclient.go ./dnsclient_unix.go ./dnsconfig_unix.go ./dnsmsg.go ./error_posix.go ./fd_unix.go ./file.go ./file_unix.go ./hook.go ./hook_unix.go ./hosts.go ./interface.go ./interface_linux.go ./ip.go ./iprawsock.go ./iprawsock_posix.go ./ipsock.go ./ipsock_posix.go ./lookup.go ./lookup_unix.go ./mac.go ./net.go ./nss.go ./parse.go ./pipe.go ./port.go ./port_unix.go ./rawconn.go ./sendfile_linux.go ./sock_cloexec.go ./sock_linux.go ./sock_posix.go ./sockopt_linux.go ./sockopt_posix.go ./sockoptip_linux.go ./sockoptip_posix.go ./tcpsock.go ./tcpsock_posix.go ./tcpsockopt_posix.go ./tcpsockopt_unix.go ./udpsock.go ./udpsock_posix.go ./unixsock.go ./unixsock_posix.go ./writev_unix.go
-mkdir -p <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo/_obj/
-</span><span style="color:#e6db74"></span>mkdir -p <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/
-</span><span style="color:#e6db74"></span>cd /home/mr/test/go/netgo_cgo
-/opt/go/pkg/tool/linux_amd64/compile -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo.a -trimpath <span style="color:#960050;background-color:#1e0010">$</span>WORK -goversion go1.<span style="color:#ae81ff">9</span>.<span style="color:#ae81ff">2</span> -p main -complete -buildid a0e2e67cde44dfa98c4ccaf123bd7ff6ae1370f8 -D _/home/mr/test/go/netgo_cgo -I <span style="color:#960050;background-color:#1e0010">$</span>WORK -pack ./main.go
+/opt/go/pkg/tool/linux_amd64/compile -o $WORK/net.a -trimpath $WORK -goversion go1.9.2 -p net -std -buildid 12048e0b22a06eafa34fe1b04bfee87c29b39979 -D _/opt/go/src/net -I $WORK -pack ./addrselect.go ./cgo_stub.go ./conf.go ./dial.go ./dnsclient.go ./dnsclient_unix.go ./dnsconfig_unix.go ./dnsmsg.go ./error_posix.go ./fd_unix.go ./file.go ./file_unix.go ./hook.go ./hook_unix.go ./hosts.go ./interface.go ./interface_linux.go ./ip.go ./iprawsock.go ./iprawsock_posix.go ./ipsock.go ./ipsock_posix.go ./lookup.go ./lookup_unix.go ./mac.go ./net.go ./nss.go ./parse.go ./pipe.go ./port.go ./port_unix.go ./rawconn.go ./sendfile_linux.go ./sock_cloexec.go ./sock_linux.go ./sock_posix.go ./sockopt_linux.go ./sockopt_posix.go ./sockoptip_linux.go ./sockoptip_posix.go ./tcpsock.go ./tcpsock_posix.go ./tcpsockopt_posix.go ./tcpsockopt_unix.go ./udpsock.go ./udpsock_posix.go ./unixsock.go ./unixsock_posix.go ./writev_unix.go
+mkdir -p $WORK/_/home/mr/test/go/netgo_cgo/_obj/
+mkdir -p $WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/
+cd /home/mr/test/go/netgo_cgo
+/opt/go/pkg/tool/linux_amd64/compile -o $WORK/_/home/mr/test/go/netgo_cgo.a -trimpath $WORK -goversion go1.9.2 -p main -complete -buildid a0e2e67cde44dfa98c4ccaf123bd7ff6ae1370f8 -D _/home/mr/test/go/netgo_cgo -I $WORK -pack ./main.go
 cd .
-/opt/go/pkg/tool/linux_amd64/link -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out -L <span style="color:#960050;background-color:#1e0010">$</span>WORK -extld<span style="color:#f92672">=</span>gcc -buildmode<span style="color:#f92672">=</span>exe -buildid<span style="color:#f92672">=</span>a0e2e67cde44dfa98c4ccaf123bd7ff6ae1370f8 <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo.a
-</span><span style="color:#e6db74"></span>cp <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out netgo
-<span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo </code></pre></div>
+/opt/go/pkg/tool/linux_amd64/link -o $WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out -L $WORK -extld=gcc -buildmode=exe -buildid=a0e2e67cde44dfa98c4ccaf123bd7ff6ae1370f8 $WORK/_/home/mr/test/go/netgo_cgo.a
+cp $WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out netgo
+➜  netgo_cgo </code></pre></div>
 <p>就短多了, 可以看到用的是 <code>/opt/go/pkg/tool/linux_amd64/compile</code></p>
 
 <p>在来看一下默认的build:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"><span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo go build -x
-WORK<span style="color:#f92672">=</span>/tmp/go-build285258876
-mkdir -p <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo/_obj/
-</span><span style="color:#e6db74"></span>mkdir -p <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/
-</span><span style="color:#e6db74"></span>cd /home/mr/test/go/netgo_cgo
-/opt/go/pkg/tool/linux_amd64/compile -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo.a -trimpath <span style="color:#960050;background-color:#1e0010">$</span>WORK -goversion go1.<span style="color:#ae81ff">9</span>.<span style="color:#ae81ff">2</span> -p main -complete -buildid <span style="color:#ae81ff">137</span>ba24345f4e3075192f2afe0e3b5aad76f10b7 -D _/home/mr/test/go/netgo_cgo -I <span style="color:#960050;background-color:#1e0010">$</span>WORK -pack ./main.go
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  netgo_cgo go build -x
+WORK=/tmp/go-build285258876
+mkdir -p $WORK/_/home/mr/test/go/netgo_cgo/_obj/
+mkdir -p $WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/
+cd /home/mr/test/go/netgo_cgo
+/opt/go/pkg/tool/linux_amd64/compile -o $WORK/_/home/mr/test/go/netgo_cgo.a -trimpath $WORK -goversion go1.9.2 -p main -complete -buildid 137ba24345f4e3075192f2afe0e3b5aad76f10b7 -D _/home/mr/test/go/netgo_cgo -I $WORK -pack ./main.go
 cd .
-/opt/go/pkg/tool/linux_amd64/link -o <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out -L <span style="color:#960050;background-color:#1e0010">$</span>WORK -extld<span style="color:#f92672">=</span>gcc -buildmode<span style="color:#f92672">=</span>exe -buildid<span style="color:#f92672">=</span><span style="color:#ae81ff">137</span>ba24345f4e3075192f2afe0e3b5aad76f10b7 <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#e6db74">WORK/_/home/mr/test/go/netgo_cgo.a
-</span><span style="color:#e6db74"></span>cp <span style="color:#960050;background-color:#1e0010">$</span>WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out netgo_cgo
-<span style="color:#960050;background-color:#1e0010">➜</span>  netgo_cgo</code></pre></div>
+/opt/go/pkg/tool/linux_amd64/link -o $WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out -L $WORK -extld=gcc -buildmode=exe -buildid=137ba24345f4e3075192f2afe0e3b5aad76f10b7 $WORK/_/home/mr/test/go/netgo_cgo.a
+cp $WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out netgo_cgo
+➜  netgo_cgo</code></pre></div>
 <p>然后我们对比一下这些二进制文件:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">➜  netgo_cgo ll
 total <span style="color:#ae81ff">8004</span>
@@ -359,17 +363,17 @@ netgo_cgo: ELF <span style="color:#ae81ff">64</span>-bit LSB executable, x86-64,
 <p>&hellip; cogo的太长了, 感兴趣的自己对比吧, 大体意思就是, <code>netcgo</code>的调了各种lib,open这个那个的, 而<code>netgo</code>的是静态文件, 用了几个我不认识的调用就完事儿了:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">...
 ...
-futex<span style="color:#e6db74">(</span><span style="color:#ae81ff">0xc420032490</span>, FUTEX_WAKE, <span style="color:#ae81ff">1</span><span style="color:#e6db74">)</span>      <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
-epoll_wait<span style="color:#e6db74">(</span><span style="color:#ae81ff">4</span>, <span style="color:#e6db74">[]</span>, <span style="color:#ae81ff">128</span>, <span style="color:#ae81ff">0</span><span style="color:#e6db74">)</span>               <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-futex<span style="color:#e6db74">(</span><span style="color:#ae81ff">0x5b5b50</span>, FUTEX_WAIT, <span style="color:#ae81ff">0</span>, NULL<span style="color:#e6db74">)</span>    <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-epoll_wait<span style="color:#e6db74">(</span><span style="color:#ae81ff">4</span>, <span style="color:#e6db74">[{</span>EPOLLIN<span style="color:#f92672">|</span>EPOLLOUT, <span style="color:#e6db74">{</span>u32<span style="color:#f92672">=</span><span style="color:#ae81ff">4131852144</span>, u64<span style="color:#f92672">=</span><span style="color:#ae81ff">140363663085424</span><span style="color:#e6db74">}}]</span>, <span style="color:#ae81ff">128</span>, <span style="color:#ae81ff">0</span><span style="color:#e6db74">)</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
-read<span style="color:#e6db74">(</span><span style="color:#ae81ff">3</span>, &#34;M<span style="color:#e6db74">\</span><span style="color:#ae81ff">335</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">201</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">200</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">1</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">1</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">3</span>www<span style="color:#e6db74">\</span><span style="color:#ae81ff">6</span>google<span style="color:#e6db74">\</span><span style="color:#ae81ff">3</span>com<span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">34</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">0</span><span style="color:#e6db74">\</span><span style="color:#ae81ff">1</span>&#34;..., <span style="color:#ae81ff">512</span><span style="color:#e6db74">)</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">60</span>
-epoll_ctl<span style="color:#e6db74">(</span><span style="color:#ae81ff">4</span>, EPOLL_CTL_DEL, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">0xc420045b14</span><span style="color:#e6db74">)</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-close<span style="color:#e6db74">(</span><span style="color:#ae81ff">3</span><span style="color:#e6db74">)</span>                                <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-rt_sigprocmask<span style="color:#e6db74">(</span>SIG_SETMASK, <span style="color:#960050;background-color:#1e0010">~</span><span style="color:#e6db74">[]</span>, <span style="color:#e6db74">[]</span>, <span style="color:#ae81ff">8</span><span style="color:#e6db74">)</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-clone<span style="color:#e6db74">(</span>lookup<span style="color:#f92672">:</span><span style="color:#ae81ff">69</span>.<span style="color:#ae81ff">171</span>.<span style="color:#ae81ff">245</span>.<span style="color:#ae81ff">84</span>
- <span style="color:#e6db74">&lt;unfinished</span> <span style="color:#e6db74">...&gt;</span><span style="color:#e6db74">)</span>                <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">?</span>
-<span style="color:#f92672">+++</span> exited with <span style="color:#ae81ff">0</span> <span style="color:#f92672">+++</span></code></pre></div>
+futex(0xc420032490, FUTEX_WAKE, 1)      = 1
+epoll_wait(4, [], 128, 0)               = 0
+futex(0x5b5b50, FUTEX_WAIT, 0, NULL)    = 0
+epoll_wait(4, [{EPOLLIN|EPOLLOUT, {u32=4131852144, u64=140363663085424}}], 128, 0) = 1
+read(3, &#34;M\335\201\200\0\1\0\1\0\0\0\0\3www\6google\3com\0\0\34\0\1&#34;..., 512) = 60
+epoll_ctl(4, EPOLL_CTL_DEL, 3, 0xc420045b14) = 0
+close(3)                                = 0
+rt_sigprocmask(SIG_SETMASK, ~[], [], 8) = 0
+clone(lookup:69.171.245.84
+ &lt;unfinished ...&gt;)                = ?
++++ exited with 0 +++</code></pre></div>
 <p>所以, 得出的结论是, 使用cgo编译的程序(或者运行时为cgo), 运行的时候会调用系统的libc, 在alpine中, 虽然它的libc是精简过的, 但人家好歹也是读了hosts文件, 所以会达到预期的效果.</p>
 
 <h3 id="解决方案">解决方案</h3>
@@ -392,23 +396,21 @@ clone<span style="color:#e6db74">(</span>lookup<span style="color:#f92672">:</sp
     
 <footer class='entry-footer-container'>
   <div class='entry-footer'>
-  <div class='categories'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  <div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
   
 </svg>
-</span>
-  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/tips'>Tips</a></div>
-<div class='tags'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+<span class='screen-reader-text'>Categories: </span></div>
+
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
   <line x1="7" y1="7" x2="7" y2="7"/>
   
 </svg>
-</span>
-  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/go'>Go</a>, <a class='tag' href='/tags/tips'>Tips</a></div>
+<span class='screen-reader-text'>Tags: </span>, </div>
+
 
   </div>
 </footer>
@@ -443,7 +445,7 @@ clone<span style="color:#e6db74">(</span>lookup<span style="color:#f92672">:</sp
   
 <div class='comments-container'>
   <div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     

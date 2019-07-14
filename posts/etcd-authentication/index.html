@@ -22,7 +22,7 @@ The client connection used to request the authentication token is typically thro
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='dev'><meta property='article:tag' content='etcd'><meta property='article:published_time' content='2019-05-16T21:15:45&#43;08:00'/><meta property='article:modified_time' content='2019-05-16T21:15:45&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.40.1" />
+<meta name="generator" content="Hugo 0.52" />
 
   <title>Etcd-Authentication • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/etcd-authentication/'>
@@ -30,12 +30,16 @@ The client connection used to request the authentication token is typically thro
   
   <link rel='icon' href='/favicon.svg'>
 <link rel='stylesheet' href='/assets/css/main.c54db339.css'>
-<script>
-window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-ga('create', 'UA-62244864-7', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-62244864-7', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
-<script async src='//www.google-analytics.com/analytics.js'></script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 </head>
 
@@ -204,37 +208,35 @@ etcdserver: user name is empty</pre></div>
 <p><strong>重启大法好</strong></p>
 
 <p>P.S. etcd 的版本为 <code>3.3.13</code>@<code>98d308426</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">GO_BUILD_FLAGS<span style="color:#f92672">=</span>&#34;-v&#34; ./build
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">GO_BUILD_FLAGS=&#34;-v&#34; ./build
 ./bin/etcd --version
-etcd Version<span style="color:#f92672">:</span> <span style="color:#ae81ff">3</span>.<span style="color:#ae81ff">3</span>.<span style="color:#ae81ff">13</span>
-Git SHA<span style="color:#f92672">:</span> <span style="color:#ae81ff">98</span>d308426
-Go Version<span style="color:#f92672">:</span> go1.<span style="color:#ae81ff">12</span>
-Go OS/Arch<span style="color:#f92672">:</span> <span style="color:#e6db74">linux/amd64
-</span><span style="color:#e6db74"></span>ETCDCTL_API<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> ./bin/etcdctl version
-etcdctl version<span style="color:#f92672">:</span> <span style="color:#ae81ff">3</span>.<span style="color:#ae81ff">3</span>.<span style="color:#ae81ff">13</span>
-API version<span style="color:#f92672">:</span> <span style="color:#ae81ff">3</span>.<span style="color:#ae81ff">3</span></code></pre></div>
+etcd Version: 3.3.13
+Git SHA: 98d308426
+Go Version: go1.12
+Go OS/Arch: linux/amd64
+ETCDCTL_API=3 ./bin/etcdctl version
+etcdctl version: 3.3.13
+API version: 3.3</code></pre></div>
 </div>
 
     
 <footer class='entry-footer-container'>
   <div class='entry-footer'>
-  <div class='categories'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  <div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
   
 </svg>
-</span>
-  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/dev'>Dev</a></div>
-<div class='tags'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+<span class='screen-reader-text'>Categories: </span></div>
+
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
   <line x1="7" y1="7" x2="7" y2="7"/>
   
 </svg>
-</span>
-  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/dev'>Dev</a>, <a class='tag' href='/tags/etcd'>Etcd</a></div>
+<span class='screen-reader-text'>Tags: </span>, </div>
+
 
   </div>
 </footer>
@@ -253,13 +255,23 @@ API version<span style="color:#f92672">:</span> <span style="color:#ae81ff">3</s
 </svg>
  Previous</span>
         <span class='screen-reader'>Previous post: </span>Golang-Open-File</a>
+    </div><div class='next-entry' style="float: right;">
+      <a href='/posts/mendel-a-b-testing-platform-part-0/'>
+        <span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+        <span class='screen-reader'>Next post: </span>Mendel - A/B Testing Platform (Part 0)</a>
     </div></div>
 </nav>
 
   
 <div class='comments-container'>
   <div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     

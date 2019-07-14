@@ -32,7 +32,7 @@
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='code'><meta property='article:published_time' content='2016-03-27T00:00:00Z'/><meta property='article:modified_time' content='2016-03-27T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.40.1" />
+<meta name="generator" content="Hugo 0.52" />
 
   <title>一点笔记 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/%E4%B8%80%E7%82%B9%E7%AC%94%E8%AE%B0/'>
@@ -40,12 +40,16 @@
   
   <link rel='icon' href='/favicon.svg'>
 <link rel='stylesheet' href='/assets/css/main.c54db339.css'>
-<script>
-window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-ga('create', 'UA-62244864-7', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-62244864-7', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
-<script async src='//www.google-analytics.com/analytics.js'></script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 </head>
 
@@ -206,17 +210,17 @@ ga('send', 'pageview');
 
 <p>多说一点，利用<code>exec</code>命令可以创建，绑定，关闭文件描述符。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">exec <span style="color:#ae81ff">6</span>&gt;&amp;<span style="color:#ae81ff">1</span>
-<span style="color:#75715e">#创建fd6，绑定到标准输出
-</span><span style="color:#75715e"></span>
+<span style="color:#75715e">#创建fd6，绑定到标准输出</span>
+
 echo hello &gt;&amp;<span style="color:#ae81ff">6</span>
-<span style="color:#75715e">#将输出重定向到fd6
-</span><span style="color:#75715e"></span>
+<span style="color:#75715e">#将输出重定向到fd6</span>
+
 exec <span style="color:#ae81ff">6</span>&gt;script.log
-<span style="color:#75715e">#将fd6的内容输出到script.log文件中
-</span><span style="color:#75715e">#上面的相当于 echo hello &gt; script.log，但是在脚本中这样写会有点乱，尤其是当文件名比较长的时候。
-</span><span style="color:#75715e"></span>
+<span style="color:#75715e">#将fd6的内容输出到script.log文件中</span>
+<span style="color:#75715e">#上面的相当于 echo hello &gt; script.log，但是在脚本中这样写会有点乱，尤其是当文件名比较长的时候。</span>
+
 exec <span style="color:#ae81ff">6</span>&gt;&amp;-
-#关闭fd6</code></pre></div>
+<span style="color:#75715e">#关闭fd6</span></code></pre></div>
 <p>可以看看下面这个来自《高级Shell脚本编程指南》的例子：
 <a href="https://raw.githubusercontent.com/wrfly/my-pastes/master/3-27.sh" target="_blank">https://raw.githubusercontent.com/wrfly/my-pastes/master/3-27.sh</a></p>
 
@@ -354,15 +358,14 @@ prw-rw-r-- <span style="color:#ae81ff">1</span> mr mr    <span style="color:#ae8
     
 <footer class='entry-footer-container'>
   <div class='entry-footer'>
-  <div class='tags'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  <div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
   <line x1="7" y1="7" x2="7" y2="7"/>
   
 </svg>
-</span>
-  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/code'>Code</a></div>
+<span class='screen-reader-text'>Tags: </span></div>
+
 
   </div>
 </footer>
@@ -397,7 +400,7 @@ prw-rw-r-- <span style="color:#ae81ff">1</span> mr mr    <span style="color:#ae8
   
 <div class='comments-container'>
   <div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     

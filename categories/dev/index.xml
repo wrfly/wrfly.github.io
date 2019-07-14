@@ -1,14 +1,41 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Dev on wrfly&#39;s blog</title>
+    <title>dev on wrfly&#39;s blog</title>
     <link>https://wrfly.kfd.me/categories/dev/</link>
-    <description>Recent content in Dev on wrfly&#39;s blog</description>
+    <description>Recent content in dev on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 16 May 2019 21:15:45 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 07 Jul 2019 13:53:31 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/categories/dev/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Mendel - A/B Testing Platform (Part 0)</title>
+      <link>https://wrfly.kfd.me/posts/mendel-a-b-testing-platform-part-0/</link>
+      <pubDate>Sun, 07 Jul 2019 13:53:31 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/mendel-a-b-testing-platform-part-0/</guid>
+      <description>背景 &amp;amp; 前言 其实很早之前就想重写我们的AB testing系统，因为现在的程序很简陋（虽然是很久之前某位大哥写的，而且也能凑合用），不支持分国家测试（这种测试很重要），每个返回的结果都会带上很长一串的配置代码（比如，Testing=abpha,Rank=abcde,Threshold=0.5&amp;hellip;.，巨长无比，比我都长），看起来非常罗嗦，也不友好，我们用什么测试都明文暴露出去了，并且现有程序很Java，晦涩难懂，不敢维护。本着破旧立新的原则，搜了一圈没有开源方案能够满足我们的要求，只得自己写一个。
+历时两个月：写代码一个月，五千多行，期间还掺杂着乱七八糟的事儿；部署测试一个月，没有QA资源给我们测试，只能自己测，在mesos上部署还搞了一周，DB，DNS，deploy.json, 超级烦。
+不过好歹，七月份终于上线了，又经过了两周的线上测试，修了几个bug，现在看起来还不错。
+一些简单的功能：
+ 支持多个项目：不同项目有自己不同的配置和实验 支持多service绑定测试：同一个项目中有多个不同的service 配置/实验区分国家： 不同的国家有不同的配置/测试 可根据UserID，SessionID等维度划分实验流量 支持配置权重：同一个配置有多个值，值附带权重属性 配置多版本，实验多版本：不同版本同时保存，互不冲突 实时分析试验结果：不必麻烦数据团队隔夜处理数据，计算CTR  大概有36个API，因为没有前端（PM画了界面，但是没人有时间写），我还写了一个简单的Python Cli程序。对了，程序语言是Golang，当然。
+我给系统起名叫 Mendel，但是PM的PRD上叫MVT，Multiple Variable Testing system，这个名字个人感觉很low，不如“孟德尔”有意思。不过我才是写代码的人，我想怎么写就怎么写（傲娇）。
+架构 整个系统分为四个部分：
+ Mendel Server Mendel Assistant Database  MySQL DB etcd influxDB  Mendel Lib  Mendel Server 负责处理所有API请求，基本上就是CURD，接受请求，验证处理，存入DB，同步到etcd上。这部分写起来其实很讨厌，虽然简单，但是太麻烦，每一个接口都要有CURD，我原来想用MongoDB作为后端存储，但是公司不提供MongoDB的维护，自己用容器风险又太大（没人维护），只能用MySQL，然后用text保存数据。因为如果想要满足设计，配置就需要相当复杂，区分国家，配置权重，service关系，不同配置的层级关系，用MySQL字段保存的话太麻烦了，也不能满足多种层级。其实写好一个CURD也不是容易事，太多细节需要考虑，不仅仅是麻烦的问题。
+Mendel Assistant
+这个组件是为了实时分析实验结果的，通过实时读取Tracking数据，获取Tracking里面的AB Testing Siganture，解开Signature，写入InfluxDB和暴露metrics给Prometheus，计算不同实验的CTR，对比效果。Mendel Server部署一个就够了，他只是个CURD Server，但这个Assistant需要部署很多个，毕竟Tracking的数据量太大了。
+Database
+MySQL，所有的“配置”都在这里，包括各个项目的元信息，基础配置，实验配置，流量分配（以后还会有用户管理，没来得及实现用户系统）
+Etcd，也是存储各种的配置信息，不过它还有解藕client与db的功能，也是作为一个缓存的存在，也作为发布/更新配置与实验的中间件（归功与etcd v3的gRPC长连接watch）（唉，但是自从接手etcd以来，已经踩了好多坑了……）。
+InfluxDB，存储我们的试验结果，因为其支持多个field，不像projetheus那样只能有固定个数的lables。需要多个fields的原因是，系统运行中，配置会随时更改，增加或者删除某一些层级配置，比如有时候想测试某种算法的好坏，但一旦测试完成，就有可能把这一层的配置删掉，固定用测试结果优秀的算法，或者动态更改配置的阈值，有时候是0.2,有时候是0.3,有时候是0.5,这都是不可预测的，所以只能用InfluxDB解决。且InfluxDB聚合能力还可以，虽然是单点（公司不给出钱买商业版），但我还没遇到什么瓶颈，如果数据丢了，重新set一下Kafka的Offset，再跑一边写进去就是了。
+Mendel Lib
+原来的设计是没一个请求进来，我们用一个TrackingID去标记，然后在TrackingID上append不同的配置，写入一个KV存储中，但是Lead说，公司的Codis不靠谱，没有一个靠谱的持久化KV存储，如果TrackingID的数据丢了就麻烦了，所以最后折中了一个Signature的方案，从很长的配置细节变成一个能够自解的signature，并且signature对外不可读。对于signature的介绍将在本文最后进行。
+其实用trackingID的方式是最好的，这样不仅可以用来标记数据，也可以用这个ID对请求进行追踪，比如在什么时候产生了访问，返回了多少广告，关键词是什么，在什么时候点击的，点击了第几个位置，这个位置的广告的平均CTR是多少，rank分是多少，similarity是多少，这些数据对于我们分析用户行为，提升算法精准度，都是有很大帮助的，但是无奈，只能用signature去自解AB Testing的数据。无奈。
+配置结构 在这套系统中，有几个关键的概念：
+ project: 拥有独立流量（独立请求和返回结果）的业务线称为一个项目 base_config: 项目的基础配置，一个项目配置中，可以包含多个服务  service: 服务，一个服务配置中，包含多个模块配置 module:：模块，具体表现为程序的某个模块，可以包含多个层级配置 layer: 在程序中的特定层，具体为某一个模块中的某一个步骤 config value: 对层级的配置，包括这个层中，对国家的配置值，不同值的权重等  traffic slots: 每一个项目拥有自己独立的流量分配，每一个国家也有独立的流量分配（保证了实验的可以在国家的维度进行） experiment: 每一个实验本质上也是一套配置，不过是建立在基础配置之上的特定修改，而且实验配置不能超出基础配置，一定是修改。实验可以根据不同的维度划分，比如根据UID划分，根据SessionID划分，但是它们一定是共享整个项目的流量的，相同国家内的流量不能够重叠交叉。实验中对于layer的配置也可以有多种，且对于每一种配置值，其权重都是相同的（有别于base config中的config value）。对于实验没有修改的layer，当base config中layer有变更时，experiment也要同步进行修改，更新，下发。  对于base config和expeirment config，所有数据都有唯一的ID和版本号，保证了不会有数据丢失，方便回滚和审计。</description>
+    </item>
     
     <item>
       <title>Etcd-Authentication</title>

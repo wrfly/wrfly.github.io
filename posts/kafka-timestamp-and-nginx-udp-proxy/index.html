@@ -20,7 +20,7 @@ config := sarama.NewConfig() config.Version = sarama.V1_0_0_0 // HERE! // sarama
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='dev'><meta property='article:tag' content='nginx'><meta property='article:published_time' content='2018-01-24T21:09:11&#43;08:00'/><meta property='article:modified_time' content='2018-01-24T21:09:11&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.40.1" />
+<meta name="generator" content="Hugo 0.52" />
 
   <title>Kafka-Timestamp-and-Nginx-Udp-Proxy • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/kafka-timestamp-and-nginx-udp-proxy/'>
@@ -28,12 +28,16 @@ config := sarama.NewConfig() config.Version = sarama.V1_0_0_0 // HERE! // sarama
   
   <link rel='icon' href='/favicon.svg'>
 <link rel='stylesheet' href='/assets/css/main.c54db339.css'>
-<script>
-window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-ga('create', 'UA-62244864-7', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-62244864-7', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
-<script async src='//www.google-analytics.com/analytics.js'></script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 </head>
 
@@ -149,8 +153,8 @@ Timestamp time.Time</pre></div>
 <ol>
 <li>关闭UDP proxy的response, 减少端口占用. 不然的话每来一个UDP包都会开一个新的端口去处理(tcpdump抓到的)</li>
 <li>增加worker连接数. 在我这边测的是, 40000个连接占用了411M的内存, 大约一个连接10k</li>
-<li>提高 <a href="http://nginx.org/en/docs/ngx_core_module.html#worker_rlimit_nofile" target="_blank">worker_rlimit_nofile</a> 限制, 增加每个worker进程可以打开的最大文件数量.</li>
-</ol>
+
+<li><p>提高 <a href="http://nginx.org/en/docs/ngx_core_module.html#worker_rlimit_nofile" target="_blank">worker_rlimit_nofile</a> 限制, 增加每个worker进程可以打开的最大文件数量.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">server{
 	listen 10001 udp;
 	proxy_pass syslog;
@@ -158,8 +162,10 @@ Timestamp time.Time</pre></div>
 }</pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">worker_rlimit_nofile 1000000;
 
 events {
-    worker_connections 40000;
-}</pre></div>
+worker_connections 40000;
+}</pre></div></li>
+</ol>
+
 <p>一些说明: <a href="http://nginx.org/en/docs/ngx_core_module.html" target="_blank">http://nginx.org/en/docs/ngx_core_module.html</a></p>
 
 <p><a href="https://www.nginx.com/blog/tcp-load-balancing-udp-load-balancing-nginx-tips-tricks/#udpLB" target="_blank">https://www.nginx.com/blog/tcp-load-balancing-udp-load-balancing-nginx-tips-tricks/#udpLB</a></p>
@@ -169,23 +175,21 @@ events {
     
 <footer class='entry-footer-container'>
   <div class='entry-footer'>
-  <div class='categories'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  <div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
   
 </svg>
-</span>
-  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/share'>Share</a></div>
-<div class='tags'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+<span class='screen-reader-text'>Categories: </span></div>
+
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
   <line x1="7" y1="7" x2="7" y2="7"/>
   
 </svg>
-</span>
-  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/dev'>Dev</a>, <a class='tag' href='/tags/nginx'>Nginx</a></div>
+<span class='screen-reader-text'>Tags: </span>, </div>
+
 
   </div>
 </footer>
@@ -220,7 +224,7 @@ events {
   
 <div class='comments-container'>
   <div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     

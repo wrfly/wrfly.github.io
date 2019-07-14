@@ -36,7 +36,7 @@
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='code'><meta property='article:published_time' content='2018-01-14T01:07:51&#43;08:00'/><meta property='article:modified_time' content='2018-01-14T01:07:51&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.40.1" />
+<meta name="generator" content="Hugo 0.52" />
 
   <title>Token-Bucket • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/token-bucket/'>
@@ -44,12 +44,16 @@
   
   <link rel='icon' href='/favicon.svg'>
 <link rel='stylesheet' href='/assets/css/main.c54db339.css'>
-<script>
-window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-ga('create', 'UA-62244864-7', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-62244864-7', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
-<script async src='//www.google-analytics.com/analytics.js'></script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 </head>
 
@@ -166,34 +170,34 @@ ga('send', 'pageview');
 <p>然后就到了最后一种方式，后台填桶。这是最直白的，开一个goroutine每隔一段时间更新bucket中的token数量。但是，理论上在高并发的情况下，CPU繁忙，go出去的ticker容易失效（goroutine没能得到CPU资源），但实际情况却。。。大大超出我的想想，这种方法竟然是效率最高的！！！</p>
 
 <p>对比测试：<a href="https://gist.github.com/wrfly/d6f3470522e10c80a77679a4636cbdb2" target="_blank">token-bucket-test.go</a></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"><span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">17</span> <span style="color:#ae81ff">5</span>s test
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">22</span> bsm<span style="color:#f92672">:</span>  <span style="color:#ae81ff">5</span>.<span style="color:#ae81ff">000064716</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">22</span> take<span style="color:#f92672">:</span> <span style="color:#ae81ff">6000</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">22</span> drop<span style="color:#f92672">:</span> <span style="color:#ae81ff">54533531</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">22</span> 
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">28</span> wrfly<span style="color:#f92672">:</span>  <span style="color:#ae81ff">5</span>.<span style="color:#ae81ff">000066249</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">28</span> take<span style="color:#f92672">:</span> <span style="color:#ae81ff">4977</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">28</span> drop<span style="color:#f92672">:</span> <span style="color:#ae81ff">57039560</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">28</span> 
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">34</span> tb<span style="color:#f92672">:</span>  <span style="color:#ae81ff">5</span>.<span style="color:#ae81ff">000073633</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">34</span> take<span style="color:#f92672">:</span> <span style="color:#ae81ff">6000</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">34</span> drop<span style="color:#f92672">:</span> <span style="color:#ae81ff">113551687</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">34</span> 
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">35</span> range test<span style="color:#f92672">:</span>  <span style="color:#ae81ff">100000000</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">35</span> dry run<span style="color:#f92672">:</span>  <span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">176605558</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">35</span> 
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">40</span> bsm<span style="color:#f92672">:</span>  <span style="color:#ae81ff">5</span>.<span style="color:#ae81ff">501930454</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">40</span> take<span style="color:#f92672">:</span> <span style="color:#ae81ff">6501</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">40</span> drop<span style="color:#f92672">:</span> <span style="color:#ae81ff">99993499</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">40</span> 
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">45</span> wrfly<span style="color:#f92672">:</span>  <span style="color:#ae81ff">4</span>.<span style="color:#ae81ff">907704798</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">45</span> take<span style="color:#f92672">:</span> <span style="color:#ae81ff">4896</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">45</span> drop<span style="color:#f92672">:</span> <span style="color:#ae81ff">99995104</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">45</span> 
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">46</span> tb<span style="color:#f92672">:</span>  <span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">299582854</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">46</span> take<span style="color:#f92672">:</span> <span style="color:#ae81ff">1000</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">46</span> drop<span style="color:#f92672">:</span> <span style="color:#ae81ff">99999000</span>
-<span style="color:#ae81ff">2018</span>/01/13 <span style="color:#ae81ff">18</span><span style="color:#f92672">:</span><span style="color:#ae81ff">05</span><span style="color:#f92672">:</span><span style="color:#ae81ff">46</span></code></pre></div>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">2018/01/13 18:05:17 5s test
+2018/01/13 18:05:22 bsm:  5.000064716
+2018/01/13 18:05:22 take: 6000
+2018/01/13 18:05:22 drop: 54533531
+2018/01/13 18:05:22 
+2018/01/13 18:05:28 wrfly:  5.000066249
+2018/01/13 18:05:28 take: 4977
+2018/01/13 18:05:28 drop: 57039560
+2018/01/13 18:05:28 
+2018/01/13 18:05:34 tb:  5.000073633
+2018/01/13 18:05:34 take: 6000
+2018/01/13 18:05:34 drop: 113551687
+2018/01/13 18:05:34 
+2018/01/13 18:05:35 range test:  100000000
+2018/01/13 18:05:35 dry run:  0.176605558
+2018/01/13 18:05:35 
+2018/01/13 18:05:40 bsm:  5.501930454
+2018/01/13 18:05:40 take: 6501
+2018/01/13 18:05:40 drop: 99993499
+2018/01/13 18:05:40 
+2018/01/13 18:05:45 wrfly:  4.907704798
+2018/01/13 18:05:45 take: 4896
+2018/01/13 18:05:45 drop: 99995104
+2018/01/13 18:05:45 
+2018/01/13 18:05:46 tb:  0.299582854
+2018/01/13 18:05:46 take: 1000
+2018/01/13 18:05:46 drop: 99999000
+2018/01/13 18:05:46</code></pre></div>
 <p>回头要看一下是什么原因导致<code>ticker</code>的方式竟然没毛病了，在繁忙的情况下，可能是我测试的方法不对，没能达到很多CPU占用的效果。</p>
 
 <p>但是在CPU资源充足的时候，用这种方法是绝对没问题的。</p>
@@ -203,23 +207,21 @@ ga('send', 'pageview');
     
 <footer class='entry-footer-container'>
   <div class='entry-footer'>
-  <div class='categories'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  <div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
   
 </svg>
-</span>
-  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/share'>Share</a></div>
-<div class='tags'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+<span class='screen-reader-text'>Categories: </span></div>
+
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
   <line x1="7" y1="7" x2="7" y2="7"/>
   
 </svg>
-</span>
-  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/code'>Code</a></div>
+<span class='screen-reader-text'>Tags: </span></div>
+
 
   </div>
 </footer>
@@ -254,7 +256,7 @@ ga('send', 'pageview');
   
 <div class='comments-container'>
   <div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     
