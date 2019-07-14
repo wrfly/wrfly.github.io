@@ -16,7 +16,7 @@
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:published_time' content='2015-09-24T00:00:00Z'/><meta property='article:modified_time' content='2015-09-24T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.40.1" />
+<meta name="generator" content="Hugo 0.52" />
 
   <title>linux-101-hacks • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/linux-101-hacks/'>
@@ -24,12 +24,16 @@
   
   <link rel='icon' href='/favicon.svg'>
 <link rel='stylesheet' href='/assets/css/main.c54db339.css'>
-<script>
-window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-ga('create', 'UA-62244864-7', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-62244864-7', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
-<script async src='//www.google-analytics.com/analytics.js'></script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 </head>
 
@@ -132,8 +136,8 @@ From:www.thegeekstuff.com</p>
 $ cd mail
 -bash: cd: mail: No such file or directory
 <span style="color:#f92672">[</span>木有这个目录<span style="color:#f92672">]</span>
-$ export CDPATH<span style="color:#f92672">=</span>/etc <span style="color:#75715e"># 或者直接 CDPATH=/etc
-</span><span style="color:#75715e"></span>$ cd mail
+$ export CDPATH<span style="color:#f92672">=</span>/etc <span style="color:#75715e"># 或者直接 CDPATH=/etc</span>
+$ cd mail
 /etc/mail
 <span style="color:#f92672">[</span>进去了!!!<span style="color:#f92672">]</span>
 $ pwd
@@ -214,7 +218,7 @@ alias cd5<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cd
   
 <div class='comments-container'>
   <div id="disqus_thread"></div>
-<script>
+<script type="application/javascript">
     var disqus_config = function () {
     
     
