@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang='en'><head>
+<html lang='en'>
+
+<head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='gRPC Load Balancer (with etcd) 引子 两个月之前，我们组想脱离公司全局的 Nginx 代理（毕竟 Nginx 的 TCP 代理用来做 gRPC 的负载均衡有很多问题），使用 gRPC 自带的负载均衡，调研了一圈开源的实现，有用consul的， 有用旧版本API实现的（方法将要被弃用），不得已，只能自己翻文档实现。
@@ -7,7 +9,6 @@
 连接池 初始阶段，client 建立N多链接到 Nginx（N的数量取决于 pool 的大小，也就是人工实现一个连接池， 其实根本没必要，但为了让流量均衡的发送到后端所有服务上必须要这样），但这个N的数字其实很有讲究， 如果N小于后端服务的数量，那么后端真实server收到的请求是不均匀的，在仅有一个 client，10个 server 的情况下，如果 client 建立5条连接到 Nginx，然后 Nginx 分别转发给后端的每一个 server， 那么就会有5个 server 收不到连接，白干。如果增加 client的数量，2x5=10，后端的10个 server 都收到了请求，才均匀。
 但，这个pool大小的设定实在玄学，client的数量也会变更，鬼知道哪些server收到的请求多，哪些 server收到的请求少？
 又，gRPC 是建立在 TCP 上的，每条连接可处理的请求能到 1w&#43; qps 以上，client 端建立几十几百个 连接到Nginx，Nginx 又转发这些到后端的N个 server 实例，看起来实在很傻逼。'>
-<meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='gRPC-LoadBalancer • wrfly&#39;s blog'>
 <meta property='og:description' content='gRPC Load Balancer (with etcd) 引子 两个月之前，我们组想脱离公司全局的 Nginx 代理（毕竟 Nginx 的 TCP 代理用来做 gRPC 的负载均衡有很多问题），使用 gRPC 自带的负载均衡，调研了一圈开源的实现，有用consul的， 有用旧版本API实现的（方法将要被弃用），不得已，只能自己翻文档实现。
@@ -17,7 +18,7 @@
 又，gRPC 是建立在 TCP 上的，每条连接可处理的请求能到 1w&#43; qps 以上，client 端建立几十几百个 连接到Nginx，Nginx 又转发这些到后端的N个 server 实例，看起来实在很傻逼。'>
 <meta property='og:url' content='https://wrfly.kfd.me/posts/grpc-loadbalancer/'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='coding'><meta property='article:tag' content='dev'><meta property='article:published_time' content='2019-03-16T00:32:21&#43;08:00'/><meta property='article:modified_time' content='2019-03-16T00:32:21&#43;08:00'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='coding'><meta property='article:tag' content='dev'><meta property='article:published_time' content='2019-03-16T00:32:21&#43;08:00'/><meta property='article:modified_time' content='2019-03-16T00:32:21&#43;08:00'/><meta name='twitter:card' content='summary'>
 
 <meta name="generator" content="Hugo 0.55.6" />
 
@@ -26,10 +27,7 @@
   
   
   <link rel='icon' href='/favicon.svg'>
-<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><style>
-:root{--color-accent:#ffcd00;}
-</style>
-
+<link rel='stylesheet' href='/assets/css/main.c54db339.css'>
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -41,51 +39,61 @@ if (!doNotTrack) {
 </script>
 <script async src='https://www.google-analytics.com/analytics.js'></script>
 
-  
-
 </head>
+
+
 <body class='page type-posts'>
+  <div class='site'>
 
-  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
-  <div class='container'>
-    
-    <ul><li class='item'>
-        <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/tags/'>tags</a>
-      </li><li class='item'>
-        <a href='/posts/'>posts</a>
-      </li><li class='item'>
-        <a href='/links/'>links</a>
-      </li><li class='item'>
-        <a href='/about/'>About</a>
-      </li><li class='item'>
-        <a href='/repos/'>Repos</a>
-      </li></ul>
-  </div>
-</nav><div class='header-widgets'>
-        <div class='container'></div>
-      </div>
+    <a class='screen-reader' href='#main'>Skip to Content</a>
 
-      <header id='header' class='header site-header'>
-        <div class='container sep-after'>
-          <div class='header-info'><p class='site-title title'>wrfly&#39;s blog</p><p class='desc site-desc'>使生如夏花之绚烂，死如秋叶之静美</p>
-          </div>
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/tags/'>tags</a>
+    </li>
+  <li>
+      <a href='/posts/'>posts</a>
+    </li>
+  <li>
+      <a href='/links/'>links</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  <li>
+      <a href='/repos/'>Repos</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>wrfly&#39;s blog</p>
+          
+          <p class='site-description subtitle'>使生如夏花之绚烂，死如秋叶之静美</p>
         </div>
-      </header>
+      </div>
+    </header>
 
-      <main id='content'>
 
-
-<article lang='en' class='entry'>
-  <header class='header entry-header'>
-  <div class='container sep-after'>
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
     <div class='header-info'>
       <h1 class='title'>gRPC-LoadBalancer</h1>
       
 
     </div>
-    <div class='entry-meta'>
+    
+<div class='meta'>
   <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -94,8 +102,8 @@ if (!doNotTrack) {
   <line x1="3" y1="10" x2="21" y2="10"/>
   
 </svg>
-<span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='2019-03-16T00:32:21&#43;08:00'>2019, Mar 16</time>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2019-03-16T00:32:21&#43;08:00'>2019, Mar 16</time>
 </span>
 
   
@@ -107,10 +115,10 @@ if (!doNotTrack) {
   </div>
 </header>
 
-  
-  
+    
+    
 
-  <div class='container entry-content'>
+    <div class='entry-content'>
   
 
 <h1 id="grpc-load-balancer-with-etcd">gRPC Load Balancer (with etcd)</h1>
@@ -334,30 +342,33 @@ nc localhost <span style="color:#ae81ff">8080</span> -v</code></pre></div>
 
 </div>
 
-  
-<footer class='entry-footer'>
-  <div class='container sep-before'><div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
   
 </svg>
-<span class='screen-reader-text'>Categories: </span><a class='category' href='/categories/dev/'>dev</a>, <a class='category' href='/categories/grpc/'>grpc</a></div>
+<span class='screen-reader-text'>Categories: </span>, </div>
+
 <div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
   <line x1="7" y1="7" x2="7" y2="7"/>
   
 </svg>
-<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/coding/'>coding</a>, <a class='tag' href='/tags/dev/'>dev</a></div>
+<span class='screen-reader-text'>Tags: </span>, </div>
+
 
   </div>
 </footer>
 
 
-</article>
-
-<nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav' style="float: left;"><div class='prev-entry' style="float: left;">
       <a href='/posts/an-accident-triggered-by-a-string/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
@@ -366,39 +377,93 @@ nc localhost <span style="color:#ae81ff">8080</span> -v</code></pre></div>
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>An-Accident-Triggered-by-a-String</a>
-    </div><div class='next-entry sep-before'>
+        <span class='screen-reader'>Previous post: </span>An-Accident-Triggered-by-a-String</a>
+    </div><div class='next-entry' style="float: right;">
       <a href='/posts/daily/'>
-        <span class='screen-reader-text'>Next post: </span>Daily<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+        <span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
   
 </svg>
 </span>
-      </a>
+        <span class='screen-reader'>Next post: </span>Daily</a>
     </div></div>
 </nav>
 
-
-
-
-      </main>
-
-      <footer id='footer' class='footer'>
-        <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2014-2019 wrfly </p>
+  
+<div class='comments-container'>
+  <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "wrfly" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 </div>
 
-        </div>
-      </footer>
+</main>
 
-    </div>
-  </div><script>window.__assets_js_src="/assets/js/"</script>
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
 
-<script src='/assets/js/main.67d669ac.js'></script>
+       &copy; 2014-2019 wrfly 
+  </p>
+</div>
 
-</body>
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script></body>
 
 </html>
 
