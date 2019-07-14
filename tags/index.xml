@@ -5,99 +5,10 @@
     <link>https://wrfly.kfd.me/tags/</link>
     <description>Recent content in Tags on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 07 Jul 2019 13:53:31 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/tags/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>bash</title>
-      <link>https://wrfly.kfd.me/tags/bash/</link>
-      <pubDate>Tue, 13 Mar 2018 22:31:28 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/bash/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>blog</title>
-      <link>https://wrfly.kfd.me/tags/blog/</link>
-      <pubDate>Sun, 31 Dec 2017 22:13:35 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/blog/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>books</title>
-      <link>https://wrfly.kfd.me/tags/books/</link>
-      <pubDate>Fri, 29 May 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/books/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>cluster</title>
-      <link>https://wrfly.kfd.me/tags/cluster/</link>
-      <pubDate>Sun, 12 Mar 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/cluster/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>code</title>
-      <link>https://wrfly.kfd.me/tags/code/</link>
-      <pubDate>Fri, 28 Dec 2018 21:31:54 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/code/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>coding</title>
-      <link>https://wrfly.kfd.me/tags/coding/</link>
-      <pubDate>Sat, 16 Mar 2019 00:32:21 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/coding/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>command</title>
-      <link>https://wrfly.kfd.me/tags/command/</link>
-      <pubDate>Sat, 08 Aug 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/command/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>daily</title>
-      <link>https://wrfly.kfd.me/tags/daily/</link>
-      <pubDate>Fri, 12 Apr 2019 22:05:57 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/daily/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>debug</title>
-      <link>https://wrfly.kfd.me/tags/debug/</link>
-      <pubDate>Thu, 10 May 2018 23:40:26 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/debug/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>design</title>
-      <link>https://wrfly.kfd.me/tags/design/</link>
-      <pubDate>Mon, 27 Nov 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/design/</guid>
-      <description></description>
-    </item>
     
     <item>
       <title>dev</title>
@@ -105,51 +16,6 @@
       <pubDate>Sun, 07 Jul 2019 13:53:31 +0800</pubDate>
       
       <guid>https://wrfly.kfd.me/tags/dev/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>devops</title>
-      <link>https://wrfly.kfd.me/tags/devops/</link>
-      <pubDate>Mon, 08 Jan 2018 20:59:37 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/devops/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>docker</title>
-      <link>https://wrfly.kfd.me/tags/docker/</link>
-      <pubDate>Thu, 10 May 2018 23:40:26 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/docker/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>etcd</title>
-      <link>https://wrfly.kfd.me/tags/etcd/</link>
-      <pubDate>Thu, 16 May 2019 21:15:45 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/etcd/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>funny</title>
-      <link>https://wrfly.kfd.me/tags/funny/</link>
-      <pubDate>Tue, 10 Feb 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/funny/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>go</title>
-      <link>https://wrfly.kfd.me/tags/go/</link>
-      <pubDate>Sat, 08 Dec 2018 16:48:09 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/go/</guid>
       <description></description>
     </item>
     
@@ -163,146 +29,56 @@
     </item>
     
     <item>
-      <title>hack</title>
-      <link>https://wrfly.kfd.me/tags/hack/</link>
-      <pubDate>Sun, 24 May 2015 00:00:00 +0000</pubDate>
+      <title>etcd</title>
+      <link>https://wrfly.kfd.me/tags/etcd/</link>
+      <pubDate>Thu, 16 May 2019 21:15:45 +0800</pubDate>
       
-      <guid>https://wrfly.kfd.me/tags/hack/</guid>
+      <guid>https://wrfly.kfd.me/tags/etcd/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>k8s</title>
-      <link>https://wrfly.kfd.me/tags/k8s/</link>
-      <pubDate>Sun, 22 Apr 2018 22:18:19 +0800</pubDate>
+      <title>daily</title>
+      <link>https://wrfly.kfd.me/tags/daily/</link>
+      <pubDate>Fri, 12 Apr 2019 22:05:57 +0800</pubDate>
       
-      <guid>https://wrfly.kfd.me/tags/k8s/</guid>
+      <guid>https://wrfly.kfd.me/tags/daily/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>linux</title>
-      <link>https://wrfly.kfd.me/tags/linux/</link>
-      <pubDate>Tue, 25 Aug 2015 00:00:00 +0000</pubDate>
+      <title>coding</title>
+      <link>https://wrfly.kfd.me/tags/coding/</link>
+      <pubDate>Sat, 16 Mar 2019 00:32:21 +0800</pubDate>
       
-      <guid>https://wrfly.kfd.me/tags/linux/</guid>
+      <guid>https://wrfly.kfd.me/tags/coding/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>mongodb</title>
-      <link>https://wrfly.kfd.me/tags/mongodb/</link>
-      <pubDate>Sat, 25 Feb 2017 00:00:00 +0000</pubDate>
+      <title>work</title>
+      <link>https://wrfly.kfd.me/tags/work/</link>
+      <pubDate>Tue, 22 Jan 2019 21:43:01 +0800</pubDate>
       
-      <guid>https://wrfly.kfd.me/tags/mongodb/</guid>
+      <guid>https://wrfly.kfd.me/tags/work/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>my-blog</title>
-      <link>https://wrfly.kfd.me/tags/my-blog/</link>
-      <pubDate>Thu, 11 Dec 2014 00:00:00 +0000</pubDate>
+      <title>code</title>
+      <link>https://wrfly.kfd.me/tags/code/</link>
+      <pubDate>Fri, 28 Dec 2018 21:31:54 +0800</pubDate>
       
-      <guid>https://wrfly.kfd.me/tags/my-blog/</guid>
+      <guid>https://wrfly.kfd.me/tags/code/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>nginx</title>
-      <link>https://wrfly.kfd.me/tags/nginx/</link>
-      <pubDate>Wed, 24 Jan 2018 21:09:11 +0800</pubDate>
+      <title>go</title>
+      <link>https://wrfly.kfd.me/tags/go/</link>
+      <pubDate>Sat, 08 Dec 2018 16:48:09 +0800</pubDate>
       
-      <guid>https://wrfly.kfd.me/tags/nginx/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ops</title>
-      <link>https://wrfly.kfd.me/tags/ops/</link>
-      <pubDate>Sat, 25 Apr 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/ops/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>others</title>
-      <link>https://wrfly.kfd.me/tags/others/</link>
-      <pubDate>Sun, 14 Jun 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/others/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>problems</title>
-      <link>https://wrfly.kfd.me/tags/problems/</link>
-      <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/problems/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>record</title>
-      <link>https://wrfly.kfd.me/tags/record/</link>
-      <pubDate>Thu, 18 Dec 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/record/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>share</title>
-      <link>https://wrfly.kfd.me/tags/share/</link>
-      <pubDate>Tue, 20 Feb 2018 20:05:06 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/share/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>shell</title>
-      <link>https://wrfly.kfd.me/tags/shell/</link>
-      <pubDate>Tue, 07 Jul 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/shell/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>singapore</title>
-      <link>https://wrfly.kfd.me/tags/singapore/</link>
-      <pubDate>Sun, 16 Sep 2018 17:03:44 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/singapore/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>thought</title>
-      <link>https://wrfly.kfd.me/tags/thought/</link>
-      <pubDate>Sun, 11 Mar 2018 23:12:32 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/thought/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>tips</title>
-      <link>https://wrfly.kfd.me/tags/tips/</link>
-      <pubDate>Tue, 31 Jul 2018 23:00:06 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/tips/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>translate</title>
-      <link>https://wrfly.kfd.me/tags/translate/</link>
-      <pubDate>Thu, 22 Feb 2018 18:13:29 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/translate/</guid>
+      <guid>https://wrfly.kfd.me/tags/go/</guid>
       <description></description>
     </item>
     
@@ -316,6 +92,177 @@
     </item>
     
     <item>
+      <title>singapore</title>
+      <link>https://wrfly.kfd.me/tags/singapore/</link>
+      <pubDate>Sun, 16 Sep 2018 17:03:44 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/singapore/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tips</title>
+      <link>https://wrfly.kfd.me/tags/tips/</link>
+      <pubDate>Tue, 31 Jul 2018 23:00:06 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/tips/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>debug</title>
+      <link>https://wrfly.kfd.me/tags/debug/</link>
+      <pubDate>Thu, 10 May 2018 23:40:26 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/debug/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>docker</title>
+      <link>https://wrfly.kfd.me/tags/docker/</link>
+      <pubDate>Thu, 10 May 2018 23:40:26 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>k8s</title>
+      <link>https://wrfly.kfd.me/tags/k8s/</link>
+      <pubDate>Sun, 22 Apr 2018 22:18:19 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/k8s/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>bash</title>
+      <link>https://wrfly.kfd.me/tags/bash/</link>
+      <pubDate>Tue, 13 Mar 2018 22:31:28 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/bash/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>thought</title>
+      <link>https://wrfly.kfd.me/tags/thought/</link>
+      <pubDate>Sun, 11 Mar 2018 23:12:32 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/thought/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>translate</title>
+      <link>https://wrfly.kfd.me/tags/translate/</link>
+      <pubDate>Thu, 22 Feb 2018 18:13:29 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/translate/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>share</title>
+      <link>https://wrfly.kfd.me/tags/share/</link>
+      <pubDate>Tue, 20 Feb 2018 20:05:06 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/share/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nginx</title>
+      <link>https://wrfly.kfd.me/tags/nginx/</link>
+      <pubDate>Wed, 24 Jan 2018 21:09:11 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/nginx/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>devops</title>
+      <link>https://wrfly.kfd.me/tags/devops/</link>
+      <pubDate>Mon, 08 Jan 2018 20:59:37 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/devops/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>blog</title>
+      <link>https://wrfly.kfd.me/tags/blog/</link>
+      <pubDate>Sun, 31 Dec 2017 22:13:35 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/blog/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>design</title>
+      <link>https://wrfly.kfd.me/tags/design/</link>
+      <pubDate>Mon, 27 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/design/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cluster</title>
+      <link>https://wrfly.kfd.me/tags/cluster/</link>
+      <pubDate>Sun, 12 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/cluster/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mongodb</title>
+      <link>https://wrfly.kfd.me/tags/mongodb/</link>
+      <pubDate>Sat, 25 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/mongodb/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>linux</title>
+      <link>https://wrfly.kfd.me/tags/linux/</link>
+      <pubDate>Tue, 25 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/linux/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>command</title>
+      <link>https://wrfly.kfd.me/tags/command/</link>
+      <pubDate>Sat, 08 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/command/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>shell</title>
+      <link>https://wrfly.kfd.me/tags/shell/</link>
+      <pubDate>Tue, 07 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/shell/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>others</title>
+      <link>https://wrfly.kfd.me/tags/others/</link>
+      <pubDate>Sun, 14 Jun 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/others/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>ubuntu</title>
       <link>https://wrfly.kfd.me/tags/ubuntu/</link>
       <pubDate>Tue, 09 Jun 2015 00:00:00 +0000</pubDate>
@@ -325,11 +272,38 @@
     </item>
     
     <item>
-      <title>vim</title>
-      <link>https://wrfly.kfd.me/tags/vim/</link>
-      <pubDate>Thu, 25 Dec 2014 00:00:00 +0000</pubDate>
+      <title>books</title>
+      <link>https://wrfly.kfd.me/tags/books/</link>
+      <pubDate>Fri, 29 May 2015 00:00:00 +0000</pubDate>
       
-      <guid>https://wrfly.kfd.me/tags/vim/</guid>
+      <guid>https://wrfly.kfd.me/tags/books/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hack</title>
+      <link>https://wrfly.kfd.me/tags/hack/</link>
+      <pubDate>Sun, 24 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/hack/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ops</title>
+      <link>https://wrfly.kfd.me/tags/ops/</link>
+      <pubDate>Sat, 25 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/ops/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>funny</title>
+      <link>https://wrfly.kfd.me/tags/funny/</link>
+      <pubDate>Tue, 10 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/funny/</guid>
       <description></description>
     </item>
     
@@ -343,20 +317,47 @@
     </item>
     
     <item>
+      <title>problems</title>
+      <link>https://wrfly.kfd.me/tags/problems/</link>
+      <pubDate>Thu, 01 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/problems/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>vim</title>
+      <link>https://wrfly.kfd.me/tags/vim/</link>
+      <pubDate>Thu, 25 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/vim/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>record</title>
+      <link>https://wrfly.kfd.me/tags/record/</link>
+      <pubDate>Thu, 18 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/record/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>my-blog</title>
+      <link>https://wrfly.kfd.me/tags/my-blog/</link>
+      <pubDate>Thu, 11 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/my-blog/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>wiki</title>
       <link>https://wrfly.kfd.me/tags/wiki/</link>
       <pubDate>Sat, 04 Oct 2014 00:00:00 +0000</pubDate>
       
       <guid>https://wrfly.kfd.me/tags/wiki/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>work</title>
-      <link>https://wrfly.kfd.me/tags/work/</link>
-      <pubDate>Tue, 22 Jan 2019 21:43:01 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/work/</guid>
       <description></description>
     </item>
     

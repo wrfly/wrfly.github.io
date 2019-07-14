@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang='en'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='背景 &amp; 前言 其实很早之前就想重写我们的AB testing系统，因为现在的程序很简陋（虽然是很久之前某位大哥写的，而且也能凑合用），不支持分国家测试（这种测试很重要），每个返回的结果都会带上很长一串的配置代码（比如，Testing=abpha,Rank=abcde,Threshold=0.5&hellip;.，巨长无比，比我都长），看起来非常罗嗦，也不友好，我们用什么测试都明文暴露出去了，并且现有程序很Java，晦涩难懂，不敢维护。本着破旧立新的原则，搜了一圈没有开源方案能够满足我们的要求，只得自己写一个。
+历时两个月：写代码一个月，五千多行，期间还掺杂着乱七八糟的事儿；部署测试一个月，没有QA资源给我们测试，只能自己测，在mesos上部署还搞了一周，DB，DNS，deploy.json, 超级烦。
+不过好歹，七月份终于上线了，又经过了两周的线上测试，修了几个bug，现在看起来还不错。
+一些简单的功能：
+ 支持多个项目：不同项目有自己不同的配置和实验 支持多service绑定测试：同一个项目中有多个不同的service 配置/实验区分国家： 不同的国家有不同的配置/测试 可根据UserID，SessionID等维度划分实验流量 支持配置权重：同一个配置有多个值，值附带权重属性 配置多版本，实验多版本：不同版本同时保存，互不冲突 实时分析试验结果：不必麻烦数据团队隔夜处理数据，计算CTR  大概有36个API，因为没有前端（PM画了界面，但是没人有时间写），我还写了一个简单的Python Cli程序。对了，程序语言是Golang，当然。
+我给系统起名叫 Mendel，但是PM的PRD上叫MVT，Multiple Variable Testing system，这个名字个人感觉很low，不如“孟德尔”有意思。不过我才是写代码的人，我想怎么写就怎么写（傲娇）。
+架构 整个系统分为四个部分：
+ Mendel Server Mendel Assistant Database  MySQL DB etcd influxDB  Mendel Lib  Mendel Server 负责处理所有API请求，基本上就是CURD，接受请求，验证处理，存入DB，同步到etcd上。这部分写起来其实很讨厌，虽然简单，但是太麻烦，每一个接口都要有CURD，我原来想用MongoDB作为后端存储，但是公司不提供MongoDB的维护，自己用容器风险又太大（没人维护），只能用MySQL，然后用text保存数据。因为如果想要满足设计，配置就需要相当复杂，区分国家，配置权重，service关系，不同配置的层级关系，用MySQL字段保存的话太麻烦了，也不能满足多种层级。其实写好一个CURD也不是容易事，太多细节需要考虑，不仅仅是麻烦的问题。
+Mendel Assistant
+这个组件是为了实时分析实验结果的，通过实时读取Tracking数据，获取Tracking里面的AB Testing Siganture，解开Signature，写入InfluxDB和暴露metrics给Prometheus，计算不同实验的CTR，对比效果。Mendel Server部署一个就够了，他只是个CURD Server，但这个Assistant需要部署很多个，毕竟Tracking的数据量太大了。
+Database
+MySQL，所有的“配置”都在这里，包括各个项目的元信息，基础配置，实验配置，流量分配（以后还会有用户管理，没来得及实现用户系统）
+Etcd，也是存储各种的配置信息，不过它还有解藕client与db的功能，也是作为一个缓存的存在，也作为发布/更新配置与实验的中间件（归功与etcd v3的gRPC长连接watch）（唉，但是自从接手etcd以来，已经踩了好多坑了……）。
+InfluxDB，存储我们的试验结果，因为其支持多个field，不像projetheus那样只能有固定个数的lables。需要多个fields的原因是，系统运行中，配置会随时更改，增加或者删除某一些层级配置，比如有时候想测试某种算法的好坏，但一旦测试完成，就有可能把这一层的配置删掉，固定用测试结果优秀的算法，或者动态更改配置的阈值，有时候是0.2,有时候是0.3,有时候是0.5,这都是不可预测的，所以只能用InfluxDB解决。且InfluxDB聚合能力还可以，虽然是单点（公司不给出钱买商业版），但我还没遇到什么瓶颈，如果数据丢了，重新set一下Kafka的Offset，再跑一边写进去就是了。
+Mendel Lib
+原来的设计是没一个请求进来，我们用一个TrackingID去标记，然后在TrackingID上append不同的配置，写入一个KV存储中，但是Lead说，公司的Codis不靠谱，没有一个靠谱的持久化KV存储，如果TrackingID的数据丢了就麻烦了，所以最后折中了一个Signature的方案，从很长的配置细节变成一个能够自解的signature，并且signature对外不可读。对于signature的介绍将在本文最后进行。
+其实用trackingID的方式是最好的，这样不仅可以用来标记数据，也可以用这个ID对请求进行追踪，比如在什么时候产生了访问，返回了多少广告，关键词是什么，在什么时候点击的，点击了第几个位置，这个位置的广告的平均CTR是多少，rank分是多少，similarity是多少，这些数据对于我们分析用户行为，提升算法精准度，都是有很大帮助的，但是无奈，只能用signature去自解AB Testing的数据。无奈。
+配置结构 在这套系统中，有几个关键的概念：
+ project: 拥有独立流量（独立请求和返回结果）的业务线称为一个项目 base_config: 项目的基础配置，一个项目配置中，可以包含多个服务  service: 服务，一个服务配置中，包含多个模块配置 module:：模块，具体表现为程序的某个模块，可以包含多个层级配置 layer: 在程序中的特定层，具体为某一个模块中的某一个步骤 config value: 对层级的配置，包括这个层中，对国家的配置值，不同值的权重等  traffic slots: 每一个项目拥有自己独立的流量分配，每一个国家也有独立的流量分配（保证了实验的可以在国家的维度进行） experiment: 每一个实验本质上也是一套配置，不过是建立在基础配置之上的特定修改，而且实验配置不能超出基础配置，一定是修改。实验可以根据不同的维度划分，比如根据UID划分，根据SessionID划分，但是它们一定是共享整个项目的流量的，相同国家内的流量不能够重叠交叉。实验中对于layer的配置也可以有多种，且对于每一种配置值，其权重都是相同的（有别于base config中的config value）。对于实验没有修改的layer，当base config中layer有变更时，experiment也要同步进行修改，更新，下发。  对于base config和expeirment config，所有数据都有唯一的ID和版本号，保证了不会有数据丢失，方便回滚和审计。'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Mendel - A/B Testing Platform (Part 0) • wrfly&#39;s blog'>
+<meta property='og:description' content='背景 &amp; 前言 其实很早之前就想重写我们的AB testing系统，因为现在的程序很简陋（虽然是很久之前某位大哥写的，而且也能凑合用），不支持分国家测试（这种测试很重要），每个返回的结果都会带上很长一串的配置代码（比如，Testing=abpha,Rank=abcde,Threshold=0.5&hellip;.，巨长无比，比我都长），看起来非常罗嗦，也不友好，我们用什么测试都明文暴露出去了，并且现有程序很Java，晦涩难懂，不敢维护。本着破旧立新的原则，搜了一圈没有开源方案能够满足我们的要求，只得自己写一个。
+历时两个月：写代码一个月，五千多行，期间还掺杂着乱七八糟的事儿；部署测试一个月，没有QA资源给我们测试，只能自己测，在mesos上部署还搞了一周，DB，DNS，deploy.json, 超级烦。
+不过好歹，七月份终于上线了，又经过了两周的线上测试，修了几个bug，现在看起来还不错。
+一些简单的功能：
+ 支持多个项目：不同项目有自己不同的配置和实验 支持多service绑定测试：同一个项目中有多个不同的service 配置/实验区分国家： 不同的国家有不同的配置/测试 可根据UserID，SessionID等维度划分实验流量 支持配置权重：同一个配置有多个值，值附带权重属性 配置多版本，实验多版本：不同版本同时保存，互不冲突 实时分析试验结果：不必麻烦数据团队隔夜处理数据，计算CTR  大概有36个API，因为没有前端（PM画了界面，但是没人有时间写），我还写了一个简单的Python Cli程序。对了，程序语言是Golang，当然。
+我给系统起名叫 Mendel，但是PM的PRD上叫MVT，Multiple Variable Testing system，这个名字个人感觉很low，不如“孟德尔”有意思。不过我才是写代码的人，我想怎么写就怎么写（傲娇）。
+架构 整个系统分为四个部分：
+ Mendel Server Mendel Assistant Database  MySQL DB etcd influxDB  Mendel Lib  Mendel Server 负责处理所有API请求，基本上就是CURD，接受请求，验证处理，存入DB，同步到etcd上。这部分写起来其实很讨厌，虽然简单，但是太麻烦，每一个接口都要有CURD，我原来想用MongoDB作为后端存储，但是公司不提供MongoDB的维护，自己用容器风险又太大（没人维护），只能用MySQL，然后用text保存数据。因为如果想要满足设计，配置就需要相当复杂，区分国家，配置权重，service关系，不同配置的层级关系，用MySQL字段保存的话太麻烦了，也不能满足多种层级。其实写好一个CURD也不是容易事，太多细节需要考虑，不仅仅是麻烦的问题。
+Mendel Assistant
+这个组件是为了实时分析实验结果的，通过实时读取Tracking数据，获取Tracking里面的AB Testing Siganture，解开Signature，写入InfluxDB和暴露metrics给Prometheus，计算不同实验的CTR，对比效果。Mendel Server部署一个就够了，他只是个CURD Server，但这个Assistant需要部署很多个，毕竟Tracking的数据量太大了。
+Database
+MySQL，所有的“配置”都在这里，包括各个项目的元信息，基础配置，实验配置，流量分配（以后还会有用户管理，没来得及实现用户系统）
+Etcd，也是存储各种的配置信息，不过它还有解藕client与db的功能，也是作为一个缓存的存在，也作为发布/更新配置与实验的中间件（归功与etcd v3的gRPC长连接watch）（唉，但是自从接手etcd以来，已经踩了好多坑了……）。
+InfluxDB，存储我们的试验结果，因为其支持多个field，不像projetheus那样只能有固定个数的lables。需要多个fields的原因是，系统运行中，配置会随时更改，增加或者删除某一些层级配置，比如有时候想测试某种算法的好坏，但一旦测试完成，就有可能把这一层的配置删掉，固定用测试结果优秀的算法，或者动态更改配置的阈值，有时候是0.2,有时候是0.3,有时候是0.5,这都是不可预测的，所以只能用InfluxDB解决。且InfluxDB聚合能力还可以，虽然是单点（公司不给出钱买商业版），但我还没遇到什么瓶颈，如果数据丢了，重新set一下Kafka的Offset，再跑一边写进去就是了。
+Mendel Lib
+原来的设计是没一个请求进来，我们用一个TrackingID去标记，然后在TrackingID上append不同的配置，写入一个KV存储中，但是Lead说，公司的Codis不靠谱，没有一个靠谱的持久化KV存储，如果TrackingID的数据丢了就麻烦了，所以最后折中了一个Signature的方案，从很长的配置细节变成一个能够自解的signature，并且signature对外不可读。对于signature的介绍将在本文最后进行。
+其实用trackingID的方式是最好的，这样不仅可以用来标记数据，也可以用这个ID对请求进行追踪，比如在什么时候产生了访问，返回了多少广告，关键词是什么，在什么时候点击的，点击了第几个位置，这个位置的广告的平均CTR是多少，rank分是多少，similarity是多少，这些数据对于我们分析用户行为，提升算法精准度，都是有很大帮助的，但是无奈，只能用signature去自解AB Testing的数据。无奈。
+配置结构 在这套系统中，有几个关键的概念：
+ project: 拥有独立流量（独立请求和返回结果）的业务线称为一个项目 base_config: 项目的基础配置，一个项目配置中，可以包含多个服务  service: 服务，一个服务配置中，包含多个模块配置 module:：模块，具体表现为程序的某个模块，可以包含多个层级配置 layer: 在程序中的特定层，具体为某一个模块中的某一个步骤 config value: 对层级的配置，包括这个层中，对国家的配置值，不同值的权重等  traffic slots: 每一个项目拥有自己独立的流量分配，每一个国家也有独立的流量分配（保证了实验的可以在国家的维度进行） experiment: 每一个实验本质上也是一套配置，不过是建立在基础配置之上的特定修改，而且实验配置不能超出基础配置，一定是修改。实验可以根据不同的维度划分，比如根据UID划分，根据SessionID划分，但是它们一定是共享整个项目的流量的，相同国家内的流量不能够重叠交叉。实验中对于layer的配置也可以有多种，且对于每一种配置值，其权重都是相同的（有别于base config中的config value）。对于实验没有修改的layer，当base config中layer有变更时，experiment也要同步进行修改，更新，下发。  对于base config和expeirment config，所有数据都有唯一的ID和版本号，保证了不会有数据丢失，方便回滚和审计。'>
+<meta property='og:url' content='https://wrfly.kfd.me/posts/mendel-ab-testing-platform-p0/'>
+<meta property='og:site_name' content='wrfly&#39;s blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='golang'><meta property='article:tag' content='dev'><meta property='article:published_time' content='2019-07-07T13:53:31&#43;08:00'/><meta property='article:modified_time' content='2019-07-07T13:53:31&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.55.6" />
+
+  <title>Mendel - A/B Testing Platform (Part 0) • wrfly&#39;s blog</title>
+  <link rel='canonical' href='https://wrfly.kfd.me/posts/mendel-ab-testing-platform-p0/'>
+  
+  
+  <link rel='icon' href='/favicon.svg'>
+<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-62244864-7', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-posts'>
+
+  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
+  <div class='container'>
+    
+    <ul><li class='item'>
+        <a href='/'>Home</a>
+      </li><li class='item'>
+        <a href='/tags/'>tags</a>
+      </li><li class='item'>
+        <a href='/posts/'>posts</a>
+      </li><li class='item'>
+        <a href='/links/'>links</a>
+      </li><li class='item'>
+        <a href='/about/'>About</a>
+      </li><li class='item'>
+        <a href='/repos/'>Repos</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>wrfly&#39;s blog</p><p class='desc site-desc'>使生如夏花之绚烂，死如秋叶之静美</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='en' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Mendel - A/B Testing Platform (Part 0)</h1>
+      
+
+    </div>
+    <div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Posted on </span>
+  <time class='entry-date' datetime='2019-07-07T13:53:31&#43;08:00'>2019, Jul 07</time>
+</span>
+
+  
+  
+
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+
+  <div class='container entry-content'>
+  
+
+<h2 id="背景-前言">背景 &amp; 前言</h2>
+
+<p>其实很早之前就想重写我们的AB testing系统，因为现在的程序很简陋（虽然是很久之前某位大哥写的，而且也能凑合用），不支持分国家测试（这种测试很重要），每个返回的结果都会带上很长一串的配置代码（比如，Testing=abpha,Rank=abcde,Threshold=0.5&hellip;.，巨长无比，比我都长），看起来非常罗嗦，也不友好，我们用什么测试都明文暴露出去了，并且现有程序很Java，晦涩难懂，不敢维护。本着破旧立新的原则，搜了一圈没有开源方案能够满足我们的要求，只得自己写一个。</p>
+
+<p>历时两个月：写代码一个月，五千多行，期间还掺杂着乱七八糟的事儿；部署测试一个月，没有QA资源给我们测试，只能自己测，在mesos上部署还搞了一周，DB，DNS，deploy.json, 超级烦。</p>
+
+<p>不过好歹，七月份终于上线了，又经过了两周的线上测试，修了几个bug，现在看起来还不错。</p>
+
+<p>一些简单的功能：</p>
+
+<ul>
+<li>支持多个项目：不同项目有自己不同的配置和实验</li>
+<li>支持多service绑定测试：同一个项目中有多个不同的service</li>
+<li>配置/实验区分国家： 不同的国家有不同的配置/测试</li>
+<li>可根据UserID，SessionID等维度划分实验流量</li>
+<li>支持配置权重：同一个配置有多个值，值附带权重属性</li>
+<li>配置多版本，实验多版本：不同版本同时保存，互不冲突</li>
+<li>实时分析试验结果：不必麻烦数据团队隔夜处理数据，计算CTR</li>
+</ul>
+
+<p>大概有36个API，因为没有前端（PM画了界面，但是没人有时间写），我还写了一个简单的Python Cli程序。对了，程序语言是Golang，当然。</p>
+
+<p>我给系统起名叫 <strong>Mendel</strong>，但是PM的PRD上叫<code>MVT</code>，Multiple Variable Testing system，这个名字个人感觉很low，不如“孟德尔”有意思。不过我才是写代码的人，我想怎么写就怎么写（傲娇）。</p>
+
+<h2 id="架构">架构</h2>
+
+<p>整个系统分为四个部分：</p>
+
+<ul>
+<li>Mendel Server</li>
+<li>Mendel Assistant</li>
+<li>Database
+
+<ul>
+<li>MySQL DB</li>
+<li>etcd</li>
+<li>influxDB</li>
+</ul></li>
+<li>Mendel Lib</li>
+</ul>
+
+<p><strong>Mendel Server</strong> 负责处理所有API请求，基本上就是CURD，接受请求，验证处理，存入DB，同步到etcd上。这部分写起来其实很讨厌，虽然简单，但是太麻烦，每一个接口都要有CURD，我原来想用MongoDB作为后端存储，但是公司不提供MongoDB的维护，自己用容器风险又太大（没人维护），只能用MySQL，然后用text保存数据。因为如果想要满足设计，配置就需要相当复杂，区分国家，配置权重，service关系，不同配置的层级关系，用MySQL字段保存的话太麻烦了，也不能满足多种层级。其实写好一个CURD也不是容易事，太多细节需要考虑，不仅仅是麻烦的问题。</p>
+
+<p><strong>Mendel Assistant</strong></p>
+
+<p>这个组件是为了实时分析实验结果的，通过实时读取Tracking数据，获取Tracking里面的AB Testing Siganture，解开Signature，写入InfluxDB和暴露metrics给Prometheus，计算不同实验的CTR，对比效果。Mendel Server部署一个就够了，他只是个CURD Server，但这个Assistant需要部署很多个，毕竟Tracking的数据量太大了。</p>
+
+<p><strong>Database</strong></p>
+
+<p>MySQL，所有的“配置”都在这里，包括各个项目的元信息，基础配置，实验配置，流量分配（以后还会有用户管理，没来得及实现用户系统）</p>
+
+<p>Etcd，也是存储各种的配置信息，不过它还有解藕client与db的功能，也是作为一个缓存的存在，也作为发布/更新配置与实验的中间件（归功与etcd v3的gRPC长连接watch）（唉，但是自从接手etcd以来，已经踩了好多坑了……）。</p>
+
+<p>InfluxDB，存储我们的试验结果，因为其支持多个field，不像projetheus那样只能有固定个数的lables。需要多个fields的原因是，系统运行中，配置会随时更改，增加或者删除某一些层级配置，比如有时候想测试某种算法的好坏，但一旦测试完成，就有可能把这一层的配置删掉，固定用测试结果优秀的算法，或者动态更改配置的阈值，有时候是0.2,有时候是0.3,有时候是0.5,这都是不可预测的，所以只能用InfluxDB解决。且InfluxDB聚合能力还可以，虽然是单点（公司不给出钱买商业版），但我还没遇到什么瓶颈，如果数据丢了，重新set一下Kafka的Offset，再跑一边写进去就是了。</p>
+
+<p><strong>Mendel Lib</strong></p>
+
+<p>原来的设计是没一个请求进来，我们用一个TrackingID去标记，然后在TrackingID上append不同的配置，写入一个KV存储中，但是Lead说，公司的Codis不靠谱，没有一个靠谱的持久化KV存储，如果TrackingID的数据丢了就麻烦了，所以最后折中了一个Signature的方案，从很长的配置细节变成一个能够自解的signature，并且signature对外不可读。对于signature的介绍将在本文最后进行。</p>
+
+<p>其实用trackingID的方式是最好的，这样不仅可以用来标记数据，也可以用这个ID对请求进行追踪，比如在什么时候产生了访问，返回了多少广告，关键词是什么，在什么时候点击的，点击了第几个位置，这个位置的广告的平均CTR是多少，rank分是多少，similarity是多少，这些数据对于我们分析用户行为，提升算法精准度，都是有很大帮助的，但是无奈，只能用signature去自解AB Testing的数据。无奈。</p>
+
+<h2 id="配置结构">配置结构</h2>
+
+<p>在这套系统中，有几个关键的概念：</p>
+
+<ul>
+<li>project: 拥有独立流量（独立请求和返回结果）的业务线称为一个项目</li>
+<li>base_config: 项目的基础配置，一个项目配置中，可以包含多个服务
+
+<ul>
+<li>service: 服务，一个服务配置中，包含多个模块配置</li>
+<li>module:：模块，具体表现为程序的某个模块，可以包含多个层级配置</li>
+<li>layer: 在程序中的特定层，具体为某一个模块中的某一个步骤</li>
+<li>config value: 对层级的配置，包括这个层中，对国家的配置值，不同值的权重等</li>
+</ul></li>
+<li>traffic slots: 每一个项目拥有自己独立的流量分配，每一个国家也有独立的流量分配（保证了实验的可以在国家的维度进行）</li>
+<li>experiment: 每一个实验本质上也是一套配置，不过是建立在基础配置之上的特定修改，而且实验配置不能超出基础配置，一定是修改。实验可以根据不同的维度划分，比如根据UID划分，根据SessionID划分，但是它们一定是共享整个项目的流量的，相同国家内的流量不能够重叠交叉。实验中对于layer的配置也可以有多种，且对于每一种配置值，其权重都是相同的（有别于base config中的config value）。对于实验没有修改的layer，当base config中layer有变更时，experiment也要同步进行修改，更新，下发。</li>
+</ul>
+
+<p>对于base config和expeirment config，所有数据都有唯一的ID和版本号，保证了不会有数据丢失，方便回滚和审计。</p>
+
+<p>文字描述起来有些枯燥啦，但我不确定能不能把图放上来，权且当个备忘录吧。</p>
+
+<p>其实实际应用起来，区分service和module的意义不大，而且还增加了client lib的复杂度，因为程序只需要从一个layer中根据国家，session，uid取出一个值而已，设计service和module这两个层级，是为了“人”方便配置，区分不同的服务和模块。当时设计的时候，也是不想把那么多层都罗列起来，看起来就很乱，也避免了多个模块有相同名称的layer的情景，比如常见的，大家都叫handler，或者score，或者threshold。</p>
+
+<p>所以猜也能猜到，这个配置会巨长无比，虽然复杂了点，但至少逻辑清晰，通俗易懂。用数据的冗余换取计算的轻便。</p>
+
+<h2 id="signature">Signature</h2>
+
+<p>这个地方比较有意思，我甚至一开始还在考虑能否实现。但程序没有做不到的事情，最终还是通过各种方法做到了。</p>
+
+<p>一个signature要表示很多东西，完全独立的“自解”，就只能沿袭曾经的做法，把每一层配置都写上，但是因为层的名称太长了，我们就可以给每一层编号，变成ABCDE，这里也有个问题是，一个项目中的配置不能超过26层，否则就溢出了（当然可以用小写字母缓解，但因为目前还没有这么多层，估计以后也不可能在一个项目中出现这么多的测试，所以就先只用大写字母来表示每一层的名称），所以，就需要一个外部的map，去解释ABCD分别代表着哪一层，而且不同的层有多个值，每种值又多种多样，有数字，有字符串，有布尔，有小数。所以类似于给层名编号，我们也可以给这些值编号，012345，所以也需要一个map，用来解释在某一层中，第0号的值是多少。</p>
+
+<p>所以，一个signagure可以从 <code>algorithm=abcdefg; threshold=0.1</code> 变成 <code>A0B0</code> 的形式，进而，变成 <code>AB0</code>。所以我们就会得到一些 <code>AB0C1D3</code>, <code>AE0BC1D2</code> 的signature。还可以保留一些负值，作为特殊用途，比如default，failed，skip等。</p>
+
+<p>但是光这个还不够，我们还要区分是在哪一个项目中，在哪一个实验中，在哪一个实验的哪一个版本中。因为PM们肯定会想着修改实验参数和实验条件的，这就导致了实验的配置会变化，以致相同的signature会有不同的阐述。所以，就需要引入一个prefix，去表示是在哪一个项目的哪一个实验的哪一个版本中：<code>1.2.1</code>, <code>1.b.3</code>, <code>b</code>表示base config。有了这三个数字，我们就可以在数据库中拿到一个唯一的配置。比如 <code>1.2.1</code> 就表示第1号项目的第2个实验的第1个版本，<code>1.b.3</code> 就表示1号项目的第3个版本的基础配置。</p>
+
+<p>同时，我们还要有一个最关键的额外参数，国家。对于不同的国家，每一个signature所表示的含义也都不一样，不仅是因为在相同的实验版本中，对国家的测试值不同，还有可能是在base config中，不同国家的配置值也有可能不一样。
+但是由于请求和返回结果中都带了country这个字段，所以没有必要在signature中也保存国家。</p>
+
+<p>所以我们最终的signature就会变成 <code>1.2.1@AC0B2D1</code> 这种形式。</p>
+
+<p>解释这个signature的时候，我们需要取出 project, experiment(or base config), version, 这三个基础ID来确定我们的配置是哪个，然后根据不同的层的应用值（<code>A0</code>, <code>B1</code>, <code>C0</code>），在配合是哪个country，来确定具体应用的值是哪个。</p>
+
+<p>当然，signature client实现的时候，还要考虑缓存（相同的signature会有很多，因为就那么几种组合），考虑insert db（不用每次都range config然后找对应的配置是什么），考虑各种错误等等。</p>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+<span class='screen-reader-text'>Categories: </span><a class='category' href='/categories/dev/'>dev</a></div>
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/golang/'>golang</a>, <a class='tag' href='/tags/dev/'>dev</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/posts/etcd-authentication/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader-text'>Previous post: </span>Etcd-Authentication</a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><div class='copyright'>
+  <p> &copy; 2014-2019 wrfly </p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='/assets/js/main.67d669ac.js'></script>
+
+</body>
+
+</html>
+

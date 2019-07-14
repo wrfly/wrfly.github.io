@@ -12,10 +12,10 @@
     
     <item>
       <title>Mendel - A/B Testing Platform (Part 0)</title>
-      <link>https://wrfly.kfd.me/posts/mendel-a-b-testing-platform-part-0/</link>
+      <link>https://wrfly.kfd.me/posts/mendel-ab-testing-platform-p0/</link>
       <pubDate>Sun, 07 Jul 2019 13:53:31 +0800</pubDate>
       
-      <guid>https://wrfly.kfd.me/posts/mendel-a-b-testing-platform-part-0/</guid>
+      <guid>https://wrfly.kfd.me/posts/mendel-ab-testing-platform-p0/</guid>
       <description>背景 &amp;amp; 前言 其实很早之前就想重写我们的AB testing系统，因为现在的程序很简陋（虽然是很久之前某位大哥写的，而且也能凑合用），不支持分国家测试（这种测试很重要），每个返回的结果都会带上很长一串的配置代码（比如，Testing=abpha,Rank=abcde,Threshold=0.5&amp;hellip;.，巨长无比，比我都长），看起来非常罗嗦，也不友好，我们用什么测试都明文暴露出去了，并且现有程序很Java，晦涩难懂，不敢维护。本着破旧立新的原则，搜了一圈没有开源方案能够满足我们的要求，只得自己写一个。
 历时两个月：写代码一个月，五千多行，期间还掺杂着乱七八糟的事儿；部署测试一个月，没有QA资源给我们测试，只能自己测，在mesos上部署还搞了一周，DB，DNS，deploy.json, 超级烦。
 不过好歹，七月份终于上线了，又经过了两周的线上测试，修了几个bug，现在看起来还不错。
