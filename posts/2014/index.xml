@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/posts/2014/</link>
+    <description>Recent content on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 29 Dec 2014 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/posts/2014/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>build-my-jekyll-blog</title>
+      <link>https://wrfly.kfd.me/posts/build-my-jekyll-blog/</link>
+      <pubDate>Mon, 29 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/build-my-jekyll-blog/</guid>
+      <description>I suggest U visit this site first.
+-Jekyll&amp;rsquo;home page-
+ md文件末尾不能存在空格，否则浏览器解析会出错误
+ jekyll插入图片格式 “ ![name](link) ”
+ md的名字中存在的&amp;rdquo;-&amp;ldquo;会被解析成空格
+ 首先要在本地搭建好jekyll环境，
+   sudo apt-get install gem sudo gem install jekyll sudo gem install [相关组件]  可以搜一下 jekyll-now 或者 jekyll bootstrap，都有详细的教程。
+大体目录：  . ├── 404.html #404页面 ├── about.html #about页面 ├── archive.html #汇总页面 ├── assets #css，js文件存放 │ ├── css │ │ ├── pygment-trac.css │ │ └── stylesheet.css │ └── js │ ├── main.</description>
+    </item>
+    
+    <item>
+      <title>20141226</title>
+      <link>https://wrfly.kfd.me/posts/20141226/</link>
+      <pubDate>Fri, 26 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/20141226/</guid>
+      <description>第一个决定是，把我在blogger上面的文章全都同步到这儿来，然后，那个blogger就算abortion了吧。
+原因很简单：麻烦。
+第二个决定是做一件有意义的事情&amp;mdash;翻译一下VIM的入门教程。
+尽管我知道已经有很多VIM的教程，还有一些中文版的说明文档什么的。但是昨天晚上看到了一片很好的入门教程，可惜是英文的，而且是一个单页面，我寻思工作量也不大，索性就当成一个项目来做吧，我觉得那一篇比网上的若干教程强多了～顺便放出原链接以及一个很“好玩”的练习VIM的网站</description>
+    </item>
+    
+    <item>
+      <title>Guide to Vim</title>
+      <link>https://wrfly.kfd.me/posts/guide-to-vim/</link>
+      <pubDate>Thu, 25 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/guide-to-vim/</guid>
+      <description>Vim使用
+The Basics of Moving in Vim
+The first thing you&amp;rsquo;ll want to learn is how to move around a file. When you&amp;rsquo;re in command mode, you&amp;rsquo;ll want to remember the following keys and what they do:
+h moves the cursor one character to the left. j moves the cursor down one line. k moves the cursor up one line. l moves the cursor one character to the right. 0 moves the cursor to the beginning of the line.</description>
+    </item>
+    
+    <item>
+      <title>Ubuntu自定义Applications</title>
+      <link>https://wrfly.kfd.me/posts/ubuntu%E8%87%AA%E5%AE%9A%E4%B9%89applications/</link>
+      <pubDate>Tue, 23 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/ubuntu%E8%87%AA%E5%AE%9A%E4%B9%89applications/</guid>
+      <description>用户自己的软件都放在 ~/.local/share/applications/ 目录下面，所以，要想添加软件到menu，只要把写好的desktop文件放到里面就可以了。desktop文件的基本格式如下:
+[Desktop Entry] Name=Your Application Exec=The application exec path(.sh/exe/.py/etc.) Icon=The application&amp;#39;s icon path. Type=Application Categories=GTK;GNOME;Utility; 放入目录中后在menu中就可以找到你的软件了。
+要是想在整个系统中都可以运行你的程序（让所有的用户都可以运行），只需要把desktop文件放到/usr/share/applications/目录中即可。(or ~/.local/share/applications)
+See: https://developer.gnome.org/integration-guide/stable/desktop-files.html.en</description>
+    </item>
+    
+    <item>
+      <title>linux下利用C实现输入密码返回*的功能</title>
+      <link>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E5%88%A9%E7%94%A8c%E5%AE%9E%E7%8E%B0%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E8%BF%94%E5%9B%9E%E7%9A%84%E5%8A%9F%E8%83%BD/</link>
+      <pubDate>Mon, 22 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux%E4%B8%8B%E5%88%A9%E7%94%A8c%E5%AE%9E%E7%8E%B0%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E8%BF%94%E5%9B%9E%E7%9A%84%E5%8A%9F%E8%83%BD/</guid>
+      <description>C++也兼容这个功能
+#include &amp;lt;stdio.h&amp;gt;#include &amp;lt;string.h&amp;gt;#include &amp;lt;termios.h&amp;gt;#include &amp;lt;unistd.h&amp;gt;#include &amp;lt;assert.h&amp;gt;int getch(void); char psw[20];//初始化密码为空&amp;#34;&amp;#34;; int length=0; //初始化密码长度 void inputPassword()//用于输入并回显*为密码 { char temp_c; printf(&amp;#34;password:&amp;#34;); while(1) { temp_c=getch(); //输入一个字符  if(temp_c!=&amp;#39;\n&amp;#39;) //判断该字符是不为回车，如果是则退出while  { switch (temp_c) { case 127: if(length!=0) { printf(&amp;#34;\b\b&amp;#34;); length--; } else; break; default: printf(&amp;#34;*&amp;#34;); //可用用你喜欢的任意字符，如改为puts&amp;#34;&amp;#34;;则无回显  psw[length] = temp_c;//连成字符串；  length++; break; } } else break; } psw[length] = &amp;#39;\0&amp;#39;; } char* getpassword()//返回一个密码字符串。 { return psw; } int getch(void) { int c=0; struct termios org_opts, new_opts; int res=0; //----- store old settings -----------  res=tcgetattr(STDIN_FILENO, &amp;amp;org_opts); assert(res==0); //---- set new terminal parms --------  memcpy(&amp;amp;new_opts, &amp;amp;org_opts, sizeof(new_opts)); new_opts.</description>
+    </item>
+    
+    <item>
+      <title>关于Ubuntu的PATH</title>
+      <link>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Eubuntu%E7%9A%84path/</link>
+      <pubDate>Fri, 19 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Eubuntu%E7%9A%84path/</guid>
+      <description>修改ubuntu下私人用户的PATH:
+Ubuntu的环境变量，一个是存放在&amp;rdquo;environment&amp;rdquo;文件里，另外一个是在&amp;rdquo;.profile&amp;rdquo;文件中
+如果你想在PATH中添加自己的路径，那么在 ~/.profile文件最后的export PATH=后面加上:~/.bash_shell/: 就能运行你放在这个目录中的脚本程序了。
+当然，前提是你要在用户目录下面创建一个那样的文件夹。</description>
+    </item>
+    
+    <item>
+      <title>php反代理以及goagent php代理</title>
+      <link>https://wrfly.kfd.me/posts/php%E5%8F%8D%E4%BB%A3%E7%90%86%E4%BB%A5%E5%8F%8Agoagent-php%E4%BB%A3%E7%90%86/</link>
+      <pubDate>Thu, 18 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/php%E5%8F%8D%E4%BB%A3%E7%90%86%E4%BB%A5%E5%8F%8Agoagent-php%E4%BB%A3%E7%90%86/</guid>
+      <description>一下午没去上课，弄了下php反代理。因为看到有一些谷歌的镜像网站，很神奇，所以我也尝试着做了一个&amp;ldquo;google.love-u.me&amp;rdquo; &amp;amp; &amp;ldquo;youtube.love-u.me&amp;rdquo;谷歌可以用，但是youtube就不行了,只能看看图片，视频还看不了。
+其实这中间的原理我也不是很懂，大概的意思是让php去请求你所需的网页，然后再回来。相当于一层代理了吧。我用的是7ghost的代码，那个项目也已经好久不更新了，但是代码还是可以用的，给他点个赞！
+然后，由于学校的ipv6也不是很稳定，goagent上面的ipv4地址更是经常挂，所以我就尝试了一下php代理服务器，也很简单，把那些文件放到国外的php空间上就ok了，原理估计跟上面的差不多。
+我要是再说具体方法就感觉多此一举了，要是想做就搜一下去吧，谷歌上有很多，也欢迎使用“我的”谷歌～
+一下午+半个晚上，就做了这点儿事儿。</description>
+    </item>
+    
+    <item>
+      <title>一些有用的command</title>
+      <link>https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E6%9C%89%E7%94%A8%E7%9A%84command/</link>
+      <pubDate>Sat, 13 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E6%9C%89%E7%94%A8%E7%9A%84command/</guid>
+      <description>转载 + comments
+!$
+ !$ 代表上一个命令的最后一个字符串
+ 你可能会这样：
+$mkdir mydir $mv mydir yourdir $cd yourdir 可以改成：
+$mkdir mydir $mv !$ yourdir $cd !$  !! 代表上一条命令[与 !-1 等价] !-2 代表倒数第二条命令 !-3 代表倒数第三条命令 以此类推(其实完全可以按方向键搞定啊!!还有Ctrl+P!!)  cd –
+ 回到上一次的目录
+ 场景举例： 当前目录为/home/a，用cd ../b切换到/home/b。这时可以通过反复执行cd –命令在/home/a和/home/b之间来回方便的切换。 （注：cd ~ 是回到自己的Home目录，cd ~user，是进入某个用户的Home目录）详情打开 http://www.grymoire.com/Unix/Quote.html
+ALT+. or &amp;lt;ESC&amp;gt; + .
+ 热建alt+. 或 esc+. 可以把上次命令行的参数给重复出来。[注意,是参数哦~]
+ :w !sudo tee %
+ 在vi中保存一个只有root可以写的文件
+ &amp;gt; file.txt
+ 创建一个空文件，比touch短。(其实就是相当与把空格重定向给了一个文件&amp;hellip;)</description>
+    </item>
+    
+    <item>
+      <title>add disqus to github blog</title>
+      <link>https://wrfly.kfd.me/posts/add-disqus-to-github-blog/</link>
+      <pubDate>Thu, 11 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/add-disqus-to-github-blog/</guid>
+      <description>Disqus is an online comment script service. Blog or personal website often use it to let people comment their articals.
+Since I used others freamwork before, the disqus add-one is hers too.So I have to make a personal disqus for myself.
+It&amp;rsquo;s very easy.Just sigh in Disqus and click me.
+Simple easy,hum~</description>
+    </item>
+    
+    <item>
+      <title>my github</title>
+      <link>https://wrfly.kfd.me/posts/my-github/</link>
+      <pubDate>Sat, 06 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/my-github/</guid>
+      <description>just a hello word page
+&amp;amp;
+this blog framework is a copy of billie66
+thanks for her work~
+BUT NOW&amp;mdash;-I made a template for myself~ Just like this!</description>
+    </item>
+    
+    <item>
+      <title>关于ubuntu下MP3文件名乱码的问题</title>
+      <link>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Eubuntu%E4%B8%8Bmp3%E6%96%87%E4%BB%B6%E5%90%8D%E4%B9%B1%E7%A0%81%E7%9A%84%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Fri, 24 Oct 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Eubuntu%E4%B8%8Bmp3%E6%96%87%E4%BB%B6%E5%90%8D%E4%B9%B1%E7%A0%81%E7%9A%84%E9%97%AE%E9%A2%98/</guid>
+      <description>我是一个linux爱好者，用的是Ubuntu，然而在播放音乐的时候却发现从我的mp3里面复制的歌曲到了电脑里面都变成乱码了，下面的文字是我从《笨兔兔的故事》中复制出来的，完美的解决了我的问题，也会解决你的问题。
+话说一个 mp3 的歌名啊,作者啊,是记录在 mp3 标签里面的。这个标签的记录方式有很多中,主要是这么几个标准:ID3v1, ID3v2 2.3,ID3v2 2.4,APEv2。
+这个 ID3v1的标签支持 ISO-8859-1 编码,这是个国际通用的编码,但是很可惜,他是不支持中文的。到 ID3v22.3 这个版本开始,增加了对 utl-16 的支持,utf-16 也是一套国际通用的编码,这里面就包含中,日,韩等等各国的文字了。到 ID3v2.4,更增加了 utf-8 的支持。utf-8 和 utf-16 都是国际通用的一套编码,所不同的是 utf-8 以字节为编码单元,而 utf-16 用双字节为编码单元,这样就有大小端问题(也就是哪个字节先传输的问题,不知道的可以 google 一下)。
+因此总的来说,utf-8 相对更受欢迎一些。ID3v22.4 支持 utf8编码,可并没有说一定要用,只是可以用 utf-8,自然也可以用其他的编码。而 APEv2标准就不同了,它规定了其编码必须同一为 utf8 编码。ISO-8859-1,utf8,utf16,这些都是国际标准的编码。但 utf8,utf16 的出现都是后来的事情了,一开始,是没有国际标准的中文编码的,那时候只有国标——国家标准，也就是我们常见的 GB2312,GBK 和 GB18030。由于这些只是国家标准,所以开源软件的作者们(多数不是中国人)自然是忽略的这些标准(当然了,每个国家都有自己的标准,听谁的阿?)。所以,如果是用 ID3v1 或者 ID3v2 类型,并且使用国家标准编码的 mp3 文件,就会出现乱码。如果是 ID3v1 或 ID3v2 类型,但是使用 utf-8, 或者utf-16 编码的,就不会乱码。如果是使用 APEv2 标准的 mp3 文件,就更不会乱码了,因为 APEv2 必须用 utf8 嘛。
+然而事实是残酷的,事实就是:国内的大多数 mp3 都使用了国家标准编码。那我们在 Linux 下就看不到了么?当然不是,编码不对的话,转换一下就好了嘛。有个软件, 叫做 mid3iconv,他就认识各种编码,让他把 mp3 的编码改成 utf-8 的,就可以了。这个软件从哪里来?</description>
+    </item>
+    
+    <item>
+      <title>DO NOT UPDATE PYTHON ON UBUNTU</title>
+      <link>https://wrfly.kfd.me/posts/do-not-update-python-on-ubuntu/</link>
+      <pubDate>Tue, 07 Oct 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/do-not-update-python-on-ubuntu/</guid>
+      <description>or
+apt-get upgrade The fellows are what I did(including the reason and result. :(
+$./configure $make #make install But, it&amp;rsquo;s the beginning of my nightmare.
+My Goagent didn&amp;rsquo;t work.
+When I run python, it told me that I should install python-gevent and python-gtk2. But these two packages ware installed before! I can use it minutes ago! I didn&amp;rsquo;t study python before and I was puzzled. At first I think it&amp;rsquo;s the python3.</description>
+    </item>
+    
+    <item>
+      <title>hydra使用方法</title>
+      <link>https://wrfly.kfd.me/posts/hydra%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Tue, 07 Oct 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/hydra%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</guid>
+      <description>Hydra 破解登录密码 PS. 这篇文章不知道是从哪儿抄来的。。。2017-4-5
+格式：
+hydra [[[-l LOGIN|-L FILE] [-p PASS|-P FILE]] | [-C FILE]] [-e ns] [-o FILE] [-t TASKS] [-M FILE [-T TASKS]] [-w TIME] [-f] [-s PORT] [-S] [-vV] server service [OPT] # 可选的-R 继续从上一次进度接着破解 -S 采用SSL链接（大写的S） -s PORT 如果非默认端口，可通过这个参数指定 -l LOGIN 小写，用于指定破解的用户，对特定用户破解 -L FILE 大写，用于指定用户的用户名字典 -p PASS 小写，用于指定密码破解，少用，一般是采用密码字典 -P FILE 大写，用于指定密码字典 -e ns 额外的选项，n：空密码试探，s：使用指定账户和密码试探 -C FILE 使用冒号分割格式 例如 “登录名:密码&amp;#34;来代替-L/-P参数 -M FILE 指定目标列表文件一行一条 -o FILE 指定结果输出文件 -f 在使用-M参数以后 找到第一对登录名或者密码的时候中止破解 -t TASKS 同时运行的线程数，默认为16 -w TIME 设置最大超时的时间，单位秒，默认是30s -v / -V 显示详细过程 server 目标ip service 指定服务名，支持如下: &amp;lt;br /&amp;gt;telnet ftp pop3[-ntlm] imap[-ntlm] smb smbnt http[s]-{head|get} http-{get|post date: 2014-10-07 title: hydra使用方法 cisco-enable vnc ldap2 ldap3 mssql mysql oracle-listener post date: 2014-10-07 title: hydra使用方法 rexec rlogin pcnfs snmp rsh cvs svn icq sapr3 ssh2 smtp-auth[-ntlm] pcanywhere teamspeak sip vmauthd firebird ncp afp OPT 可选项 如何使用代理服务器进行破解（这一点主要处于攻击者的ip，处于自身安全考虑） HYDRA_PROXY_HTTP 变量参数可以用来定义代理服务器(只能使用http代理) 语法:</description>
+    </item>
+    
+    <item>
+      <title>关于ARP欺骗</title>
+      <link>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Earp%E6%AC%BA%E9%AA%97/</link>
+      <pubDate>Sat, 04 Oct 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Earp%E6%AC%BA%E9%AA%97/</guid>
+      <description> 本文科普一下ARP欺骗的一些知识，顺便教你怎样优雅的ARP欺骗。 What is ARP spoofing?
+1.什么是ARP欺骗 来自wikipedia上的解释是这样子的： &amp;gt; ARP欺骗（英语：ARP spoofing），又称ARP病毒（ARP poisoning）或ARP攻击，是针对以太网地址解析协议（ARP）的一种攻击技术。此种攻击可让攻击者取得局域网上的数据数据包甚至可篡改数据包，且可让网络上特定电脑或所有电脑无法正常连接。 ARP欺骗的运作原理是由攻击者发送假的ARP数据包到网络上，尤其是送到网关上。其目的是要让送至特定的IP地址的流量被错误送到攻击者所取代的 地方。因此攻击者可将这些流量另行转送到真正的闸道（被动式数据包嗅探，passive sniffing）或是篡改后再转送（中间人攻击，man-in-the-middle attack）。攻击者亦可将ARP数据包导到不存在的MAC地址以达到阻断服务攻击的效果，例如netcut软件。
+例如某一网络闸道的IP地址是192.168.0.254，其MAC地址为00-11-22-33-44-55，网络上的电脑内ARP表会有这一笔ARP记录。攻击者发动攻击时，会大量发出已将192.168.0.254的MAC地址篡改为00-55-44-33-22-11的ARP数据包。那么网络上的电脑若将此伪造的ARP写入自身的ARP表后，电脑若要通过网络闸道连到其他电脑时，数据包将被导到00-55-44-33-22-11这个MAC地址，因此攻击者可从此MAC地址截收到数据包，可篡改后再送回真正的闸道，或是什么也不做，让网络无法连接。
+我的理解是这样的：
+我和小明在同一个局域网下，我对小明进行了arp欺骗，小明的数据就会到我的电脑上来。 首先我的电脑要把数据转发的功能打开，让小明的数据到我这里来以后，我还能给他发出去，也就是让小明能够正常上网，要不然小明就会生气。 在局域网内，网关是通过MAC地址识别电脑的，所以我就给网关发送消息，谎称我的mac地址是小明的mac地址，然后网关就会把小明的数据包发送给我，与此同时，我还要跟小明的电脑说，我的mac地址是网关的mac地址，你的数据包要发送给我，这样小明的数据也就流到我这里来了，我作为中间人，当然是有权利去查看这些数据的（要不然我攻击个毛）。
+2.怎样进行ARP欺骗 $sudo arpspoof -t 目标ip 网关ip $sudo arpspoof -t 网关ip 目标ip $sudo echo 1 &amp;gt;&amp;gt;/proc/sys/net/ipv4/ip_forward 具体解释如下： 第一句是让目标ip的mac地址指向本机ip，也就是网`让网关知道，目标ip的mac地址换了，换成我的了。 第二句是让网关知道，目标ip的mac地址是本机的mac地址。 第三句是在本地实现转发功能。
+这样就实现了让目标电脑的流量流经本机了。 然后在用wireshark抓个包啥的，我就不多说了。
+3.附注 本人才疏学浅，记性还不好，记不住这么多命令。于是就从网上找了个软件，一键搞定了。
+ettercap 这个软件就是个好东西了，用鼠标就能搞定一切，包括但不限于探测内网下所有主机，端口转发，流量监控。 有需要的同学可以自行google。
+最后，我要是说不能做坏事的话，那我就天真了，只是希望大家能做坏事做的优雅一些，别违背道德。 </description>
+    </item>
+    
+    <item>
+      <title>去掉blogger博客中的Attribution</title>
+      <link>https://wrfly.kfd.me/posts/%E5%8E%BB%E6%8E%89blogger%E5%8D%9A%E5%AE%A2%E4%B8%AD%E7%9A%84attribution/</link>
+      <pubDate>Sat, 04 Oct 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%8E%BB%E6%8E%89blogger%E5%8D%9A%E5%AE%A2%E4%B8%AD%E7%9A%84attribution/</guid>
+      <description>所谓Attribution，就是blogger博客下面的“由Blogger强力驱动” 或者“ Simple template. Powered by Blogger. ”
+有些人会觉得烦，包括我，这篇帖子是教你怎样把页脚的Attribution去掉的。
+1.到 模板 → 修改html ### ![1/img/remove_attribution_in_blogger/remove_attribution_in_blogger.png)
+2.Ctrl + F 查找代码：### &amp;lt;b:widget id=&amp;#39;Attribution1&amp;#39; locked=&amp;#39;true&amp;#39; title: 去掉blogger博客中的Attribution ![2/img/remove_attribution_in_blogger/remove_attribution_in_blogger_2.png)
+3.找到之后，把 locked=&amp;lsquo;true&amp;rsquo; 改成 locked=&amp;lsquo;false&amp;rsquo;### ![3/img/remove_attribution_in_blogger/remove_attribution_in_blogger_3.png)
+4.保存### 5.删除### 点击 布局 → 页面元素 → 修改 Attribution → 点击删除 即可删掉“由Blogger强力驱动”
+![4/img/remove_attribution_in_blogger/remove_attribution_in_blogger_4.png)</description>
+    </item>
+    
+  </channel>
+</rss>

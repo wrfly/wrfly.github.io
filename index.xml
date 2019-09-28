@@ -52,7 +52,7 @@ wrfly - 2017/12/31 - Beijing</description>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://wrfly.kfd.me/repos/</guid>
-      <description>Libs  ecp Envoronment config parser bindata Golang embedded data reglib Docker registry library check Check multiple errors in once simorse Send mos code (USR1 and USR2) to program gua Golang convert structs into cli arguments  Projects  et Email Tracker yasuser URL shortener web-dns Query DNS via HTTP gus-proxy An union proxy container-web-tty Connect to your containers via a web browser  Tiny things  crs Container reverse search k8s-install.</description>
+      <description>Libs  ecp Envoronment config parser bindata Golang embedded data reglib Docker registry library check Check multiple errors in once simorse Send mos code (USR1 and USR2) to program gua Golang convert structs into cli arguments  Projects  et Email Tracker piu Pull images up to date yasuser URL shortener web-dns Query DNS via HTTP gus-proxy An union proxy container-web-tty Connect to your containers via a web browser  Tiny things  crs Container reverse search k8s-install.</description>
     </item>
     
     <item>
@@ -80,6 +80,15 @@ Mendel Lib
 其实用trackingID的方式是最好的，这样不仅可以用来标记数据，也可以用这个ID对请求进行追踪，比如在什么时候产生了访问，返回了多少广告，关键词是什么，在什么时候点击的，点击了第几个位置，这个位置的广告的平均CTR是多少，rank分是多少，similarity是多少，这些数据对于我们分析用户行为，提升算法精准度，都是有很大帮助的，但是无奈，只能用signature去自解AB Testing的数据。无奈。
 配置结构 在这套系统中，有几个关键的概念：
  project: 拥有独立流量（独立请求和返回结果）的业务线称为一个项目 base_config: 项目的基础配置，一个项目配置中，可以包含多个服务  service: 服务，一个服务配置中，包含多个模块配置 module:：模块，具体表现为程序的某个模块，可以包含多个层级配置 layer: 在程序中的特定层，具体为某一个模块中的某一个步骤 config value: 对层级的配置，包括这个层中，对国家的配置值，不同值的权重等  traffic slots: 每一个项目拥有自己独立的流量分配，每一个国家也有独立的流量分配（保证了实验的可以在国家的维度进行） experiment: 每一个实验本质上也是一套配置，不过是建立在基础配置之上的特定修改，而且实验配置不能超出基础配置，一定是修改。实验可以根据不同的维度划分，比如根据UID划分，根据SessionID划分，但是它们一定是共享整个项目的流量的，相同国家内的流量不能够重叠交叉。实验中对于layer的配置也可以有多种，且对于每一种配置值，其权重都是相同的（有别于base config中的config value）。对于实验没有修改的layer，当base config中layer有变更时，experiment也要同步进行修改，更新，下发。  对于base config和expeirment config，所有数据都有唯一的ID和版本号，保证了不会有数据丢失，方便回滚和审计。</description>
+    </item>
+    
+    <item>
+      <title>Mendel - A/B Testing Platform (Part 1)</title>
+      <link>https://wrfly.kfd.me/posts/mendel-ab-testing-platform-p1/</link>
+      <pubDate>Sun, 07 Jul 2019 13:53:31 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/mendel-ab-testing-platform-p1/</guid>
+      <description> 遇到的问题 </description>
     </item>
     
     <item>
@@ -2524,7 +2533,7 @@ hydra [[[-l LOGIN|-L FILE] [-p PASS|-P FILE]] | [-C FILE]] [-e ns] [-o FILE] [-t
       <pubDate>Sat, 04 Oct 2014 00:00:00 +0000</pubDate>
       
       <guid>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Earp%E6%AC%BA%E9%AA%97/</guid>
-      <description>本文科普一下ARP欺骗的一些知识，顺便教你怎样优雅的ARP欺骗。 What is ARP spoofing?
+      <description> 本文科普一下ARP欺骗的一些知识，顺便教你怎样优雅的ARP欺骗。 What is ARP spoofing?
 1.什么是ARP欺骗 来自wikipedia上的解释是这样子的： &amp;gt; ARP欺骗（英语：ARP spoofing），又称ARP病毒（ARP poisoning）或ARP攻击，是针对以太网地址解析协议（ARP）的一种攻击技术。此种攻击可让攻击者取得局域网上的数据数据包甚至可篡改数据包，且可让网络上特定电脑或所有电脑无法正常连接。 ARP欺骗的运作原理是由攻击者发送假的ARP数据包到网络上，尤其是送到网关上。其目的是要让送至特定的IP地址的流量被错误送到攻击者所取代的 地方。因此攻击者可将这些流量另行转送到真正的闸道（被动式数据包嗅探，passive sniffing）或是篡改后再转送（中间人攻击，man-in-the-middle attack）。攻击者亦可将ARP数据包导到不存在的MAC地址以达到阻断服务攻击的效果，例如netcut软件。
 例如某一网络闸道的IP地址是192.168.0.254，其MAC地址为00-11-22-33-44-55，网络上的电脑内ARP表会有这一笔ARP记录。攻击者发动攻击时，会大量发出已将192.168.0.254的MAC地址篡改为00-55-44-33-22-11的ARP数据包。那么网络上的电脑若将此伪造的ARP写入自身的ARP表后，电脑若要通过网络闸道连到其他电脑时，数据包将被导到00-55-44-33-22-11这个MAC地址，因此攻击者可从此MAC地址截收到数据包，可篡改后再送回真正的闸道，或是什么也不做，让网络无法连接。
 我的理解是这样的：
@@ -2533,7 +2542,7 @@ hydra [[[-l LOGIN|-L FILE] [-p PASS|-P FILE]] | [-C FILE]] [-e ns] [-o FILE] [-t
 这样就实现了让目标电脑的流量流经本机了。 然后在用wireshark抓个包啥的，我就不多说了。
 3.附注 本人才疏学浅，记性还不好，记不住这么多命令。于是就从网上找了个软件，一键搞定了。
 ettercap 这个软件就是个好东西了，用鼠标就能搞定一切，包括但不限于探测内网下所有主机，端口转发，流量监控。 有需要的同学可以自行google。
-最后，我要是说不能做坏事的话，那我就天真了，只是希望大家能做坏事做的优雅一些，别违背道德。</description>
+最后，我要是说不能做坏事的话，那我就天真了，只是希望大家能做坏事做的优雅一些，别违背道德。 </description>
     </item>
     
     <item>

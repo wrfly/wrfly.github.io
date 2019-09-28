@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/posts/2017/</link>
+    <description>Recent content on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 31 Dec 2017 22:13:35 +0800</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/posts/2017/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Last-Day-of-2017</title>
+      <link>https://wrfly.kfd.me/posts/last-day-of-2017/</link>
+      <pubDate>Sun, 31 Dec 2017 22:13:35 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/last-day-of-2017/</guid>
+      <description>今天是2017年的最后一天，晚上吃了一包泡面，一根黄瓜，一个苹果，一会儿还要吃个橘子。（说好的减肥呢）
+昨天晚上+今天的产出是一个新博客，当当当当，就是现在看到的这个了。 从Jekyll换到了Hugo，变了的是目录结构和内容，不变的还是markdown。
+过程中有几个坑，在这里记录一下。
+Tags的问题 Jekyll的tags可以用空格区分，但是在这里换成了hugo，就得用严格的yaml格式了，像以前这种的：
+--- tags: daily blog --- 都得换成
+--- tags: - daily - blog --- Title和创建时间的问题 以前写的东西，都是以文件名作为标题和创建时间，但在这里也得先在header中声明，老办法行不通了，必须要这样：
+--- date: &amp;#34;2017-12-31T22:13:35+08:00&amp;#34; title: &amp;#34;Last-Day-of-2017&amp;#34; categories: - daily tags: - daily - blog --- 解决问题 原先的文件中是没有声明这些东西的，所以就的批量修改，一般没毛病的话，sed就能解决了：
+# 增加date和title for f in *;do export T=&amp;#34;`echo &amp;#34;$f&amp;#34; | cut -d &amp;#34;-&amp;#34; -f4 | cut -d &amp;#34;.&amp;#34; -f1`&amp;#34; export D=$(date --date=`echo &amp;#34;$f&amp;#34; | cut -d &amp;#34;-&amp;#34; -f -3` +&amp;#34;%Y-%m-%d&amp;#34;) sed -i &amp;#34;s/post/post\ndate: $D\ntitle: $T/1&amp;#34; $f done #把原先的layout删掉 for f in *;do sed -i &amp;#34;1,10{/layout/d}&amp;#34; $f done # 把tags用[]括起来 for f in *;do cat &amp;#34;$f&amp;#34; | head -n10| grep &amp;#34;tags: &amp;#34; | grep -v &amp;#34;\[&amp;#34; &amp;amp;&amp;amp; echo $f &amp;amp;&amp;amp; sed -i &amp;#34;s/\(tags: \)\(.</description>
+    </item>
+    
+    <item>
+      <title>alpine-DNS-problem</title>
+      <link>https://wrfly.kfd.me/posts/alpine-dns-problem/</link>
+      <pubDate>Wed, 06 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/alpine-dns-problem/</guid>
+      <description>Many softwares use alpine as their run-time base image.
+Recently I set up a docker registry with portus as its front. But I came up with a problem that, registry won&amp;rsquo;t post date: 2017-12-06 title: alpine-DNS-problem
+Firstly I thought it was a bug of docker resigtry, but as I&amp;rsquo;m digging into its code, I found that it&amp;rsquo;s actruely a bug of alpine linux. Alpine linux doesn&amp;rsquo;t have an /etc/nsswitch.conf config file.</description>
+    </item>
+    
+    <item>
+      <title>系统设计</title>
+      <link>https://wrfly.kfd.me/posts/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/</link>
+      <pubDate>Mon, 27 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/</guid>
+      <description>引子 事情还要从大三说起，当时不知道哪里来的想法，可能是知乎刷多了，又联合了一个“六度分隔理论”，就想爬取知乎上所有人的关注和被关注数据，看是否能够验证一下这个理论。当时也就脑子一热，只是想完成这件事情，但没有考虑过具体怎样完成。
+然后等到毕业设计的时候，这个想法又在脑子里闪过，不过想着由于工程量太大，就换了另外一个设计，是结合实习期间看到，学到的一些东西，做了一个能够运行的系统，现在也考虑要不要放出来，或者等以后有时间再打磨一下API再放出来。这都是后话了。
+真正的开展，还要到三个月前，我找工作的那两周。那个周末被CMGS帮忙内推了几家公司，等面试的时间也怪无聊的，就把这个想法捡了起来，毕竟一个月的工作，还是跟着CMGS学了一些工程上的东西的（咱就像是海绵，到哪里都能吸两口）。
+那这个系统是什么呢？
+简单的说，是一个爬虫。复杂的说，是一个可以自我复制的爬虫。
+我其实并没有深入了解过一般爬虫的实现方法，但大体推测，也无外乎是抓取页面，分析链接，然后顺藤摸瓜，如此反复。这样就会有一个问题，我要放出多少只爬虫，才能够满足我的需求？像搜索引擎这种级别的，他们资源多，放出去的虫子也多，基本可以无限制的爬来爬去。但如果是个人性质的，针对某一个站点，有筛选过滤策略条件的，而且还要充分利用资源，那就得好好琢磨一下了。
+一个大胆的想法。
+为什么不能让爬虫学习一下鸣人，可以自我复制呢？
+我放出去一个蜘蛛，抓取 kfd.me 这个站的所有页面，母蜘蛛发现了 &amp;ldquo;kfd.me/a/&amp;ldquo;，然后分裂一个小蜘蛛去爬 &amp;ldquo;kfd.me/a/*&amp;ldquo;，自己再去寻找，子蜘蛛此时如果发现了&amp;rdquo;*kfd.me/a/a1/*&amp;rdquo; 那么这个蜘蛛再次分裂，产生一个新的蜘蛛去抓 &amp;ldquo;kfd.me/a/a1/*&amp;ldquo;，自己去寻找 &amp;ldquo;kfd.me/a/*&amp;rdquo; 其他的URI。
+这个分裂过程，可以是fork，等系统资源差不多了，再去远程调用创建一个新的蜘蛛，远程调用的方式可以是对进程的调用，也可以直接创建一个容器，利用kubernetes，docker swarm或者CMGS做的eru-lambda，总之能够在集群资源中创建新的容器的调度系统就可以。
+这样一来，只要我们有充足的资源，那这个蜘蛛分裂的过程就可以一直下去，也不必考虑循环问题，因为每个蜘蛛都有自己的作用域，或者说抓取的范围，不是他的地盘，他不会操心，而等到蜘蛛抓取完自己地盘里的信息了，就自杀，释放集群资源。
+子子孙孙无穷尽也。
+系统设计 前面罗嗦了那么多（真不愧是话唠），终于到正规了。
+那如何设计一个这样的系统呢？
+我认为，世界上大部分的事情，都是相通的。自然界中的事物，现象，人类可以学习并应用到自己的生活中。而人类社会中，经过历史验证过的流程，设计，理念也同样可以应用在系统设计方面。
+比如说流水线作业，比如说我们的等级制度，比如说我们的通信流程。
+流水线作业可以对应微服务架构；社会等级制度可以对应系统中的等级划分（主从结构，或者其他的结构）；通信流程可以对应系统中的网络划分（子网掩码对应不同省份的区号，集团内部网络可以理解为自制域）。等等等等。
+所以，在设计系统的时候，我感觉，应该跟建一座工厂，或者建立一支军队差不多。都是利用一些资源，去完成我们的目的，或者提供某种服务。
+工厂里有机器，有工人，有宿舍，有老板，还有洗手间，工作车间，秘书，经理，各种各种；军队又分军种，分武器，分等级，分战区，分连队，分部门，组织精密，等级森严。
+那么一个系统呢，系统中也要考虑网络架构，存储，通信，日志，跨区域服务，分不同的组件，资源调度，资源监控，还要考虑机器的成本，维护的成本（相当于后勤部门），还有项目管理，配置管理，问题追踪，告警处理等等等等。乍一听很庞大，是的没错，因为我说了一大坨，但如果我们条理化呢，每种角色都分门别类呢。一口吃不成个胖子，一天也设计不出一套系统。
+其实冯诺依曼的体系已经经过了历史的验证，至少目前还没有更好的架构出现。那么我们就可以参照着来啊，比如说一台计算机，要有CPU，内存，网卡，硬盘，显卡，主板，声卡，电源，那么系统中就要有，调度器，运行时环境，网络，存储，监控，日志，整体构架，告警系统，宿主机系统。
+调度器可以理解为对系统的整体掌控，对业务应用的调度和计算；运行时环境可以理解为Python，JVM，Docker；网络可以分为区域网络，服务网络；存储又有分布式存储，文件存储，数据库，消息队列，文件共享；监控就是对系统中各个组件的监控（包括负载，性能，各种指标）；日志则是收集各个组件产生的日志文件；整体架构，则是对于系统而言，是不是方便扩展的，是不是方便调试的，有没有容灾，可不可以拆分，解耦做得好不好，备份恢复方案做的怎么样；告警系统则是在某个环节中出现错误时，能不能即使有效准确的通知到上级（也就是我们），能不能让人迅速定位问题，解决问题；宿主机系统则是这个“系统”运行在哪里，是Windows还是Linux，是Ubuntu还是CentOS，是Andriod还是iOS。
+理清楚了，就可以开始干活了。
+拿我的spider来说，单就角色划分而言，可以有四种角色：
+ discover：发现新大陆，只负责找人 worker：抓取分析找到的人的信息，苦力活 monitor：监控worker的工作，万一有占着茅坑不拉屎的，就给干掉；也会监控discover和watcher，万一有哪个gg了，重启一下他们 watcher：检测某一个用户的动态，更新数据库中内容 boss：monitor向其汇报，它再汇报给我  当然这中间还要考虑其他的很多问题，比如说网络怎么弄（现在看来，可以用gus-proxy作为代理），角色之间信息传递通过什么（消息队列，etcd，DB选型），监控策略是什么，如何将数据展示出来等等。discover和worker如何分身，watcher如何分身，他们之间怎么互相通信（可以参考蚂蚁，两两通信，然后慢慢扩散，但是又有时效性的问题）。
+所以真的是一件很庞大的事情。
+组件设计 个人感觉，设计这个东西就是一个大事化小，小事化了的过程，一个系统提供复杂的服务，满足复杂的需求，完成复杂的任务，而系统中的组件就是将复杂的任务拆分，并一点点完成的小蚂蚁。虽然说是蚂蚁，但是也有基础的功能，最简单的，输入和输出。
+其实任何东西都可以理解为输入和输出，典型的就是函数，要有参数和返回值，当然也可以没有返回值，没有那就是空，返回值为空，当然，参数也可以为空。许多函数累加，就会变成一个程序，这个时候，输入和输出就变得复杂了起来，但拆开来看，还是有输入和输出的，只是很细了而已。
+既然一个组建是有输入和输出组成的（大体上），那么这样看起来就简单多了。比如说上面提到的 *discover*，就是一个发现新用户的组建或者成为程序（但程序的话，也是一些程序，毕竟discover不会只有一个，而是以集群的形式存在，对外展现是输入和输出，对内而言是一个组件），他的输入是知乎的网址，输出是新发现的用户。
+怎样让这个程序变成一个集群，从而成为系统的一个组件呢。比如，某个discover发现了一个用户，他怎么知道是新用户，而不是已经被别人发现过的呢。当然可以将每个discover发现的用户保存到一个共享的数据库中，然后每次查询的时候，如果发现已经被人发现过了，那就不查了。但能不能有这样一种思路，就是，每个discover的发现，对自身而言都是新大陆，重复发现并不会对现有的数据产成影响，派出去的discover越多，重复发现的概率虽然也会增大，但是我们发现的新用户也会越多，而且，还可以定义discover回家的规则，即如何让一个discover停下（关于停止，可以采用命令发布的模式，每个discover接受中央发出的指令，也可以采用discover主动领取圣旨的模式，衡量自身是否满足停止的条件，然后自行判断：这两种模式没有本质的区别，都是中央集权）。
+（忽然想到一句话，从知乎某个大V那里看来的，说，“如果你在行动之前想清楚要怎样做，已经超过80%的程序员了”，很有道理。）
+把组建抽象为输入和输出，但每个组件不可能只有一组输入输出，他可能会有别的功能，这个时候就需要把每一对输入输出抽出来，在脑子里形成一个清单，然后一点一点实现。当然，最好能够一次性把需求列完成，这样可以避免以后的大改动，抽象程度也会更高一点。但，这好像是不可能的，我们的需求不可能一成不变，组件的功能也不可能不会增加，这就需要我们组件内部的耦合性要低。当我们把系统拆开的时候，其实就是在解耦了，现在我们要把组件拆开，也是对组件的解藕。
+系统的解藕对于系统功能的扩展和规模的扩展都有好处；组件内部的解藕，对于程序员而言，则是很关键和必要的事情，能省下以后不少的麻烦，开发人员节省出来的时间，对于公司而言就是节省金钱。
+解藕意味着抽象，拆分，但也不能把程序拆的七零八散，把系统弄得超级复杂。Simple is good。
+后语 这篇文章跨了两天的时间，思路有点断。
+原本这里想说一下对于程序设计的看法，然而鄙人有点懒，等想起来再说好了。
+就酱。</description>
+    </item>
+    
+    <item>
+      <title>拆拆拆</title>
+      <link>https://wrfly.kfd.me/posts/%E6%8B%86%E6%8B%86%E6%8B%86/</link>
+      <pubDate>Thu, 19 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E6%8B%86%E6%8B%86%E6%8B%86/</guid>
+      <description> 程序的拆拆拆 敏捷开发 &amp;amp; 快速迭代 去年实习的时候就听过这两个词，很时髦，很新颖。大体的理解就是，因为创业公司技术壁垒很低，大家都争分夺秒，所以新功能的开发必须要快，一个新的特性开发出来之后，进入一个快速迭代的流程，其实也就是开发-测试-发布的一个流程，通过自动化的手段，将人为干预降到最低，把从代码到交付这个流程贯通起来，快速上线。
+技术壁垒这个东西，无非就是时间壁垒。曾经面试的时候跟一个创业公司的CEO聊过，他也给我灌输了这一点，当时我问他产品有没有壁垒，他就很坦然的说，半年。以一个时间跨度去衡量技术跨度，我觉得OK。同样一种服务，厉害一点的团队，可能半年开发完，那一般一点的团队，一年，一年半也能写个差不多。日光底下又没有新鲜事，无非就是写的好坏的问题嘛，但这些都可以通过优化，重构去解决。好的代码是重构出来的，我很同意这句话。
+而敏捷开发，我理解为，拆拆拆。从定义上讲：
+ 敏捷开发是一种以人为核心、迭代、循序渐进的开发方法。在敏捷开发中，软件项目的构建被切分成多个子项目，各个子项目的成果都经过测试，具备集成和可运行的特征。换言之，就是把一个大项目分为多个相互联系，但也可独立运行的小项目，并分别完成，在此过程中软件一直处于可使用状态。
+ 项目的概念，可以是一个单纯的project，工程上的的projet，交付的产物是一个程序；但从项目经理的角度出发，一个项目则是可以给用户带来价值的一组服务。所以这里有点模糊，但我个人理解，项目就是repo，服务就是service，两者可以联系在一起，也可以不联系在一起，一个repo可以就是一个service，但也有可能是一个service的一部分。其实结合docker的stack和container的关系，就容易理解：stack中定义一组container，一个stack对外提供服务，但一个container组成的service也可以看作为一个stack。
+敏捷开发即将原先的大项目拆分成一个一个的小项目，不同的小项目组合起来就是这个“大项目”，即“服务”。但也有可能，这个“大项目”也只是某个服务的一部分。小项目之间互相独立，只要定义好接口，不关心内部实现。这样就能以程序解耦为基础，在人员上解耦，大家互相独立的开发，写好需求，写清楚需求，这个IO流就跑起来了。
+其实程序嘛，无非就是个IO，给个输入，程序给出输出。只不过大程序完成了很多事，小程序只做一件事而已。
+也谈微服务 近些年，“微服务”这个词也挺时髦的。很幸运，一开始去的公司比较时尚，由于是做Docker服务的，所以接触Docker也还不晚。而Docker和微服务，我个人认为是紧密联系在一起的。
+什么是微服务。我们知道服务是对外提供功能的一组程序，一个服务，或者说，公司的一组业务，是由很多不同的组件构成的，那微服务就是在组件这一个层次上（组件可以理解为特定的程序），把组建拆拆拆，把程序拆开，每个组件对外还是相同的功能，但是对内而言，已经七零八散了。在微服务构架里，“七零八散”并不是个贬义词，看似很小的程序在逻辑上都是有组织有纪律的。忽然又想起微信小程序了，看来总体的发展趋势还是微小化，一开始是服务器，虚拟机，后来有了虚拟空间，再后来GAE，SAE，Docker，还有亚马逊的lambda服务，大家都是朝着微小化的方向发展，我们把机器拆开，服务拆开，接口拆开，程序拆开，进程拆开，函数拆开，最后都变成一个个的IO。
+就像是从一家家的小作坊，变成了工厂的流水线，每个人负责单一的功能，每个人都是对外提供一种服务，但由于这个服务比较小，所以就叫微服务。小作坊和工厂都是服务，不同的是，工厂的资源高度集中，工人稳定可靠（不会因为不上班而DOS），流水线分工明确，产品可追溯，流程可控制。一群工人组成的team，就像一群微服务组成的集群。
+说到集群，就不得不说管理和调度，这也是一门博大精深的学问，可以看下google的borg系统。还有集群的监控，日志，存储，网络等等等等。又想起那天去头条面试的时候，那个老大问我对成千上万的容器怎么监控，metric有哪些，当时我竟然脑子短路，只说了alive这一个，哪怕uptime呢，最后他告诉我，还要有对请求的统计（可能是他就说了这一个，也有可能我只记住了这一个）。不过现在手头正做一个API的服务，audit啊，auth啊，cache啊，metrics啊，很涨经验。
+拆拆拆 这个也是今天想到的，从程序分层，想到组件（component）分层，然后又回到了微服务。程序的分层，就是在逻辑和代码上做内部的解耦，不同的DAO，不同的Handler，不同的Type，都要一一区分，能抽象的都抽象，能解耦的都解耦，这样的好处是，在逻辑上很清晰，在测试方面也容易进行单元测试。
+又想到一个“传递和全局变量”的问题。其实一直在纠结，因为程序经常会与数据库打交道，也就是DAO的处理，初始化handler的时候，到底是将new出来的DAO传递进去，还是在DAO中定义一个全局变量，当有handler需要与数据库交互的时候，直接调用这个全局变量呢。我代码看的也少，不了解别人是怎么做的，但经讨论认为，如果说DAO的session或者client能够保证并发安全，那么这个全局变量是没问题的。如果不能保证并发安全，那么就要么加锁（或者队列），要么就再new一个新的出来给handler用。这就要具体情况具体分析了，像influxdb的UDP的client，就可以每次调用的时候new一个出来。但既然其HTTP的client能够保证并发安全，那么全局变量的做法也是OK的。
+拆程序不仅在逻辑上的分层很清晰，在流程上的层次也很明确。以后有新的功能开发，直接找到对应的module或者handler或者别的什么名字，在其基础上append代码就可以，如果有其他地方的改动，也只是小修小补，只要做好feature的unit test，其他的改动也不会有问题。
+如果一个程序让人读起来很乱，那么就需要考虑重构，内部解耦，划分好调用层次，流程顺序等等。
+实在不行，就重写吧。
+扩展阅读  https://www.biaodianfu.com/tencent-agile.html http://agilemanifesto.org/iso/zhchs/principles.html 解析微服务架构 http://wiki.mbalib.com/wiki/%E6%95%8F%E6%8D%B7%E5%BC%80%E5%8F%91  </description>
+    </item>
+    
+    <item>
+      <title>20170908</title>
+      <link>https://wrfly.kfd.me/posts/20170908/</link>
+      <pubDate>Fri, 08 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/20170908/</guid>
+      <description>发现近来话越来越多了，不知道是好事还是坏事。
+但频繁的更新blog，却没有什么干货，难免有些罪恶感。
+whatever，写给自己。
+八月中旬“辞职”以后，空窗了两周，然后现在也快入职两周了。不得不感叹光阴似箭。
+喜欢新的工作。也喜欢我的X1C。不烫手。
+前两周还是第一次经历正式意义上的找工作，因为之前的实习经历也好，面试经历也好，都太顺风顺水了，毫无挫折，有如探曩取物。导致我对自己的评价过高，没能赶上预期。不过这也不是坏事，最终还是吃到了喜欢的巧克力，而且中间还去了故宫玩，去了颐和园，回了趟家，办了护照哈哈哈，事儿好多啊。然后还趁着没工作，着手自己的“分布式爬虫”，直到现在才完成了一个proxy，但鄙人感觉这东西还是很有用的，作为一个spider的组件。
+好像对自己还是没有一个清晰的定位，但从做过的事情来看，也就属于platform这一组了，运维开发啊，搞点小事情啊，监控告警啊，集群分布式啊，balabala。好像，离黑客这条路是越来越远了，不过现在国家打的这么严，买个ss都被判刑，咱还是老实点吧。
+总结一下前一个月的工作，跟着老大完成了core，主要工作量是补全了测试 :D 然后在做工程方面有很大的提升，全局观也开始形成了，导致在新的公司总想找事情做…… 写代码就跟写文章似的，也需要推敲琢磨，三天一重构这句话不是白说的。工作的过程，也就是提升自己的过程。有时候迫于某些原因在当时那样实现，但几天之后发现又有新的思路，那么就得refactor了，这样经过时间的沉淀，最终得到的可以说是一件工艺品，艺术品，而不仅仅是工具了。
+ 优秀的工程师同样是优秀的艺术家，有些艺术家的作品是挂在墙上的，有些艺术家的作品则跑在进程里。 &amp;mdash; 我。
+ 经历了两个多月的不明不白之后，终于藕断丝也断了。感情这种事情，跟工作一样，都是强求不来。工作的话还可以用薪水来补平内心的不满，但异地恋这种事情，唉。：（ 虽然说不要隔着屏幕对另一个人产生好感，但，希望我能找到更可爱更适合我的妹子吧 ：）
+然后还闲的没事儿临摹了一个shadowsocks-qt5的 logo： http://wrfly.kfd.me/file/ss-qt5.svg 很清楚。
+越来越觉得没地方去了，游戏也就那样，kill time而已，想去吃好吃的，但一个人总有些奇怪，都没个倾听的对象。国庆放假也买不到回家的票，回家能干什么呢，今中午薄哥说他认识个黄牛大哥，我想等计划好回家之后可以问问。好久没有在家过中秋节了，去年的中秋节晚上跟她还吵架了，历历在目啊唉。哦对，我还想着攒钱，每个月3k如何。也在考虑给爸妈买个养老保险之类的，或者等再工作一段时间之后？原先觉着zhihu啊，v2ex啊，都是很好的论坛，现在的话，只剩1024了。zhihu广告越来越多，v2ex上喷子和三观不合的人也越来越多了。我要找下一个可以刷时间的地方了，kindle？好主意。也想去星巴克坐一下午，那边网应该不差吧。
+短期内的目标是完成工作任务，除了工作的目标，继续完成我的“分裂式”爬虫？然后搞一个关系网出来。
+数据很有趣，系统很有趣，创造很有趣。我未来的女朋友也很有趣。</description>
+    </item>
+    
+    <item>
+      <title>面试有感</title>
+      <link>https://wrfly.kfd.me/posts/%E9%9D%A2%E8%AF%95%E6%9C%89%E6%84%9F/</link>
+      <pubDate>Wed, 16 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E9%9D%A2%E8%AF%95%E6%9C%89%E6%84%9F/</guid>
+      <description>这两天面试了两家公司。
+周一是头条。赶了一小时的路，等了二十分钟面试官。一面的时候，说了一下我的简历，我做的项目，考了一个小程序，虽然也不能work，但勉强通过吧。二面问了全排序，然后g掉了。中途还在他们食堂混了顿饭，其实也没吃饱。写代码的中途去了两次厕所，有点尴尬。
+的确是一家技术氛围很强的公司，人员也很专业，前台，面试会议室，食堂，都很不错。唯一可惜的就是我水平不行，连个递归都手写不出来。
+周二是知乎，安全岗。同样是一个小时路程，但是在那边等了半小时HR，上楼之后感觉又随便拉了个人来面试，然后等他五分钟联网。然后自我介绍那一套。可能那个小哥面试经验不足，也可能是人家太忙吧。感觉自己回答的都不好。应该也是g掉了。
+唉唉唉，给老大丢脸了。
+情况就是这么个情况。今天没有收到摩拜的面试通知，明天去故宫登一波基。
+其实我很好奇，为什么面试官都不会事先看一下简历，问了一下知乎的小哥，也没有很清晰的回答我，大概的意思是，他们很忙，时间成本。
+但招人本来就是要成本的呀。
+白白浪费掉简历上的链接。哦对，知乎连纸质版的简历都没准备，看来是真的忙。
+难以想象怎样才能在很短的时间展示自己，也不明白怎样在这么短的时间内了解一个人。面试也是门技术活。
+人嘛，都是有长有短，咳咳，我是说，长处短处。
+不善言谈的人，或者不善表达自己的人，比如我？就感觉很吃亏了，相比那些能够很好的表达自己的人，其实这也是能力的欠缺。唉唉唉。
+我原本想着，我这github更新的频率，blog上的有的没的，简历上的项目和实习/工作经历，应该能打动一部分人吧。还是高估自己了。
+也难怪，毕竟没有这么正式的面试过。太过自信，以致自负。
+真的有点水了我。
+但话又说回来，不能妄自尊大，也不能妄自菲薄呀。
+找工作哪有那么容易嘛。
+实习的面试可能是allen想给我个机会；工作的面试可能是跟老大聊得来，他看我可以栽培。
+但真正这样正式的面试，我还是第一次。之前也没人考过我算法和数据结构呀。怪自己不行。如果能够好好的review一下自己写的，说不定哈，就可以通过头条了。但我也好像没有很惋惜的样子，感觉还是有点不合适。我是很喜欢解决问题，但我好像没有能力用那些算法什么的解决。
+至于安全方面，虽然说是科班出身，但学到的东西寥寥无几，人家考你sqlmap的源码，我是真心没看过。也就凭兴趣搞站，遇到问题了，搜一下。如果是izy或者lcy的话，他们应该很容易就过了吧。
+找到一个合适的工作不容易。感觉每个人都是带有一定的自身属性的，放在这里就OK，放在那里就不行。
+也是需要锻炼学习一下怎样表达自己，面试官，绝大多数面试官，都可能是临时拉来的，你要让他相信你的能力，或者说了解你的能力，并非易事啊。
+要说自己会干什么，还得看你让我干什么。不会的东西，一周，也就学的差不多了。
+面试是一场硬仗，面试的东西很可能在工作中都用不到，因为大家都是面试很基础的，而这些东西，都有现成的代码可以抄，有点悖论的样子。
+所以说啊，如果你也跟我一样要找工作，还是看一下，搜一下前人的面试经历，看一下这家公司的风格，投简历的时候也要慎重，到底符不符合人家的要求。
+再有吐槽的一点就是，你写了github啊，blog啊，他们也就瞄一眼。瞄～
+全凭一张嘴。还有手写代码的能力。
+其实我也很赞同这个手写代码的能力，上面能看出很多问题，但是的话，就算用IDE，也不会一下就跑通，所以这个很考验人。给头条点赞。
+总结一下。
+简历上的github最好加点数字，比如多少个repo，多少次commit，多少行代码。blog里面写了多少文章，从什么时候开始的。感觉这些具体的数字更好衡量一点，不然的话，面试官很可能就一语带过：“哦，还有博客是吧。”不要指望面试官会去看上面写了什么东西。因为他们可能连简历都没打印（逃&amp;hellip;
+面试之前问一下同学或者师兄，看面试官都喜欢问什么，有针对性的弥补一下，因为这些套路都是不变的。有点应试教育的感觉了。
+但不管怎么说，自身实力是最重要的。
+当然也不能因为几家公司的面试失败就断然否定自己，尺有所短，寸有所长？
+心态放平，不着急。</description>
+    </item>
+    
+    <item>
+      <title>热升级</title>
+      <link>https://wrfly.kfd.me/posts/%E7%83%AD%E5%8D%87%E7%BA%A7/</link>
+      <pubDate>Sun, 30 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E7%83%AD%E5%8D%87%E7%BA%A7/</guid>
+      <description> 什么是热升级 see https://my.oschina.net/astaxie/blog/136364
+我理解的热升级就是更新程序而不需要重启，当然这个重启是宏观上的重启，即不需要重新启动服务器或者服务进程，但从底层来讲，至少子进程还是需要重新启动一下的，毕竟更新了代码。
+典型的热升级是nginx的 upgrade-on-fly
+其原理就是启动两个master进程（一个新版本，一个旧版本），端口复用，同时处理请求，然后再下线旧版本的nginx，这里边要处理的就是保持连接的问题，即不能让旧版本nginx的连接断开，从而影响业务。
+难点与要处理的问题  保持连接（stop-gracefully） 不能断开old version与client建立的连接 无缝衔接（zero-downtime）要保证新的请求都能被new version的binary所处理，不能遗漏或拒绝 资源稳定（分布式资源锁）不能因为新旧版本的处理而导致资源不一致，资源抢占、竞争等问题  第一点和第二点是最基本要处理的，第三点则是业务层面，也就是在程序逻辑层面要保证的。
+保持旧的连接同时转移新的请求给new version，就是要保证old version不退出的情况下，new version接管进程的listenner，golang不支持端口复用，所以只能有转移listenner的fd来实现。不管是master-worker类型的还是endless这种 fork-exec 类型的，都是这种实现。
+现有的解决方案 我知道的开源实现方案有这么几个：
+ https://github.com/facebookgo/grace https://github.com/rcrowley/goagain https://github.com/fvbock/endless https://github.com/jpillora/overseer  其中overseer和endless都是动手实践过的。
+endless的缺点就是，old versino退出之后，新exec出来的进程是一个新的进程，也就是说，脱离的原来的环境而被init进程托管，这个时候如果你用systemd进行进程管理的话，systemd就会认为其已经dead了。
+所以如果想采用endless的话，就要像nginx那样，用fork的方式启动进程，即启动之后fork一份，然后主进程退出，同时维护一份pid文件，告诉systemd这样的进程管理工具，他的pid是谁，还活着没。
+而overseer则属于master-child这种类型，一个master负责检查是否有更新，有的话就新fork一个进程出来，转移所有的env，listenner，args等。上层来看，程序还是那个程序，但是负责处理请求的进程则换成了新的child进程。
+两者相同的地方就是对于请求的处理，都在accept层面放了计数器（不然就没法知道还有多少个连接了）从而实现graceful stop。
+然后 思来想去，还是overseer比较适合，相当于在上层加了一个handler，然后我给加了一个file的fetcher：
+https://github.com/wrfly/overseer
+看来大家都很忙，owner说是要给瞅瞅，但这么久了那个PR还没合。 当然，我也不介意别人用我的namespace hhh
+参考资料  https://my.oschina.net/astaxie/blog/136364 https://fitstar.github.io/falcore/hot_restart https://grisha.org/blog/2014/06/03/graceful-restart-in-golang/  </description>
+    </item>
+    
+    <item>
+      <title>go程序依赖问题</title>
+      <link>https://wrfly.kfd.me/posts/go%E7%A8%8B%E5%BA%8F%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Tue, 04 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/go%E7%A8%8B%E5%BA%8F%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/</guid>
+      <description>今天遇到一个问题就是，在centos下build出来的golang程序能不能直接放到alpine上面运行。
+实际测试发现，有的可以，有的不可以。
+原因与直觉相同，因为二者系统的动态链接库不同，alpine用了精简版的libc，不是glibc。
+如果build binary的时候没有用到系统的依赖，那么则不会出现依赖性问题。
+解决方法有两种，在build的时候：
+ go build -ldflags &amp;ldquo;-s -w&amp;rdquo; -a -tagsnetgo -installsuffix netgo
+ CGO_ENABLED=0 go build -ldflags &amp;ldquo;-s&amp;rdquo; -a -installsuffix cgo .
+  见：
+ &amp;lt;http://www.jeffsloyer.io/post date: 2017-07-04 title: go程序依赖问题 https://stackoverflow.com/questions/36279253/go-compiled-binary-wont-run-in-an-alpine-docker-container-on-ubuntu-host  </description>
+    </item>
+    
+    <item>
+      <title>匆匆</title>
+      <link>https://wrfly.kfd.me/posts/%E5%8C%86%E5%8C%86/</link>
+      <pubDate>Wed, 24 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%8C%86%E5%8C%86/</guid>
+      <description>时间 忘记在哪里看到的了，说，不同的年龄对时间的感知程度是不一样的，小孩子觉得一天很漫长很漫长，起床，穿衣服，吃饭，上厕所，上学，上课，下课，课间操&amp;hellip;一天简直太长了，晚上回去还要吃饭，写作业，看电视，天天盼着什么时候才能长大。但是到了老年，每天就起床，吃饭，睡觉，一天啥都没干就已经结束了，总想盼着时间过得慢一点。
+之前一直不能理解这些话，但临近毕业，我越发感受到，时间，真的过得太快了。
+四年的时间，感觉剧情都没有一部电影长。但总归是经历了那么多东西。罗列的话，军训，上课，考试，放假，开学，爬山，聚餐，火锅，唱歌，熬夜，日站，看书，动漫，追剧，失恋，认识新的人，实习，晒太阳，漫无目的的散步，写代码，做项目，搞网站，写博客，林林总总，乱七八糟的。
+我甚至还记得当时选大学选专业的那些日子。甚至还记得熬夜去走廊写高数作业，然后碰到一个莫名的人来巡视；熬夜日站，想尽各种方法手段去搞别人；熬夜写代码赶需求，快速迭代，敏捷开发？；不吃不喝打比赛，虽然根本没什么名次，但的确接触到不少新东西。历历在目却又如白驹过隙。
+大一的时候在墙上贴的那些励志的话也都悉数褪尽颜色，还有那些罗列的书单，笑哈哈，就看了两本。
+ 想想你在做什么，你该做什么，你要做什么。
+你永远不知道未来的你有多强大。
+不要碌碌无为，不要劳而无获，不要虚度光阴。
+专注一件事，做到底。
+ 还有最最重要的一条：
+ 永远记得备份数据！
+ 可怜的，宝贵的，该死的时间。
+规划 今天去帮同学做攻击测试，然后被问到如何确定自己的方向。233，我上个月选择offer的时候还问过别人，现在就要以 elder 的身份去给别人解惑了。
+忽然想起新华字典里有这样一个例句：“张华考上了北京大学；李萍进了中等技术学校；我在百货公司当售货员：我们都有光明的前途。”
+换到大学毕业，那就是：“张华考上了研究生；李萍去了创业公司写代码；我在某个公司干销售：我们都还活着。”
+感觉，这不是我们的计划啊，我们的目标不是星辰大海吗。
+屁，房子都买不起，星什么辰，大什么海。
+人啊，活着最重要，至于开心的话，排第二位吧就。
+初步总结了一下程序员的发展之路：应届生→初级程序员→中级程序员→高级程序员→初级架构师→中级架构师→高级架构师→CTO→买房。
+中间任何环节都可能分叉，转行去做销售什么的，或者回家开饭店。其实我倒是挺想开饭店的，人总归是要吃饭的嘛，如果将来AI取代了某些程序员的位置，那我就还能有点家产。其实在学校开店也可以，手机贴膜啊，复印店啊，旧书店啊什么的。但是日子又太无聊了。唉。人活着，或多或少，都是有些苦恼的。比如，晚上吃啥。
+有件事情我一直在权衡，兴趣和工作是绑定到一起的吗。可以把兴趣发展成工作，还是说，可以把工作演变成兴趣？但兴趣是真的好玩，工作的话，就不一定了。二者之间，要说想通的地方，成就感？兴趣可以使我愉悦，工作可以使我获得薪水，都可以从二者中获得成就感，当然，如果有成就的话。
+所以啊，对于我来说，信息安全是个兴趣，但不一定要发展成工作，不然有可能我会丢失我的愉悦；但工作一定不能是枯燥无味和重复的，否则我就没有成就感。我未必会从兴趣中获得报酬或者薪水，但从工作中，一定不能不开心。（对没错，这就是离职的理由之一。）我的工作可以是开发，可以是运维，可以是救火队员，但我一定要把这些事情玩出花儿，不能日复一日的熬，一天一天的撞钟。真的，太无聊，那样。但是有一种人就特别厉害，兴趣和工作完美的结合到了一起，干活就跟玩儿一样，爽歪歪，太羡慕。
+但有些人就不一样啊，他们喜欢安逸和稳定和不出问题，每天虽然做着重复的事情，但下班后的悠闲就会弥补这些不愉快。所以这些人生也不能说是没意思。
+某种意义上讲，我还挺奇葩的，我喜欢出现问题，然后解决问题，但又不喜欢同样的问题，because this makes me angry. 也不会说别人爱听的话，lonely.
+再回到解惑上去。
+那天我问别人的时候，总结了两点就是，专注和沉淀。L说的是沉淀，Z说的是专注。其实意思都差不多，就是别水，要有干货。专注是沉淀的充分条件，沉淀是专注的必要条件。
+虽然都是二十出头的小伙子，但说的还都很有道理的，比我这个迷茫要强得多。
+记得大一的时候，学长说过要选择自己的方向，可能那个时候他也刚找到自己的方向吧，毕竟找方向挺难的，这么多东西，又没有指南针，找方向谈何容易。
+所以那些没有方向的人，就只能找个热门的行业和岗位，进个培训班，学上几个月，然后面试碰碰运气，混口饭吃。我可不想这样。
+人呐，要知道自己要干什么。
+大学中多涉猎一点，是好事。因为只有这样了，你才能知道到底有哪些方向供你选择，某种意义上的路线矫正？也有可能就是，当你找到某个方向的时候，发现另一个方向自己也喜欢得不得了，然后就跳到那个行业去了。嗯&amp;hellip;虽然听起来像狗熊掰棒子，但是大家都是成年人了，是要对自己的行为负责的，所以，慎重考虑之后的决定，并不是见异思迁。
+至于找工作，就要看你会什么了。写代码的不能去搞设计，做美工的不能来干运维。虽然说不想当厨子的裁缝不是好司机，但不会写代码的程序员是做不了CTO的（认真脸）。 最好的方式是，通过大学四年的积累，找到了自己的方向，然后小小的努力一下，学有小成，然后有些顺利的拿到offer，开始打工之路。最差的方式是，打了四年游戏，啥也不会，毕业证差点混不出来，毕业前慌忙啃了三个月Java，坎坷入职某公司。
+虽然大家都找到了工作，但经历不一样呀。哦对忘了说，经历是人生宝贵的财富。
+唉，我都不知道自己说了什么。大家好，我叫瞎哔哔。</description>
+    </item>
+    
+    <item>
+      <title>校内网安全测试</title>
+      <link>https://wrfly.kfd.me/posts/%E6%A0%A1%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/</link>
+      <pubDate>Tue, 18 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E6%A0%A1%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/</guid>
+      <description>今天测试了一下学校的内网主机，傻逼学校没做VLAN，光在 10.170.0.0/16 就扫到了 1662 台开着 445 端口的主机:
+➜ ./fmt.sh | wc -l 1662 ➜ ./fmt.sh | grep &amp;#34;Windows 7&amp;#34; | wc -l 451 ➜ ./fmt.sh | grep &amp;#34;Windows 8&amp;#34; | wc -l 378 ➜ ./fmt.sh | grep &amp;#34;Windows 10&amp;#34; | wc -l 788 ➜ ./fmt.sh | grep &amp;#34;Windows XP&amp;#34; | wc -l 40 ➜ ./fmt.sh | grep &amp;#34;Windows 2008&amp;#34; | wc -l 3 ➜ ./fmt.sh | grep &amp;#34;Windows 2008&amp;#34; [*] 10.</description>
+    </item>
+    
+    <item>
+      <title>shadowbroker大杀器</title>
+      <link>https://wrfly.kfd.me/posts/shadowbroker%E5%A4%A7%E6%9D%80%E5%99%A8/</link>
+      <pubDate>Sun, 16 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/shadowbroker%E5%A4%A7%E6%9D%80%E5%99%A8/</guid>
+      <description>搞了两天，弄出个差不多的套路，漫游了一波校园网。
+环境要求： python2.6 + pywin32 扩展包
+将 windows/lib/ 下对应的的dll目录添加到系统环境变量里面，还要把 pytrch.py 和 _pytrch 都放到python的扩展包里面，否则运行 fb.py 会报错。
+然后运行 fb.py
+两个可用套路：
+Eternalblue + Doublepulsar use Eternalblue 中间按照提示填入相应的IP和端口信息 需要注意的是这里： [*] Mode :: Delivery mechanism *0) DANE Forward deployment via DARINGNEOPHYTE 1) FB Traditional deployment from within FUZZBUNCH [?] Mode [0] : 1 [+] Run Mode: FB 然后一路确定就OK use Doublepulsar [!] Enter Prompt Mode :: Doublepulsar Module: Doublepulsar ==================== Name Value ---- ----- NetworkTimeout 60 TargetIp 10.</description>
+    </item>
+    
+    <item>
+      <title>还是代理</title>
+      <link>https://wrfly.kfd.me/posts/%E8%BF%98%E6%98%AF%E4%BB%A3%E7%90%86/</link>
+      <pubDate>Sun, 02 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E8%BF%98%E6%98%AF%E4%BB%A3%E7%90%86/</guid>
+      <description>sublimetext的PackageControl连接总是超时，但是手头又没有http的代理，都是用的shadowsocks，然后就要想个办法怎样把socks5代理转换成http代理。
+先是大体搜了一下，解决方案有这两种： - proxychains - tsocks
+但是这两种代理都不复合我的要求，因为他们只能代理一次请求，不会持续listen一个端口，然后提供服务。
+不得已之下，自己&amp;rdquo;写&amp;rdquo;一个吧。
+https://github.com/wrfly/hovers
+其实到后来才搜到，有个老牌的代理软件：privoxy，安装之后，在配置文件里添加 forward-socks5 / 127.0.0.1:1080 . 就可以了。其中127.0.0.1:1080是socks5的代理地址。
+然后在sublime中配置一下： ~/.config/sublime-text-3/Packages/User/Package Control.sublime-settings
+添加：
+&amp;#34;http_proxy&amp;#34;: &amp;#34;localhost:8118&amp;#34; 即可。</description>
+    </item>
+    
+    <item>
+      <title>Linux下Gates病毒</title>
+      <link>https://wrfly.kfd.me/posts/linux%E4%B8%8Bgates%E7%97%85%E6%AF%92/</link>
+      <pubDate>Wed, 22 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux%E4%B8%8Bgates%E7%97%85%E6%AF%92/</guid>
+      <description>今天处理了一个Gates病毒。 病毒表面症状是，创建一个带有 ais 隐藏属性的 /etc/kblockd 文件，无法删除，并且在 /usr/bin/dpkgd/ 目录中创建了lsof netstat ss ps这些二进制文件，在 /tmp 目录下生成 gates.lod 和 moni.lod 两个文件，在 /etc/init.d/ 中创建 selinux 和 DbSecuritySpt ，并向 /etc/rc.d/rc*/ 中注册，其中，/etc/init.d/selinux 启动的是 /usr/bin/bsd-port/getty，还会创建一个隐藏的 /usr/bin/.sshd 文件作为后门。
+看上去很复杂的样子。
+解决脚本如下：
+#!/bin/bash chattr -ais /etc/kblockd #cp /dev/null /etc/kblockd #chmod -x /etc/kblockd rm -f /etc/kblockd pkill .sshd chmod -x /usr/bin/.sshd rm -f /usr/bin/.sshd pkill ^getty rm -rf /usr/bin/bsd-port rm -rf /usr/bin/dpkgd find /etc/rc.d/ -name *selinux -delete find /etc/init.d -name *selinux -delete find /etc/rc.</description>
+    </item>
+    
+    <item>
+      <title>confd笔记</title>
+      <link>https://wrfly.kfd.me/posts/confd%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Sun, 12 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/confd%E7%AC%94%E8%AE%B0/</guid>
+      <description>好记性不如烂笔头。
+昨天完成了项目的 etcd + confd + openresty 的反代部分，在这里记录一下。这东西学起来还是有点时间的，文档也说的不明白，没个example可以看。
+etcd 部分 单点etcd启动：
+docker volume create etcd_data docker run -dti --network host \ 	-v etcd_data:/default.etcd \ 	-e ETCD_LISTEN_PEER_URLS=http://10.170.1.31:2380 \ 	-e ETCD_LISTEN_CLIENT_URLS=http://10.170.1.31:2379 \ 	-e ETCD_ADVERTISE_CLIENT_URLS=http://10.170.1.31:2379 \ 	quay.io/coreos/etcd:latest 然后这个 quay.io/coreos/etcd:latest 镜像隔着我国比较远，所以不如用我的镜像 wrfly/etcd pull 的时候会快一点。 （2017-3-12 version: latest）
+confd 配置部分 confd启动的时候需要一些配置：
+backend = &amp;#34;etcd&amp;#34; confdir = &amp;#34;/etc/confd&amp;#34; log-level = &amp;#34;info&amp;#34; watch = true noop = false prefix = &amp;#34;/&amp;#34; scheme = &amp;#34;http&amp;#34; node = [ &amp;#34;1.</description>
+    </item>
+    
+    <item>
+      <title>etcd笔记</title>
+      <link>https://wrfly.kfd.me/posts/etcd%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Wed, 08 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/etcd%E7%AC%94%E8%AE%B0/</guid>
+      <description>很早就写的一篇笔记，放在这里充数。
+运行一个最简单的etcd docker run -p 4001:4001 --rm -ti microbox/etcd --name etcd0 API  获取版本
+curl -L http://127.0.0.1:2379/version  获取键值 bash curl http://127.0.0.1:2379/v2/keys/message   设置键值
+curl http://127.0.0.1:2379/v2/keys/message -XPUT -d value=&amp;#34;Hello world&amp;#34; curl -X PUT http://127.0.0.1:2379/v2/keys/message?value=&amp;#34;Hello world&amp;#34; curl -X PUT http://127.0.0.1:2379/v2/keys/message?value=&amp;#34;Hello etcd&amp;#34;  删除键 bash curl -X DELETE http://127.0.0.1:2379/v2/keys/message   使用TTL
+curl http://127.0.0.1:2379/v2/keys/foo -XPUT -d value=bar -d ttl=5 curl http://127.0.0.1:2379/v2/keys/foo?value=bar&amp;amp;ttl=5 -XPUT  取消TTL bash curl http://127.0.0.1:2379/v2/keys/foo?value=bar&amp;amp;ttl= -XPUT   创建目录</description>
+    </item>
+    
+    <item>
+      <title>关于随机</title>
+      <link>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8E%E9%9A%8F%E6%9C%BA/</link>
+      <pubDate>Sun, 05 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8E%E9%9A%8F%E6%9C%BA/</guid>
+      <description>我们知道电脑生成的数字是伪随机的，掷骰子是随机的。那为什么电脑生成不出一个准确的随机数呢？为什么掷骰子就是随机的呢？
+电脑生成的random number，是以time作为seed，然后生成一个数字，那么，如果我们在电脑计算完成这个数字之前，准确的知道了这个seed，知道电脑生成数字的这个函数，那么我们就知道电脑即将生成的数字。这很容易理解。
+但是。
+为什么我们都相信，掷骰子就是随机的呢？
+我们怎样来定义这个随机呢。
+Quota wikipedia:
+ 随机性（英语：Randomness）这个词是用来表达目的、动机、规则或一些非科学用法的可预测性的缺失。 一个随机的过程是一个不定因子不断产生的重复过程，但它可能遵循某个概率分布。 术语随机经常用于统计学中，表示一些定义清晰的、彻底的统计学属性，例如缺失偏差或者相关。随机与任意不同，因为“一个变量是随机的”表示这个变量遵循概率分布。而任意在另一方面又暗示了变量没有遵循可限定概率分布。
+ 我的理解是，如果一个事件遵循概率分布，每种事件的可能性都相同，那他则是随机的；如果事件不可预测，不遵循概率分布，那就是任意的。
+所以，掷骰子这件事，真的是随机的吗？
+如果我们在掷骰子的时候准确的知道了投掷的方向，角度，初始投掷面，是不是就可以计算出最终的结果？那这是随机的吗？
+如果一个事件有十个过程，其中一个过程是随机的，另外九个过程是不随机的，那产生的事件结果是随机的吗？不随机的话，就是确定的吗？
+投掷一枚硬币，可能会出现正、反、立三种情况，那这三种情况的概率必然不是一样的，那么为什么我们认为正反是随机的呢？
+如果说是因为投掷时候的角度，初始面，以及投掷力度的不同所产生了一个随机的面，那么只有确保投掷时候各个因素都必须是随机的，才能保证最终产生的结果是随机的，然而这些因素能够保证都是随机的吗？只要有一个条件不随机，那么最终产生的结果就不是随机的，可以这样理解吗？
+再回到抛硬币这件事，如果硬币正反面相同，并且有办法标记，在真空环境下，用相同的力度，角度抛出，那么产生是不是就能确定了呢？再放宽一下条件，硬币正反面不想同，仅有细微差别，在正常环境下，用不同的角度，不同的力度抛出硬币，最终产生的结果是真的随机吗？可不可以理解为，函数的输入是力度和角度，输入是硬币哪个面朝上呢。但是如果我们能够计算出这个力度和角度，是不是就能准确的知道哪个面朝上，是不是可以说，这不是随机的，也不是任意的，而是可预知的？
+那么世界上有什么是随机的呢？是不是全都是伪随机？今天下楼的时候刚好碰见一个同学，这是真的“刚好”吗？真的是随机遇见的吗？会不会是可以预测呢？而你没有办法预测，只是因为你掌握的资源不够？
+那么，未来是随机的吗？是不是在一系列伪随机下的必然？
+最后推荐两个小视频：
+什么是随机的
+什么不是随机的</description>
+    </item>
+    
+    <item>
+      <title>MongoDB常用操作</title>
+      <link>https://wrfly.kfd.me/posts/mongodb%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</link>
+      <pubDate>Sat, 25 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/mongodb%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</guid>
+      <description>官方文档：https://docs.mongodb.com/manual/reference/operator/
+简单  use dbName 切换数据库 db.getCollectionNames() 列出数据库中的集合们 db.collctionName.insert({&amp;quot;name&amp;quot;:&amp;quot;wrfly&amp;quot;,&amp;quot;ID&amp;quot;:&amp;quot;wrfly&amp;quot;,&amp;quot;tags&amp;quot;:[&amp;quot;tag1&amp;quot;,&amp;quot;tag2&amp;quot;,&amp;quot;tag3&amp;quot;]}) 插入数据  查询  db.C.find() 查询全部数据  比较类  db.inventory.find({&amp;quot;ID&amp;quot;:&amp;quot;wrfly&amp;quot;}) 精确查询 ID 为 wrfly 的文档 或者 db.inventory.find( { &amp;quot;ID&amp;quot;: { $eq: &amp;quot;wrfly&amp;quot; } } ) 同理， $eq 还可以换成 $gt (&amp;gt;), $gte (&amp;gt;=), $lt(&amp;lt;), $lte(&amp;lt;=), $ne(!=), $in(在集合中), $nin(不在集合中) db.inventory.find ( { quantity: { $in: [20, 50] } } ) 查找 quantity在20和50之间（大于20，小于50）的数据  逻辑判断类（与或非）  db.inventory.find( { $or: [ { quantity: { $lt: 20 } }, { price: 10 } ] } ) 查询 quantity 小于20或者 price 大于10的数据 db.</description>
+    </item>
+    
+    <item>
+      <title>20170203</title>
+      <link>https://wrfly.kfd.me/posts/20170203/</link>
+      <pubDate>Fri, 03 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/20170203/</guid>
+      <description>已经好久没有更新博客了，找的借口是工作繁忙和懒。
+半年的实习也已经结束一周了，光阴似箭，这句话很有道理。
+这半年总结起来，有写脚本的活，有写Python开发的活，有写go打补丁的活，还有用go写监控的活。原来DevOps就是因为缺人才产生的一种职业啊，naive了我又。数据库高可用方案也搞了好久，写了一点东西，全放公司wiki上了，希望对别人有用。接手的项目有几个，创造性的东西也有几个，大多数是自己的歪点子，不过效果还不错。
+Docker啊Docker。我离安全的路是越走越远了。
+中间还玩了两个docker提权，也算是给公司提醒了，不过那篇文章终究没有写出来。
+不过也托了docker的福，我的毕设也跟docker相关，代码也多多少少写了一点了，用的是新学的golang。
+半年回了三次学校，一次答辩，一次考试，一次补考。
+半年玩了两次，一次西安，一次南京。
+人啊，是越来越懒了，感觉没有以前那么有干劲儿了。
+每每想到未来的种种，就有点压得我喘不过气，不过，没用。还不如老老实实写代码。
+可是我不甘心做个码农呀。
+可是我还能做点什么。
+我也不知道自己几斤几两。其实我连四层代理，七层代理是啥都不知道。我只知道有个四层，有个七层，而且还没用到。
+我会一点php，会一点python，会一点golang，还会写点shell，centos和ubuntu都会玩，也管理过自己的十台机器，还有公司的几百台机器（其实没啥好管的，无非就是清理磁盘，重启机器，修修文件系统，重装一下docker，再多的，管理一下scaleio？）。有时候都觉得自己low的不行。可是我又觉得自己跟别人不一样。到底哪里不一样呢，我还说不清楚。这就比较尴尬了。
+为什么晚上比白天更有效率？ 因为晚上的时候对白天的碌碌无为感到愧疚。
+比deadline更有力量的是内心的愧疚。
+给毕设起名字也没起好，想做一个靶场，基于docker的，docker里面放漏洞应用。想了半天，竟然叫fc。不知道会不会有人联想起fc2，或者是fuck之类的词儿。
+选择困难。
+代码写了一半，制作那些漏洞应用又得好半天，更别说那些书面工作了。好烦。
+我还有十个小时的视频要录制，真的，我哪里来的勇气浪费时间啊。
+都说博客是分享技术的，我tm却在这里瞎扯淡。希望以后的自己看了现在的自己写的乱七八糟的东西，不会笑话自己。
+就这。</description>
+    </item>
+    
+  </channel>
+</rss>

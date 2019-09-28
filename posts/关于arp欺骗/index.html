@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang='en'><head>
+<html lang='zh_CN'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='本文科普一下ARP欺骗的一些知识，顺便教你怎样优雅的ARP欺骗。 What is ARP spoofing?
+<meta name='description' content=' 本文科普一下ARP欺骗的一些知识，顺便教你怎样优雅的ARP欺骗。 What is ARP spoofing?
 1.什么是ARP欺骗 来自wikipedia上的解释是这样子的： &gt; ARP欺骗（英语：ARP spoofing），又称ARP病毒（ARP poisoning）或ARP攻击，是针对以太网地址解析协议（ARP）的一种攻击技术。此种攻击可让攻击者取得局域网上的数据数据包甚至可篡改数据包，且可让网络上特定电脑或所有电脑无法正常连接。 ARP欺骗的运作原理是由攻击者发送假的ARP数据包到网络上，尤其是送到网关上。其目的是要让送至特定的IP地址的流量被错误送到攻击者所取代的 地方。因此攻击者可将这些流量另行转送到真正的闸道（被动式数据包嗅探，passive sniffing）或是篡改后再转送（中间人攻击，man-in-the-middle attack）。攻击者亦可将ARP数据包导到不存在的MAC地址以达到阻断服务攻击的效果，例如netcut软件。
 例如某一网络闸道的IP地址是192.168.0.254，其MAC地址为00-11-22-33-44-55，网络上的电脑内ARP表会有这一笔ARP记录。攻击者发动攻击时，会大量发出已将192.168.0.254的MAC地址篡改为00-55-44-33-22-11的ARP数据包。那么网络上的电脑若将此伪造的ARP写入自身的ARP表后，电脑若要通过网络闸道连到其他电脑时，数据包将被导到00-55-44-33-22-11这个MAC地址，因此攻击者可从此MAC地址截收到数据包，可篡改后再送回真正的闸道，或是什么也不做，让网络无法连接。
 我的理解是这样的：
@@ -11,11 +11,11 @@
 这样就实现了让目标电脑的流量流经本机了。 然后在用wireshark抓个包啥的，我就不多说了。
 3.附注 本人才疏学浅，记性还不好，记不住这么多命令。于是就从网上找了个软件，一键搞定了。
 ettercap 这个软件就是个好东西了，用鼠标就能搞定一切，包括但不限于探测内网下所有主机，端口转发，流量监控。 有需要的同学可以自行google。
-最后，我要是说不能做坏事的话，那我就天真了，只是希望大家能做坏事做的优雅一些，别违背道德。'>
+最后，我要是说不能做坏事的话，那我就天真了，只是希望大家能做坏事做的优雅一些，别违背道德。 '>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='关于ARP欺骗 • wrfly&#39;s blog'>
-<meta property='og:description' content='本文科普一下ARP欺骗的一些知识，顺便教你怎样优雅的ARP欺骗。 What is ARP spoofing?
+<meta property='og:description' content=' 本文科普一下ARP欺骗的一些知识，顺便教你怎样优雅的ARP欺骗。 What is ARP spoofing?
 1.什么是ARP欺骗 来自wikipedia上的解释是这样子的： &gt; ARP欺骗（英语：ARP spoofing），又称ARP病毒（ARP poisoning）或ARP攻击，是针对以太网地址解析协议（ARP）的一种攻击技术。此种攻击可让攻击者取得局域网上的数据数据包甚至可篡改数据包，且可让网络上特定电脑或所有电脑无法正常连接。 ARP欺骗的运作原理是由攻击者发送假的ARP数据包到网络上，尤其是送到网关上。其目的是要让送至特定的IP地址的流量被错误送到攻击者所取代的 地方。因此攻击者可将这些流量另行转送到真正的闸道（被动式数据包嗅探，passive sniffing）或是篡改后再转送（中间人攻击，man-in-the-middle attack）。攻击者亦可将ARP数据包导到不存在的MAC地址以达到阻断服务攻击的效果，例如netcut软件。
 例如某一网络闸道的IP地址是192.168.0.254，其MAC地址为00-11-22-33-44-55，网络上的电脑内ARP表会有这一笔ARP记录。攻击者发动攻击时，会大量发出已将192.168.0.254的MAC地址篡改为00-55-44-33-22-11的ARP数据包。那么网络上的电脑若将此伪造的ARP写入自身的ARP表后，电脑若要通过网络闸道连到其他电脑时，数据包将被导到00-55-44-33-22-11这个MAC地址，因此攻击者可从此MAC地址截收到数据包，可篡改后再送回真正的闸道，或是什么也不做，让网络无法连接。
 我的理解是这样的：
@@ -24,7 +24,7 @@ ettercap 这个软件就是个好东西了，用鼠标就能搞定一切，包�
 这样就实现了让目标电脑的流量流经本机了。 然后在用wireshark抓个包啥的，我就不多说了。
 3.附注 本人才疏学浅，记性还不好，记不住这么多命令。于是就从网上找了个软件，一键搞定了。
 ettercap 这个软件就是个好东西了，用鼠标就能搞定一切，包括但不限于探测内网下所有主机，端口转发，流量监控。 有需要的同学可以自行google。
-最后，我要是说不能做坏事的话，那我就天真了，只是希望大家能做坏事做的优雅一些，别违背道德。'>
+最后，我要是说不能做坏事的话，那我就天真了，只是希望大家能做坏事做的优雅一些，别违背道德。 '>
 <meta property='og:url' content='https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Earp%E6%AC%BA%E9%AA%97/'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='wiki'><meta property='article:published_time' content='2014-10-04T00:00:00Z'/><meta property='article:modified_time' content='2014-10-04T00:00:00Z'/><meta name='twitter:card' content='summary'>
@@ -56,7 +56,7 @@ if (!doNotTrack) {
 </head>
 <body class='page type-posts'>
 
-  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
+  <div class='site'><a class='screen-reader-text' href='#content'></a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label=''>
   <div class='container'>
     
     <ul><li class='item'>
@@ -87,7 +87,7 @@ if (!doNotTrack) {
       <main id='content'>
 
 
-<article lang='en' class='entry'>
+<article lang='zh_CN' class='entry'>
   <header class='header entry-header'>
   <div class='container sep-after'>
     <div class='header-info'>
@@ -104,7 +104,7 @@ if (!doNotTrack) {
   <line x1="3" y1="10" x2="21" y2="10"/>
   
 </svg>
-<span class='screen-reader-text'>Posted on </span>
+<span class='screen-reader-text'> </span>
   <time class='entry-date' datetime='2014-10-04T00:00:00Z'>2014, Oct 04</time>
 </span>
 
@@ -162,7 +162,10 @@ $sudo echo <span style="color:#ae81ff">1</span> &gt;&gt;/proc/sys/net/ipv4/ip_fo
 <p>这个软件就是个好东西了，用鼠标就能搞定一切，包括但不限于探测内网下所有主机，端口转发，流量监控。
 有需要的同学可以自行google。</p>
 
-<p>最后，我要是说不能做坏事的话，那我就天真了，只是希望大家能做坏事做的优雅一些，别违背道德。</p>
+<p>最后，我要是说不能做坏事的话，那我就天真了，只是希望大家能做坏事做的优雅一些，别违背道德。
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbLTgwNjg1MjU1OF19
+--></p>
 
 </div>
 
@@ -174,7 +177,7 @@ $sudo echo <span style="color:#ae81ff">1</span> &gt;&gt;/proc/sys/net/ipv4/ip_fo
   <line x1="7" y1="7" x2="7" y2="7"/>
   
 </svg>
-<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/wiki/'>wiki</a></div>
+<span class='screen-reader-text'>tags: </span><a class='tag' href='/tags/wiki/'>wiki</a></div>
 
   </div>
 </footer>
@@ -191,11 +194,11 @@ $sudo echo <span style="color:#ae81ff">1</span> &gt;&gt;/proc/sys/net/ipv4/ip_fo
   <polyline points="10 18 4 12 10 6"/>
   
 </svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>去掉blogger博客中的Attribution</a>
+ </span>
+        <span class='screen-reader-text'>: </span>去掉blogger博客中的Attribution</a>
     </div><div class='next-entry sep-before'>
       <a href='/posts/hydra%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/'>
-        <span class='screen-reader-text'>Next post: </span>hydra使用方法<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+        <span class='screen-reader-text'>: </span>hydra使用方法<span aria-hidden='true'> <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -236,10 +239,10 @@ $sudo echo <span style="color:#ae81ff">1</span> &gt;&gt;/proc/sys/net/ipv4/ip_fo
       </main>
 
       <footer id='footer' class='footer'>
-        <div class='container sep-before'><section class='widget widget-social_menu sep-after'><nav aria-label='Social Menu'>
+        <div class='container sep-before'><section class='widget widget-social_menu sep-after'><nav aria-label=''>
     <ul><li>
         <a href='https://github.com/wrfly' target='_blank' rel='noopener'>
-          <span class='screen-reader-text'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+          <span class='screen-reader-text'></span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
   
@@ -247,7 +250,7 @@ $sudo echo <span style="color:#ae81ff">1</span> &gt;&gt;/proc/sys/net/ipv4/ip_fo
 </a>
       </li><li>
         <a href='mailto:mr.wrfly@gmail.com' target='_blank' rel='noopener'>
-          <span class='screen-reader-text'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+          <span class='screen-reader-text'></span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
   <polyline points="22,6 12,13 2,6"/>
@@ -256,7 +259,7 @@ $sudo echo <span style="color:#ae81ff">1</span> &gt;&gt;/proc/sys/net/ipv4/ip_fo
 </a>
       </li><li>
         <a href='https://t.me/wrfly' target='_blank' rel='noopener'>
-          <span class='screen-reader-text'>Open Telegram account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+          <span class='screen-reader-text'></span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
   

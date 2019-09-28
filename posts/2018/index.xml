@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>wrfly&#39;s blog</title>
+    <link>https://wrfly.kfd.me/posts/2018/</link>
+    <description>Recent content on wrfly&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 28 Dec 2018 21:31:54 +0800</lastBuildDate>
+    
+	<atom:link href="https://wrfly.kfd.me/posts/2018/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Change-My-Attitude-Towards-Work</title>
+      <link>https://wrfly.kfd.me/posts/change-my-attitude-towards-work/</link>
+      <pubDate>Fri, 28 Dec 2018 21:31:54 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/change-my-attitude-towards-work/</guid>
+      <description>我信奉真理胜过一切。
+ 我是一个嫉恶如仇的人，眼里容不下一点沙子，看不惯别人错误的行为，看不下项目里垃圾的代码。
+我是一个程序员，这就意味着我以写代码为生，我用键盘敲出代码，为PM实现功能，给公司带来利益，以换取微薄的收入，支撑我生活所需的食物和水。但与此同时，我又跟别的程序员不太一样，我对代码质量的要求特别高，我怕犯错，每当有别人指出我的错误，我就谨小慎微，毕恭毕敬，有则改之，无则加勉，因为要对自己的每一行代码负责，所以每写一点东西，都会写上注释，文档，不确定的函数写好单元测试，还安装了拼写插件，以检查英语单词的拼写错误，代码超过两遍复用就抽象，类型定义和命名仔细斟酌，不写无用的代码，不写复杂的代码，如果我的代码别人看不懂，那么我首先要承担一半责任，我还对CI/CD特别挑剔，对commit message也异常执着，项目里总是要写一个Makefile和README，每个包里都用interface定义好接口，中规中矩，兢兢业业，如履薄冰，生怕自己的代码被别人鄙视，成为别人眼中的垃圾代码。
+这种习惯是从小就养成的，每当错了一道题，如果是第二遍犯错，内心就会很自责，承受不住内心的拷问，所以我会把错误记在本子上，记在脑子里，就差刻在手臂上，告诫自己以后不要再犯。近乎自负。
+可是并不是每个人都如此的对待错误，甚至不认为是错误。他们有他们自己的价值观，工作观，代码观。我不应该将自己苛刻的代码洁癖强加到别人身上，哪怕，写的是同一个项目里的代码。他们不写文档，不写注释，不写测试，不做抽象和重构，只是他们自己的事，跟任何人（除了项目负责人，因为他要合并PR和review代码）无关，当然其他人也要review代码，但，“严于律己，宽以待人”这句老祖宗留下来的经验教训应时刻被牢记，看到不爽的，睁一只眼闭一只眼也就过去了，生那个气干嘛。
+就像有人喜欢把家里收拾的整整齐齐，干干净净；有人就是喜欢乱扔袜子，不打扫卫生，不整理衣柜；咱不能看见别人没擦嘴就强行按住人家给他擦嘴不是？
+我对待生活的洁癖已经好一些了，但是对与代码的洁癖，还需要缓解缓解，不能因为别人写的不好还不改正就批评他，一是没资格，二是犯不上。不是有首歌：小燕子，穿花衣，年年春天来这里，我问燕子为什么，燕子说，管好你自己。
+工作而已，完成任务就行了，还真以为有“全局观”，“大局意识”，“主人翁意识”，老板就会给你加钱？老板认识你是谁呐？要想升职加薪，跳槽才是最有效的方式，除此之外，就是站队和吹逼。
+每天上班，下班，规划好工作，写好自己的代码就完事儿了，再怎么加班领导也不会给你发红包啊，每个公司都有自己的薪酬体系，哪那么容易啊。还有，没到手的承诺，千万别信，就像前女友说的爱你一样。
+想到这里，心里就开朗了，工作嘛，没必要锱铢必较，“能者多劳”是资本家骗小孩子的，提高自身修养，跳出自己的安逸圈，做更好的自己，才是王道。
+不懂的就问，不会的就学，合理安排自己的时间，一门心思扑在工作上不是啥值得骄傲的事儿。
+加班？放他娘的臭狗屁！</description>
+    </item>
+    
+    <item>
+      <title>Multi-Error-Handling</title>
+      <link>https://wrfly.kfd.me/posts/multi-error-handling/</link>
+      <pubDate>Sat, 08 Dec 2018 16:48:09 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/multi-error-handling/</guid>
+      <description>Several weeks ago, I was asked to implement a &amp;ldquo;checker&amp;rdquo; that should check multiple errors (or conditions) at one time, once there is an error returned by one of the check, the whole check process should be terminated and returns the error (the first error).
+Then after I wrote it in the project, I refactored it and published in github, https://github.com/wrfly/check
+This package is quite simple, https://godoc.org/github.com/wrfly/check, it only got two functions:</description>
+    </item>
+    
+    <item>
+      <title>Golang-For-Loop</title>
+      <link>https://wrfly.kfd.me/posts/golang-for-loop/</link>
+      <pubDate>Sun, 25 Nov 2018 14:34:14 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/golang-for-loop/</guid>
+      <description>😀
+Recently my colleague meets a problem with golang for loop. He ranged an array of User, wanted to filter some user and append them (use pointer to get their address) to another user array, but finally got an array contains the same user.
+Some thing like this:
+newUsers := []*User{} for _, u := range UserArray{ if checkFailed(u){ continue } newUsers = append(newUsers, &amp;amp;u) } The newUsers got the same user with different indexes.</description>
+    </item>
+    
+    <item>
+      <title>Crontab-Trivia</title>
+      <link>https://wrfly.kfd.me/posts/crontab-trivia/</link>
+      <pubDate>Sun, 21 Oct 2018 01:01:50 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/crontab-trivia/</guid>
+      <description>Recently I have to use crontab to run a script at midnight (a Hadoop job in our office cluster to collect some tracking data). To follow the script&amp;rsquo;s log, I use tee to fork the log to some log file named with the date. But after the day I set the cronjob, I found nothing in the grafana neither of the HDFS, this means the job didn&amp;rsquo;t run.
+I wrote the job command as follows:</description>
+    </item>
+    
+    <item>
+      <title>Two-Weeks-Here</title>
+      <link>https://wrfly.kfd.me/posts/two-weeks-here/</link>
+      <pubDate>Sun, 16 Sep 2018 17:03:44 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/two-weeks-here/</guid>
+      <description>来这里两周了, 能够勉强正常生活了, 也可以循着地图到处看看了. 昨天去了东海岸公园, 虽然阴天, 看不到碧海蓝天, 但吹着海风感觉还不错.
+入职第二天去拍照和录指纹, 然后五个工作日拿到EP (第二个周一), 一年的有效期. 然后就可以办手机卡, 银行卡了. 因为HR有催, 所以周四中午去了Vivocity办了手机卡, StarHub的更优惠一些, 流量多, 关键周末不限流量, 网速都差不多的, 在国内买的Singtel的卡, 其实是泰国的卡, 然后漫游到新加坡的, 不过都是singtel, 速度都很可以, 下载峰值能够到2.5M-3M/s, 在google搜索speedtest, 然后测试的. 之所以选择StarHub, 一是因为流量多(XS套餐在前6个月,每月有9G流量, 周末不限流量, 后六个月每月6G流量, 后一年优惠就结束了, 每月3G流量, 都是周末不限量), 二是因为公司跟StarHub有合作, 免去了开卡费和注册费, 这里很坑, 如果不去读他们的详细介绍, 是不知道有这个费用的, 大概S$10+S$37, 不管singtel还是starhub都有.
+本想着那天中午一起把银行卡也办下来, 但时间不够了, 就只办了手机卡, 也是佩服自己蹩脚的英语, 能够顺利把手机卡搞定. 当天是一分钱没花的, 但他们会把账单寄到家里, 这里的水电费, 煤气费, 电话费, 网费都会通过信件寄给你. 所以需要pay the bill. 然后周五去办理银行卡, 他们说OCBC还不错, 我也跟风办了OCBC. 荷兰村的OCBC很小, 只有两个窗口, 大概等了30分钟, 然后办理用了20分钟. 这里的银行卡号跟账户号是分开的, 所以要打钱给某个人, 需要知道他的账户号, account number. 然后在手机app上可以设定GIRO或者还账单什么的, GIRO我理解为一个自动扣费的协议, 签了这个就会自动从银行划钱给公司.</description>
+    </item>
+    
+    <item>
+      <title>Singapore</title>
+      <link>https://wrfly.kfd.me/posts/singapore/</link>
+      <pubDate>Sun, 02 Sep 2018 00:22:55 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/singapore/</guid>
+      <description>前些日子一直在准备来新加坡的事宜(主要是淘宝买东西, 然后我又有选择困难症, 所以一天也选择不了多少东西), 然后就没有怎么更新代码, github上也不绿了.
+现在终于来到这个城市/国家了, 也算是安定下来了, 所以写点东西记录一下, 趁着昨天晚上的热乎劲.
+准备 签证 由于公司给办的EP签证, 所以我做的事情其实不是很多, 就填了一下EP申请表(在此强烈推荐使用 &amp;ldquo;好签&amp;rdquo;, 在手机上就能在PDF文件上划拉签名, 填写资料, 省下了打印再复印, 北京住所附近的打印店一张纸两块钱, 简直坑爹), 发了护照的首页, 也没有提供什么学信网的证明, 也没提交学位证复印件, 有可能是新加坡政府对于上市公司的照顾, 对我而言签证程序还算简单, 等了大约三周, 下来了IPA, 也就是 &amp;ldquo;In-principle approval&amp;rdquo;, 打印出来, 拿着就可以出境和通关, 非常简单方便. 我之前还担心会有什么问题, 其实一本护照, 一封IPA就可以入境.
+但新加坡对单身女性的签证很不友好, 很多旅行社都不给办理, 所以我女朋友就比较麻烦了, 月薪也达不到, 但是听说新加坡公民或者PR可以给担保入境, 直接在MOM的网站上申请就可以, 还没有尝试不过.
+顺便说一下飞机上的小白卡, 飞机上发卡的时候我正好去了厕所, 所以就没我的, 我看别人都在填那个, 就按了呼叫灯, 让乘务员拿了一份过来. 全英文的其实也能填, 有些地方可以空着, 比如我是过去工作, 所以就没有离开新加坡的下一个城市, 也没有填Stay days, 在新加坡的住址也没有很严格的规范, 只要填上就可以了, 就我而言, 单词之间的空格就空了一个字符, 也不知道对不对, 但我确实是过关了.
+住 在来之前, 除了签证(公司给办的), 最重要的事情就是住了, 可以在网上自己找, 但是会很麻烦, 包括合同什么的, 还有大家推荐的新浪 &amp;ldquo;狮城租房&amp;rdquo;, 上面有很多房源, 但我们不能过去看, 如果遇到一个好的房东还好, 如果遇到比较差的, 就会很麻烦.</description>
+    </item>
+    
+    <item>
+      <title>The-Meanings-of-Travel</title>
+      <link>https://wrfly.kfd.me/posts/the-meanings-of-travel/</link>
+      <pubDate>Sun, 05 Aug 2018 18:15:30 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/the-meanings-of-travel/</guid>
+      <description>马上要离开北京了, 趁这个周末去了天津. 一直惦记着那边正宗的煎饼果子和相声. 出发之前还列了清单, 然而实际上50%都没达成. 有计划的旅行, 计划赶不上变化的旅途.
+昨天晚上听完相声都10点了, 又在旁边的排档吃了饭, 从此将小龙虾拉黑, 一是麻烦, 二是没肉. 太不过瘾. 然后骑上自行车在黑暗中前行, 鼓楼那片都没灯了, 隐隐约约看到了鼓楼朝南的门上写着 &amp;ldquo;定南&amp;rdquo;, 又在东面发现了 &amp;ldquo;镇东&amp;rdquo;, 顿时觉得这个鼓楼不简单, 于是围着楼转了一圈, 北面写着 &amp;ldquo;拱北&amp;rdquo;, 西面写着 &amp;ldquo;安西&amp;rdquo;. 很有文化底蕴. 这种昏暗的&amp;rdquo;景色&amp;rdquo;, 以及我们后面去看的没有灯的 &amp;ldquo;天津眼&amp;rdquo;, 很少人能见到的, 但这也是城市的一部分, 天津的夜骑, 正如西安的夜骑和北京的夜骑, 能够深深感受到城市的魅力, 在昏暗中仿佛时间穿越了回去, 远离了嘈杂和喧嚣, 听这座城市的故事. (当然也要感谢共享单车)
+今天还去了五大道, 路边听到一个老师傅拿着扩音器招揽游客, 以前我对这种讲历史的&amp;rdquo;小导游&amp;rdquo;都是嗤之以鼻, 但今天却有种冲动想请他带着我转一圈. 谈好价钱(八十)以后, &amp;ldquo;老天津&amp;rdquo;就带着我开始转了, 一人一辆车, 颇有意思. 讲了一些房子的主人, 房子的风格, 哥特, 意大利风格, 摩登风格, 现代风格, 听起来人家是备了课的. 这片区域是当时的英租界, 很多政客名流富豪大商军阀元帅都居住于此, 放现在就是富人区了. 房子设计的也是各有不同, 有的是买的地皮, 请外国设计师来设计, 有的是买的现房. 也有很多高级公寓, 建国以后收归国家, 然后分配给工人们了. 很多房子也变成了招待所, 机关幼儿园, 国企办公机构等等. 以前一直不理解招待所是干什么的, 直到今天看到招待所有很多党和国家领导人住过, 才知道, 原来是给大官们住宿的. 想想也是, 人家总不能住商业酒店.</description>
+    </item>
+    
+    <item>
+      <title>golang: netgo vs cgo</title>
+      <link>https://wrfly.kfd.me/posts/golang-netgo-vs-cgo/</link>
+      <pubDate>Tue, 31 Jul 2018 23:00:06 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/golang-netgo-vs-cgo/</guid>
+      <description>由于alpine很小巧, 其经常被拿来当作容器应用运行时的基础镜像, 但是稍不注意, 就会踩一个坑.
+一般来讲, 如果我们想改变某个域名的地址, 除了更改DNS记录, 那就只有更改hosts文件了, 由于容器的便捷性, 我们总是会更改容器的hosts文件, 不管是通过 --add-host也好, 挂载hosts文件进去也好, 总之, 是更改这个文件.
+问题发现 然鹅! 有时候竟然会出现更改hosts文件无效的情况! 明明在里面ping是可以的呀! 为什么程序就不走这个IP呢? (默认golang程序)
+经过仔细的排查发现, 是golang程序的问题&amp;hellip; 中间过程略去不表&amp;hellip;
+alpine由于是个小巧的linux系统, 里面没有 /etc/nsswitch.conf 文件, 默认编译的go程序(netgo)会首先去查找这个文件, 判断dns查找顺序, 如果找不到这个文件, 那就 &amp;ldquo;自行决断&amp;rdquo;, 去DNS服务器里查找了. 所以如果想解决这个问题, 可以在image里面把这个文件给 &amp;ldquo;补上&amp;rdquo;: 可以看这个PR
+关于nsswitch.conf的详细介绍, 可以看这里 man 或者 man nsswitch.conf
+实验验证 下面有个小实验:
+package main import &amp;#34;net&amp;#34; const host = &amp;#34;www.google.com&amp;#34; func main() { println(host) ips, err := net.LookupIP(host) if err != nil { panic(err) } for _, ip := range ips { println(&amp;#34;lookup:&amp;#34; + ip.</description>
+    </item>
+    
+    <item>
+      <title>Go-Tips-Token-Bucket</title>
+      <link>https://wrfly.kfd.me/posts/go-tips-token-bucket/</link>
+      <pubDate>Sat, 28 Jul 2018 23:29:49 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/go-tips-token-bucket/</guid>
+      <description>前几天写了一个docker registry的lib https://github.com/wrfly/reglib
+然后在写example的时候发现并发太高, 把registry搞得502了, 然后就想办法怎么限制一下这个并发. 其实这个问题在之前面试的时候被问到过, 当时回答的不好. 因为一般的限流令牌桶的话都是有一个时间往里补充的, 我当时还没接触过别的, 所以就比较尴尬.
+但是那天下午忽然就想到可以用channel去实现这个令牌桶, 但是操作恰好相反, 操作的时候不是取出令牌再进行下一步, 而是往里放, 对应的, 操作完成也不是再还回令牌, 而是取出.
+可以看一个简单的例子:
+package main import ( &amp;#34;fmt&amp;#34; &amp;#34;sync&amp;#34; &amp;#34;time&amp;#34; ) func main() { count := 15 limit := 5 var wg sync.WaitGroup wg.Add(count) tbChan := make(chan struct{}, limit) for index := 0; index &amp;lt; count; index++ { go func(index int) { tbChan &amp;lt;- struct{}{} defer func() { &amp;lt;-tbChan }() defer wg.Done() fmt.Printf(&amp;#34;this is %d\n&amp;#34;, index) time.</description>
+    </item>
+    
+    <item>
+      <title>What-is-a-Goroutine, seriously</title>
+      <link>https://wrfly.kfd.me/posts/what-is-a-goroutine-seriously/</link>
+      <pubDate>Mon, 02 Jul 2018 12:29:07 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/what-is-a-goroutine-seriously/</guid>
+      <description>拖延了很久的一篇. 借面试的机会, 梳理一遍.
+ init and pstree 在系统中, 所有的执行和操作都是通过进程实现的. 当我们按下电源按钮的那一刻, 就相当于盘古开天辟地了, 从此, 所有的进程都会&amp;rdquo;依附于&amp;rdquo;一个叫init进程的特殊进程. 关于Linux初始化init进程, 可以看下这一个系列:
+浅析 Linux 初始化 init 系统:
+ Sysvinit UpStart Systemd  我们可以通过 pstree 来查看进程之间的关系.
+Process and Thread 严格意义上讲, 并没有进程,线程的区别, Linus 在一篇邮件中表达了自己的观点: http://lkml.iu.edu/hypermail/linux/kernel/9608/0191.html
+不管是Process,还是Threads, 都是一些可被执行的实体,context of execution (COE) or independent sequences of execution.
+但如果说区别, 进程之间不会共享内存(一般来讲), 而线程之间则会共享进程的内存. 线程是进程资源的子集, 他们唯一的区别在于是否共享了资源.
+ That state includes things like CPU state (registers etc), MMU state (page mappings), permission state (uid, gid) and various &amp;ldquo;communication states&amp;rdquo; (open files, signal handlers etc).</description>
+    </item>
+    
+    <item>
+      <title>Golang-Append</title>
+      <link>https://wrfly.kfd.me/posts/golang-append/</link>
+      <pubDate>Sun, 24 Jun 2018 21:26:01 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/golang-append/</guid>
+      <description>这几天在准备面试, 想起之前被问到的一个全排序的问题, 今天用golang写了一遍, 无意中发现了一个冷门的知识(或者叫坑).
+看下面一段代码:
+var NUMS = []int{1, 2, 3} func main() { x1 := NUMS[:1] x2 := NUMS[2:] fmt.Println(x1, x2, NUMS) fmt.Println(append(x1, x2...)) fmt.Println(x1, x2, NUMS) } 大脑编译一下, 结果会是什么?
+[1] [3] [1 2 3] [1 3] [1] [3] [1 2 3] 是上面这样吗?
+首先截取了 NUMS 的第一个作为 x1(1), 然后截取 NUMS 的第二个之后的, 作为 x2(3), 然后输出 x1, x2 和 NUMS; 然后将 x1 x2 连接起来输出(1 3); 然后重复第一次的输出.
+好像没问题吧?
+但是.
+https://play.golang.org/p/CugWJ9tP34Q
+结果却有点出人意料:
+[1] [3] [1 2 3] [1 3] [1] [3] [1 3 3] 为什么 NUMS 会被修改呢?</description>
+    </item>
+    
+    <item>
+      <title>Golang-Maaaap</title>
+      <link>https://wrfly.kfd.me/posts/golang-maaaap/</link>
+      <pubDate>Thu, 07 Jun 2018 21:53:55 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/golang-maaaap/</guid>
+      <description>下周出去玩.
+ 从备忘里翻出一个话题. 也是曾经遇到的问题. 在这里记录一下, 希望能给他人帮助.
+https://stackoverflow.com/questions/32751537/why-do-i-get-a-cannot-assign-error-when-setting-value-to-a-struct-as-a-value-i
+https://stackoverflow.com/questions/17438253/access-struct-in-map-without-copying
+Problem 先来看一段小代码:
+package main import &amp;#34;fmt&amp;#34; type person struct { name string age int } func main() { m := map[int]person{} for i := 0; i &amp;lt; 5; i++ { m[i] = person{ name: fmt.Sprintf(&amp;#34;person:%d&amp;#34;, i), } } for i := 0; i &amp;lt; 5; i++ { m[i].age = i } for _, p := range m { fmt.Println(p.name, p.age) } } https://play.</description>
+    </item>
+    
+    <item>
+      <title>Docker-Registry-Redirect-to-S3</title>
+      <link>https://wrfly.kfd.me/posts/docker-registry-redirect-to-s3/</link>
+      <pubDate>Thu, 10 May 2018 23:40:26 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/docker-registry-redirect-to-s3/</guid>
+      <description>不要让别人冲毁你的时间.
+ 事情的起因是, 办公室里从AWS上的docker registry拉镜像太慢, 用了kcp也不管用. 但是BBR又不能随便开, 那台机器不能关机重启. 所以只好折中, 在另一台机器上insmod tcp_bbr然后在上面跑一个nginx tcp reverse proxy, 代理一下真正的registry.
+emm, 但是事情并没有按照想象中的那样顺利.
+具体表现为, 本地到中转server的速度很快, 中转server到register的速度也不慢. 但是本地从中转上拉镜像就特别慢. TCP的window很小.
+很奇怪啊很奇怪.
+虽然也有用tcpdump抓包观察, 但是, 诶, 等等. 为什么出现了一个莫名的IP? 在tcpdump的流量中, 经验出现了 s3-1-w.aws~~~.com 的流量!
+我明明是从registry server上拉的镜像, 为什么会跟S3交互呢?
+会不会是, registry认证通过后, 直接给重定向到S3了!
+所以本地即使配置了中转服务器作为代理, 但实际上还是从S3下载文件! 嗯, 很有道理的样子.
+于是就搜了一下, 嘿, 真叫我蒙对了&amp;hellip;
+https://docs.docker.com/registry/configuration/#redirect
+这个开关是默认打开的(disable: false), 显然没有考虑我天朝行情.
+我们的registry后端存储用的是S3, 所以这里就直接redirect到S3了. 在国外这种默认是没问题的, 把流量全都丢给S3, registry上就不会有带宽瓶颈了. 但是在国内&amp;hellip;
+解决方法就是, 把这个开关设置成true.
+这里不得不吐槽一下这个配置, 因为:
+sotage: ... delete: enabled: true redirect: disable: false 也不知道是谁设计了这样的开关, 就不能统一一下么.</description>
+    </item>
+    
+    <item>
+      <title>Happy-Birthday</title>
+      <link>https://wrfly.kfd.me/posts/happy-birthday/</link>
+      <pubDate>Tue, 08 May 2018 22:51:57 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/happy-birthday/</guid>
+      <description>不如意事常八九, 可与人言无二三.
+ 今天又是寻常的一天, 只不过有点倒霉.
+要租我房子的小姐姐变卦了, 所以我也只能跟我的新房东变卦. 可是我已经交了1k的定金, 所以就弄得很尴尬, 而且还白跑了一趟. 到现在也没个回复, 我想, 至少也能退个八百吧.
+怪自己太心急, 看房子不到十分钟就匆匆忙忙的给了钱, 凭什么呀, 凭什么让我给定金我就给啊, 又不是我要被轰走, 我完全可以慢慢找房子的呀. 包子了这次.
+而且也没跟新租户要定金什么的, 所以导致了这次很被动. 其实被动也不仅于此, 还在于, 我把定金给的太早, 房子确实好, 也大, 但6个人, 生活质量肯定会下降吧. 而且, 还没有桌子椅子, 如果在给钱之前把这些条件都提出来, 势必会好一些, 因为主动权在我这里, 我有谈判的资本. 但当一切都敲定的时候, 我就被踢出谈判桌了. 太年轻啊太年轻.
+而且也怪自己太穷, 想方设法找到便宜而又近的房子. 但是每天一小时的通勤时间我完全可以承受啊, 相比每个月多300的房租, 与五个陌生人相处, 新的环境, 还要买桌子椅子, 我还是讨厌这些麻烦. 所以现在只好期待房东能给我一个好消息, 至少别是个坏消息.
+主动权是个好东西啊, 受制于人很难受很难受, 各种憋屈, 各种委屈. 虽说人在江湖, 身不由己, 但还是要对自己好一点啊, 为了几百块钱而惆怅, 发怒, 真是蠢死了, 不值. 现在明白为什么大哥们总喜欢掌控一些事情了, 因为你只有拥有主动权, 你才有谈判的话语权, 别人才会尊重你, 尊重你的意见和想法, 不然, 别人凭什么跟你谈判呢, 你算什么呢. 讲理吗, 凭什么讲理啊. Naive!</description>
+    </item>
+    
+    <item>
+      <title>Signals-in-Container</title>
+      <link>https://wrfly.kfd.me/posts/signals-in-container/</link>
+      <pubDate>Sat, 05 May 2018 21:19:55 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/signals-in-container/</guid>
+      <description>可能因为天气变热, 最近几天有些烦躁不安. 一个大脑的我, 果真处理不了多任务.
+ 这篇博客讲一下docker对于容器的信号处理, 包括 docker stop, docker kill, 以及docker挂掉的时候, 容器会产生什么样的反映.
+起因 事情的起因是前天晚上公司大楼电力检修, 机房停机了, 第二天上班的时候, 有同事问我, docker stop的时候, 容器没有正常关闭是为什么, 关机是正常关机, docker服务也都是正常停的(service docker stop),但是有一个mysql的容器没有正常停, 里面的数据没有落盘就死了, 导致了数据丢失和脏数据.
+我一时半会儿还真没法回答, 之前有看过相关知识, 说docker停止容器会向进程号为1的进程发送SIGTERM,但还真不知道机器停止的时候是怎样一种情况, 毕竟理论是理论, 实践才出真知.
+经过 然后就做了这样一个容器实验:
+FROMgolang:alpineCOPY main.go /RUN go build -o /bin/sig /main.goCMDsigpackage main import ( &amp;#34;log&amp;#34; &amp;#34;os&amp;#34; &amp;#34;os/signal&amp;#34; &amp;#34;syscall&amp;#34; ) func main() { log.Printf(&amp;#34;Service started, pid: [ %d ]&amp;#34;, os.Getpid()) defer log.Println(&amp;#34;Service stopped&amp;#34;) sigChan := make(chan os.Signal) signal.Ignore() signal.</description>
+    </item>
+    
+    <item>
+      <title>Another-K8s-Installation</title>
+      <link>https://wrfly.kfd.me/posts/another-k8s-installation/</link>
+      <pubDate>Sun, 22 Apr 2018 22:18:19 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/another-k8s-installation/</guid>
+      <description>额额, 又是一篇kubernetes的安装指南.
+不过我这一篇有点短, emm:
+bash &amp;lt;(curl -fSsL https://git.io/vpY6k) 好了, 正文就写完了.
+P.S. 项目在这里 https://github.com/wrfly/k8s-install.sh.
+然后说点闲话.
+这两天借着彭老板的门票, 去听了QCon. 虽然外面下着小雨, 但会场内人超多, 也没有空调, 很热. 昨天早上还去错了地方, 在&amp;rdquo;国际会议中心&amp;rdquo;, 然后去了&amp;rdquo;国家会议中心&amp;rdquo;. 其实凭良心讲, &amp;ldquo;国际&amp;rdquo; 还不如 &amp;ldquo;国家&amp;rdquo; 的富丽堂皇, 倒像是上世纪的样子.
+可能是咱才疏学浅, 有些主讲人说的云里雾里的, 有的是推销自家产品, 有的是念PPT, &amp;ldquo;参差不齐&amp;rdquo;这话说出来就显得我有点狂妄, 不过还是觉得有些内容枯燥无聊, 没啥干货. TiDB的大哥讲的还是很好的, 开源路上的教训比如, 先跑起来,不要过早优化; 测试的重要性; 工具的重要性; 监控的重要性等等. 获益匪浅. 然后还有一场百度网盘的, 但是当我看到他前面介绍网盘客户端的时候, 出现了 &amp;ldquo;Iphone&amp;rdquo;, &amp;ldquo;Ipad&amp;rdquo;的时候, 我就给他打负分了, 然后后面也在念PPT, 我就走了. 但听彭老板说, 百度的人讲BRPC的时候, 还是很牛逼的. 然后还听了刘超老师讲了Service Mesh, 很早就关注了他的公众号, 干货满满.
+晚上跟彭老板和孙老板吃了烤鸭hhh, 听了不少教诲, 对于自己的未来发展有了一点思考, 希望有一天能够望其项背.
+自己还是太菜了. 还要努力才能在以后毫不费力. 现在太安逸的话, 以后可就要吃苦了.</description>
+    </item>
+    
+    <item>
+      <title>Max-Length-in-Shebang</title>
+      <link>https://wrfly.kfd.me/posts/max-length-in-shebang/</link>
+      <pubDate>Tue, 13 Mar 2018 22:31:28 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/max-length-in-shebang/</guid>
+      <description>Life is full of surprises.
+ 昨天遇到一个Jenkins CI中执行tox出错的问题, 说 interpreter not found, 仔细debug了一番, 最终发现是shebang太长了.
+然后就找到了对应的解释: shebang-line-limit-in-bash-and-linux-kernel
+原因是在执行tox的过程中, tox没有使用系统自带的python 或者 pip, 而是自己下载了一个, 放到 $YOUR_PROJECT/.tox/bin/py27/pip 里面, 然后这个pip文件里的开头是 #!$YOUR_PROJECT/.tox/bin/py27/python2.7, 如果你的project名字太长, 导致这一行超过了128个字符的话, 那么就gg.
+这个问题会经常出现在Jenkins的python项目里, 因为jenkins在CI的过程中会自动扩展你项目的名字, 让他变得很长, 很大概率超过128个, 比如我们项目的 #!/var/jenkins_home/workspace/srv_feature_PLATFORMDEV-581-QM1COB64VSWGD5RGAT631CKDKW3TXH2CEI0XKLJZICJXXBM8SF9A@2/.tox/py27/bin/python2.7 根本tmd不能用. 报错信息: bad interpreter: Permission denied
+还有一些人在讨论: https://github.com/pypa/pip/issues/1773 然而他们好久没有发布新版本出来了&amp;hellip;
+有个老哥也遇到坑了: /usr/bin/python: bad interpreter: Permission denied error
+解决方案是, 在tox的配置文件里指定command而不是用它自己生成的python或者pip:
+[tox] # List the environment that will be run by default minversion = 1.6 envlist = py27,pep8 skipsdist = True [testenv] setenv = VIRTUAL_ENV={envdir} LANG=en_US.</description>
+    </item>
+    
+    <item>
+      <title>Panic</title>
+      <link>https://wrfly.kfd.me/posts/panic/</link>
+      <pubDate>Sun, 11 Mar 2018 23:12:32 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/panic/</guid>
+      <description>I&amp;rsquo;m not going to talk about the panic in golang, I&amp;rsquo;m talking about panic in our life.
+ 今天偶然看到又一个研究生想要退学的消息. 评论也都是一边倒, 痛诉学校的种种不是, 制度的种种不好. 其实有点好笑, 因为很像键盘侠, 但的确又做不了什么, 更或者还会是委曲求全的那一群. &amp;ldquo;委曲求全&amp;rdquo; 这个词, 不知道在国外有没有, 又或者是中国人独特的发明创造, 我们五千年的文明历史, 的确是总结了一些经验, 和一大批丰富的词语.
+想当初我还在学校论坛上发表过痛诉学校制度的帖子, 随声附和的人也不少, 批评我的也有很多, 现象很正常, 但我在想, 为什么没有第二个帖子, 为什么是我. 怎么也没有结论. 一来, 我不特殊, 二来我又穷苦出身, 三来还学习不好, 真真比不上其他的同学. 现在想想, 引用前几天别人对我的一个评价, &amp;ldquo;耿直&amp;rdquo;. 什么都往外说. 可我也好奇, 别人心里都在想什么. 忽然又想到, 很久没和别人谈心了.
+再来说恐慌.
+厌学也好, 退学也罢, 总之是不想继续下去了. 有点类似&amp;rdquo;周一不想上班&amp;rdquo;. 可能是学的东西没有成就感, 也或许是对未来没有希望, 反正, 看不到头. 我们总是对未知恐慌, 因为不知道前面是什么, 就像恐惧黑暗. 那位学长好像是因为导师的原因, 吐槽了导师的脾气, 经常换研究方向, 以及学术上的无所事事和&amp;rdquo;抢功劳&amp;rdquo;.</description>
+    </item>
+    
+    <item>
+      <title>Go-Scheduler</title>
+      <link>https://wrfly.kfd.me/posts/go-scheduler/</link>
+      <pubDate>Thu, 22 Feb 2018 18:13:29 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/go-scheduler/</guid>
+      <description>翻译自: http://morsmachine.dk/go-scheduler
+虽然是13年的一篇文章, 但还是值得一读的.
+介绍 Go 1.1版本一个大的改动是由Dmitry Vyukov做的新的调度器. 新的调度器在性能上为go程序并行提供了&amp;rdquo;戏剧性&amp;rdquo;的提升(总之是很牛), 然后自己又没别的事情做, 就想着写一写这个新的调度器(或者说思路, 方法, 概念 balabala).
+这篇文章中的大部分内容都在这个原始文档中提出了, 这个文档写的很全面, 但是太&amp;rdquo;技术&amp;rdquo;了. (我感觉也太技术了, 云里雾里的, 所以作者在这里打算通俗的讲一讲)
+关于新的调度器, 你需要知道的都在那篇原始文档里, 但是这篇文章有图~ 所以更清晰一点.
+带有调度器的Go运行时(go runtime)需要什么 在我们深入了解调度器之前, 我们需要理解为什么它是必须的. 为什么在操作系统可以帮你调度线程的时候, 你仍然需要一个用户空间下的调度器.
+POSIX线程API对于现存的Unix进程模型来说更像是一个逻辑扩展, 于此, 对于线程的控制, 更接近与对进程的控制. 线程拥有其自己的信号标志位, 可以被CPU协同分配, 可以被放进cgroups中管理, 可以被查询其所用的资源等. 这些控件对于go程序调度goroutine来说, 增加了很多无谓的功能和开销, 并且当线程数达到100,000时, 开销会迅速增加.
+另一个问题是, 基于Go的语言模型, 系统不能创建可被通知的调度决定(informed scheduling decisions). 比如, Go在垃圾回收时, 需要让所有线程停止, 并且线程使用的内存需要连贯. 这就涉及到, 等到所有正在运行的线程达到一个能使内存连贯的点.
+当你有很多线程需要被调度到一个随机的点的时候, 唯一的机会是你要等到大多数线程都达到某个内存连贯的点. 对于Go调度器来说, 它知道哪里的内存是连续的, 所以就能作出这样的决定. 这就意味着, 当gc的时候(stw), 我们只需要等待那些正在被CPU运行的线程即可.
+角色一览 对于线程来说, 有三种常见的模型. 一个是 N:1, 即多个用户空间下的线程运行在同一个CPU核心上. 这种模型的优点是, 可以在多个线程间快速的切换上下文, 但缺点也很明显, 无法利用多核系统的优点.</description>
+    </item>
+    
+    <item>
+      <title>Discover-sync.Pool</title>
+      <link>https://wrfly.kfd.me/posts/discover-sync.pool/</link>
+      <pubDate>Tue, 20 Feb 2018 20:05:06 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/discover-sync.pool/</guid>
+      <description>其实很久之前就用到了这个东西，起因是collecter程序占用太多内存了，然后就用sync.Pool复用额外消耗的一次性内存，避免GC周期太长使内存来不及释放而导致的OOM。
+https://golang.org/pkg/sync/#Pool
+简单的说，就是在一个池子里放了一些“东西”，这些东西是某种特殊的类型，用的时候需要指定。
+池子会随着你的取用而扩张，比如说，池子里面放了扳手（扳手池），现在有10个工人依次取用，当第一个人取的时候，“扳手池”发现没有扳手，ok，new一个出来; 当第一个工人用完了的时候，把扳手放回扳手池，然后第二个人取的时候，扳手池就直接返回那个扳手就可以了。嗯……如果第一个工人没有归还呢，那么扳手池就要重新new一个扳手了，也就是这种情况：10个工人同时取用扳手，那么扳手池就得new10个新的出来了。
+一个测试：
+https://gist.github.com/wrfly/7de7f1e0c87860aa2f92dc6ed64cb75b
+Makefile：
+.PHONY: build run test NAME := $(shell basename `pwd`) build: go build run: ./$(NAME) test: build run go tool pprof -lines $(NAME) mem.porf  上面那个gist中，有几个测试，在这种情况下：
+wg.Add(alloc) for i := 0; i &amp;lt; alloc; i++ { go func(num int) { // justMake() 	// bufPoolGet() 	bufPoolGetAndPut(num) // bufPoolSleepAndGetAndPut(num) 	wg.Done() }(i) } 也就是拿了接着放回去的时候，结果如下：
+➜ syncPool_mem_usage_test make run go build ./syncPool_mem_usage_test newmake: 4 reused: 9996 reused slice(maybe equal to newmake) len: 0 ➜ syncPool_mem_usage_test  也就是说，新分配了4个1e6长度的[]byte，其余的都是复用的。</description>
+    </item>
+    
+    <item>
+      <title>RWMutex-and-sync.Map</title>
+      <link>https://wrfly.kfd.me/posts/rwmutex-and-sync.map/</link>
+      <pubDate>Sat, 03 Feb 2018 20:34:48 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/rwmutex-and-sync.map/</guid>
+      <description>In the last post, I noted a problem of read-and-write in high-cocurrency situation and finally chose to use sync.Map. This post I will make a comparation between map with RWMutex and sync.Map.
+Read-or-Write Test Code package main import ( &amp;#34;fmt&amp;#34; &amp;#34;sync&amp;#34; &amp;#34;time&amp;#34; ) type rwMap struct { data map[int]int m sync.RWMutex } var ( rwm = rwMap{data: make(map[int]int)} end = int(1e7) syncM sync.Map ) func main() { fmt.Println(&amp;#34;write test&amp;#34;) // rw map 	start := time.</description>
+    </item>
+    
+    <item>
+      <title>Read-and-Write-in-High-Concurrency</title>
+      <link>https://wrfly.kfd.me/posts/read-and-write-in-high-concurrency/</link>
+      <pubDate>Fri, 02 Feb 2018 19:17:28 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/read-and-write-in-high-concurrency/</guid>
+      <description>问题 今天遇到一个高并发读写的问题。
+具体的场景是，有一个“策略”的集合，然后每秒有很多消息进来，每一条消息都要匹配有没有对应的策略，如果有的话就应用策略（更改消息的某个属性），没有的话就返回。
+抽象来看，就是在N多读的同时，怎样去写数据。
+一开始我的方法是策略存在数组里，消息来了就去遍历数组，如果匹配到了就返回对应的规则。这种方法最笨，因为每一条消息过来，我都要去循环遍历整个数组，如果数组很长的话（有很多规则），那么带来的无谓开销会很大，复杂度为O(n)。
+而且还一个问题，如果在range数组的时候，数组发生了变化，那么就会读到错误的值，或者崩溃。
+一种解决的方法是，在遍历之前，首先拷贝一份新的，遍历新的策略数组，而不是原有的全局变量。这种方法的问题在于，每次匹配规则的时候，都要进行一次拷贝，虽然简单，也能解决问题，但，太浪费资源，而且很丑。
+最终的思路是，用哈希表的方式去匹配策略，从复杂度上来看是O(1)的操作，但问题在于并发读写哈希表。
+复现 为了更容易的表示问题，用了大量的并发读写（实际情况没有下面那么频繁，写操作要比读操作少得多得多）：
+package main import ( &amp;#34;fmt&amp;#34; &amp;#34;time&amp;#34; ) var biu map[int]int func read() { for i := 0; i &amp;lt; len(biu); i++ { if biu[i] != i { fmt.Printf(&amp;#34;%d != %d\n&amp;#34;, biu[i], i) panic(&amp;#34;!&amp;#34;) } } } func write() { for i := 0; i &amp;lt; time.Now().Second(); i++ { biu[i] = i } } func main() { biu = make(map[int]int) go func() { for { go write() time.</description>
+    </item>
+    
+    <item>
+      <title>Kafka-Timestamp-and-Nginx-Udp-Proxy</title>
+      <link>https://wrfly.kfd.me/posts/kafka-timestamp-and-nginx-udp-proxy/</link>
+      <pubDate>Wed, 24 Jan 2018 21:09:11 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/kafka-timestamp-and-nginx-udp-proxy/</guid>
+      <description>昨天遇到一个kafka lib的问题, 明明kafka版本是1.0, 发消息的时候也带上时间戳了, 但接收的时候就是看不到时间戳, timestamp为-1.
+如果你也是用的sarama, 记着要在配置的时候制定kafka版本,不然就默认用最小的版本了, 而最小版本(0.8)是没有时间戳功能的, 所以即使后台的kafka是最新的1.0, 那也收不到timestamp, 因为sarama发的时候就没带, 协议版本里没有.
+解决方法是, 指定kafka的版本:
+config := sarama.NewConfig() config.Version = sarama.V1_0_0_0 // HERE! // sarama.WaitForLocal sarama.WaitForAll sarama.NoResponse config.Producer.RequiredAcks = conf.AckMode 还需要注意的一点是:
+// Timestamp is the timestamp assigned to the message by the broker. This // is only guaranteed to be defined if the message was successfully // delivered, RequiredAcks is not NoResponse, and the Kafka broker is at // least version 0.</description>
+    </item>
+    
+    <item>
+      <title>Go-TrimLeft-and-TrimPrefix</title>
+      <link>https://wrfly.kfd.me/posts/go-trimleft-and-trimprefix/</link>
+      <pubDate>Wed, 24 Jan 2018 20:38:42 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/go-trimleft-and-trimprefix/</guid>
+      <description>今天忽然发现了一个bug，其实是我自己的错误啦，不过也可以甩锅给文档……
+简而言之，是用法错误，看这样一个例子：
+package main import ( &amp;#34;fmt&amp;#34; &amp;#34;strings&amp;#34; ) func main() { str := &amp;#34;/some/key&amp;#34; fmt.Println(strings.TrimLeft(str, &amp;#34;/some&amp;#34;)) }key Program exited. https://play.golang.org/p/Hn8-iVEUi-W
+没毛病是吧？
+如果你也觉着没毛病，那你也错啦！
+package main import ( &amp;#34;fmt&amp;#34; &amp;#34;strings&amp;#34; ) func main() { str := &amp;#34;/some/sugar&amp;#34; fmt.Println(strings.TrimLeft(str, &amp;#34;/some&amp;#34;)) }ugar Program exited. https://play.golang.org/p/_-3V1PgLwjh
+喂喂喂！怎么把我的sugar的s给吃了，这是bug吧！
+嗯。的确是bug，不过，“凡事总要先从自身找原因”:
+ func TrimLeft
+func TrimLeft(s string, cutset string) string
+TrimLeft returns a slice of the string s with all leading Unicode code points contained in cutset removed.</description>
+    </item>
+    
+    <item>
+      <title>Token-Bucket-II</title>
+      <link>https://wrfly.kfd.me/posts/token-bucket-ii/</link>
+      <pubDate>Sat, 20 Jan 2018 14:52:01 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/token-bucket-ii/</guid>
+      <description>昨天公司年会上中了一部iPhoneX，感觉用尽了积攒了二十多年的运气。
+ 上回说到用ticker的方式后台fill令牌桶的效率是最高的，然后鄙人就很奇怪，所以就又刨根问底测试了一下，发现在单核的情况下（用docker的方式绑定CPU到容器），如果有大于100个协程在run的话，性能的确会受影响。
+代码: https://gist.github.com/wrfly/3f2b23b20d53fbe5f9fee8e8f89fe861
+CPU: Intel(R) Core(TM) i7-7600U CPU @ 2.80GHz
+多核情况下的性能对比: ➜ ratelimit ./ratelimit 2018/01/20 15:10:28 start testing... 2018/01/20 15:10:28 5s test 2018/01/20 15:10:33 juju[lock]: 5.000108905 2018/01/20 15:10:33 take: 6000 2018/01/20 15:10:33 drop: 35740301 2018/01/20 15:10:33 2018/01/20 15:10:38 bsm[atomic]: 5.000146318 2018/01/20 15:10:38 take: 6000 2018/01/20 15:10:38 drop: 57423059 2018/01/20 15:10:38 2018/01/20 15:10:43 wrfly: 5.000100057 2018/01/20 15:10:43 take: 5000 2018/01/20 15:10:43 drop: 116287439 2018/01/20 15:10:43 2018/01/20 15:10:48 tb: 5.</description>
+    </item>
+    
+    <item>
+      <title>Token-Bucket</title>
+      <link>https://wrfly.kfd.me/posts/token-bucket/</link>
+      <pubDate>Sun, 14 Jan 2018 01:07:51 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/token-bucket/</guid>
+      <description>上周解决的bug（其实并不能算是bug，是因为量太大导致的OOM）用到了令牌桶，简单在此记录一下。
+关于令牌桶，最早接触的时候还是实习的时候用到的tc，这货限流就是用的令牌桶，简单地说，就是有一个桶，这个桶中有一些令牌，每进来一个包，就拿走一个令牌，当一定时间内（比如说，一秒）令牌被拿完了，那接下来的包就被丢弃了，因为他们没有拿到令牌；等到下一个时间周期，桶中再次被填满令牌，然后包来了再拿。
+更详尽的参考：限流:漏桶算法和令牌桶算法  其中也有wikipedia的链接。
+关于实现，github上搜到的golang的实现有这几个：
+ https://github.com/bsm/ratelimit https://github.com/juju/ratelimit https://github.com/tsenart/tb  (P.S 还有我的hhh token bucket)
+大体思路有这几个：
+ 使用lock+对比时间 使用原子操作+对比时间 使用原子操作+后台填桶（tikcer）  令牌桶其实很简单，就看怎样实现性能最好。
+使用lock去拿token（看桶里还有没有token），然后再对比一下上次填桶的时间和取token的时间，就可以判断这个token能不能取到，这种实现的弊处在于lock的引入在数据量很大的情况下带来了不必要的lock和unlock，引起性能的下降。
+所以就引出了第二种方案，使用原子操作来取代lock，性能有很大的提升。对比测试在下文中有代码。
+可能会有人问，为什么要用对比时间的方式呢，后台用一个ticker定时填满不就行了。这也是我一开始想到的，但实际操作中却出现了问题，不知道是我姿势不对还是什么，测出的效果很差，怀疑是ticker没有定时执行，CPU没能调度到它上，没有来得及重置bucket。
+然后就到了最后一种方式，后台填桶。这是最直白的，开一个goroutine每隔一段时间更新bucket中的token数量。但是，理论上在高并发的情况下，CPU繁忙，go出去的ticker容易失效（goroutine没能得到CPU资源），但实际情况却。。。大大超出我的想想，这种方法竟然是效率最高的！！！
+对比测试：token-bucket-test.go
+2018/01/13 18:05:17 5s test 2018/01/13 18:05:22 bsm: 5.000064716 2018/01/13 18:05:22 take: 6000 2018/01/13 18:05:22 drop: 54533531 2018/01/13 18:05:22 2018/01/13 18:05:28 wrfly: 5.000066249 2018/01/13 18:05:28 take: 4977 2018/01/13 18:05:28 drop: 57039560 2018/01/13 18:05:28 2018/01/13 18:05:34 tb: 5.000073633 2018/01/13 18:05:34 take: 6000 2018/01/13 18:05:34 drop: 113551687 2018/01/13 18:05:34 2018/01/13 18:05:35 range test: 100000000 2018/01/13 18:05:35 dry run: 0.</description>
+    </item>
+    
+    <item>
+      <title>Logrotate-Problem</title>
+      <link>https://wrfly.kfd.me/posts/logrotate-problem/</link>
+      <pubDate>Mon, 08 Jan 2018 20:59:37 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/logrotate-problem/</guid>
+      <description>今天遇到一个logrotate的问题。
+现象是配置不生效（其实也不是完全不生效，只是每小时的滚转策略变成一天了）。
+配置文件：
+# see &amp;#34;man logrotate&amp;#34; for details # rotate log files weekly weekly # keep 4 weeks worth of backlogs rotate 4 # create new (empty) log files after rotating old ones create # use date as a suffix of the rotated file dateext # uncomment this if you want your log files compressed #compress # packages drop log rotation information into this directory include /etc/logrotate.d$ ls -l /etc/cron.</description>
+    </item>
+    
+    <item>
+      <title>Share-Memory-by-Communicating</title>
+      <link>https://wrfly.kfd.me/posts/share-memory-by-communicating/</link>
+      <pubDate>Sat, 06 Jan 2018 20:39:56 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/share-memory-by-communicating/</guid>
+      <description>Origin: https://blog.golang.org/share-memory-by-communicating
+传统的多线程编程（比如Java，C++，Python等）需要码农通过在线程间共享内存的方式通信。一般来讲，共享的数据结构用锁来保护，线程想获取数据的时候必须先拿到锁。在某些情况下，用线程安全的数据结构能使其变得更加容易，比如Python的Queue。
+Go的并发原语 - goroutine和channel - 提供了另一种优雅的方式去写并发软件。（这些概念有一个有趣的历史，起源于C. A. R. Hoare的 Communicating Sequential Processes）Go鼓励用channel的方式在goroutine之间传递引用数据，而不是声明一把锁去协调对共享数据的访问。这样的操作保证了在同一时刻只有一个goroutine拥有对数据的访问权。这个概念在高效Go编程（go程序员的必读文档）中有总结。
+ 不要通过共享的方式去沟通，通过沟通的方式共享内存。
+ 考虑这样一个程序，它轮旬一堆的URL。在传统的多线程编程中，你或许用以下的数据结构：
+type Resource struct { url string polling bool lastPolled int64 } type Resources struct { data []*Resource lock *sync.Mutex } 然后有一个Poller的函数（并发执行）看起来可能会这样：
+func Poller(res *Resources) { for { // get the least recently-polled Resource  // and mark it as being polled  res.lock.Lock() var r *Resource for _, v := range res.data { if v.</description>
+    </item>
+    
+    <item>
+      <title>About-Love</title>
+      <link>https://wrfly.kfd.me/posts/about-love/</link>
+      <pubDate>Sat, 06 Jan 2018 19:57:01 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/about-love/</guid>
+      <description>无论顺境还是逆境，富裕还是贫穷，健康还是疾病，快乐还是忧愁，我将一直爱你，珍惜你，对你忠实，直到永远。
+喜今日两姓联姻，一堂缔约，良缘永结，匹配同称。看此日桃花灼灼，宜室宜家，卜他年瓜瓞绵绵，尔昌尔炽。谨以白头之约，书向鸿笺，好将红叶之盟，载明鸳谱。
+  就算你拒绝了我，我对你也永远没有埋怨。但我不会再靠近了。如果你有求于我，我依然会鞠躬尽瘁。从今往后我会把喜欢藏起来，不再招摇过市了，我会努力过得好，希望你也是。
+爱情不止是找一个人结伴生活，而是与对方共享自己的人生。
+ 如果说爱情只为了找一个人过日子，那我大可省去这笔麻烦，因为我可以自己过日子，吃饭睡觉看电影玩游戏听歌散步旅行拍照看书写字。
+心目中的爱情应是，一起吃饭睡觉看电影玩游戏听歌散步旅行拍照看书写字。
+什么包容理解信任依赖关心和爱，都是后话。前提得是互相欣赏。欣赏就是聊得来，别她说东你说西，她吃素你吃鸡。
+姜太公钓鱼，愿者上钩。</description>
+    </item>
+    
+    <item>
+      <title>Gracefully-Shutdown</title>
+      <link>https://wrfly.kfd.me/posts/gracefully-shutdown/</link>
+      <pubDate>Wed, 03 Jan 2018 23:03:07 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/gracefully-shutdown/</guid>
+      <description>时间是宇宙唯一的资源 &amp;mdash; 我
+ 因为上周准备code review的时候遇到了这个问题，大家也给出了一些建议，和imcom哥也进行了一番讨论，了解了golang中context的一些用法，在这里记录备份一下，也希望对别人有所帮助。
+首先简单的阐述一下问题是什么。golang编程，经常会go出去一些goroutine，抛出去不难，关键要看怎么收回来，因为程序不仅有启动，还要有退出，不管是正常退出还是非正常退出，总得有一个clean up的过程，不然就会导致程序不可控，引发非正常退出，数据丢失或者脏数据等一些乱七八糟的问题。
+所以我们要在程序退出的时候对申请的资源进行释放，主动关闭已经建立的连接，完成正在进行的工作，然后退出程序。
+github上有很多公开的让http服务graceful退出的lib，好像某些框架也提供了gracefulstop的方法。其本质就是停止服务，关闭端口，拒绝了新来的请求，然后把手头正在进行的请求处理完，或者设置一个超时时间强制结束正在进行的请求，然后server就stop了。这里我不谈论这个，因为有很多框架都自带了这个功能，而且不限于http服务。
+但有个东西是要参考的，golang中的context。写过http服务的人都知道，每个请求的request中都带了一个context，一开始我是不知道这是做什么用的，但每个东西都有其用法，这个context的用法就是让server端和client联系起来的一个上下文，也可以理解为纽带。最基础的，比如client发出了一个请求，但是由于某种原因（网络断了，链接丢了，客户端主动关闭了，Ctrl+C了），这个连接断了，那么server端还要继续处理么，肯定不要了嘛，不然发给谁，给鬼啊，所以server就要根据这个context进行下一步处理，如果context已经done了，那么这个请求就可以直接return了。
+说起来会很枯燥，看代码（跟上面说的server无关了哈，有点偏）：
+package main import ( &amp;#34;context&amp;#34; &amp;#34;fmt&amp;#34; &amp;#34;sync&amp;#34; &amp;#34;time&amp;#34; ) var wg sync.WaitGroup func main() { ctx, cancel := context.WithCancel(context.Background()) defer cancel() n := 3 wg.Add(n) for i := 0; i &amp;lt; n; i++ { go testContext(ctx) } time.Sleep(2100 * time.Millisecond) cancel() wg.Wait() } func testContext(ctx context.Context) { defer wg.Done() defer fmt.Println(&amp;#34;stop&amp;#34;) tk := time.NewTicker(time.Second) defer tk.Stop() for { select { case &amp;lt;-ctx.</description>
+    </item>
+    
+    <item>
+      <title>Global-Counter-in-Programming</title>
+      <link>https://wrfly.kfd.me/posts/global-counter-in-programming/</link>
+      <pubDate>Tue, 02 Jan 2018 00:18:50 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/global-counter-in-programming/</guid>
+      <description>今天去颐和园玩来着，看到官方开的溜冰场，虽然50一位，但也值了。非常开心。 &amp;mdash; 我
+ 前些日子给QiMen添加新功能，需要统计实时状态，状态中有个请求数量，所以需要一个计数器。
+如果是一般的计数器还好，写一个全局变量一个一个加就可以了，但是由于是高并发的服务，很多线程都回去加加减减，所以全局变量的方法是不可取的。
+那既然有高并发，我给这个变量加个锁好了。也不可以，因为是高并发，可以假设每秒有10k请求，那就需要Lock Unlock 10k次，显然是对资源的浪费，很没有必要。 所以加锁的方案也不可行。
+既然这样，那不如加个队列吧，一头写，另一头读。这个方案貌似可以，但计数器的实现就变成了“队列”+“计数器”，感觉工程量有点大。所以还是pass了。
+emmm，今天吃饭等号的时候，跟阿杰讨论了下，他说他们的方案有一种是依靠外部redis单线程的优势，用redis的counter来加加减减。好像能够解决问题，毕竟redis还是靠得住的，然而，网络IO貌似有点高，而且引入了新的redis组件，如果排除掉网络IO的影响，如果有10个QiMen，每个QiMen每秒10k的消息，那就是每秒100k的操作，不知道redis能不能抗住。（也不确定redis cluster搞不搞的定这个counter）可能是大家的业务场景不一样，所以杰师傅考虑的“统计数据外置”在我的情境下是没必要的，因为我只需要一个总的结果，每隔一段时间反馈给我就好。但大多数情况下，统计数据外置还是政治正确的，这样可以解耦数据，使服务无状态。
+然后在golang example中其实就有一个counter，用的是atomic的原子特性。（话说这里有一个插曲，golang的playground中，给每个程序限制了一个线程运行，因为每次跑goroutine都会得到正确的结果，不论加不加锁，也不论加不加atomic，猜测playground在运行时添加了 GOMAXPROCS=1）
+var counter uint64 = 0 atomic.AddUint64(&amp;amp;counter, 1) 但这个counter也不能满足我的要求，因为我其实是不知道有多少个counter的，比如请求来源有10个（以IP划分），那我就有10个counter，所以在事先不知道有多少个counter的情况下，这种方案也“貌似”被pass了。（其实在prometheus中，exporter所用的counter内部实现也是atomic）
+第一反应是用map:
+counter := make(map[string]uint64, 0) if _, ok := counter[source]; !ok { counter[source] = 0 } c := counter[source] atomic.AddUint64(&amp;amp;c, 1) // error here 然而，map里面不让取地址，因为是哈希表，里面的东西会经常变，没有一个准确的地址。（可以搜一下大佬们对此的讨论，如果感兴趣的话）
+但是。凡事总有个但是。imcom哥提供了这样一种方案。
+counter := make(map[string]*uint64, 0) 最终的counter还是哈希表，但内容是一个指针，这样atomic就可以对其操作。如果想读取值的话，就atomic.LoadUint64一下。还可以在上层封装一个，在一个struct中既创建一个普通的map，又创建一个指针的map，增删全在指针map上进行，读取呢，则先Load到普通的map，然后就可以进行之后的操作了，比如映射json。
+type Counter struct{ IP	map[string]uint64 `json:&amp;#34;ip&amp;#34;` IPCounter map[string]*uint64 `json:&amp;#34;-&amp;#34;` } 问题解决。
+对于atomic的扩展阅读：sync/atomic - 原子操作</description>
+    </item>
+    
+  </channel>
+</rss>

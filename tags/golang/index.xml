@@ -38,6 +38,15 @@ Mendel Lib
     </item>
     
     <item>
+      <title>Mendel - A/B Testing Platform (Part 1)</title>
+      <link>https://wrfly.kfd.me/posts/mendel-ab-testing-platform-p1/</link>
+      <pubDate>Sun, 07 Jul 2019 13:53:31 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/mendel-ab-testing-platform-p1/</guid>
+      <description> 遇到的问题 </description>
+    </item>
+    
+    <item>
       <title>Golang-Open-File</title>
       <link>https://wrfly.kfd.me/posts/golang-open-file/</link>
       <pubDate>Tue, 16 Apr 2019 22:13:25 +0800</pubDate>
