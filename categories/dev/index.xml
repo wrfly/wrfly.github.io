@@ -5,10 +5,36 @@
     <link>https://wrfly.kfd.me/categories/dev/</link>
     <description>Recent content in dev on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 07 Jul 2019 13:53:31 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 30 Sep 2019 00:41:31 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/categories/dev/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Mendel - A/B Testing Platform (Part 1)</title>
+      <link>https://wrfly.kfd.me/posts/mendel-ab-testing-platform-p1/</link>
+      <pubDate>Mon, 30 Sep 2019 00:41:31 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/mendel-ab-testing-platform-p1/</guid>
+      <description>离上一篇文章已经过了好久了，能够记起还有这么一个坑没填，并且能够记得要些什么，纯属不易…… 这篇主要讲一下系统实现的时候遇到的问题以及我是如何解决的，当中会有疏漏的地方，也欢迎看到这篇文章并且感兴趣的人一起讨论。
+流量分布 这个系统最最主要的目的和功能就是分配流量，所以如何分配流量，就成为了首先要面临的问题。
+我们的配置分为两种，基础配置和实验配置，那么随之的，流量也分为两种：基础流量和实验流量。对于一个国家的请求而言，如果把流量按照一百份来划分，用了10%的流量做实验，那么就需要在这些请求中挑出10%出来，让其走实验的配置，剩余的90%则按照基础配置进行选择（在某个layer中运用某种算法）。
+这其中有一个要求，即流量不能随机划分，不能让用户感知到变化，上一秒是根据base config进行的选择，出现了ABCD，下一秒也要按照base config，不能表现不一致。
+这一点我们通过fnv哈希算法来实现，将用户的country，session和uid作为输入，确保三要素相同的情况下，得到的hash分布是随机的。
+当然这里也有一些细节，比如既要支持按照session划分，又要按照uid划分，在对一致性要求没那么高的时候，还可以加上hour作为第四因素，变相放大实验流量，得到更多结果。
+所以解决方案为：
+fnv(country + session + uid [+ hour]) % 100 的出一个数字，通过这个数字判定是base还是experiment
+实验选择 接着上面，在得到一个[0,99)的数字以后，怎么就能确定是base还是exp呢？
+如果base的config占80%, exp1占10%，exp2占5%，exp3占5%，如何确定一个请求（hash = 55）在哪里呢？
+最简单的方法，用一个map[uint8]string来存储没一个数字所对应的实验ID或者BaseID，每次请求过来都用这个map查一下。
+但我有点嫌慢，就选择了另外一种方式：bitmap
+我们有100份流量，但是数字最大到int64，所以就需要两个int64来存储我们的实验信息，如果一个数字是45,那么就选择第一个bitmap，如果是76,就选择第二个。
+具体操作是将bitmap右移[&amp;gt;&amp;gt;]hash位，在与1与或[&amp;amp;&amp;amp;]，如果是真，那么就在这个实验里，如果是假，就换下一个实验的bitmap进行同样操作。
+这样能够比map的方式快50%
+流量分布不均匀 这其实是自己挖的一个坑，因为所有的流量都会分布到[0,99)上，所以我在存储的时候用了uint8, 认为这个数字已经足够用了，但实际上，虽然它够用，但模100之后并不平均，因为uint8的范围是[0,128), 将这一批平均分布的数字模100之后的分布则必然不平均，[0,28)在[0,99)内占了两份。
+// Hash returns a hash value of [0,100) func Hash(x string) uint8 { hash := fnv.New32a() hash.Write([]byte(x)) return uint8(hash.Sum32()) % 100 } 所以简单粗暴的方式是更改一下取模顺序，我们认为hash.Sum32()是平均的，那么其mod 100也是平均的，则最后类型转换成uint8则也是平均的了。
+// Hash returns a hash value of [0,100) func Hash(x string) uint8 { hash := fnv.</description>
+    </item>
     
     <item>
       <title>Mendel - A/B Testing Platform (Part 0)</title>
@@ -35,32 +61,6 @@ Mendel Lib
 其实用trackingID的方式是最好的，这样不仅可以用来标记数据，也可以用这个ID对请求进行追踪，比如在什么时候产生了访问，返回了多少广告，关键词是什么，在什么时候点击的，点击了第几个位置，这个位置的广告的平均CTR是多少，rank分是多少，similarity是多少，这些数据对于我们分析用户行为，提升算法精准度，都是有很大帮助的，但是无奈，只能用signature去自解AB Testing的数据。无奈。
 配置结构 在这套系统中，有几个关键的概念：
  project: 拥有独立流量（独立请求和返回结果）的业务线称为一个项目 base_config: 项目的基础配置，一个项目配置中，可以包含多个服务  service: 服务，一个服务配置中，包含多个模块配置 module:：模块，具体表现为程序的某个模块，可以包含多个层级配置 layer: 在程序中的特定层，具体为某一个模块中的某一个步骤 config value: 对层级的配置，包括这个层中，对国家的配置值，不同值的权重等  traffic slots: 每一个项目拥有自己独立的流量分配，每一个国家也有独立的流量分配（保证了实验的可以在国家的维度进行） experiment: 每一个实验本质上也是一套配置，不过是建立在基础配置之上的特定修改，而且实验配置不能超出基础配置，一定是修改。实验可以根据不同的维度划分，比如根据UID划分，根据SessionID划分，但是它们一定是共享整个项目的流量的，相同国家内的流量不能够重叠交叉。实验中对于layer的配置也可以有多种，且对于每一种配置值，其权重都是相同的（有别于base config中的config value）。对于实验没有修改的layer，当base config中layer有变更时，experiment也要同步进行修改，更新，下发。  对于base config和expeirment config，所有数据都有唯一的ID和版本号，保证了不会有数据丢失，方便回滚和审计。</description>
-    </item>
-    
-    <item>
-      <title>Mendel - A/B Testing Platform (Part 1)</title>
-      <link>https://wrfly.kfd.me/posts/mendel-ab-testing-platform-p1/</link>
-      <pubDate>Sun, 07 Jul 2019 13:53:31 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/posts/mendel-ab-testing-platform-p1/</guid>
-      <description>离上一篇文章已经过了好久了，能够记起还有这么一个坑没填，并且能够记得要些什么，纯属不易…… 这篇主要讲一下系统实现的时候遇到的问题以及我是如何解决的，当中会有疏漏的地方，也欢迎看到这篇文章并且感兴趣的人一起讨论。
-流量分布 这个系统最最主要的目的和功能就是分配流量，所以如何分配流量，就成为了首先要面临的问题。
-我们的配置分为两种，基础配置和实验配置，那么随之的，流量也分为两种：基础流量和实验流量。对于一个国家的请求而言，如果把流量按照一百份来划分，用了10%的流量做实验，那么就需要在这些请求中挑出10%出来，让其走实验的配置，剩余的90%则按照基础配置进行选择（在某个layer中运用某种算法）。
-这其中有一个要求，即流量不能随机划分，不能让用户感知到变化，上一秒是根据base config进行的选择，出现了ABCD，下一秒也要按照base config，不能表现不一致。
-这一点我们通过fnv哈希算法来实现，将用户的country，session和uid作为输入，确保三要素相同的情况下，得到的hash分布是随机的。
-当然这里也有一些细节，比如既要支持按照session划分，又要按照uid划分，在对一致性要求没那么高的时候，还可以加上hour作为第四因素，变相放大实验流量，得到更多结果。
-所以解决方案为：
-fnv(country + session + uid [+ hour]) % 100 的出一个数字，通过这个数字判定是base还是experiment
-实验选择 接着上面，在得到一个[0,99)的数字以后，怎么就能确定是base还是exp呢？
-如果base的config占80%, exp1占10%，exp2占5%，exp3占5%，如何确定一个请求（hash = 55）在哪里呢？
-最简单的方法，用一个map[uint8]string来存储没一个数字所对应的实验ID或者BaseID，每次请求过来都用这个map查一下。
-但我有点嫌慢，就选择了另外一种方式：bitmap
-我们有100份流量，但是数字最大到int64，所以就需要两个int64来存储我们的实验信息，如果一个数字是45,那么就选择第一个bitmap，如果是76,就选择第二个。
-具体操作是将bitmap右移[&amp;gt;&amp;gt;]hash位，在与1与或[&amp;amp;&amp;amp;]，如果是真，那么就在这个实验里，如果是假，就换下一个实验的bitmap进行同样操作。
-这样能够比map的方式快50%
-流量分布不均匀 这其实是自己挖的一个坑，因为所有的流量都会分布到[0,99)上，所以我在存储的时候用了uint8, 认为这个数字已经足够用了，但实际上，虽然它够用，但模100之后并不平均，因为uint8的范围是[0,128), 将这一批平均分布的数字模100之后的分布则必然不平均，[0,28)在[0,99)内占了两份。
-// Hash returns a hash value of [0,100) func Hash(x string) uint8 { hash := fnv.New32a() hash.Write([]byte(x)) return uint8(hash.Sum32()) % 100 } 所以简单粗暴的方式是更改一下取模顺序，我们认为hash.Sum32()是平均的，那么其mod 100也是平均的，则最后类型转换成uint8则也是平均的了。
-// Hash returns a hash value of [0,100) func Hash(x string) uint8 { hash := fnv.</description>
     </item>
     
     <item>
