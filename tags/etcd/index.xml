@@ -32,9 +32,13 @@ The client connection used to request the authentication token is typically thro
       <guid>https://wrfly.kfd.me/posts/etcd%E7%AC%94%E8%AE%B0/</guid>
       <description>很早就写的一篇笔记，放在这里充数。
 运行一个最简单的etcd docker run -p 4001:4001 --rm -ti microbox/etcd --name etcd0 API  获取版本
-curl -L http://127.0.0.1:2379/version  获取键值 bash curl http://127.0.0.1:2379/v2/keys/message   设置键值
-curl http://127.0.0.1:2379/v2/keys/message -XPUT -d value=&amp;#34;Hello world&amp;#34; curl -X PUT http://127.0.0.1:2379/v2/keys/message?value=&amp;#34;Hello world&amp;#34; curl -X PUT http://127.0.0.1:2379/v2/keys/message?value=&amp;#34;Hello etcd&amp;#34;  删除键 bash curl -X DELETE http://127.0.0.1:2379/v2/keys/message   使用TTL
-curl http://127.0.0.1:2379/v2/keys/foo -XPUT -d value=bar -d ttl=5 curl http://127.0.0.1:2379/v2/keys/foo?value=bar&amp;amp;ttl=5 -XPUT  取消TTL bash curl http://127.0.0.1:2379/v2/keys/foo?value=bar&amp;amp;ttl= -XPUT   创建目录</description>
+curl -L http://127.0.0.1:2379/version 获取键值
+curl http://127.0.0.1:2379/v2/keys/message 设置键值
+curl http://127.0.0.1:2379/v2/keys/message -XPUT -d value=&amp;#34;Hello world&amp;#34; curl -X PUT http://127.0.0.1:2379/v2/keys/message?value=&amp;#34;Hello world&amp;#34; curl -X PUT http://127.0.0.1:2379/v2/keys/message?value=&amp;#34;Hello etcd&amp;#34; 删除键
+curl -X DELETE http://127.0.0.1:2379/v2/keys/message 使用TTL
+curl http://127.0.0.1:2379/v2/keys/foo -XPUT -d value=bar -d ttl=5 curl http://127.0.0.1:2379/v2/keys/foo?value=bar&amp;amp;ttl=5 -XPUT 取消TTL
+curl http://127.0.0.1:2379/v2/keys/foo?value=bar&amp;amp;ttl= -XPUT 创建目录
+curl -X PUT http://127.0.0.1:2379/v2/keys/dir1?dir=true curl -X PUT http://127.0.0.1:2379/v2/keys/dir1 -d dir=true 删除目录</description>
     </item>
     
   </channel>

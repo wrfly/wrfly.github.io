@@ -5,10 +5,33 @@
     <link>https://wrfly.kfd.me/categories/share/</link>
     <description>Recent content in share on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 20 Feb 2018 20:05:06 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 01 Dec 2019 16:15:21 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/categories/share/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Prometheus-Metrics</title>
+      <link>https://wrfly.kfd.me/posts/prometheus-metrics/</link>
+      <pubDate>Sun, 01 Dec 2019 16:15:21 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/posts/prometheus-metrics/</guid>
+      <description>最近越来越懒了，或者说懒癌越来越重了。经历了很多东西，却懒得记下来，可能会在今年的年终总结中写上几笔吧。
+这一篇文章想说一下Prometheus的Metrics，聊一聊这一年来总结的经验。记得刚毕业的时候面过头条，面试官也问过我，说在百万级别的容器面前，metrics监控能有哪些，当时我支支吾吾说不上来，脑子里浮现的只有CPU，内存，带宽和IO。通过这一年多来不断对我们ads服务的完善，我对这个问题有了更好的答案。
+Metrics 这一部分讲一下有哪些基本的metrics
+QPS 首先能想到的就是QPS，但QPS其实是比较笼统的概念，到底是谁的QPS，在哪儿的QPS，请求的QPS还是返回的QPS，请求A的QPS还是请求B的QPS，是印尼的QPS还是马来的QPS，是serverA的QPS还是serverD的QPS？
+metrics的目的是更好的了解系统状态，所以，你想知道多少的状态，就有多少的metrics，metrics一定是要有用的，而不是拍脑袋想出来的。
+所以通过解决上述问题，针对某一个服务，大体能得出一些可用的metrics：
+ 整个服务调用的QPS：对系统的整体把控，变化应该均匀，除大促外，不应该有peak  调用方有哪些：看看是谁调用的最多，印尼还是马来？ 服务中每一个instance的QPS：流量是不是均衡  服务返回的QPS：变化也应该均匀，不然就是有某些instance超时了，没有及时响应  每个instance的返回的QPS：返回应该与请求一致  调用下游服务的QPS：如果这个服务不是单独存在，就需要知道它调用下游依赖的QPS，如果调用链是A-&amp;gt;B-&amp;gt;C, 则ABC的调用请求比例应一致 返回结果的QPS：拿我们ads来说，每秒返回多少广告应该是稳定的，不会出现突然升高或下降（压测，大促等人为情况除外），如果返回突然变少了，有可能是ES里的广告少了（误删了大批广告），有可能是instance处理不过来，请求10k，返回8k，2k超时（这时也会从调用端看出端倪，不单单是服务端告警）  返回成功的QPS：200, ok 返回失败的QPS：因为什么失败的 其他情况的QPS：过滤条件？  不同API的QPS：如果服务有多个API的话，需要针对每个API进行衡量，如果发现load变高，则能一眼看出是什么导致的，是不是某个API的请求变多了，还是下游某些服务变慢了，还是返回的数量便多了，等等等等。   在系统稳定的情况下，所有QPS变化都应该是平滑的，比例应该是一致的。
+Error 错误也是系统中很重要的一个环节，正常情况下，不管是错误的数量还是比率，都应该很低。但是如果想精确定位问题，有两个点是需要考虑的。
+一个是错误类型。golang里面我们可以针对 “可能会发生” 或者 “已经发生过” 的错误进行类型定义，判断error是不是某种类型，然后通过metrics导出，反映给grafana，并告警。如果错误没有发生过，则打印到error日志中，供后续分析，并不断提炼error类型，最终目标是将所有error都定义，不管是error code也好，error type也好，总之能够通过metrics反映哪里出了问题。
+另一个是错误率。大多数情况下，我们对错误有一定的容忍度，并不是一旦出现error，就必须人工介入，有些error就是一直存在，隔几秒出现一次，在没有充足的时间和人力的情况下，我们倾向于ignore。所以就需要关心 “错误率”。假设对下游某种服务A的请求量是10k每秒，但是服务A不是那么稳定，100个请求里有1个是超时或者其他错误的，那么我们就会发现每秒的错误有100个，夜间会变成1个（100QPS的情况下）。这个时候，虽然错误的数量变化很大，但是这个是由请求数量的变化引起的，所以我们就可以忽略这种错误，等“有时间”了再去debug到底是哪里出了问题。
+还有一点要特别注意的是，对于error qps的统计，我们也要分instance去看，有可能某些instance的网络出了问题，查询cache或者连接下游服务特别慢，也会导致大量error出现，这时候总体的error rate是上升的，但是对于instance而言，只有几个别出现了问题，并不是全部的instance都出了问题。
+关于error的类型，很多时候都要根据自己的业务逻辑去定义，但是也有一些基础的error，比如：
+ 超时： context.DeadlineExceeded 调用某种接口X失败：其中包括各种RPC调用，发送Kafka消息，ACK消息； 缓存失败：Set，Get，NilResult&amp;hellip; Invalid Request (fraud, limit, country, uid, session&amp;hellip;) No Result DB error&amp;hellip;  Latency 时延也是我们很关心的一个点，当某种服务的时延上升，一般来讲就是处理不过来了，这时候会影响下游所有的服务，一个超时，个个超时，从而导致服务完全不可用或者部分不可用。我们也可以通过调用端的时延来判断服务端的负载，还可以将client的时延和server的时延对比看，如果不一致，那么基本可以确定是网络出了问题。
+所以，Latency的metrics有下：
+ client latency：发起者的时延 server latency：接收者的处理时间 latency per instance：可以查看是不是某一台instance出了问题 ！！！ 如果请求与调用相关，还需要记录每种请求的latency，比如请求来源，请求大小，请求类型等 请求处理的总时间，包括所有的下游调用，缓存处理：因为我们很可能会疏漏某些调用服务，所以即使已有的latency表现一切正常，但是我们处理也有可能会变慢，这时通过总时间可以看到我们的响应变慢了，然后再一步步深追，到底是哪里的latency没有加，是哪里变慢了，是程序的问题还是系统的问题，等等 cache的latency：通常来讲，cache的GET操作不会超过1ms，但极端情况如大促，key或者value过大，cluster有网络问题，就会导致我们的cache变慢，这也会影响下游的服务调用。我们可以把cache当作一种服务来看待，归于client latency中  Cache 主要关心cache的hit rate和使用量，以及cache的latency，主要的Get，Set操作。</description>
+    </item>
     
     <item>
       <title>Discover-sync.Pool</title>
