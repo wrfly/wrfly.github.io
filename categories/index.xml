@@ -5,10 +5,19 @@
     <link>https://wrfly.kfd.me/categories/</link>
     <description>Recent content in Categories on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 01 Jan 2020 22:20:24 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 30 May 2020 23:12:46 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/categories/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>dev</title>
+      <link>https://wrfly.kfd.me/categories/dev/</link>
+      <pubDate>Sat, 30 May 2020 23:12:46 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/categories/dev/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>daily</title>
@@ -34,15 +43,6 @@
       <pubDate>Sun, 01 Dec 2019 16:15:21 +0800</pubDate>
       
       <guid>https://wrfly.kfd.me/categories/share/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>dev</title>
-      <link>https://wrfly.kfd.me/categories/dev/</link>
-      <pubDate>Mon, 30 Sep 2019 00:41:31 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/categories/dev/</guid>
       <description></description>
     </item>
     

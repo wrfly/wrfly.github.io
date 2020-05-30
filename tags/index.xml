@@ -5,10 +5,28 @@
     <link>https://wrfly.kfd.me/tags/</link>
     <description>Recent content in Tags on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 01 Jan 2020 22:20:24 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 30 May 2020 23:12:46 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>dev</title>
+      <link>https://wrfly.kfd.me/tags/dev/</link>
+      <pubDate>Sat, 30 May 2020 23:12:46 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/dev/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>work</title>
+      <link>https://wrfly.kfd.me/tags/work/</link>
+      <pubDate>Sat, 30 May 2020 23:12:46 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/work/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>daily</title>
@@ -38,15 +56,6 @@
     </item>
     
     <item>
-      <title>dev</title>
-      <link>https://wrfly.kfd.me/tags/dev/</link>
-      <pubDate>Mon, 30 Sep 2019 00:41:31 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/dev/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>golang</title>
       <link>https://wrfly.kfd.me/tags/golang/</link>
       <pubDate>Mon, 30 Sep 2019 00:41:31 +0800</pubDate>
@@ -70,15 +79,6 @@
       <pubDate>Sat, 16 Mar 2019 00:32:21 +0800</pubDate>
       
       <guid>https://wrfly.kfd.me/tags/coding/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>work</title>
-      <link>https://wrfly.kfd.me/tags/work/</link>
-      <pubDate>Tue, 22 Jan 2019 21:43:01 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/work/</guid>
       <description></description>
     </item>
     
