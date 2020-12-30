@@ -19,7 +19,7 @@
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='problems'><meta property='article:published_time' content='2014-10-24T00:00:00Z'/><meta property='article:modified_time' content='2014-10-24T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>关于ubuntu下MP3文件名乱码的问题 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Eubuntu%E4%B8%8Bmp3%E6%96%87%E4%BB%B6%E5%90%8D%E4%B9%B1%E7%A0%81%E7%9A%84%E9%97%AE%E9%A2%98/'>
@@ -112,20 +112,19 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>我是一个linux爱好者，用的是Ubuntu，然而在播放音乐的时候却发现从我的mp3里面复制的歌曲到了电脑里面都变成乱码了，下面的文字是我从《笨兔兔的故事》中复制出来的，完美的解决了我的问题，也会解决你的问题。</p>
-
 <p>话说一个 mp3 的歌名啊,作者啊,是记录在 mp3 标签里面的。这个标签的记录方式有很多中,主要是这么几个标准:ID3v1, ID3v2 2.3,ID3v2 2.4,APEv2。</p>
-
 <p>这个 ID3v1的标签支持 ISO-8859-1 编码,这是个国际通用的编码,但是很可惜,他是不支持中文的。到 ID3v22.3 这个版本开始,增加了对 utl-16 的支持,utf-16 也是一套国际通用的编码,这里面就包含中,日,韩等等各国的文字了。到 ID3v2.4,更增加了 utf-8 的支持。utf-8 和 utf-16 都是国际通用的一套编码,所不同的是 utf-8 以字节为编码单元,而 utf-16 用双字节为编码单元,这样就有大小端问题(也就是哪个字节先传输的问题,不知道的可以 google 一下)。</p>
-
 <p>因此总的来说,utf-8 相对更受欢迎一些。ID3v22.4 支持 utf8编码,可并没有说一定要用,只是可以用 utf-8,自然也可以用其他的编码。而 APEv2标准就不同了,它规定了其编码必须同一为 utf8 编码。ISO-8859-1,utf8,utf16,这些都是国际标准的编码。但 utf8,utf16 的出现都是后来的事情了,一开始,是没有国际标准的中文编码的,那时候只有国标——国家标准，也就是我们常见的 GB2312,GBK 和 GB18030。由于这些只是国家标准,所以开源软件的作者们(多数不是中国人)自然是忽略的这些标准(当然了,每个国家都有自己的标准,听谁的阿?)。所以,如果是用 ID3v1 或者 ID3v2 类型,并且使用国家标准编码的 mp3 文件,就会出现乱码。如果是 ID3v1 或 ID3v2 类型,但是使用 utf-8, 或者utf-16 编码的,就不会乱码。如果是使用 APEv2 标准的 mp3 文件,就更不会乱码了,因为 APEv2 必须用 utf8 嘛。</p>
-
 <p>然而事实是残酷的,事实就是:国内的大多数 mp3 都使用了国家标准编码。那我们在 Linux 下就看不到了么?当然不是,编码不对的话,转换一下就好了嘛。有个软件,
 叫做 mid3iconv,他就认识各种编码,让他把 mp3 的编码改成 utf-8 的,就可以了。这个软件从哪里来?自然是让超级牛力（apt-get）请来:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$sudo apt-get install python-mutagen</pre></div>
+<pre><code>$sudo apt-get install python-mutagen
+</code></pre>
 <p>或者让新立得安装</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">python-mutagen</pre></div>
+<pre><code>python-mutagen
+</code></pre>
 <p>装完了以后,就可以在你的家目录下运行:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . -iname &#34;*.mp3&#34; -execdir mid3iconv -e gbk {} \;</pre></div>
+<pre><code>find . -iname &quot;*.mp3&quot; -execdir mid3iconv -e gbk {} \;
+</code></pre>
 <p>所有的 mp3 就都改过来了。</p>
 
 </div>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>golang on wrfly&#39;s blog</title>
@@ -49,7 +49,7 @@ fnv(country + session + uid [+ hour]) % 100 的出一个数字，通过这个数
  支持多个项目：不同项目有自己不同的配置和实验 支持多service绑定测试：同一个项目中有多个不同的service 配置/实验区分国家： 不同的国家有不同的配置/测试 可根据UserID，SessionID等维度划分实验流量 支持配置权重：同一个配置有多个值，值附带权重属性 配置多版本，实验多版本：不同版本同时保存，互不冲突 实时分析试验结果：不必麻烦数据团队隔夜处理数据，计算CTR  大概有36个API，因为没有前端（PM画了界面，但是没人有时间写），我还写了一个简单的Python Cli程序。对了，程序语言是Golang，当然。
 我给系统起名叫 Mendel，但是PM的PRD上叫MVT，Multiple Variable Testing system，这个名字个人感觉很low，不如“孟德尔”有意思。不过我才是写代码的人，我想怎么写就怎么写（傲娇）。
 架构 整个系统分为四个部分：
- Mendel Server Mendel Assistant Database  MySQL DB etcd influxDB  Mendel Lib  Mendel Server 负责处理所有API请求，基本上就是CURD，接受请求，验证处理，存入DB，同步到etcd上。这部分写起来其实很讨厌，虽然简单，但是太麻烦，每一个接口都要有CURD，我原来想用MongoDB作为后端存储，但是公司不提供MongoDB的维护，自己用容器风险又太大（没人维护），只能用MySQL，然后用text保存数据。因为如果想要满足设计，配置就需要相当复杂，区分国家，配置权重，service关系，不同配置的层级关系，用MySQL字段保存的话太麻烦了，也不能满足多种层级。其实写好一个CURD也不是容易事，太多细节需要考虑，不仅仅是麻烦的问题。
+ Mendel Server Mendel Assistant Database  MySQL DB etcd influxDB   Mendel Lib  Mendel Server 负责处理所有API请求，基本上就是CURD，接受请求，验证处理，存入DB，同步到etcd上。这部分写起来其实很讨厌，虽然简单，但是太麻烦，每一个接口都要有CURD，我原来想用MongoDB作为后端存储，但是公司不提供MongoDB的维护，自己用容器风险又太大（没人维护），只能用MySQL，然后用text保存数据。因为如果想要满足设计，配置就需要相当复杂，区分国家，配置权重，service关系，不同配置的层级关系，用MySQL字段保存的话太麻烦了，也不能满足多种层级。其实写好一个CURD也不是容易事，太多细节需要考虑，不仅仅是麻烦的问题。
 Mendel Assistant
 这个组件是为了实时分析实验结果的，通过实时读取Tracking数据，获取Tracking里面的AB Testing Siganture，解开Signature，写入InfluxDB和暴露metrics给Prometheus，计算不同实验的CTR，对比效果。Mendel Server部署一个就够了，他只是个CURD Server，但这个Assistant需要部署很多个，毕竟Tracking的数据量太大了。
 Database
@@ -60,7 +60,7 @@ Mendel Lib
 原来的设计是没一个请求进来，我们用一个TrackingID去标记，然后在TrackingID上append不同的配置，写入一个KV存储中，但是Lead说，公司的Codis不靠谱，没有一个靠谱的持久化KV存储，如果TrackingID的数据丢了就麻烦了，所以最后折中了一个Signature的方案，从很长的配置细节变成一个能够自解的signature，并且signature对外不可读。对于signature的介绍将在本文最后进行。
 其实用trackingID的方式是最好的，这样不仅可以用来标记数据，也可以用这个ID对请求进行追踪，比如在什么时候产生了访问，返回了多少广告，关键词是什么，在什么时候点击的，点击了第几个位置，这个位置的广告的平均CTR是多少，rank分是多少，similarity是多少，这些数据对于我们分析用户行为，提升算法精准度，都是有很大帮助的，但是无奈，只能用signature去自解AB Testing的数据。无奈。
 配置结构 在这套系统中，有几个关键的概念：
- project: 拥有独立流量（独立请求和返回结果）的业务线称为一个项目 base_config: 项目的基础配置，一个项目配置中，可以包含多个服务  service: 服务，一个服务配置中，包含多个模块配置 module:：模块，具体表现为程序的某个模块，可以包含多个层级配置 layer: 在程序中的特定层，具体为某一个模块中的某一个步骤 config value: 对层级的配置，包括这个层中，对国家的配置值，不同值的权重等  traffic slots: 每一个项目拥有自己独立的流量分配，每一个国家也有独立的流量分配（保证了实验的可以在国家的维度进行） experiment: 每一个实验本质上也是一套配置，不过是建立在基础配置之上的特定修改，而且实验配置不能超出基础配置，一定是修改。实验可以根据不同的维度划分，比如根据UID划分，根据SessionID划分，但是它们一定是共享整个项目的流量的，相同国家内的流量不能够重叠交叉。实验中对于layer的配置也可以有多种，且对于每一种配置值，其权重都是相同的（有别于base config中的config value）。对于实验没有修改的layer，当base config中layer有变更时，experiment也要同步进行修改，更新，下发。  对于base config和expeirment config，所有数据都有唯一的ID和版本号，保证了不会有数据丢失，方便回滚和审计。</description>
+ project: 拥有独立流量（独立请求和返回结果）的业务线称为一个项目 base_config: 项目的基础配置，一个项目配置中，可以包含多个服务  service: 服务，一个服务配置中，包含多个模块配置 module:：模块，具体表现为程序的某个模块，可以包含多个层级配置 layer: 在程序中的特定层，具体为某一个模块中的某一个步骤 config value: 对层级的配置，包括这个层中，对国家的配置值，不同值的权重等   traffic slots: 每一个项目拥有自己独立的流量分配，每一个国家也有独立的流量分配（保证了实验的可以在国家的维度进行） experiment: 每一个实验本质上也是一套配置，不过是建立在基础配置之上的特定修改，而且实验配置不能超出基础配置，一定是修改。实验可以根据不同的维度划分，比如根据UID划分，根据SessionID划分，但是它们一定是共享整个项目的流量的，相同国家内的流量不能够重叠交叉。实验中对于layer的配置也可以有多种，且对于每一种配置值，其权重都是相同的（有别于base config中的config value）。对于实验没有修改的layer，当base config中layer有变更时，experiment也要同步进行修改，更新，下发。  对于base config和expeirment config，所有数据都有唯一的ID和版本号，保证了不会有数据丢失，方便回滚和审计。</description>
     </item>
     
     <item>

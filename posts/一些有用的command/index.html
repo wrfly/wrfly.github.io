@@ -37,7 +37,7 @@ ALT&#43;. or &lt;ESC&gt; &#43; .
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='shell'><meta property='article:published_time' content='2014-12-13T00:00:00Z'/><meta property='article:modified_time' content='2014-12-13T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>一些有用的command • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E6%9C%89%E7%94%A8%E7%9A%84command/'>
@@ -130,141 +130,104 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>转载 + comments</p>
-
 <p><code>!$</code></p>
-
 <blockquote>
 <p><code>!$</code> 代表上一个命令的最后一个字符串</p>
 </blockquote>
-
 <p>你可能会这样：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$mkdir mydir
 $mv mydir yourdir
-$cd yourdir</code></pre></div>
-<p>可以改成：</p>
+$cd yourdir
+</code></pre></div><p>可以改成：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$mkdir mydir
 $mv !$ yourdir
-$cd !$</code></pre></div>
-<ul>
+$cd !$
+</code></pre></div><ul>
 <li><code>!!</code> 代表上一条命令[与 !-1 等价]</li>
 <li><code>!-2</code> 代表倒数第二条命令</li>
 <li><code>!-3</code> 代表倒数第三条命令</li>
 <li>以此类推(其实完全可以按方向键搞定啊!!还有Ctrl+P!!)</li>
 </ul>
-
 <p><code>cd –</code></p>
-
 <blockquote>
 <p>回到上一次的目录</p>
 </blockquote>
-
 <p>场景举例：
 当前目录为<code>/home/a</code>，用<code>cd ../b</code>切换到<code>/home/b</code>。这时可以通过反复执行<code>cd –</code>命令在<code>/home/a</code>和<code>/home/b</code>之间来回方便的切换。
-（注：<code>cd ~</code> 是回到自己的Home目录，<code>cd ~user</code>，是进入某个用户的Home目录）详情打开 <a href="http://www.grymoire.com/Unix/Quote.html" target="_blank">http://www.grymoire.com/Unix/Quote.html</a></p>
-
+（注：<code>cd ~</code> 是回到自己的Home目录，<code>cd ~user</code>，是进入某个用户的Home目录）详情打开 <a href="http://www.grymoire.com/Unix/Quote.html">http://www.grymoire.com/Unix/Quote.html</a></p>
 <p><code>ALT+.</code> or <code>&lt;ESC&gt; + .</code></p>
-
 <blockquote>
 <p>热建alt+. 或 esc+. 可以把上次命令行的参数给重复出来。[注意,是参数哦~]</p>
 </blockquote>
-
 <p><code>:w !sudo tee %</code></p>
-
 <blockquote>
 <p>在vi中保存一个只有root可以写的文件</p>
 </blockquote>
-
 <p><code>&gt; file.txt</code></p>
-
 <blockquote>
 <p>创建一个空文件，比touch短。(其实就是相当与把空格重定向给了一个文件&hellip;)</p>
 </blockquote>
-
-<p><code>mtr 8.8.8.8</code>
-&gt; mtr命令比traceroute要好,可以实时观测ping值以及丢包率,但是你要事先安装好mtr(sudo apt-get install mtr).</p>
-
+<p><code>mtr 8.8.8.8</code></p>
+<blockquote>
+<p>mtr命令比traceroute要好,可以实时观测ping值以及丢包率,但是你要事先安装好mtr(sudo apt-get install mtr).</p>
+</blockquote>
 <p><code>在命令行前加空格，该命令不会进入history里</code></p>
-
 <p>(还可以用 history -r 这条命令,目的是不记录本次session的命令内容,关闭tty后history不保存)</p>
-
 <p><code>echo &quot;ls -l&quot; | at midnight</code></p>
-
 <blockquote>
 <p>在某个时间运行某个命令。(详情请看 at 命令[man at])</p>
 </blockquote>
-
-<p><code>curl (这个命令真的很好用, 我经常用 -I 来查看网页头)</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$curl -I wrfly.github.io</code></pre></div>
-<p><code>htop 软件</code></p>
-
+<p><code>curl (这个命令真的很好用, 我经常用 -I 来查看网页头) </code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$curl -I wrfly.github.io
+</code></pre></div><p><code>htop 软件</code></p>
 <p>比top更高端一些. (atop, iftop, ntop &hellip;)</p>
-
 <p><code>man ascii</code></p>
-
 <blockquote>
 <p>显示ascii码表。内个,unix下的del和windows下的是不同的,写C的可要注意了~</p>
 </blockquote>
-
 <p><code>netstat –tlnp</code> (ss -ant)</p>
-
 <blockquote>
 <p>列出本机进程监听的端口号。（注：netstat -anop 可以显示侦听在这个端口号的进程）</p>
 </blockquote>
-
 <p><code>ssh user@server bash &lt; /path/to/local/script.sh</code></p>
-
 <blockquote>
 <p>在远程机器上运行一段脚本。这条命令最大的好处就是不用把脚本拷到远程机器上。</p>
 </blockquote>
-
 <p><code>net rpc shutdown -I ipAddressOfWindowsPC -U username%password</code></p>
-
 <blockquote>
 <p>远程关闭一台Windows的机器</p>
 </blockquote>
-
 <p><code>screen -d -m -S some_name &quot;ping my_router&quot;</code></p>
-
 <blockquote>
-<p>后台运行一段不终止的程序，并可以随时查看它的状态。-d -m参数启动&rdquo;分离&rdquo;模式，-S指定了一个session的标识。可以通过-R命令来重新&rdquo;挂载&rdquo;一个标识的session。更多细节请参考screen用法 man screen。</p>
+<p>后台运行一段不终止的程序，并可以随时查看它的状态。-d -m参数启动&quot;分离&quot;模式，-S指定了一个session的标识。可以通过-R命令来重新&quot;挂载&quot;一个标识的session。更多细节请参考screen用法 man screen。</p>
 </blockquote>
-
 <p><code>wget --random-wait -r -p -e robots=off -U mozilla http://www.example.com</code></p>
-
 <blockquote>
 <p>下载整个www.example.com网站。(真的很好用!!!)</p>
 </blockquote>
-
 <p><code>curl ipinfo.io</code></p>
-
 <blockquote>
 <p>查看本机的外网ip地址(ipv4),并且给出ip的物理地址;</p>
 </blockquote>
-
 <p><code>curl ipinfo.io/8.8.8.8</code> 你会得到更多~</p>
-
 <p><code>lsof –i</code></p>
-
 <blockquote>
 <p>实时查看本机网络服务的活动状态。</p>
 </blockquote>
-
-<p><code>python -m SimpleHTTPServer</code>
-&gt; 一句话实现一个HTTP服务，把当前目录设为HTTP服务目录，可以通过<a href="http://localhost:8000访问" target="_blank">http://localhost:8000访问</a> 这也许是这个星球上最简单的HTTP服务器的实现了。
-&gt; python 还有好多实用的module,你可以通过 -m 然后按tab补全看一下所有的module.</p>
-
+<p><code>python -m SimpleHTTPServer</code></p>
+<blockquote>
+<p>一句话实现一个HTTP服务，把当前目录设为HTTP服务目录，可以通过http://localhost:8000访问 这也许是这个星球上最简单的HTTP服务器的实现了。
+python 还有好多实用的module,你可以通过 -m 然后按tab补全看一下所有的module.</p>
+</blockquote>
 <p>最后来一个搞笑的:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">history | <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    awk <span style="color:#e6db74">&#39;{CMD[$2]++;count++;} END { for (a in CMD )print CMD[a] &#34; &#34; CMD[a]/count*100 &#34;% &#34; a }&#39;</span> | <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    grep -v <span style="color:#e6db74">&#34;./&#34;</span> | <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    column -c3 -s <span style="color:#e6db74">&#34; &#34;</span> -t | <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    sort -nr | nl | head -n10</code></pre></div>
-<p>这行脚本能输出你最常用的十条命令，由此甚至可以洞察你是一个什么类型的程序员。</p>
-
+</span><span style="color:#ae81ff"></span>    sort -nr | nl | head -n10
+</code></pre></div><p>这行脚本能输出你最常用的十条命令，由此甚至可以洞察你是一个什么类型的程序员。</p>
 <p>最后还是那句Shell的至理名言： &ldquo;Where there is a shell，there is a way!&rdquo;</p>
-
-<p>本文转自 <a href="http://coolshell.cn/articles/8619.html" target="_blank">http://coolshell.cn/articles/8619.html</a> 半部分有修改.额,关于上面那句至理名言,</p>
-
+<p>本文转自 <a href="http://coolshell.cn/articles/8619.html">http://coolshell.cn/articles/8619.html</a> 半部分有修改.额,关于上面那句至理名言,</p>
 <p>我还真没找到出处&hellip;&hellip;.</p>
 
 </div>

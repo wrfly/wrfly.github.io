@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>command on wrfly&#39;s blog</title>
@@ -20,8 +20,8 @@
 fuser - identify processes using files or sockets.
 根据占用的文件或者socket来确定进程。好东西啊。
 fuser-几个常用的命令  fuser 8080/tcp 打印占用8080端口的进程 fuser /etc/passwd 打印占用/etc/passwd的进程 fuser -k 8080/tcp 杀死占用8080端口的进程  下面是来自thegeekstuff的关于fuser的一些介绍和技巧。To share and mark.
-文件或目录 $fuser . /home/mr/test: 13965c 可以看到进程ID后面跟了一个字母&amp;rsquo;c&amp;rsquo;，这个&amp;rsquo;c&amp;rsquo;其实是一个标识符，表示 这个进程把此目录作为他的当前目录。类似的还有：
-   参数 意义     c 当前目录   e 可执行文件正在运行   f 进程正在打开文件，默认省略   F 进程正在打开文件往里写入，默认省略   r 进程的根目录   m 内存映射，或者共享库    具体可以加上-v查看ACCESS详情，但是我感觉用处不大。另外-v还可以查看运行进程的用户是谁，运行的命令是什么， 这个还是很有用的。</description>
+文件或目录 $fuser . /home/mr/test: 13965c 可以看到进程ID后面跟了一个字母&amp;rsquo;c&amp;rsquo;，这个&amp;rsquo;c&#39;其实是一个标识符，表示 这个进程把此目录作为他的当前目录。类似的还有：
+   参数 意义     c 当前目录   e 可执行文件正在运行   f 进程正在打开文件，默认省略   F 进程正在打开文件往里写入，默认省略   r 进程的根目录   m 内存映射，或者共享库    具体可以加上**-v**查看ACCESS详情，但是我感觉用处不大。另外**-v**还可以查看运行进程的用户是谁，运行的命令是什么， 这个还是很有用的。</description>
     </item>
     
     <item>
@@ -39,9 +39,10 @@ UTF-8编码 https://en.wikipedia.org/wiki/UTF-8
 接下来就请出这篇文章的主角: iconv
 简单翻译一下iconv的man手册：
  iconv - 把文字从一种格式转换成另一种格式。 如果没有给定输入文件的话，就从标准输入中读取， 如果没有给定输出文件的话，就将转换结果输出到标准输出当中。 默认的编码都是系统的本地默认编码。
-iconv [options] [-f from-encoding] [-t to-encoding] [inputfile]&amp;hellip;
-相关选项： * -f from-encoding (输入的编码格式，如 -f gbk) * -t to-encoding (输出的编码格式，如 -t utf8)
-如果 **//IGNORE** 跟在输出编码格式后面的话，不能正确转换的文字将会被抛弃，并且转换完成之后 将会打印出错误信息。（PS：不能正确转换的意思是，字符集里没有这个字，也包括那些生僻字哦～也就是说，如果这个编码能够被转换成乱七八糟的生僻字， 那么iconv是可以转换的，因为它“认识”这些生僻字，尽管你不认识。） 如果 **//TRANSLIT** 跟在输出编码后面的话，如果需要并且可能的话，源编码将会被音译为要转换的编码。 这就意味着，如果一个单词不能背转换为相应编码的时候，就会被读音相似，也可以说是拼写相似的单词所代替， 既不能被正确转换，也不能被音译的文字将会以 &amp;ldquo;?&amp;rdquo; 表示。 * -l 列出所有已知编码类型 * -c 丢弃那些不能背正确转换的编码，而不是遇到错误时停止。 * -o 后面跟着要输出的文件，例如 -o output.file * &amp;ndash;verbose 当处理多个文件时，打印进度信息到标准错误中。 * -?</description>
+ iconv [options] [-f from-encoding] [-t to-encoding] [inputfile]&amp;hellip;
+  相关选项：
+ -f from-encoding (输入的编码格式，如 -f gbk) -t to-encoding (输出的编码格式，如 -t utf8)    如果 **//IGNORE** 跟在输出编码格式后面的话，不能正确转换的文字将会被抛弃，并且转换完成之后 将会打印出错误信息。（PS：不能正确转换的意思是，字符集里没有这个字，也包括那些生僻字哦～也就是说，如果这个编码能够被转换成乱七八糟的生僻字， 那么iconv是可以转换的，因为它“认识”这些生僻字，尽管你不认识。）    如果 **//TRANSLIT** 跟在输出编码后面的话，如果需要并且可能的话，源编码将会被音译为要转换的编码。  这就意味着，如果一个单词不能背转换为相应编码的时候，就会被读音相似，也可以说是拼写相似的单词所代替， 既不能被正确转换，也不能被音译的文字将会以 &amp;ldquo;?&amp;rdquo; 表示。
+ -l 列出所有已知编码类型 -c 丢弃那些不能背正确转换的编码，而不是遇到错误时停止。 -o 后面跟着要输出的文件，例如 -o output.</description>
     </item>
     
   </channel>

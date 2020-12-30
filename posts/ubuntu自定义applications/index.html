@@ -17,7 +17,7 @@ See: https://developer.gnome.org/integration-guide/stable/desktop-files.html.en'
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='ubuntu'><meta property='article:published_time' content='2014-12-23T00:00:00Z'/><meta property='article:modified_time' content='2014-12-23T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>Ubuntu自定义Applications • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/ubuntu%E8%87%AA%E5%AE%9A%E4%B9%89applications/'>
@@ -110,17 +110,15 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>用户自己的软件都放在 <code>~/.local/share/applications/</code> 目录下面，所以，要想添加软件到menu，只要把写好的desktop文件放到里面就可以了。desktop文件的基本格式如下:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">[Desktop Entry]
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">[Desktop Entry]
 Name=Your Application
 Exec=The application exec path(.sh/exe/.py/etc.)
 Icon=The application&#39;s icon path.
 Type=Application
-Categories=GTK;GNOME;Utility;</pre></div>
-<p>放入目录中后在menu中就可以找到你的软件了。</p>
-
+Categories=GTK;GNOME;Utility;
+</code></pre></div><p>放入目录中后在menu中就可以找到你的软件了。</p>
 <p>要是想在整个系统中都可以运行你的程序（让所有的用户都可以运行），只需要把desktop文件放到<code>/usr/share/applications/</code>目录中即可。(or <code>~/.local/share/applications</code>)</p>
-
-<p>See: <a href="https://developer.gnome.org/integration-guide/stable/desktop-files.html.en" target="_blank">https://developer.gnome.org/integration-guide/stable/desktop-files.html.en</a></p>
+<p>See: <a href="https://developer.gnome.org/integration-guide/stable/desktop-files.html.en">https://developer.gnome.org/integration-guide/stable/desktop-files.html.en</a></p>
 
 </div>
 

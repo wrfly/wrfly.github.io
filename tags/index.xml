@@ -1,14 +1,23 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on wrfly&#39;s blog</title>
     <link>https://wrfly.kfd.me/tags/</link>
     <description>Recent content in Tags on wrfly&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 30 May 2020 23:12:46 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 30 Dec 2020 23:08:35 +0800</lastBuildDate>
     
 	<atom:link href="https://wrfly.kfd.me/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>daily</title>
+      <link>https://wrfly.kfd.me/tags/daily/</link>
+      <pubDate>Wed, 30 Dec 2020 23:08:35 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/daily/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>dev</title>
@@ -29,15 +38,6 @@
     </item>
     
     <item>
-      <title>daily</title>
-      <link>https://wrfly.kfd.me/tags/daily/</link>
-      <pubDate>Wed, 01 Jan 2020 22:20:24 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/daily/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>experience</title>
       <link>https://wrfly.kfd.me/tags/experience/</link>
       <pubDate>Sun, 01 Dec 2019 16:15:21 +0800</pubDate>
@@ -52,6 +52,15 @@
       <pubDate>Sun, 01 Dec 2019 16:15:21 +0800</pubDate>
       
       <guid>https://wrfly.kfd.me/tags/prometheus/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>go</title>
+      <link>https://wrfly.kfd.me/tags/go/</link>
+      <pubDate>Mon, 30 Sep 2019 00:41:31 +0800</pubDate>
+      
+      <guid>https://wrfly.kfd.me/tags/go/</guid>
       <description></description>
     </item>
     
@@ -88,15 +97,6 @@
       <pubDate>Fri, 28 Dec 2018 21:31:54 +0800</pubDate>
       
       <guid>https://wrfly.kfd.me/tags/code/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>go</title>
-      <link>https://wrfly.kfd.me/tags/go/</link>
-      <pubDate>Sat, 08 Dec 2018 16:48:09 +0800</pubDate>
-      
-      <guid>https://wrfly.kfd.me/tags/go/</guid>
       <description></description>
     </item>
     

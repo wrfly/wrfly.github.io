@@ -4,34 +4,48 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='本文转自:http://www.nginx.cn/562.html
 略有修改.
-使用php-fpm解析PHP，&rdquo;No input file specified&rdquo;，&rdquo;File not found&rdquo;是令nginx新手头疼的常见错误，原因是php-fpm进程找不到SCRIPT_FILENAME配置的要执行的.php文件，php-fpm返回给nginx的默认404错误提示。
+使用php-fpm解析PHP，&ldquo;No input file specified&rdquo;，&ldquo;File not found&quot;是令nginx新手头疼的常见错误，原因是php-fpm进程找不到SCRIPT_FILENAME配置的要执行的.php文件，php-fpm返回给nginx的默认404错误提示。
 比如网站default下没有test.php，访问这个文件时通过[抓包]可以看到返回的内容。(linux下可以通过 curl -I http://somesites.com/test.php来查看http头)
-curl -I http://somesites.com/test.php HTTP/1.1 404 Not Found Server: nginx Date: Sun, 15 Mar 2015 12:18:16 GMT Content-Type: text/html Content-Length: 162 Connection: keep-alive 一般会返回一个404的错误页面,但是在某些情况下也会出现&rdquo;File not found.&ldquo;这条提示信息.
+curl -I http://somesites.com/test.php HTTP/1.1 404 Not Found Server: nginx Date: Sun, 15 Mar 2015 12:18:16 GMT Content-Type: text/html Content-Length: 162 Connection: keep-alive  一般会返回一个404的错误页面,但是在某些情况下也会出现&quot;File not found.&ldquo;这条提示信息.
 很多人不想用户直接看到这个默认的404错误信息，想自定义404错误.
 给出解决办法前我们来先分析下如何避免出现这类404错误，然后再说如果遇到这种情况(比如用户输入一个错误不存在的路径)时,怎样做才能显示自定义的404错误页。
 ####一、错误的路径被发送到php-fpm进程####
 出现这类错误，十个有九个是后端fastcgi进程收到错误路径(SCRIPT_FILENAME)，而后端fastcgi收到错误路径的原因大都是配置错误。
-常见的nginx.conf的配置如下：  server { listen [::]:80; server_name example.com www.example.com; access_log /var/www/logs/example.com.access.log;
-location / { root /var/www/example.com; index index.html index.htm index.php; } location /images { autoindex on; } location ~ \.'>
+常见的nginx.conf的配置如下：
+这个配置中有很多不合理的地方，其中一个明显的问题就是root指令被放到了location / 块。如果root指令被定义在location块中,那么该root指令只能对其所在的location生效,其它locaiont中没有root指令，像 location /images 块不会匹配任何请求，所以就需要在每个请求中重复配置root指令来解决这个问题。因此我们需要把root指令放在server块，这样各个location就会继承父server块定义的$document_root，如果某个location需要定义一个不同的$document_root，则可以在location单独定义一个root指令。
+另一个问题就是fastCGI参数SCRIPT_FILENAME 是写死的。如果修改了root指令的值或者移动文件到别的目录，php-fpm会返回“No input file specified”错误，因为SCRIPT_FILENAME在配置中是写死的并没有随着$doucument_root变化而变化，我们可以修改SCRIPT_FILENAME配置如下：
+fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+（PS:一般的配置，默认都没有写上面的，因为我的默认配置文件中并没有上面所提到的那一条，所以我觉得这一条可以忽略不写，，如有错出请发email打脸:）
+所以我们不能忘记在server块中配置root指令，不然$document_root的值为空，只会传$fastcgi_script_name到php-fpm，这样就会导致“No input file specified”错误。
+####二、请求的文件真的不存在####
+当nginx收到一个不在的.php文件的请求时,因为nginx只会检查$uri是否是&rdquo;.php&quot;结尾，不会对文件是否存在进行判断，&quot;.php&quot;结尾的请求nginx会直接发给php-fpm处理。php-fpm处理时找不到文件就会返回“No input file specified”带着“404 Not Found”头。
+解决办法'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Nginx File not found 错误 • wrfly&#39;s blog'>
 <meta property='og:description' content='本文转自:http://www.nginx.cn/562.html
 略有修改.
-使用php-fpm解析PHP，&rdquo;No input file specified&rdquo;，&rdquo;File not found&rdquo;是令nginx新手头疼的常见错误，原因是php-fpm进程找不到SCRIPT_FILENAME配置的要执行的.php文件，php-fpm返回给nginx的默认404错误提示。
+使用php-fpm解析PHP，&ldquo;No input file specified&rdquo;，&ldquo;File not found&quot;是令nginx新手头疼的常见错误，原因是php-fpm进程找不到SCRIPT_FILENAME配置的要执行的.php文件，php-fpm返回给nginx的默认404错误提示。
 比如网站default下没有test.php，访问这个文件时通过[抓包]可以看到返回的内容。(linux下可以通过 curl -I http://somesites.com/test.php来查看http头)
-curl -I http://somesites.com/test.php HTTP/1.1 404 Not Found Server: nginx Date: Sun, 15 Mar 2015 12:18:16 GMT Content-Type: text/html Content-Length: 162 Connection: keep-alive 一般会返回一个404的错误页面,但是在某些情况下也会出现&rdquo;File not found.&ldquo;这条提示信息.
+curl -I http://somesites.com/test.php HTTP/1.1 404 Not Found Server: nginx Date: Sun, 15 Mar 2015 12:18:16 GMT Content-Type: text/html Content-Length: 162 Connection: keep-alive  一般会返回一个404的错误页面,但是在某些情况下也会出现&quot;File not found.&ldquo;这条提示信息.
 很多人不想用户直接看到这个默认的404错误信息，想自定义404错误.
 给出解决办法前我们来先分析下如何避免出现这类404错误，然后再说如果遇到这种情况(比如用户输入一个错误不存在的路径)时,怎样做才能显示自定义的404错误页。
 ####一、错误的路径被发送到php-fpm进程####
 出现这类错误，十个有九个是后端fastcgi进程收到错误路径(SCRIPT_FILENAME)，而后端fastcgi收到错误路径的原因大都是配置错误。
-常见的nginx.conf的配置如下：  server { listen [::]:80; server_name example.com www.example.com; access_log /var/www/logs/example.com.access.log;
-location / { root /var/www/example.com; index index.html index.htm index.php; } location /images { autoindex on; } location ~ \.'>
+常见的nginx.conf的配置如下：
+这个配置中有很多不合理的地方，其中一个明显的问题就是root指令被放到了location / 块。如果root指令被定义在location块中,那么该root指令只能对其所在的location生效,其它locaiont中没有root指令，像 location /images 块不会匹配任何请求，所以就需要在每个请求中重复配置root指令来解决这个问题。因此我们需要把root指令放在server块，这样各个location就会继承父server块定义的$document_root，如果某个location需要定义一个不同的$document_root，则可以在location单独定义一个root指令。
+另一个问题就是fastCGI参数SCRIPT_FILENAME 是写死的。如果修改了root指令的值或者移动文件到别的目录，php-fpm会返回“No input file specified”错误，因为SCRIPT_FILENAME在配置中是写死的并没有随着$doucument_root变化而变化，我们可以修改SCRIPT_FILENAME配置如下：
+fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+（PS:一般的配置，默认都没有写上面的，因为我的默认配置文件中并没有上面所提到的那一条，所以我觉得这一条可以忽略不写，，如有错出请发email打脸:）
+所以我们不能忘记在server块中配置root指令，不然$document_root的值为空，只会传$fastcgi_script_name到php-fpm，这样就会导致“No input file specified”错误。
+####二、请求的文件真的不存在####
+当nginx收到一个不在的.php文件的请求时,因为nginx只会检查$uri是否是&rdquo;.php&quot;结尾，不会对文件是否存在进行判断，&quot;.php&quot;结尾的请求nginx会直接发给php-fpm处理。php-fpm处理时找不到文件就会返回“No input file specified”带着“404 Not Found”头。
+解决办法'>
 <meta property='og:url' content='https://wrfly.kfd.me/posts/nginx-file-not-found-%E9%94%99%E8%AF%AF/'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='nginx'><meta property='article:published_time' content='2015-03-15T00:00:00Z'/><meta property='article:modified_time' content='2015-03-15T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>Nginx File not found 错误 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/nginx-file-not-found-%E9%94%99%E8%AF%AF/'>
@@ -123,109 +137,43 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  <p>本文转自:<a href="http://www.nginx.cn/562.html" target="_blank">http://www.nginx.cn/562.html</a></p>
-
+  <p>本文转自:http://www.nginx.cn/562.html</p>
 <p>略有修改.</p>
-
-<p>使用php-fpm解析PHP，&rdquo;No input file specified&rdquo;，&rdquo;File not found&rdquo;是令nginx新手头疼的常见错误，原因是php-fpm进程找不到SCRIPT_FILENAME配置的要执行的.php文件，php-fpm返回给nginx的默认404错误提示。</p>
-
-<p>比如网站default下没有test.php，访问这个文件时通过[抓包]可以看到返回的内容。(linux下可以通过 <code>curl -I <a href="http://somesites.com/test.php" target="_blank">http://somesites.com/test.php</a><code>来查看http头)</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">curl -I http://somesites.com/test.php
+<p>使用php-fpm解析PHP，&ldquo;No input file specified&rdquo;，&ldquo;File not found&quot;是令nginx新手头疼的常见错误，原因是php-fpm进程找不到SCRIPT_FILENAME配置的要执行的.php文件，php-fpm返回给nginx的默认404错误提示。</p>
+<p>比如网站default下没有test.php，访问这个文件时通过[抓包]可以看到返回的内容。(linux下可以通过 <!-- raw HTML omitted -->curl -I <a href="http://somesites.com/test.php">http://somesites.com/test.php</a><!-- raw HTML omitted -->来查看http头)</p>
+<pre><code>curl -I http://somesites.com/test.php
 
 HTTP/1.1 404 Not Found
 Server: nginx
 Date: Sun, 15 Mar 2015 12:18:16 GMT
 Content-Type: text/html
 Content-Length: 162
-Connection: keep-alive</pre></div>
-<p>一般会返回一个404的错误页面,但是在某些情况下也会出现&rdquo;File not found.&ldquo;这条提示信息.</p>
-
+Connection: keep-alive
+</code></pre>
+<p>一般会返回一个404的错误页面,但是在某些情况下也会出现&quot;File not found.&ldquo;这条提示信息.</p>
 <p>很多人不想用户直接看到这个默认的404错误信息，想自定义404错误.</p>
-
 <p>给出解决办法前我们来先分析下如何避免出现这类404错误，然后再说如果遇到这种情况(比如用户输入一个错误不存在的路径)时,怎样做才能显示自定义的404错误页。</p>
-
 <p>####一、错误的路径被发送到php-fpm进程####</p>
-
 <p>出现这类错误，十个有九个是后端fastcgi进程收到错误路径(SCRIPT_FILENAME)，而后端fastcgi收到错误路径的原因大都是配置错误。</p>
-
-<p>常见的nginx.conf的配置如下：
-<pre>
-server {
-    listen   [::]:80;
-    server_name  example.com www.example.com;
-    access_log  /var/www/logs/example.com.access.log;</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">location / {
-    root   /var/www/example.com;
-    index  index.html index.htm index.php;
-}
-
-location /images {
-    autoindex on;
-}
-
-location ~ \.php$ {
-    fastcgi_pass   127.0.0.1:9000;
-    fastcgi_index  index.php;
-    fastcgi_param  SCRIPT_FILENAME  /var/www/example.com$fastcgi_script_name;
-    include fastcgi_params;
-}</pre></div>
-<p>}
-</pre></p>
-
+<p>常见的nginx.conf的配置如下：</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>这个配置中有很多不合理的地方，其中一个明显的问题就是root指令被放到了location / 块。如果root指令被定义在location块中,那么该root指令只能对其所在的location生效,其它locaiont中没有root指令，像 location /images 块不会匹配任何请求，所以就需要在每个请求中重复配置root指令来解决这个问题。因此我们需要把root指令放在server块，这样各个location就会继承父server块定义的$document_root，如果某个location需要定义一个不同的$document_root，则可以在location单独定义一个root指令。</p>
-
 <p>另一个问题就是fastCGI参数SCRIPT_FILENAME 是写死的。如果修改了root指令的值或者移动文件到别的目录，php-fpm会返回“No input file specified”错误，因为SCRIPT_FILENAME在配置中是写死的并没有随着$doucument_root变化而变化，我们可以修改SCRIPT_FILENAME配置如下：</p>
-
 <p>fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;</p>
-
 <p>（PS:一般的配置，默认都没有写上面的，因为我的默认配置文件中并没有上面所提到的那一条，所以我觉得这一条可以忽略不写，，如有错出请发email打脸:）</p>
-
 <p>所以我们不能忘记在server块中配置root指令，不然$document_root的值为空，只会传$fastcgi_script_name到php-fpm，这样就会导致“No input file specified”错误。</p>
-
 <p>####二、请求的文件真的不存在####</p>
-
-<p>当nginx收到一个不在的.php文件的请求时,<strong>因为nginx只会检查$uri是否是&rdquo;.php&rdquo;结尾，不会对文件是否存在进行判断</strong>，&rdquo;.php&rdquo;结尾的请求nginx会直接发给php-fpm处理。php-fpm处理时找不到文件就会返回“No input file specified”带着“404 Not Found”头。</p>
-
+<p>当nginx收到一个不在的.php文件的请求时,<!-- raw HTML omitted -->因为nginx只会检查$uri是否是&rdquo;.php&quot;结尾，不会对文件是否存在进行判断<!-- raw HTML omitted -->，&quot;.php&quot;结尾的请求nginx会直接发给php-fpm处理。php-fpm处理时找不到文件就会返回“No input file specified”带着“404 Not Found”头。</p>
 <p>解决办法</p>
-
 <p>我们在nginx拦截不存在的文件，请求并返回自定义404错误</p>
-
-<p>使用 try_files 捕捉不存在的urls并返回错误。（在<code>location ~ .php$<code>里面添加一句话。）</p>
-
-<pre>
-location ~ .php$ {
- try_files $uri =404;
-}
-</pre>
-
+<p>使用 try_files 捕捉不存在的urls并返回错误。（在<!-- raw HTML omitted -->location ~ .php$<!-- raw HTML omitted -->里面添加一句话。）</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>上面的配置会检查.php文件是否存在，如果不存在(不仅仅检查是不是php文件，还会检测文件名是否存在)，会返回404页面。</p>
-
 <p>最后贴一个我自己的配置:</p>
-
-<pre>
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server ipv6only=on;
-
-    root /var/www/nginx/;
-    index index.html index.php index.htm;
-    server_name localhost;
-
-    error_page 404 /404.html;
-
-    location = /50x.html {
-        root /usr/share/nginx/html;
-    }
-    
-    location ~ \.php$ {
-        try_files $uri =404;
-        astcgi_split_path_info ^(.+\.php)(/.+)$;
-        fastcgi_pass unix:/var/run/php5-fpm.sock;
-        fastcgi_index index.php;
-        include fastcgi_params;
-    }
-}
-</pre>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 
 </div>
 

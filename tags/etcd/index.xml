@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>etcd on wrfly&#39;s blog</title>
@@ -21,7 +21,7 @@
 升级后，新的instance没有请求，依赖这个服务的所有service都连着旧的地址（在mesos上重新部署之后地址和端口都变了），但这些instance都是通过etcd作服务发现的，把自己注册到etcd上，而且etcd上也的确看到了新的地址，但是为什么那些server还抓着旧地址不放呢？（讲道理我写的lib没问题啊）而且重启之后就能拿到新的地址了，也有请求到升级之后的instance上去了。
 经过 Dat在群里贴了这样一段，取自etcd官方文档：
  At first, a client must create a gRPC connection only to authenticate its user ID and password. An etcd server will respond with an authentication reply. The reponse will be an authentication token on success or an error on failure. The client can use its authentication token to present its credentials to etcd when making API requests.
-The client connection used to request the authentication token is typically thrown away; it cannot carry the new token&amp;rsquo;s credentials.</description>
+  The client connection used to request the authentication token is typically thrown away; it cannot carry the new token&amp;rsquo;s credentials.</description>
     </item>
     
     <item>
@@ -31,14 +31,7 @@ The client connection used to request the authentication token is typically thro
       
       <guid>https://wrfly.kfd.me/posts/etcd%E7%AC%94%E8%AE%B0/</guid>
       <description>很早就写的一篇笔记，放在这里充数。
-运行一个最简单的etcd docker run -p 4001:4001 --rm -ti microbox/etcd --name etcd0 API  获取版本
-curl -L http://127.0.0.1:2379/version 获取键值
-curl http://127.0.0.1:2379/v2/keys/message 设置键值
-curl http://127.0.0.1:2379/v2/keys/message -XPUT -d value=&amp;#34;Hello world&amp;#34; curl -X PUT http://127.0.0.1:2379/v2/keys/message?value=&amp;#34;Hello world&amp;#34; curl -X PUT http://127.0.0.1:2379/v2/keys/message?value=&amp;#34;Hello etcd&amp;#34; 删除键
-curl -X DELETE http://127.0.0.1:2379/v2/keys/message 使用TTL
-curl http://127.0.0.1:2379/v2/keys/foo -XPUT -d value=bar -d ttl=5 curl http://127.0.0.1:2379/v2/keys/foo?value=bar&amp;amp;ttl=5 -XPUT 取消TTL
-curl http://127.0.0.1:2379/v2/keys/foo?value=bar&amp;amp;ttl= -XPUT 创建目录
-curl -X PUT http://127.0.0.1:2379/v2/keys/dir1?dir=true curl -X PUT http://127.0.0.1:2379/v2/keys/dir1 -d dir=true 删除目录</description>
+运行一个最简单的etcd docker run -p 4001:4001 --rm -ti microbox/etcd --name etcd0 API  获取版本  curl -L http://127.0.0.1:2379/version  获取键值  curl http://127.0.0.1:2379/v2/keys/message  设置键值  curl http://127.0.0.1:2379/v2/keys/message -XPUT -d value=&amp;#34;Hello world&amp;#34; curl -X PUT http://127.0.0.1:2379/v2/keys/message?value=&amp;#34;Hello world&amp;#34; curl -X PUT http://127.0.0.1:2379/v2/keys/message?value=&amp;#34;Hello etcd&amp;#34;  删除键  curl -X DELETE http://127.0.0.1:2379/v2/keys/message  使用TTL  curl http://127.0.0.1:2379/v2/keys/foo -XPUT -d value=bar -d ttl=5 curl http://127.0.0.1:2379/v2/keys/foo?value=bar&amp;amp;ttl=5 -XPUT  取消TTL  curl http://127.0.0.1:2379/v2/keys/foo?value=bar&amp;amp;ttl= -XPUT  创建目录  curl -X PUT http://127.</description>
     </item>
     
   </channel>

@@ -7,12 +7,12 @@ rarcrack,其官方主页：http://rarcrack.sourceforge.net/
 该软件用于暴力破解压缩文件的密码，但仅支持RAR, ZIP, 7Z这三种类型，其特点是可以使用多线程而且可以暂停与继续(会在当前目录生成一个xml文件，里面显示了正在尝试的一个密码)。
 安装方法
 首先从官网下载安装包，然后执行如下命令
-$ tar -xjf rarcrack-0.2.tar.bz2 $ cd rarcrack-0.2.tar.bz2 $ make $ make install 使用方法
-rarcrack 文件名 [--threads thread_num] [--type rar|zip|7z] 该软件还自带了测试样例，该目录内，执行 rarcrack test.rar &ndash;threads 4 &ndash;type rar ，等待一会儿即可得到结果。
+$ tar -xjf rarcrack-0.2.tar.bz2 $ cd rarcrack-0.2.tar.bz2 $ make $ make install  使用方法
+rarcrack 文件名 [--threads thread_num] [--type rar|zip|7z]  该软件还自带了测试样例，该目录内，执行 rarcrack test.rar &ndash;threads 4 &ndash;type rar ，等待一会儿即可得到结果。
 如果要改变尝试的位置可以直接打开xml，修改当前密码那一行即可。
 如果出现如下错误：
-gcc -pthread rarcrack.c xml2-config --libs --cflags -O2 -o rarcrack /bin/sh: 1: xml2-config: not found In file included from rarcrack.c:21:0: rarcrack.h:25:48: 致命错误： libxml/xmlmemory.h：没有那个文件或目录 编译中断。 make: *** [all] 错误 1 则执行：
-sudo apt-get install libxml2-dev libxslt-dev 安装相应的依赖包。'>
+gcc -pthread rarcrack.c xml2-config --libs --cflags -O2 -o rarcrack /bin/sh: 1: xml2-config: not found In file included from rarcrack.c:21:0: rarcrack.h:25:48: 致命错误： libxml/xmlmemory.h：没有那个文件或目录 编译中断。 make: *** [all] 错误 1  则执行：
+sudo apt-get install libxml2-dev libxslt-dev  安装相应的依赖包。'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='linux下暴力破解rar，zip文件 • wrfly&#39;s blog'>
@@ -21,17 +21,17 @@ rarcrack,其官方主页：http://rarcrack.sourceforge.net/
 该软件用于暴力破解压缩文件的密码，但仅支持RAR, ZIP, 7Z这三种类型，其特点是可以使用多线程而且可以暂停与继续(会在当前目录生成一个xml文件，里面显示了正在尝试的一个密码)。
 安装方法
 首先从官网下载安装包，然后执行如下命令
-$ tar -xjf rarcrack-0.2.tar.bz2 $ cd rarcrack-0.2.tar.bz2 $ make $ make install 使用方法
-rarcrack 文件名 [--threads thread_num] [--type rar|zip|7z] 该软件还自带了测试样例，该目录内，执行 rarcrack test.rar &ndash;threads 4 &ndash;type rar ，等待一会儿即可得到结果。
+$ tar -xjf rarcrack-0.2.tar.bz2 $ cd rarcrack-0.2.tar.bz2 $ make $ make install  使用方法
+rarcrack 文件名 [--threads thread_num] [--type rar|zip|7z]  该软件还自带了测试样例，该目录内，执行 rarcrack test.rar &ndash;threads 4 &ndash;type rar ，等待一会儿即可得到结果。
 如果要改变尝试的位置可以直接打开xml，修改当前密码那一行即可。
 如果出现如下错误：
-gcc -pthread rarcrack.c xml2-config --libs --cflags -O2 -o rarcrack /bin/sh: 1: xml2-config: not found In file included from rarcrack.c:21:0: rarcrack.h:25:48: 致命错误： libxml/xmlmemory.h：没有那个文件或目录 编译中断。 make: *** [all] 错误 1 则执行：
-sudo apt-get install libxml2-dev libxslt-dev 安装相应的依赖包。'>
+gcc -pthread rarcrack.c xml2-config --libs --cflags -O2 -o rarcrack /bin/sh: 1: xml2-config: not found In file included from rarcrack.c:21:0: rarcrack.h:25:48: 致命错误： libxml/xmlmemory.h：没有那个文件或目录 编译中断。 make: *** [all] 错误 1  则执行：
+sudo apt-get install libxml2-dev libxslt-dev  安装相应的依赖包。'>
 <meta property='og:url' content='https://wrfly.kfd.me/posts/linux%E4%B8%8B%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3rarzip%E6%96%87%E4%BB%B6/'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='linux'><meta property='article:tag' content='hack'><meta property='article:published_time' content='2015-04-07T00:00:00Z'/><meta property='article:modified_time' content='2015-04-07T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>linux下暴力破解rar，zip文件 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/linux%E4%B8%8B%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3rarzip%E6%96%87%E4%BB%B6/'>
@@ -124,35 +124,32 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>Linux暴力破解RAR，ZIP，7Z压缩包</p>
-
-<p>rarcrack,其官方主页：<a href="http://rarcrack.sourceforge.net/" target="_blank">http://rarcrack.sourceforge.net/</a></p>
-
+<p>rarcrack,其官方主页：http://rarcrack.sourceforge.net/</p>
 <p>该软件用于暴力破解压缩文件的密码，但仅支持RAR, ZIP, 7Z这三种类型，其特点是可以使用多线程而且可以暂停与继续(会在当前目录生成一个xml文件，里面显示了正在尝试的一个密码)。</p>
-
 <p>安装方法</p>
-
 <p>首先从官网下载安装包，然后执行如下命令</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ tar -xjf rarcrack-0.2.tar.bz2
+<pre><code>$ tar -xjf rarcrack-0.2.tar.bz2
 $ cd rarcrack-0.2.tar.bz2
 $ make
-$ make install</pre></div>
+$ make install
+</code></pre>
 <p>使用方法</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">rarcrack 文件名 [--threads thread_num] [--type rar|zip|7z]</pre></div>
+<pre><code>rarcrack 文件名 [--threads thread_num] [--type rar|zip|7z]
+</code></pre>
 <p>该软件还自带了测试样例，该目录内，执行   rarcrack test.rar &ndash;threads 4 &ndash;type rar   ，等待一会儿即可得到结果。</p>
-
 <p>如果要改变尝试的位置可以直接打开xml，修改当前密码那一行即可。</p>
-
 <p>如果出现如下错误：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">gcc -pthread rarcrack.c xml2-config --libs --cflags -O2 -o rarcrack
+<pre><code>gcc -pthread rarcrack.c xml2-config --libs --cflags -O2 -o rarcrack
 /bin/sh: 1: xml2-config: not found
 In file included from rarcrack.c:21:0:
 rarcrack.h:25:48: 致命错误： libxml/xmlmemory.h：没有那个文件或目录
 编译中断。
-make: *** [all] 错误 1</pre></div>
+make: *** [all] 错误 1
+</code></pre>
 <p>则执行：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo apt-get install libxml2-dev libxslt-dev</pre></div>
+<pre><code>sudo apt-get install libxml2-dev libxslt-dev
+</code></pre>
 <p>安装相应的依赖包。</p>
-
 <p>ps:本文来自网络，忘记出处了。</p>
 
 </div>

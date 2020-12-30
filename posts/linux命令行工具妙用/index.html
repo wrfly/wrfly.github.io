@@ -3,23 +3,23 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Fork from:http://mingxinglai.com/cn/2012/08/toos-of-bash/
-前言：虽然现在各种动态脚本语言发展得热火朝天,一片欣欣向荣的景象,而且动态脚本语言如python确实学习成本低,入门快,虽然unix 下各种工具比我们很多人年龄都大,但是我还是相信一些有用的小工具在可预见的时间内不会消失,因为灵活运用它们能够快速解决很多小问题,而且你不大可能写出更短的代码来。
-1. 一行命令算术运算 seq 100 | echo $[ $(tr &#39;\n&#39; &#39;&#43;&#39;) 0] seq 5 3 20 | echo $[ $(tr &#39;\n&#39; &#39;*&#39;) 1] seq 用于产生一组等差的数列,默认首项和公差都是1,所以上面的第一行代码会产生1 －－ 100 的整数,且每个数占一行,使用tr 将换行替换成＋号以后,形成如1&#43;2&#43;......&#43;100&#43;的一行字符串,所以需要在字符串最后加一个0,最后使用echo $[ ]进行算数运算,也可以通过管道使用bc来计算seq 100 | echo $(tr &#39;\n&#39; &#39;&#43;&#39;) 0 | bc。
+**前言：**虽然现在各种动态脚本语言发展得热火朝天,一片欣欣向荣的景象,而且动态脚本语言如python确实学习成本低,入门快,虽然unix 下各种工具比我们很多人年龄都大,但是我还是相信一些有用的小工具在可预见的时间内不会消失,因为灵活运用它们能够快速解决很多小问题,而且你不大可能写出更短的代码来。
+1. 一行命令算术运算 seq 100 | echo $[ $(tr &#39;\n&#39; &#39;&#43;&#39;) 0] seq 5 3 20 | echo $[ $(tr &#39;\n&#39; &#39;*&#39;) 1]  seq 用于产生一组等差的数列,默认首项和公差都是1,所以上面的第一行代码会产生1 －－ 100 的整数,且每个数占一行,使用tr 将换行替换成＋号以后,形成如1&#43;2&#43;......&#43;100&#43;的一行字符串,所以需要在字符串最后加一个0,最后使用echo $[ ]进行算数运算,也可以通过管道使用bc来计算seq 100 | echo $(tr &#39;\n&#39; &#39;&#43;&#39;) 0 | bc。
 2. 100的阶乘末尾有几个零？ 这是计算机专业面试的一个比较有名的题目,正确的解法答案是 n/5 &#43; n/5/5 &#43; n/5/5/5&hellip;&hellip; 下面我们写一行代码来验证一下
-echo {1..100}|tr &#39; &#39; &#39;*&#39;|bc|tr &#39;1-9&#39; &#39;\n&#39;|sort -r| head -1|awk &#39;{print length($0) }&#39; 这里{1..100}属于通配符,例如你要新建100个文件,就可以touch test{1..100}.txt,还可以touch test{a..z}.txt。 算后计算出1乘到100的结果,将结果中非零的数字替换成换行符在1乘到100的结果中,必然是末尾的0最多 所以我们只需要在tr &#39;1-9&#39; &#39;\n&#39;之后,找出最长的那一行就可以了,这里使用的方法是先将结果逆序排序sort -r,然后打印第一行head -,计算出第一行的长度awk &#39;{print length($0)}&#39;。'>
+echo {1..100}|tr &#39; &#39; &#39;*&#39;|bc|tr &#39;1-9&#39; &#39;\n&#39;|sort -r| head -1|awk &#39;{print length($0) }&#39;  这里{1..100}属于通配符,例如你要新建100个文件,就可以touch test{1..100}.txt,还可以touch test{a..z}.txt。 算后计算出1乘到100的结果,将结果中非零的数字替换成换行符在1乘到100的结果中,必然是末尾的0最多 所以我们只需要在tr &#39;1-9&#39; &#39;\n&#39;之后,找出最长的那一行就可以了,这里使用的方法是先将结果逆序排序sort -r,然后打印第一行head -,计算出第一行的长度awk &#39;{print length($0)}&#39;。'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='linux命令行工具妙用 • wrfly&#39;s blog'>
 <meta property='og:description' content='Fork from:http://mingxinglai.com/cn/2012/08/toos-of-bash/
-前言：虽然现在各种动态脚本语言发展得热火朝天,一片欣欣向荣的景象,而且动态脚本语言如python确实学习成本低,入门快,虽然unix 下各种工具比我们很多人年龄都大,但是我还是相信一些有用的小工具在可预见的时间内不会消失,因为灵活运用它们能够快速解决很多小问题,而且你不大可能写出更短的代码来。
-1. 一行命令算术运算 seq 100 | echo $[ $(tr &#39;\n&#39; &#39;&#43;&#39;) 0] seq 5 3 20 | echo $[ $(tr &#39;\n&#39; &#39;*&#39;) 1] seq 用于产生一组等差的数列,默认首项和公差都是1,所以上面的第一行代码会产生1 －－ 100 的整数,且每个数占一行,使用tr 将换行替换成＋号以后,形成如1&#43;2&#43;......&#43;100&#43;的一行字符串,所以需要在字符串最后加一个0,最后使用echo $[ ]进行算数运算,也可以通过管道使用bc来计算seq 100 | echo $(tr &#39;\n&#39; &#39;&#43;&#39;) 0 | bc。
+**前言：**虽然现在各种动态脚本语言发展得热火朝天,一片欣欣向荣的景象,而且动态脚本语言如python确实学习成本低,入门快,虽然unix 下各种工具比我们很多人年龄都大,但是我还是相信一些有用的小工具在可预见的时间内不会消失,因为灵活运用它们能够快速解决很多小问题,而且你不大可能写出更短的代码来。
+1. 一行命令算术运算 seq 100 | echo $[ $(tr &#39;\n&#39; &#39;&#43;&#39;) 0] seq 5 3 20 | echo $[ $(tr &#39;\n&#39; &#39;*&#39;) 1]  seq 用于产生一组等差的数列,默认首项和公差都是1,所以上面的第一行代码会产生1 －－ 100 的整数,且每个数占一行,使用tr 将换行替换成＋号以后,形成如1&#43;2&#43;......&#43;100&#43;的一行字符串,所以需要在字符串最后加一个0,最后使用echo $[ ]进行算数运算,也可以通过管道使用bc来计算seq 100 | echo $(tr &#39;\n&#39; &#39;&#43;&#39;) 0 | bc。
 2. 100的阶乘末尾有几个零？ 这是计算机专业面试的一个比较有名的题目,正确的解法答案是 n/5 &#43; n/5/5 &#43; n/5/5/5&hellip;&hellip; 下面我们写一行代码来验证一下
-echo {1..100}|tr &#39; &#39; &#39;*&#39;|bc|tr &#39;1-9&#39; &#39;\n&#39;|sort -r| head -1|awk &#39;{print length($0) }&#39; 这里{1..100}属于通配符,例如你要新建100个文件,就可以touch test{1..100}.txt,还可以touch test{a..z}.txt。 算后计算出1乘到100的结果,将结果中非零的数字替换成换行符在1乘到100的结果中,必然是末尾的0最多 所以我们只需要在tr &#39;1-9&#39; &#39;\n&#39;之后,找出最长的那一行就可以了,这里使用的方法是先将结果逆序排序sort -r,然后打印第一行head -,计算出第一行的长度awk &#39;{print length($0)}&#39;。'>
+echo {1..100}|tr &#39; &#39; &#39;*&#39;|bc|tr &#39;1-9&#39; &#39;\n&#39;|sort -r| head -1|awk &#39;{print length($0) }&#39;  这里{1..100}属于通配符,例如你要新建100个文件,就可以touch test{1..100}.txt,还可以touch test{a..z}.txt。 算后计算出1乘到100的结果,将结果中非零的数字替换成换行符在1乘到100的结果中,必然是末尾的0最多 所以我们只需要在tr &#39;1-9&#39; &#39;\n&#39;之后,找出最长的那一行就可以了,这里使用的方法是先将结果逆序排序sort -r,然后打印第一行head -,计算出第一行的长度awk &#39;{print length($0)}&#39;。'>
 <meta property='og:url' content='https://wrfly.kfd.me/posts/linux%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E5%A6%99%E7%94%A8/'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='shell'><meta property='article:tag' content='ubuntu'><meta property='article:published_time' content='2015-05-13T00:00:00Z'/><meta property='article:modified_time' content='2015-05-13T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>linux命令行工具妙用 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/linux%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E5%A6%99%E7%94%A8/'>
@@ -111,315 +111,228 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p>Fork from:<a href="http://mingxinglai.com/cn/2012/08/toos-of-bash/" target="_blank">http://mingxinglai.com/cn/2012/08/toos-of-bash/</a></p>
-
-<p><strong>前言：</strong>虽然现在各种动态脚本语言发展得热火朝天,一片欣欣向荣的景象,而且动态脚本语言如<a href="http://wiki.woodpecker.org.cn/moin/WeiZhong/2006-01-17" target="_blank">python确实学习成本低,入门快</a>,虽然unix 下各种工具比我们很多人年龄都大,但是我还是相信一些有用的小工具在可预见的时间内不会消失,因为灵活运用它们能够快速解决很多小问题,而且你不大可能写出更短的代码来。</p>
-
+  <p>Fork from:<a href="http://mingxinglai.com/cn/2012/08/toos-of-bash/">http://mingxinglai.com/cn/2012/08/toos-of-bash/</a></p>
+<p>**前言：**虽然现在各种动态脚本语言发展得热火朝天,一片欣欣向荣的景象,而且动态脚本语言如<a href="http://wiki.woodpecker.org.cn/moin/WeiZhong/2006-01-17">python确实学习成本低,入门快</a>,虽然unix 下各种工具比我们很多人年龄都大,但是我还是相信一些有用的小工具在可预见的时间内不会消失,因为灵活运用它们能够快速解决很多小问题,而且你不大可能写出更短的代码来。</p>
 <h2 id="1-一行命令算术运算">1. 一行命令算术运算</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">seq 100 | echo $[ $(tr &#39;\n&#39; &#39;+&#39;) 0]
-seq 5 3 20 | echo $[ $(tr &#39;\n&#39; &#39;*&#39;) 1]</pre></div>
+<pre><code>seq 100 | echo $[ $(tr '\n' '+') 0]
+seq 5 3 20 | echo $[ $(tr '\n' '*') 1]
+</code></pre>
 <p>seq 用于产生一组等差的数列,默认首项和公差都是1,所以上面的第一行代码会产生1 －－
 100 的整数,且每个数占一行,使用tr 将换行替换成＋号以后,形成如<code>1+2+......+100+</code>的一行字符串,所以需要在字符串最后加一个0,最后使用<code>echo $[ ]</code>进行算数运算,也可以通过管道使用bc来计算<code>seq 100 | echo $(tr '\n' '+') 0 | bc</code>。</p>
-
 <h2 id="2-100的阶乘末尾有几个零">2. 100的阶乘末尾有几个零？</h2>
-
 <p>这是计算机专业面试的一个比较有名的题目,正确的解法答案是 n/5 + n/5/5 + n/5/5/5&hellip;&hellip; 下面我们写一行代码来验证一下</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">echo {1..100}|tr &#39; &#39; &#39;*&#39;|bc|tr &#39;1-9&#39; &#39;\n&#39;|sort -r|
-head -1|awk &#39;{print length($0) }&#39;</pre></div>
+<pre><code>echo {1..100}|tr ' ' '*'|bc|tr '1-9' '\n'|sort -r|
+head -1|awk '{print length($0) }'
+</code></pre>
 <p>这里{1..100}属于通配符,例如你要新建100个文件,就可以<code>touch test{1..100}.txt</code>,还可以<code>touch test{a..z}.txt</code>。
 算后计算出1乘到100的结果,将结果中非零的数字替换成换行符<em>在1乘到100的结果中,必然是末尾的0最多</em> 所以我们只需要在<code>tr '1-9' '\n'</code>之后,找出最长的那一行就可以了,这里使用的方法是先将结果逆序排序<code>sort -r</code>,然后打印第一行<code>head -</code>,计算出第一行的长度<code>awk '{print length($0)}'</code>。</p>
-
 <p>有没有更简单的办法来实现这个功能呢,或者说有没有更短的程序能实现同样的功能,我们几乎可以肯定的是,在shell脚本中<em>代码越少执行越快</em>,看下面的代码：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">seq 100 | echo  $(tr &#39;\n&#39; &#39;*&#39;) 1 | bc 
-| tr -C &#39;0&#39; &#39;\n&#39; | wc -L</pre></div>
+<pre><code>seq 100 | echo  $(tr '\n' '*') 1 | bc 
+| tr -C '0' '\n' | wc -L
+</code></pre>
 <p>前面3步虽然用了不一样的方法,但是功能都是一样的,效率也没什么区别,但是后面这种实现方式不需要排序,这就省下了很多时间。所以效率更高是毫无疑问的,而实现后者的关键是要知道wc提供了一个参数 -L ( <code>wc -L</code>) 用于统计最长的行 。</p>
-
 <h2 id="3-统计源程序的行数">3. 统计源程序的行数</h2>
-
-<p>假如你有一天心血来潮,想统计自己写了多少代码,或者说你也跟我一样看到了《<a href="http://news.163.com/12/0604/11/835EHV450001124J.html" target="_blank">解放军“网络尖兵”90天写40万行代码</a>》这条新闻,觉得不可思议,那么你应该做的就是统计代码的行数,假如你最喜欢的动态脚本语言是python,那么你很可能会用python的os.walk（）来遍历目录,然后过滤文件后缀名为源代码的（如c、cpp和h）,再按行读取每个符合的文件,合计所有文件的行数。有没有更简单的办法呢？答案是肯定的。我们先不考虑文件的后缀名,很容易的就能写出下面的代码：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find $path -exec wc -l {} \; | awk &#39;{lines += $1} 
-END {print lines}&#39;</pre></div>
+<p>假如你有一天心血来潮,想统计自己写了多少代码,或者说你也跟我一样看到了《<a href="http://news.163.com/12/0604/11/835EHV450001124J.html">解放军“网络尖兵”90天写40万行代码</a>》这条新闻,觉得不可思议,那么你应该做的就是统计代码的行数,假如你最喜欢的动态脚本语言是python,那么你很可能会用python的os.walk（）来遍历目录,然后过滤文件后缀名为源代码的（如c、cpp和h）,再按行读取每个符合的文件,合计所有文件的行数。有没有更简单的办法呢？答案是肯定的。我们先不考虑文件的后缀名,很容易的就能写出下面的代码：</p>
+<pre><code>find $path -exec wc -l {} \; | awk '{lines += $1} 
+END {print lines}'
+</code></pre>
 <p>虽然结果是拿到了,可总感觉效率低了点。而且需要我们手工的将每个文件的行数加起来,对于这么懒的你,这怎么可以忍受呢？于是想到可以直接把所有文件合并起来,当成一个整体传给wc：</p>
-
 <p>find $path | xargs cat | wc -l</p>
-
 <p>这下效率果然高多了,瞬间就得到了结果,不过内存占用或许会比较多。于是又看了下wc的文档,发现它可以接受多个文件参数,最后会输出总行数,于是cat也就可以省略了：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find $path | xargs wc -l</pre></div>
+<pre><code>find $path | xargs wc -l
+</code></pre>
 <p>我们能不能写得更短一点呢？如果再交换下wc和find的位置,连xargs也能省略了：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">wc -l \`find $path\`</pre></div>
+<pre><code>wc -l \`find $path\`
+</code></pre>
 <p>最后你写出来的一行代码应该跟下面的差不多：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">wc -l \`find $path -regex &#34;.*\.\(py\|c\|cpp\|h\)&#34;\`</pre></div>
-<p>此示例参考网址：<a href="http://www.keakon.net/2011/04/15/%E7%BB%9F%E8%AE%A1%E4%BB%A3%E7%A0%81%E8%A1%8C%E6%95%B0%E6%9C%89%E5%87%A0%E7%A7%8D%E5%86%99%E6%B3%95%EF%BC%9F" target="_blank">www.keakon.net</a></p>
-
-<h1 id="d-f">4. 删除垃圾文件</h1>
-
+<pre><code>wc -l \`find $path -regex &quot;.*\.\(py\|c\|cpp\|h\)&quot;\`
+</code></pre>
+<p>此示例参考网址：<a href="http://www.keakon.net/2011/04/15/%E7%BB%9F%E8%AE%A1%E4%BB%A3%E7%A0%81%E8%A1%8C%E6%95%B0%E6%9C%89%E5%87%A0%E7%A7%8D%E5%86%99%E6%B3%95%EF%BC%9F">www.keakon.net</a></p>
+<!-- raw HTML omitted -->
 <p>假入你的home 目录下有一个code子目录,用于存放你平时做的一些算法练习,而且你也熟悉git,那么你很可能会会写出下面的脚本</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">## !/bin/bash
+<pre><code>## !/bin/bash
 cd ~/code
 git add .
-git push</pre></div>
+git push
+</code></pre>
 <p>然后使用cron 让计算机每晚9点帮你备份数据,但是很可能你的~/code 下还有很多a.out
 文件,很明显这是无用的文件,我们要珍惜 github 上宝贵的300M 空间,所以要把所有的a.out 文件删除,该怎么做呢？</p>
-
 <p>一种方法是我们可以通过find 提供的-exec 参数来对找到的文件执行操作,格式如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . -name a.out -exec rm -rf {} \;</pre></div>
+<pre><code>find . -name a.out -exec rm -rf {} \;
+</code></pre>
 <p>还有更简单的办法就是使用find 提供的-delete 参数,</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . -type f -name &#34;a.out&#34; -delete</pre></div>
+<pre><code>find . -type f -name &quot;a.out&quot; -delete
+</code></pre>
 <p>当然了,方法总是多多的,我们还可以将找到的文件名通过xargs
 传给下一个命令,不过需要注意的是,正确的用法应该是</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . -type f -name &#34;filename&#34; -print0 | xargs -0 rm -f</pre></div>
+<pre><code>find . -type f -name &quot;filename&quot; -print0 | xargs -0 rm -f
+</code></pre>
 <p>上面的-print0 就是明确说明用\0 作为输入的定界,而不是默认的空格或回车,按照下面的方法也是正确的,但是当遇到文件名包含空格的时候就可能会出错。如你当前文件夹下面有三个文件,分别是empty、file 和  empty file. 你现在要删除empty file .</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . -name &#34;empty file&#34; | xargs rm -rf </pre></div>
+<pre><code>find . -name &quot;empty file&quot; | xargs rm -rf 
+</code></pre>
 <p>结果不是我们期望的那样的,这条命令会删除empty 和 file 文件,保留empty file 文件,所以为了以防万一,只要我们把find 的输出作为xargs 的输入,就必须将 -print0 与find 结合使用,以字符null 来分割输出。</p>
-
 <h2 id="5-分析散文中使用的单词">5. 分析散文中使用的单词</h2>
-
-<p>下面我们来看一个由《<a href="http://book.douban.com/subject/6124333/" target="_blank">Programming Pearls</a>》的作者Bentley提出的问题：写一个文字处理程序,找出n个出现最频繁的单词,并在输出结果的列表上加入它们的出现次数,按照次数从小到大排序,据说著名科学家Donald Kunth 和David Hanson 分别回应了两个聪明的程序,而每个程序都花了分别数小时写出来,最后Bentley 给出了一个只有一行的脚本代码,而这行代码对于熟悉linux 命令行工具的普通程序员来说都没有一点难度。可见linux 命令行工具的强大。下面我们来看具体是怎么实现的。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cat $* | tr -cs A-Za-z &#39;\n&#39;| tr A-Z a-z |
-sort | uniq -c | sort -r -n | sed 25q</pre></div>
+<p>下面我们来看一个由《<a href="http://book.douban.com/subject/6124333/">Programming Pearls</a>》的作者Bentley提出的问题：写一个文字处理程序,找出n个出现最频繁的单词,并在输出结果的列表上加入它们的出现次数,按照次数从小到大排序,据说著名科学家Donald Kunth 和David Hanson 分别回应了两个聪明的程序,而每个程序都花了分别数小时写出来,最后Bentley 给出了一个只有一行的脚本代码,而这行代码对于熟悉linux 命令行工具的普通程序员来说都没有一点难度。可见linux 命令行工具的强大。下面我们来看具体是怎么实现的。</p>
+<pre><code>cat $* | tr -cs A-Za-z '\n'| tr A-Z a-z |
+sort | uniq -c | sort -r -n | sed 25q
+</code></pre>
 <p>解释如下：1.连接所有输入文件；2.让每行包含一个单词,办法是把字母表以外的字符(-c)翻译成新行(\n)去掉重复的空白行(-s)；3.把大写翻译成小写；4.排序,以便把相同的单词归并在一起；5.把连续的相同的单词换成一个单词及其计数(-c)；6.按照数值(-n)递减(-r)顺序来排序；7.经过一个流编辑器,在打印25行后退出。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cat hamlet.txt | tr -cs A-Za-z &#39;\n&#39; |tr A-Z a-z|
-sort | uniq -c | sort -nr | head -n 25</pre></div>
+<pre><code>cat hamlet.txt | tr -cs A-Za-z '\n' |tr A-Z a-z|
+sort | uniq -c | sort -nr | head -n 25
+</code></pre>
 <p>如果你真的去执行了上面的代码，你很可能会觉得有些结果很诡异,比如说<code>s,d</code>,怎么会出现这么多呢？d我没想到是为什么,但是<code>s</code> 很明显,如<code>what's</code>当我们把单引号去掉的时候,它就变成了两个单词<code>what</code> 和 <code>s</code>,也就是说结果不是很正确,那我们需要把<code>s</code>这行去掉,方法如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cat hamlet.txt | tr -cs A-Za-z &#39;\n&#39; |
+<pre><code>cat hamlet.txt | tr -cs A-Za-z '\n' |
 tr A-Z a-z | sort | uniq -c | sort -nr |
-grep -v &#39;^ *[0-9]* s$&#39;| head -n 25</pre></div>
+grep -v '^ *[0-9]* s$'| head -n 25
+</code></pre>
 <p>还有你可能觉得,单词出现次数在前面,而单词在后面很怪,希望将它们换下顺序也不是不可以：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cat hamlet.txt | tr -cs A-Za-z &#39;\n&#39; | tr A-Z a-z |
-sort | uniq -c | sort -nr | grep -v &#39;^ *[0-9]* s$&#39;|
-head -n 25 | awk &#39;{printf(&#34;%10s\t%5d\n&#34;, $2, $1)}&#39;</pre></div>
+<pre><code>cat hamlet.txt | tr -cs A-Za-z '\n' | tr A-Z a-z |
+sort | uniq -c | sort -nr | grep -v '^ *[0-9]* s$'|
+head -n 25 | awk '{printf(&quot;%10s\t%5d\n&quot;, $2, $1)}'
+</code></pre>
 <p>有了上面的分析,再要获得其他结果就很容易了,比如你想知道莎士比亚在《哈姆雷特》这本书里共用了几个单词,你就可以这样：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cat hamlet.txt | tr -cs A-Za-z &#39;\n&#39; | tr A-Z a-z |
-sort | uniq -c | sort -nr | grep -v &#39;^ *[0-9]* s$&#39;| wl -l</pre></div>
+<pre><code>cat hamlet.txt | tr -cs A-Za-z '\n' | tr A-Z a-z |
+sort | uniq -c | sort -nr | grep -v '^ *[0-9]* s$'| wl -l
+</code></pre>
 <p>你也可以分析《哈姆雷特》这本书有多少字：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cat hamlet.txt | tr -cs A-Za-z &#39;\n&#39; | tr A-Z a-z | wc -l</pre></div>
+<pre><code>cat hamlet.txt | tr -cs A-Za-z '\n' | tr A-Z a-z | wc -l
+</code></pre>
 <p>如果你觉得《哈姆雷特》这本书非常具有代表性,你想通过这本书来知道哪些单词是英语中常用的单词,你就可以这样：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cat hamlet.txt | tr -cs A-Za-z &#39;\n&#39; | tr A-Z a-z |
-sort | uniq -c | sort -nr | grep -v &#39;^ *[0-9]* s$&#39;|
-awk &#39;$1 &gt;= 5{print $0}&#39;</pre></div>
+<pre><code>cat hamlet.txt | tr -cs A-Za-z '\n' | tr A-Z a-z |
+sort | uniq -c | sort -nr | grep -v '^ *[0-9]* s$'|
+awk '$1 &gt;= 5{print $0}'
+</code></pre>
 <p>你还可以知道哪些单词只出现了一次</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cat hamlet.txt | tr -cs A-Za-z &#39;\n&#39; | tr A-Z a-z |
-sort | uniq -c | sort -nr | grep -v &#39;^ *[0-9]* s$&#39;|
-awk &#39;$1 ＝= 1{print $0}&#39;</pre></div>
-<p><strong><em>你还想知道什么？别忘了,知道得越多越危险。</em></strong></p>
-
+<pre><code>cat hamlet.txt | tr -cs A-Za-z '\n' | tr A-Z a-z |
+sort | uniq -c | sort -nr | grep -v '^ *[0-9]* s$'|
+awk '$1 ＝= 1{print $0}'
+</code></pre>
+<p><em><strong>你还想知道什么？别忘了,知道得越多越危险。</strong></em></p>
 <h2 id="6-文件查找与文件列表">6. 文件查找与文件列表</h2>
-
-<p><code>find</code>是Unix/Linux命令行工具箱最棒的工具之一，这个命令对编写shell脚本很有帮助，但是多数人由于对它缺乏认识，并不能有效的使用它。:-),包括我自己，刚开始极少使用<code>find</code>,在知道<code>find</code>的很多功能以后时常需要用到，但是由于find的参数实在太多，每次都需要翻书查阅，特地在此记录，方便下次查阅，这部分例子主要来自《<a href="http://book.douban.com/subject/6889456/" target="_blank">Linux Shell脚本攻略</a>》，略有补充,我在此向看到这篇博客的童鞋强烈推荐此书。</p>
-
+<p><code>find</code>是Unix/Linux命令行工具箱最棒的工具之一，这个命令对编写shell脚本很有帮助，但是多数人由于对它缺乏认识，并不能有效的使用它。:-),包括我自己，刚开始极少使用<code>find</code>,在知道<code>find</code>的很多功能以后时常需要用到，但是由于find的参数实在太多，每次都需要翻书查阅，特地在此记录，方便下次查阅，这部分例子主要来自《<a href="http://book.douban.com/subject/6889456/">Linux Shell脚本攻略</a>》，略有补充,我在此向看到这篇博客的童鞋强烈推荐此书。</p>
 <p>要列出当前目录及子目录下的文件和文件夹，可以采用下面的写法：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find base_path
+<pre><code>find base_path
 find . -print
-find .. -print0</pre></div>
-<p>bash_path可以是任意位置，如(/home/slynx)，<code>find</code>会从该位置开始向下查找。.指定当前目录，..指定父目录，这是Unix文件系统的约定用法。<code>-print</code>指明打印出匹配文件的文件名，当使用<code>-print</code>时，&rsquo;\n&rsquo;作为用于分隔文件的定界符，<code>-print0</code>指明使用作为&rsquo;\0&rsquo;用于分隔文件的定界符。</p>
-
+find .. -print0
+</code></pre>
+<p>bash_path可以是任意位置，如(/home/slynx)，<code>find</code>会从该位置开始向下查找。.指定当前目录，..指定父目录，这是Unix文件系统的约定用法。<code>-print</code>指明打印出匹配文件的文件名，当使用<code>-print</code>时，'\n'作为用于分隔文件的定界符，<code>-print0</code>指明使用作为&rsquo;\0'用于分隔文件的定界符。</p>
 <p>作为一个强大的命令行工具，<code>find</code>命令包含了诸多值得留意的选项，接下来让我们来看一下<code>find</code>命令的一些其他选项。</p>
-
 <h3 id="1-根据文件名或者正则表达式匹配搜索">(1). 根据文件名或者正则表达式匹配搜索</h3>
-
 <p>选项<code>-name</code>的参数指定了文件名所必须匹配的字符串。我们可以将同配符作为参数使用。如下所示：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . -name &#34;*.txt&#34;
-find . -iname &#34;example*&#34;</pre></div>
+<pre><code>find . -name &quot;*.txt&quot;
+find . -iname &quot;example*&quot;
+</code></pre>
 <p><code>find</code>命令还有一个选项<code>-iname</code>(忽略大小写），该选项的作用和<code>-name</code>类似，只不过在匹配名字的时候会忽略大小写。</p>
-
 <p>我们还可以使用OR条件来一次匹配多个：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . \( -name &#34;*.txt&#34; -o -name &#34;*.pdf&#34; \) -print</pre></div>
+<pre><code>find . \( -name &quot;*.txt&quot; -o -name &quot;*.pdf&quot; \) -print
+</code></pre>
 <p>上面的代码会打印出所有的txt和pdf文件。选项-path可以使用通配符来匹配文件路径或者文件。<code>-name</code>总是用给定的文件名进行匹配。<code>-path</code>则将文件路径作为一个整体进行匹配。如下所示：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find ~ -path &#34;*git*&#34; -print</pre></div>
+<pre><code>find ~ -path &quot;*git*&quot; -print
+</code></pre>
 <p>选项<code>-regex</code>和<code>-path</code>相似，不过<code>-regex</code>是基于正则表达式来匹配文件路径的。下面的命令匹配.py或者.sh文件。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find -regex &#34;.*\(\.py\|\.sh\)$&#34;</pre></div>
+<pre><code>find -regex &quot;.*\(\.py\|\.sh\)$&quot;
+</code></pre>
 <p>类似于<code>-name</code>,<code>-iregex</code>用于忽略正则表达式的大小写。</p>
-
-<h2 id="2-否定参数">## ## (2). 否定参数</h2>
-
+<h2 id="--2-否定参数">## ## (2). 否定参数</h2>
 <p><code>find</code>可以用&rdquo;!&ldquo;否定参数的含义，例如：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . ! -name &#34;*.txt&#34; -print</pre></div>
+<pre><code>find . ! -name &quot;*.txt&quot; -print
+</code></pre>
 <h3 id="3-基于深度的搜索">(3). 基于深度的搜索</h3>
-
 <p><code>find</code>命令在使用时会遍历所有的子目录。我们可以采用一些深度参数来限制<code>find</code>命令遍历的深度。<code>-maxdepth</code>和<code>-mindepth</code>就是这类参数。如：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . -maxdepth 1 -type f </pre></div>
+<pre><code>find . -maxdepth 1 -type f 
+</code></pre>
 <p>该命令只列出当前目录下的所有普通文件，即使有子目录，也不会被打印或遍历，与此类似，<code>-maxdepth</code>
 2 最多向下遍历两级子目录。</p>
-
 <p><code>-maxdepth</code>和<code>-mindepth</code>应该作为<code>find</code>的第3个参数出现，如果作为第4个参数或者之后的参数，就可能会影响到<code>find</code>的效率，因为它不得不进行一些不必要的检查。</p>
-
 <h3 id="4-根据文件类型搜索">(4). 根据文件类型搜索</h3>
-
 <p><code>-type</code>可以对文件搜索进行过滤。借助这个选项，我们可以为<code>find</code>命令指明特定的文件匹配类型。如下所示：</p>
-
 <p>只列出链接：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . -type l</pre></div>
+<pre><code>find . -type l
+</code></pre>
 <p>只列出目录：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . -type d</pre></div>
-<table cellspacing="0">
-<thead>
-<tr align="first">
-<td align="left">文件类型</td>
-<td align="left">类型参数</td>
-</tr>
-</thead>
-<tbody>
-<tr align="center">
-<td align="left">普通文件</td>
-<td align="left">f</td>
-</tr>
-<tr align="center">
-<td align="left">符号链接</td>
-<td align="left">l</td>
-</tr>
-<tr align="center">
-<td align="left">目录</td>
-<td align="left">d</td>
-</tr>
-<tr align="center">
-<td align="left">字符设备</td>
-<td align="left">c</td>
-</tr>
-<tr align="center">
-<td align="left">块设备</td>
-<td align="left">b</td>
-</tr>
-<tr align="center">
-<td align="left">套接字</td>
-<td align="left">s</td>
-</tr>
-<tr align="center">
-<td align="left">Fifo</td>
-<td align="left">p</td>
-</tr>
-
-</tbody>
-</table>
-### (5). 根据文件时间进行搜索
-
-`-atime`(访问时间)，`-mtime`(修改时间)`-ctime`(变化时间)可以作为`find`的时间参数。它们用整数值给出，单位是天数，这些整数还可以带有正负号，如下所示：
-
-打印出最近7天内被访问过的所有文件：
-
-    find . -type f -atime -7 -print
-
-
-打印恰好7天前被访问的所有文件：
-
-    find . -type f -atime 7 -print
-
-
-打印出访问时间超过7天的所有文件
-
-    find . -type f -atime +7 -print
-
-
-类似的，我们可以根据修改时间，用`-mtime`进行搜索，也可以根据变化时间`-ctime`进行搜索。与此同时，我们还可以使用`-amin,-mmin,-cmin`做为参数，即以分钟作为计量的单位。举例如下：
-
-    find . -type f -amin +7 -print
-
-
-上面这条语句会打印出所有访问时间超过7分钟的文件。
-
-`find` 另一个漂亮的参数是`-newer` ,使用`-newer`
-，我们可以指定一个用于比较时间戳(修改时间)的参考文件，然后找出比该文件更新的所有文件，例如，找出比file.txt 修改时间更长的所有文件：
-
-    find . -type f -newer file.txt -print
-
-
-### (6). 基于文件大小进行搜索
-根据文件的大小，可以这样搜索：
-
-大于2KB的文件
-
-    find . -type f -size +2k
-
-
-小于2KB的文件
-
-    find . -type f -size -2k
-
-
-等于2KB的文件
-
-    find . -type f -size 2k
-
-除了k之外，我们还可以使用其他文件大小单元
-
-<table>
-<tr align="center">
-<td align="left">b</td>
-<td align="left">块</td>
-</tr>
-
-<tr align="center">
-<td align="left">c</td>
-<td align="left">字节</td>
-</tr>
-
-<tr align="center">
-<td align="left">w</td>
-<td align="left">字</td>
-</tr>
-
-<tr align="center">
-<td align="left">k</td>
-<td align="left">千字节</td>
-</tr>
-
-<tr align="center">
-<td align="left">M</td>
-<td align="left">兆字节</td>
-</tr>
-
-<tr align="center">
-<td align="left">G</td>
-<td align="left">吉</td>
-</tr>
-
-</table>
-
+<pre><code>find . -type d
+</code></pre>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p><code>-atime</code>(访问时间)，<code>-mtime</code>(修改时间)<code>-ctime</code>(变化时间)可以作为<code>find</code>的时间参数。它们用整数值给出，单位是天数，这些整数还可以带有正负号，如下所示：</p>
+<p>打印出最近7天内被访问过的所有文件：</p>
+<pre><code>find . -type f -atime -7 -print
+</code></pre>
+<p>打印恰好7天前被访问的所有文件：</p>
+<pre><code>find . -type f -atime 7 -print
+</code></pre>
+<p>打印出访问时间超过7天的所有文件</p>
+<pre><code>find . -type f -atime +7 -print
+</code></pre>
+<p>类似的，我们可以根据修改时间，用<code>-mtime</code>进行搜索，也可以根据变化时间<code>-ctime</code>进行搜索。与此同时，我们还可以使用<code>-amin,-mmin,-cmin</code>做为参数，即以分钟作为计量的单位。举例如下：</p>
+<pre><code>find . -type f -amin +7 -print
+</code></pre>
+<p>上面这条语句会打印出所有访问时间超过7分钟的文件。</p>
+<p><code>find</code> 另一个漂亮的参数是<code>-newer</code> ,使用<code>-newer</code>
+，我们可以指定一个用于比较时间戳(修改时间)的参考文件，然后找出比该文件更新的所有文件，例如，找出比file.txt 修改时间更长的所有文件：</p>
+<pre><code>find . -type f -newer file.txt -print
+</code></pre>
+<h3 id="6-基于文件大小进行搜索">(6). 基于文件大小进行搜索</h3>
+<p>根据文件的大小，可以这样搜索：</p>
+<p>大于2KB的文件</p>
+<pre><code>find . -type f -size +2k
+</code></pre>
+<p>小于2KB的文件</p>
+<pre><code>find . -type f -size -2k
+</code></pre>
+<p>等于2KB的文件</p>
+<pre><code>find . -type f -size 2k
+</code></pre>
+<p>除了k之外，我们还可以使用其他文件大小单元</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <h3 id="7-删除匹配的选项">(7). 删除匹配的选项</h3>
-
-<p>我们已经在第4部分介绍了<a href="#d-f">如何删除垃圾文件</a>，在此不在熬述。</p>
-
+<p>我们已经在第4部分介绍了<!-- raw HTML omitted -->如何删除垃圾文件<!-- raw HTML omitted -->，在此不在熬述。</p>
 <h3 id="8-基于文件权限和所有权的匹配">(8). 基于文件权限和所有权的匹配</h3>
-
 <p>文件匹配可以根据文件权限进行。列出具有特定权限的所有文件：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . -type f -perm 644 -print</pre></div>
+<pre><code>find . -type f -perm 644 -print
+</code></pre>
 <p>以Appache Web服务器为例。Web服务器上的PHP文件需要具有合适的执行权限。我们可以用下面的方法找出那些没有设置好权限的PHP文件：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . -type f -name &#34;*.php&#34; ! -perm 644 -print</pre></div>
+<pre><code>find . -type f -name &quot;*.php&quot; ! -perm 644 -print
+</code></pre>
 <p>用选项<code>-user USER</code>就能够找出某个特定用户所拥有的文件，参数USER可以是用户名也可以是UID</p>
-
 <h3 id="9-结合find执行命令或动作">(9). 结合find执行命令或动作</h3>
-
 <p><code>find</code>命令可以借助选项<code>-exec</code>与其他命令进行结合。<code>-exec</code>算得上是<code>find</code>最强大的特性之一。下面看看应该如何使用<code>-exec</code>选项。</p>
-
 <p>下面，我们将某位用户(比如说是root)的全部文件的所有权更改成另一位用户，那么我们就可以用<code>-user</code>找出root拥有的所有文件，然后用<code>-exec</code>更改所有权。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . -type f -user root -exec chown YourName {} \;</pre></div>
+<pre><code>find . -type f -user root -exec chown YourName {} \;
+</code></pre>
 <p>在这个命令中，{}是一个特殊的字符串，与<code>-exec</code>选项结合使用。对于每一个匹配的文件，{}，会被替换成相应的文件名。例如：<code>find</code>命令找到两个文件test1.txt和test2.txt,其所有者均为root,那么<code>find</code>将会执行<code>chown YourName {}</code> 它会被解析为c<code>hown YourName test1.txt</code> 和 <code>chown YourName test2.txt</code>.</p>
-
 <p>另一个例子是将指定目录中的所有C程序文件拼接起来，写入带个文件all_c_files.txt,我们可以用find
 找到所有的C文件，然后结合<code>-exec</code> 使用cat命令：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . -type f -name &#34;*.c&#34; -exec cat {} \; &gt;all_files.txt</pre></div>
+<pre><code>find . -type f -name &quot;*.c&quot; -exec cat {} \; &gt;all_files.txt
+</code></pre>
 <p><code>-exec</code>之后可以接任何命令。{}表示一个匹配。对于任何一个匹配的文件名，{}会被该文件名所替代。</p>
-
-<p>我们使用&gt;操作符将来自<code>find</code>的数据重定向到all_c_files.txt文件，没有使用&gt;&gt;的原因是因为<code>find</code>命令全部处处只是一个单数据流，而只有当多个数据流被追加到单个文件中的时候才有必要使用&gt;&gt;。</p>
-
+<p>我们使用&gt;操作符将来自<code>find</code>的数据重定向到all_c_files.txt文件，没有使用&raquo;的原因是因为<code>find</code>命令全部处处只是一个单数据流，而只有当多个数据流被追加到单个文件中的时候才有必要使用&raquo;。</p>
 <p>例如，用下列命令将10天前的.txt文件复制到OLD目录中：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . -type f -mtime +10 -name &#34;*.txt&#34; -exec cp {} OLD \;</pre></div>
+<pre><code>find . -type f -mtime +10 -name &quot;*.txt&quot; -exec cp {} OLD \;
+</code></pre>
 <p><code>find</code>命令同样可以采用类似的方法与其他命令结合起来。</p>
-
 <p>有一点值得注意的是，我们无法在<code>-exec</code>参数中直接使用多个命令。它只能够接受单个命令，不过我们可以耍一个小花招。把多个命令写到一个shell脚本中，例如(commands.sh)然后在<code>-exec</code>中使用这个脚本：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">-exec ./commands.sh {} \;</pre></div>
+<pre><code>-exec ./commands.sh {} \;
+</code></pre>
 <p><code>-exec</code>能够同<code>printf</code>结合来生成有用的输出信息。例如：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . -type f -name &#34;*.txt&#34; -exec
-print &#34;Text file: %s\n&#34; {} \;</pre></div>
+<pre><code>find . -type f -name &quot;*.txt&quot; -exec
+print &quot;Text file: %s\n&quot; {} \;
+</code></pre>
 <h3 id="10-让find跳过特定目录">(10). 让find跳过特定目录</h3>
-
 <p>在搜索目录并执行某些操作的时候，有时为了提高效率，需要跳过一些子目录。例如：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . \( -name &#34;.git&#34; -prune \) -o
-\( -type f -name &#34;*.html&#34; \)</pre></div>
+<pre><code>find . \( -name &quot;.git&quot; -prune \) -o
+\( -type f -name &quot;*.html&quot; \)
+</code></pre>
 <p>以上命令打印出不包括在<code>.git</code>目录中的所有文件的名称。
-还有一种方法可以跳过特定目录，例如，当前文件夹包含很多文件和子文件夹，我们现在需要把除了某一文件以外的其他文件都删除，应该怎么做？(这是一个我经常碰到的问题，比如我从github 上下载了<a href="https://github.com/blynn/gitmagic" target="_blank">git 的教程</a>，但是该教程下面有各种语言版本，显然我只需要保留简体中文版，所以我需要删除除了zh_cn 外的所有文件和文件夹)</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">find . -maxdepth 1 ! -name &#34;zh_cn&#34; -exec rm -rf {} \;</pre></div>
+还有一种方法可以跳过特定目录，例如，当前文件夹包含很多文件和子文件夹，我们现在需要把除了某一文件以外的其他文件都删除，应该怎么做？(这是一个我经常碰到的问题，比如我从github 上下载了<a href="https://github.com/blynn/gitmagic">git 的教程</a>，但是该教程下面有各种语言版本，显然我只需要保留简体中文版，所以我需要删除除了zh_cn 外的所有文件和文件夹)</p>
+<pre><code>find . -maxdepth 1 ! -name &quot;zh_cn&quot; -exec rm -rf {} \;
+</code></pre>
 <p>首先我们指定搜索深度为1,这样才不会把zh_cn子目录下的文件给找出来，然后我们通过！来对文件名取反，再删除之。</p>
 
 </div>

@@ -45,7 +45,7 @@ fnv(country &#43; session &#43; uid [&#43; hour]) % 100 的出一个数字，通
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='golang'><meta property='article:tag' content='dev'><meta property='article:published_time' content='2019-09-30T00:41:31&#43;08:00'/><meta property='article:modified_time' content='2019-09-30T00:41:31&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>Mendel - A/B Testing Platform (Part 1) • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/mendel-ab-testing-platform-p1/'>
@@ -137,101 +137,64 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p>离上一篇文章已经过了好久了，能够记起还有这么一个坑没填，并且能够记得要些什么，纯属不易…… 这篇主要讲一下系统实现的时候遇到的问题以及我是如何解决的，当中会有疏漏的地方，也欢迎看到这篇文章并且感兴趣的人一起讨论。</p>
-
+  <p>离上一篇文章已经过了好久了，能够记起还有这么一个坑没填，并且能够记得要些什么，纯属不易…… 这篇主要讲一下系统实现的时候遇到的问题以及我是如何解决的，当中会有疏漏的地方，也欢迎看到这篇文章并且感兴趣的人一起讨论。</p>
 <h3 id="流量分布">流量分布</h3>
-
 <p>这个系统最最主要的目的和功能就是分配流量，所以如何分配流量，就成为了首先要面临的问题。</p>
-
 <p>我们的配置分为两种，基础配置和实验配置，那么随之的，流量也分为两种：基础流量和实验流量。对于一个国家的请求而言，如果把流量按照一百份来划分，用了10%的流量做实验，那么就需要在这些请求中挑出10%出来，让其走实验的配置，剩余的90%则按照基础配置进行选择（在某个layer中运用某种算法）。</p>
-
 <p>这其中有一个要求，即流量不能随机划分，不能让用户感知到变化，上一秒是根据base config进行的选择，出现了ABCD，下一秒也要按照base config，不能表现不一致。</p>
-
 <p>这一点我们通过<code>fnv</code>哈希算法来实现，将用户的<code>country</code>，<code>session</code>和<code>uid</code>作为输入，确保三要素相同的情况下，得到的hash分布是随机的。</p>
-
 <p>当然这里也有一些细节，比如既要支持按照<code>session</code>划分，又要按照<code>uid</code>划分，在对一致性要求没那么高的时候，还可以加上<code>hour</code>作为第四因素，变相放大实验流量，得到更多结果。</p>
-
 <p>所以解决方案为：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">fnv(country + session + uid [+ hour]) % 100</code></pre></div>
-<p>的出一个数字，通过这个数字判定是base还是experiment</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">fnv(country + session + uid [+ hour]) % 100
+</code></pre></div><p>的出一个数字，通过这个数字判定是base还是experiment</p>
 <h3 id="实验选择">实验选择</h3>
-
 <p>接着上面，在得到一个[0,99)的数字以后，怎么就能确定是base还是exp呢？</p>
-
 <p>如果base的config占80%, exp1占10%，exp2占5%，exp3占5%，如何确定一个请求（hash = 55）在哪里呢？</p>
-
 <p>最简单的方法，用一个<code>map[uint8]string</code>来存储没一个数字所对应的实验ID或者BaseID，每次请求过来都用这个map查一下。</p>
-
 <p>但我有点嫌慢，就选择了另外一种方式：bitmap</p>
-
 <p>我们有100份流量，但是数字最大到int64，所以就需要两个int64来存储我们的实验信息，如果一个数字是45,那么就选择第一个bitmap，如果是76,就选择第二个。</p>
-
 <p>具体操作是将bitmap<code>右移[&gt;&gt;]</code>hash位，在与1<code>与或[&amp;&amp;]</code>，如果是真，那么就在这个实验里，如果是假，就换下一个实验的bitmap进行同样操作。</p>
-
 <p>这样能够比map的方式快50%</p>
-
 <h3 id="流量分布不均匀">流量分布不均匀</h3>
-
 <p>这其实是自己挖的一个坑，因为所有的流量都会分布到[0,99)上，所以我在存储的时候用了<code>uint8</code>, 认为这个数字已经足够用了，但实际上，虽然它够用，但模100之后并不平均，因为<code>uint8</code>的范围是[0,128), 将这一批平均分布的数字模100之后的分布则必然不平均，[0,28)在[0,99)内占了两份。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#75715e">// Hash returns a hash value of [0,100)
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Hash</span>(<span style="color:#a6e22e">x</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">uint8</span> {
 	<span style="color:#a6e22e">hash</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">fnv</span>.<span style="color:#a6e22e">New32a</span>()
 	<span style="color:#a6e22e">hash</span>.<span style="color:#a6e22e">Write</span>([]byte(<span style="color:#a6e22e">x</span>))
 	<span style="color:#66d9ef">return</span> uint8(<span style="color:#a6e22e">hash</span>.<span style="color:#a6e22e">Sum32</span>()) <span style="color:#f92672">%</span> <span style="color:#ae81ff">100</span>
-}</code></pre></div>
-<p>所以简单粗暴的方式是更改一下取模顺序，我们认为<code>hash.Sum32()</code>是平均的，那么其mod 100也是平均的，则最后类型转换成<code>uint8</code>则也是平均的了。</p>
+}
+</code></pre></div><p>所以简单粗暴的方式是更改一下取模顺序，我们认为<code>hash.Sum32()</code>是平均的，那么其mod 100也是平均的，则最后类型转换成<code>uint8</code>则也是平均的了。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#75715e">// Hash returns a hash value of [0,100)
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Hash</span>(<span style="color:#a6e22e">x</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">uint8</span> {
 	<span style="color:#a6e22e">hash</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">fnv</span>.<span style="color:#a6e22e">New32a</span>()
 	<span style="color:#a6e22e">hash</span>.<span style="color:#a6e22e">Write</span>([]byte(<span style="color:#a6e22e">x</span>))
 	<span style="color:#66d9ef">return</span> uint8(<span style="color:#a6e22e">hash</span>.<span style="color:#a6e22e">Sum32</span>() <span style="color:#f92672">%</span> <span style="color:#ae81ff">100</span>)
-}</code></pre></div>
-<p>但是，但是，但是，上线一版hotfix之后，结果还是不平均，而且还出现了两极分化。即如果有AB两种选项，每个占比50%，则在一批随机生成的uuid所产生的hash数字中，最终结果应该有四种：AA，AB，BA，BB，且均占25%，但是结果却出乎意料，要么没有AA，BA，要么没有AB，BB，非常神奇。</p>
-
+}
+</code></pre></div><p>但是，但是，但是，上线一版hotfix之后，结果还是不平均，而且还出现了两极分化。即如果有AB两种选项，每个占比50%，则在一批随机生成的uuid所产生的hash数字中，最终结果应该有四种：AA，AB，BA，BB，且均占25%，但是结果却出乎意料，要么没有AA，BA，要么没有AB，BB，非常神奇。</p>
 <p>但是我们也没有从数学上找到原因，只是通过下面一种mod一个奇数的方法解决了这个问题，这个奇数是从fnv包里抄的。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#75715e">// Hash returns a hash value of [0,100)
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Hash</span>(<span style="color:#a6e22e">x</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">uint8</span> {
 	<span style="color:#a6e22e">hash</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">fnv</span>.<span style="color:#a6e22e">New32a</span>()
 	<span style="color:#a6e22e">hash</span>.<span style="color:#a6e22e">Write</span>([]byte(<span style="color:#a6e22e">x</span>))
 	<span style="color:#66d9ef">return</span> uint8(<span style="color:#a6e22e">hash</span>.<span style="color:#a6e22e">Sum32</span>() <span style="color:#f92672">%</span> <span style="color:#ae81ff">16777619</span> <span style="color:#f92672">%</span> <span style="color:#ae81ff">100</span>)
-}</code></pre></div>
-<p>如果有学数学的同学恰好知道，还请不吝赐教，感谢。</p>
-
+}
+</code></pre></div><p>如果有学数学的同学恰好知道，还请不吝赐教，感谢。</p>
 <h3 id="命名问题">命名问题</h3>
-
 <p>这个其实是一个想当然的问题，我理所当然的认为所有名字用uuid就好，不重复。但是却忽视了一个很重要的功能：易读性。</p>
-
 <p>如果config ID，service ID，experiment ID，module ID和layer ID都是毫无章法的uuid，那么在配置的时候谁也不认识谁，看到一个ID连他的基本属性都不知道，只能全文查找，在配置的时候也极易出错。</p>
-
 <p>所以就在每一种类型前面加了一个prefix，如果是config，那就是 <code>config_&lt;uuid&gt;</code>, 如果是layer，那就是<code>layer_&lt;uuid&gt;</code>。</p>
-
 <p>但还有一个问题，我们还是不知道哪个layer是哪个layer，在写配置文件的时候也很容易犯错误，且不好追查。所以就又加了<code>alias</code>，每个layer除了自己的uuid，还有一个<code>alias</code>用于人工区分和辨认，具体可以是<code>module.layer</code> 或者<code>service.module.layer</code>，总之比一个uuid强多了。</p>
-
 <h3 id="数据统计">数据统计</h3>
-
 <p>我采用了InfluxDB作为统计数据的后端存储，每来一条数据，我就处理一条，写到InfluxDB里去。</p>
-
 <p>但有一天我发现一个问题，数据会丢。因为我处理的时候，是将发送过来的数据的时间戳作为写入的时间，这样的目的是即使数据重放也不会重复写入，但带来的问题就是，如果两条数据是同一秒处理的，那么第一条数据就会被覆盖，也就是，丢了。</p>
-
 <p>解决的方法是batch写入，攒两秒的数据，或者两百条，满了就发车，写db，这样既解决了覆盖写入的问题，又减轻了对influxdb的负担，一箭双雕，一举两得。</p>
-
 <p>后来又发现一个问题，就是field太多了，而且有很多重复的。因为所有的结果都由这一个服务处理，写field的时候将key和value作为field的名称，这就导致了有n多的field，且如果两个project中有相同的key，就会造成field的混乱，找不到自己的数据了。</p>
-
 <p>解决方法是，每个field前insert一个project ID。其实最好的方法是每一个project都建立一个单独的database，或者每一个experiment建立一个单独的database，这样数据也是分离的，但是我懒。</p>
-
 <h3 id="python-脚本发送-json-数据">Python 脚本发送 JSON 数据</h3>
-
 <p>Python 用 requests 库发送JSON的时候，如果不指定 <code>headers={'content-type': 'application/json'}</code> 那么发送的数据就不是JSON，这东西可把我坑坏了。有时候Postman帮你解决了太多东西，导致你认为这东西都是理所当然的，但其实并不然，等你自己实现的时候才发现坑这么多。</p>
-
 <h3 id="认证问题">认证问题</h3>
-
 <p>由于时间紧迫，没有实现认证就匆匆上线系统了，导致所有的API接口都是可以被任意瞎搞的，想创建就创建，想删除就删除。我对于这样的事情是无法容忍的，尤其是知道了某个印度同事在瞎搞我的系统之后，test环境也就罢了，搞线上环境，忍无可忍。</p>
-
 <p>于是乎我就悄悄摸摸上线了一个简陋的认证：程序每半个小时生成一个token，写在日志里，任何critical的操作都需要在请求的header里带上这个token。考虑到除了我不会有人去查看程序日志和读代码，我觉得目前这样做还是OK的，并将这个trick告诉了信得过的同事。</p>
-
 <p>瞎搞，不存在的。</p>
 
 </div>

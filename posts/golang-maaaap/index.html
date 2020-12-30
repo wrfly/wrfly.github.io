@@ -21,7 +21,7 @@ package main import &#34;fmt&#34; type person struct { name string age int } fun
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='go'><meta property='article:published_time' content='2018-06-07T21:53:55&#43;08:00'/><meta property='article:modified_time' content='2018-06-07T21:53:55&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>Golang-Maaaap • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/golang-maaaap/'>
@@ -113,20 +113,13 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<blockquote>
+  <blockquote>
 <p>下周出去玩.</p>
 </blockquote>
-
 <p>从备忘里翻出一个话题. 也是曾经遇到的问题. 在这里记录一下, 希望能给他人帮助.</p>
-
-<p><a href="https://stackoverflow.com/questions/32751537/why-do-i-get-a-cannot-assign-error-when-setting-value-to-a-struct-as-a-value-i" target="_blank">https://stackoverflow.com/questions/32751537/why-do-i-get-a-cannot-assign-error-when-setting-value-to-a-struct-as-a-value-i</a></p>
-
-<p><a href="https://stackoverflow.com/questions/17438253/access-struct-in-map-without-copying" target="_blank">https://stackoverflow.com/questions/17438253/access-struct-in-map-without-copying</a></p>
-
+<p><a href="https://stackoverflow.com/questions/32751537/why-do-i-get-a-cannot-assign-error-when-setting-value-to-a-struct-as-a-value-i">https://stackoverflow.com/questions/32751537/why-do-i-get-a-cannot-assign-error-when-setting-value-to-a-struct-as-a-value-i</a></p>
+<p><a href="https://stackoverflow.com/questions/17438253/access-struct-in-map-without-copying">https://stackoverflow.com/questions/17438253/access-struct-in-map-without-copying</a></p>
 <h3 id="problem">Problem</h3>
-
 <p>先来看一段小代码:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 
@@ -153,25 +146,18 @@ if (!doNotTrack) {
 	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">p</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">m</span> {
 		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">age</span>)
 	}
-}</code></pre></div>
-<p><a href="https://play.golang.org/p/GD3AnjclSiw" target="_blank">https://play.golang.org/p/GD3AnjclSiw</a></p>
+}
 
+</code></pre></div><p><a href="https://play.golang.org/p/GD3AnjclSiw">https://play.golang.org/p/GD3AnjclSiw</a></p>
 <p>然后我们得到了一个错误:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">prog.go:20:12: cannot assign to struct field m[i].age in map</code></pre></div>
-<p>golang新手可能会遇到这样的问题, 但表面上看好像没什么毛病. 给map中的一个对象的某个属性赋值, 有问题吗?</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">prog.go:20:12: cannot assign to struct field m[i].age in map
+</code></pre></div><p>golang新手可能会遇到这样的问题, 但表面上看好像没什么毛病. 给map中的一个对象的某个属性赋值, 有问题吗?</p>
 <p>有的.</p>
-
 <p>如果你数据结构基础还在的话, 就会想到 map 其实就是哈希表, 而哈希表是一直在变的, 它不能保证当你存入或者取出数据之后, 哈希表中的data还在原来的位置, 因为每次都可能会涉及到重新分配地址, 而在map中的对象, 也就可能不在原来的地方了, <code>map[i]</code> 是一个<code>person</code>的结构, 取出来的时候内存地址为 <code>0xabcdefg</code> 但是如果想给它赋值, 找他的时候, 内存中的地址就可能会变成 <code>0x1234567</code>, 也就是说, 这个person一直在变, 你无法获得他的地址, 也就没办法给他的某一个属性赋值.</p>
-
 <p>当然, 你可以把整个对象替换掉. 这就相当于重新给map的key存了一个值.</p>
-
 <h3 id="solution">Solution</h3>
-
 <h4 id="pointer-value">Pointer Value</h4>
-
 <p>既然我们无法获取到map的某个key对应的值的地址, 那么, 如果这个值就是一个地址呢?</p>
-
 <p>比如, <code>map[int]*person</code>:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 
@@ -198,13 +184,10 @@ if (!doNotTrack) {
 	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">p</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">m</span> {
 		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">age</span>)
 	}
-}</code></pre></div>
-<p><a href="https://play.golang.org/p/rwzmap72kTI" target="_blank">https://play.golang.org/p/rwzmap72kTI</a></p>
-
+}
+</code></pre></div><p><a href="https://play.golang.org/p/rwzmap72kTI">https://play.golang.org/p/rwzmap72kTI</a></p>
 <p>这里其实就是让value可以被addressable, 然后就能对其属性重新赋值了.</p>
-
 <h4 id="re-put-value">Re-Put Value</h4>
-
 <p>如果你的业务不允许用指针作为value(出于xxx的原因和考虑), 那么可以用下面这种方法, 先把value取出来, 然后对value进行修改, 最后把value重新放进去(有点类似把大象装进冰箱):</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 
@@ -233,18 +216,16 @@ if (!doNotTrack) {
 	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">p</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">m</span> {
 		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">age</span>)
 	}
-}</code></pre></div>
-<p><a href="https://play.golang.org/p/OFIiXAUkGOq" target="_blank">https://play.golang.org/p/OFIiXAUkGOq</a></p>
-
+}
+</code></pre></div><p><a href="https://play.golang.org/p/OFIiXAUkGOq">https://play.golang.org/p/OFIiXAUkGOq</a></p>
 <h3 id="more">More</h3>
-
 <p>利用这种方法, 我们可以很方便的做一个map的原子计数器:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">counter</span> = <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#f92672">*</span><span style="color:#66d9ef">uint64</span></code></pre></div>
-<p>针对不同IP的锁:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">clientLocker</span> = <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#f92672">*</span><span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">Mutex</span></code></pre></div>
-<p>或者给每个user一个limtter:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">clientLimiter</span> = <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#f92672">*</span><span style="color:#a6e22e">RateLimtter</span></code></pre></div>
-<p>基础真的很重要啊很重要</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">counter</span> = <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#f92672">*</span><span style="color:#66d9ef">uint64</span>
+</code></pre></div><p>针对不同IP的锁:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">clientLocker</span> = <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#f92672">*</span><span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">Mutex</span>
+</code></pre></div><p>或者给每个user一个limtter:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">clientLimiter</span> = <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#f92672">*</span><span style="color:#a6e22e">RateLimtter</span>
+</code></pre></div><p>基础真的很重要啊很重要</p>
 
 </div>
 

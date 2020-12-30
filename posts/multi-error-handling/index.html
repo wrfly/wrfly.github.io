@@ -15,7 +15,7 @@ This package is quite simple, https://godoc.org/github.com/wrfly/check, it only 
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='go'><meta property='article:published_time' content='2018-12-08T16:48:09&#43;08:00'/><meta property='article:modified_time' content='2018-12-08T16:48:09&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>Multi-Error-Handling • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/multi-error-handling/'>
@@ -108,18 +108,15 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>Several weeks ago, I was asked to implement a &ldquo;checker&rdquo; that should check multiple errors (or conditions) at one time, once there is an error returned by one of the check, the whole check process should be terminated and returns the error (the first error).</p>
-
-<p>Then after I wrote it in the project, I refactored it and published in github, <a href="https://github.com/wrfly/check" target="_blank">https://github.com/wrfly/check</a></p>
-
-<p>This package is quite simple, <a href="https://godoc.org/github.com/wrfly/check" target="_blank">https://godoc.org/github.com/wrfly/check</a>, it only got two functions:</p>
+<p>Then after I wrote it in the project, I refactored it and published in github, <a href="https://github.com/wrfly/check">https://github.com/wrfly/check</a></p>
+<p>This package is quite simple, <a href="https://godoc.org/github.com/wrfly/check,">https://godoc.org/github.com/wrfly/check,</a> it only got two functions:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#a6e22e">NoError</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">checkPoints</span> []<span style="color:#a6e22e">CheckErrFunc</span>) <span style="color:#66d9ef">error</span>
-<span style="color:#a6e22e">Passed</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">checkPoints</span> []<span style="color:#a6e22e">CheckFunc</span>) <span style="color:#66d9ef">bool</span></code></pre></div>
-<p><code>NoError</code> tells you that the check points got no error, and <code>Passed</code> tells you all the checkpoints is passed.</p>
-
+<span style="color:#a6e22e">Passed</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">checkPoints</span> []<span style="color:#a6e22e">CheckFunc</span>) <span style="color:#66d9ef">bool</span>
+</code></pre></div><p><code>NoError</code> tells you that the check points got no error, and <code>Passed</code> tells you all the checkpoints is passed.</p>
 <p>And the check point functions are quite simple too:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">CheckErrFunc</span> <span style="color:#66d9ef">func</span>() <span style="color:#66d9ef">error</span>
-<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">CheckFunc</span> <span style="color:#66d9ef">func</span>() <span style="color:#66d9ef">bool</span></code></pre></div>
-<p>You can wrap your functions in these check functions, for example:</p>
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">CheckFunc</span> <span style="color:#66d9ef">func</span>() <span style="color:#66d9ef">bool</span>
+</code></pre></div><p>You can wrap your functions in these check functions, for example:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">checkSomething</span>() <span style="color:#66d9ef">bool</span>{
 	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">myCheck</span>(<span style="color:#a6e22e">a</span>,<span style="color:#a6e22e">b</span>,<span style="color:#a6e22e">c</span>,<span style="color:#a6e22e">d</span>) <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span>
 }
@@ -132,8 +129,8 @@ if (!doNotTrack) {
 
 <span style="color:#75715e">// myCheck() only returns an error in this
 </span><span style="color:#75715e">// example, but you can still use more
-</span><span style="color:#75715e"></span><span style="color:#f92672">//</span> <span style="color:#a6e22e">complicated</span> <span style="color:#a6e22e">functions</span> <span style="color:#a6e22e">as</span> <span style="color:#a6e22e">you</span> <span style="color:#a6e22e">want</span></code></pre></div>
-<p>This lib use empty channels to notify the caller by close
+</span><span style="color:#75715e">// complicated functions as you want
+</span></code></pre></div><p>This lib use empty channels to notify the caller by close
 the empty channel (in <code>Passed</code>), and its well tested. (at lease in
 my opinion.)</p>
 

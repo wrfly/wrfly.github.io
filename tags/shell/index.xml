@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>shell on wrfly&#39;s blog</title>
@@ -27,7 +27,7 @@ A$ ncat -lp 8080 B$ exec 3&amp;lt;&amp;gt; /dev/tcp/127.0.0.1/80 B$ echo &amp;#3
 信息加密解密方法：
 en(){ echo $1|openssl aes-256-cbc -k pass -e |openssl aes-256-cbc -k pass -d; } 这个小函数是用来测试加密解密的。
 然后说下脚本的思路：
- 登陆，确定用户身份，用户名长度要过滤，防止恶意输入 房间选择，也要过滤，因为是要创建一个新的文档，所以必须过滤掉&amp;rdquo;. / \&amp;ldquo;等一系列特殊字符，默认是public房间，即所有用户输入输出均在public文件中。 消息IO，这个是聊天的核心，但是实现起来并不是很难，tail -f一直检测文件变化，因为所有的用户输入都保存到了“chat_room”这个文件里，当有新用户发言的时候所有同一房间下的用户都会收到消息，相当于群聊。如果是想两个人聊天，就可以两个人新建一个聊天室，也就相当于一对一的聊天了。 数据包格式，这个好弄，时间，用户名，消息数据。 安全性。远程的安全性永远的不到保障，所以只能在客户端解决。Wait~ 扩展：文件传输，表情包，tmux扩展，发送图片（asciiview）  问题  进程间通信，用tail读取文件 父进程退出之后，子进程不退出（tail -f &amp;ndash;pid $$） kill 命令用法 命令行输出颜色 （echo -e &amp;ldquo;balabala&amp;rdquo;） $$ 和 $!</description>
+ 登陆，确定用户身份，用户名长度要过滤，防止恶意输入 房间选择，也要过滤，因为是要创建一个新的文档，所以必须过滤掉&amp;rdquo;. / &amp;quot;等一系列特殊字符，默认是public房间，即所有用户输入输出均在public文件中。 消息IO，这个是聊天的核心，但是实现起来并不是很难，tail -f一直检测文件变化，因为所有的用户输入都保存到了“chat_room”这个文件里，当有新用户发言的时候所有同一房间下的用户都会收到消息，相当于群聊。如果是想两个人聊天，就可以两个人新建一个聊天室，也就相当于一对一的聊天了。 数据包格式，这个好弄，时间，用户名，消息数据。 安全性。远程的安全性永远的不到保障，所以只能在客户端解决。Wait~ 扩展：文件传输，表情包，tmux扩展，发送图片（asciiview）  问题  进程间通信，用tail读取文件 父进程退出之后，子进程不退出（tail -f &amp;ndash;pid $$） kill 命令用法 命令行输出颜色 （echo -e &amp;ldquo;balabala&amp;rdquo;） $$ 和 $!</description>
     </item>
     
     <item>
@@ -40,14 +40,12 @@ en(){ echo $1|openssl aes-256-cbc -k pass -e |openssl aes-256-cbc -k pass -d; } 
 下面这些是我从上面摘抄的，但是也请转载注明出处～
 先装上pv，然后再敲这一条，会把你帅呆了的！
 echo &amp;#34;You can simulate on-screen typing just like in the movies&amp;#34; | pv -qL 10 来，测试一下咱的硬盘有多快：
-timeout 2s yes &amp;#34;hello world!&amp;#34; &amp;gt; big_file &amp;amp; watch du -h big_file 常用的20条命令++
-history | awk &amp;#39;{a[$2]++}END{for(i in a){print a[i] &amp;#34; &amp;#34; i}}&amp;#39; | sort -rn | head 文字版星球大战!!!
-telnet towel.blinkenlights.nl 在终端右上角显示个表
+timeout 2s yes &amp;quot;hello world!&amp;quot; &amp;gt; big_file &amp;amp; watch du -h big_file  常用的20条命令++
+history | awk &#39;{a[$2]++}END{for(i in a){print a[i] &amp;quot; &amp;quot; i}}&#39; | sort -rn | head  文字版星球大战!!!
+telnet towel.blinkenlights.nl  在终端右上角显示个表
 去tmp目录下逛一圈再回来(小括号代表子shell)
-(cd /tmp &amp;amp;&amp;amp; ls) nc用来传文件：
-nc -v -l 80 &amp;lt; file.ext 更改文件后缀名，把wrfly.png改成wrfly.jpg：
-mv wrfly.{png,jpg} 把命令的输出内容转换成图片，超酷炫：
-ifconfig | convert label:@- ip.</description>
+(cd /tmp &amp;amp;&amp;amp; ls)  nc用来传文件：
+nc -v -l 80 &amp;lt; file.ext  更改文件后缀名，把wrfly.png改成wrfly.jpg：</description>
     </item>
     
     <item>
@@ -57,10 +55,10 @@ ifconfig | convert label:@- ip.</description>
       
       <guid>https://wrfly.kfd.me/posts/linux%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E5%A6%99%E7%94%A8/</guid>
       <description>Fork from:http://mingxinglai.com/cn/2012/08/toos-of-bash/
-前言：虽然现在各种动态脚本语言发展得热火朝天,一片欣欣向荣的景象,而且动态脚本语言如python确实学习成本低,入门快,虽然unix 下各种工具比我们很多人年龄都大,但是我还是相信一些有用的小工具在可预见的时间内不会消失,因为灵活运用它们能够快速解决很多小问题,而且你不大可能写出更短的代码来。
-1. 一行命令算术运算 seq 100 | echo $[ $(tr &amp;#39;\n&amp;#39; &amp;#39;+&amp;#39;) 0] seq 5 3 20 | echo $[ $(tr &amp;#39;\n&amp;#39; &amp;#39;*&amp;#39;) 1] seq 用于产生一组等差的数列,默认首项和公差都是1,所以上面的第一行代码会产生1 －－ 100 的整数,且每个数占一行,使用tr 将换行替换成＋号以后,形成如1+2+......+100+的一行字符串,所以需要在字符串最后加一个0,最后使用echo $[ ]进行算数运算,也可以通过管道使用bc来计算seq 100 | echo $(tr &#39;\n&#39; &#39;+&#39;) 0 | bc。
+**前言：**虽然现在各种动态脚本语言发展得热火朝天,一片欣欣向荣的景象,而且动态脚本语言如python确实学习成本低,入门快,虽然unix 下各种工具比我们很多人年龄都大,但是我还是相信一些有用的小工具在可预见的时间内不会消失,因为灵活运用它们能够快速解决很多小问题,而且你不大可能写出更短的代码来。
+1. 一行命令算术运算 seq 100 | echo $[ $(tr &#39;\n&#39; &#39;+&#39;) 0] seq 5 3 20 | echo $[ $(tr &#39;\n&#39; &#39;*&#39;) 1]  seq 用于产生一组等差的数列,默认首项和公差都是1,所以上面的第一行代码会产生1 －－ 100 的整数,且每个数占一行,使用tr 将换行替换成＋号以后,形成如1+2+......+100+的一行字符串,所以需要在字符串最后加一个0,最后使用echo $[ ]进行算数运算,也可以通过管道使用bc来计算seq 100 | echo $(tr &#39;\n&#39; &#39;+&#39;) 0 | bc。
 2. 100的阶乘末尾有几个零？ 这是计算机专业面试的一个比较有名的题目,正确的解法答案是 n/5 + n/5/5 + n/5/5/5&amp;hellip;&amp;hellip; 下面我们写一行代码来验证一下
-echo {1..100}|tr &amp;#39; &amp;#39; &amp;#39;*&amp;#39;|bc|tr &amp;#39;1-9&amp;#39; &amp;#39;\n&amp;#39;|sort -r| head -1|awk &amp;#39;{print length($0) }&amp;#39; 这里{1..100}属于通配符,例如你要新建100个文件,就可以touch test{1..100}.txt,还可以touch test{a..z}.txt。 算后计算出1乘到100的结果,将结果中非零的数字替换成换行符在1乘到100的结果中,必然是末尾的0最多 所以我们只需要在tr &#39;1-9&#39; &#39;\n&#39;之后,找出最长的那一行就可以了,这里使用的方法是先将结果逆序排序sort -r,然后打印第一行head -,计算出第一行的长度awk &#39;{print length($0)}&#39;。</description>
+echo {1..100}|tr &#39; &#39; &#39;*&#39;|bc|tr &#39;1-9&#39; &#39;\n&#39;|sort -r| head -1|awk &#39;{print length($0) }&#39;  这里{1..100}属于通配符,例如你要新建100个文件,就可以touch test{1..100}.txt,还可以touch test{a..z}.txt。 算后计算出1乘到100的结果,将结果中非零的数字替换成换行符在1乘到100的结果中,必然是末尾的0最多 所以我们只需要在tr &#39;1-9&#39; &#39;\n&#39;之后,找出最长的那一行就可以了,这里使用的方法是先将结果逆序排序sort -r,然后打印第一行head -,计算出第一行的长度awk &#39;{print length($0)}&#39;。</description>
     </item>
     
     <item>
@@ -70,7 +68,7 @@ echo {1..100}|tr &amp;#39; &amp;#39; &amp;#39;*&amp;#39;|bc|tr &amp;#39;1-9&amp;
       
       <guid>https://wrfly.kfd.me/posts/bash%E9%87%8C%E9%9D%A2%E7%9A%84%E4%B8%8E%E5%92%8C%E6%88%96/</guid>
       <description>First, let&amp;rsquo;s see some interesting codes. There is a test.sh in the directory, and nothing else.
-And&amp;rdquo;|&amp;rdquo;,&amp;rdquo;||&amp;rdquo;,&amp;rdquo;&amp;amp;&amp;amp;&amp;ldquo;,&amp;rdquo;&amp;gt;&amp;ldquo;,&amp;rdquo;$?&amp;rdquo; these symbols can be easily get via google.
+And&amp;rdquo;|&amp;rdquo;,&amp;quot;||&amp;rdquo;,&amp;quot;&amp;amp;&amp;amp;&amp;quot;,&amp;ldquo;&amp;gt;&amp;rdquo;,&amp;ldquo;$?&amp;rdquo; these symbols can be easily get via google.
 When I type these commands, it&amp;rsquo;s very confused.
 $ ls | grep asda &amp;amp;&amp;amp; echo $? $ ls | grep asda || echo $? 1 $ ls | grep test || echo $? test.sh $ ls | grep test &amp;gt; /dev/null || echo $? $ ls | grep test &amp;gt; /dev/null &amp;amp;&amp;amp; echo $?</description>
     </item>
@@ -85,8 +83,8 @@ $ ls | grep asda &amp;amp;&amp;amp; echo $? $ ls | grep asda || echo $? 1 $ ls |
 具体可见维基百科
 但是它只会解析别名, 也就是说, 如果你告诉它, 张三跟张麻子是一个人, 你说张三, 他就知道你说的是张麻子, 但是如果你告诉他张三欠我一块钱, 那他就gg了, 人家并不能理解张麻子欠你一块钱啊. 或许他会说: 等等, 一块钱是什么?
 这里我遇到的问题是如何传递参数进去.
-curl ipinfo.io/8.8.8.8 这条命令是查看 8.8.8.8 的ip所在地, 那么, 如果我设置了
-alias ipadrs=&amp;#39;curl ipinfo.io/$1&amp;#39; 会不会成功?
+curl ipinfo.io/8.8.8.8  这条命令是查看 8.8.8.8 的ip所在地, 那么, 如果我设置了
+alias ipadrs=&#39;curl ipinfo.io/$1&#39;  会不会成功?
 当然不会, 因为他不知道, 也无法处理你给他传进去的 ip.
 没有办法么?
 当然不是.
@@ -108,7 +106,7 @@ hi world 有点意思吧! 我们已经可以把参数传递进去了耶~
       <description>bash快捷操作
 生活在 Bash shell 中，熟记以下快捷键，将极大的提高你的命令行操作效率。
 编辑命令
-Ctrl + a ：移到命令行首 Ctrl + e ：移到命令行尾 Ctrl + f ：按字符前移（右向） Ctrl + b ：按字符后移（左向） Alt + f ：按单词前移（右向） Alt + b ：按单词后移（左向） Ctrl + xx：在命令行首和光标之间移动 Ctrl + u ：从光标处删除至命令行首 Ctrl + k ：从光标处删除至命令行尾 Ctrl + w ：从光标处删除至字首 Alt + d ：从光标处删除至字尾 Ctrl + d ：删除光标处的字符 Ctrl + h ：删除光标前的字符 Ctrl + y ：粘贴至光标后 Alt + c ：从光标处更改为首字母大写的单词 Alt + u ：从光标处更改为全部大写的单词 Alt + l ：从光标处更改为全部小写的单词 Ctrl + t ：交换光标处和之前的字符 Alt + t ：交换光标处和之前的单词 Alt + Backspace：与 Ctrl + w 类似 重新执行命令</description>
+Ctrl + a ：移到命令行首 Ctrl + e ：移到命令行尾 Ctrl + f ：按字符前移（右向） Ctrl + b ：按字符后移（左向） Alt + f ：按单词前移（右向） Alt + b ：按单词后移（左向） Ctrl + xx：在命令行首和光标之间移动 Ctrl + u ：从光标处删除至命令行首 Ctrl + k ：从光标处删除至命令行尾 Ctrl + w ：从光标处删除至字首 Alt + d ：从光标处删除至字尾 Ctrl + d ：删除光标处的字符 Ctrl + h ：删除光标前的字符 Ctrl + y ：粘贴至光标后 Alt + c ：从光标处更改为首字母大写的单词 Alt + u ：从光标处更改为全部大写的单词 Alt + l ：从光标处更改为全部小写的单词 Ctrl + t ：交换光标处和之前的字符 Alt + t ：交换光标处和之前的单词 Alt + Backspace：与 Ctrl + w 类似  重新执行命令</description>
     </item>
     
     <item>

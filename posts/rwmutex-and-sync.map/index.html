@@ -13,7 +13,7 @@ Read-or-Write Test Code package main import ( &#34;fmt&#34; &#34;sync&#34; &#34;
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='go'><meta property='article:tag' content='code'><meta property='article:published_time' content='2018-02-03T20:34:48&#43;08:00'/><meta property='article:modified_time' content='2018-02-03T20:34:48&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>RWMutex-and-sync.Map • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/rwmutex-and-sync.map/'>
@@ -105,12 +105,8 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p>In the last post, I noted a problem of read-and-write in high-cocurrency situation and finally chose to use <code>sync.Map</code>. This post I will make a comparation between <code>map with RWMutex</code> and <code>sync.Map</code>.</p>
-
+  <p>In the last post, I noted a problem of read-and-write in high-cocurrency situation and finally chose to use <code>sync.Map</code>. This post I will make a comparation between <code>map with RWMutex</code> and <code>sync.Map</code>.</p>
 <h3 id="read-or-write-test">Read-or-Write Test</h3>
-
 <h4 id="code">Code</h4>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 
@@ -167,8 +163,8 @@ if (!doNotTrack) {
 	}
 	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;sync map used %v\n\n&#34;</span>, <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Since</span>(<span style="color:#a6e22e">start</span>))
 
-}</code></pre></div>
-<h4 id="result">Result</h4>
+}
+</code></pre></div><h4 id="result">Result</h4>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">➜  comparation go run main.go
 write test
 rw map used 3.012520671s
@@ -177,13 +173,10 @@ sync map used 10.648790268s
 read test
 rw map used 1.124830897s
 sync map used 2.328729454s
-➜  comparation</code></pre></div>
-<p>We can see that <code>sync.Map</code> is not as good as we except in this situation.</p>
-
+➜  comparation
+</code></pre></div><p>We can see that <code>sync.Map</code> is not as good as we except in this situation.</p>
 <h3 id="cocurrency-read-write-test">Cocurrency Read-Write Test</h3>
-
 <p>Let&rsquo;s do some test in high-cocurrency.</p>
-
 <h4 id="map-with-rw-mutex">map with rw-mutex</h4>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 
@@ -246,12 +239,12 @@ sync map used 2.328729454s
 	}
 
 	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;read %d, used %v\n&#34;</span>, <span style="color:#a6e22e">readTimes</span>, <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Since</span>(<span style="color:#a6e22e">start</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#f92672">-</span><span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>)))
-}</code></pre></div>
-<p>I got:</p>
+}
+</code></pre></div><p>I got:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">➜  comparation go run main.go
 read 13163604, used 2.019429333s
-➜  comparation</code></pre></div>
-<h4 id="sync-map">sync.Map</h4>
+➜  comparation
+</code></pre></div><h4 id="syncmap">sync.Map</h4>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 
 <span style="color:#f92672">import</span> (
@@ -308,17 +301,15 @@ read 13163604, used 2.019429333s
 	}
 
 	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;read %d, used %v\n&#34;</span>, <span style="color:#a6e22e">readTimes</span>, <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Since</span>(<span style="color:#a6e22e">start</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#f92672">-</span><span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>)))
-}</code></pre></div>
-<p>And the result:</p>
+}
+
+</code></pre></div><p>And the result:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">➜  comparation go run main.go
 read 95246260, used 2.30790947s
-➜  comparation</code></pre></div>
-<p>I did got the difference: <strong><code>sync.Map</code> cocurrent read ability is much better than a map with rw mutex.</strong></p>
-
+➜  comparation
+</code></pre></div><p>I did got the difference: <strong><code>sync.Map</code> cocurrent read ability is much better than a map with rw mutex.</strong></p>
 <h3 id="conclusion">Conclusion</h3>
-
 <p><code>sync.Map</code> is suitable for the scenes with high-cocurrency read and fewer write actions.</p>
-
 <p>But in the cases whitch a map is read or write in single goroutine, you&rsquo;d better use a map with rw-mutex.</p>
 
 </div>

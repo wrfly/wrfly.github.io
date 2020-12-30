@@ -6,7 +6,8 @@
 弊端 且说一下 Nginx 作为 gRPC 服务的负载均衡的问题，由于 Nginx 作为中间件，gRPC 的 client 是不知道后端有多少服务的，它只认 Nginx 的地址，所有的服务发现和负载均衡由Nginx统一处理， 默认的负载方式是轮询。
 连接池 初始阶段，client 建立N多链接到 Nginx（N的数量取决于 pool 的大小，也就是人工实现一个连接池， 其实根本没必要，但为了让流量均衡的发送到后端所有服务上必须要这样），但这个N的数字其实很有讲究， 如果N小于后端服务的数量，那么后端真实server收到的请求是不均匀的，在仅有一个 client，10个 server 的情况下，如果 client 建立5条连接到 Nginx，然后 Nginx 分别转发给后端的每一个 server， 那么就会有5个 server 收不到连接，白干。如果增加 client的数量，2x5=10，后端的10个 server 都收到了请求，才均匀。
 但，这个pool大小的设定实在玄学，client的数量也会变更，鬼知道哪些server收到的请求多，哪些 server收到的请求少？
-又，gRPC 是建立在 TCP 上的，每条连接可处理的请求能到 1w&#43; qps 以上，client 端建立几十几百个 连接到Nginx，Nginx 又转发这些到后端的N个 server 实例，看起来实在很傻逼。'>
+又，gRPC 是建立在 TCP 上的，每条连接可处理的请求能到 1w&#43; qps 以上，client 端建立几十几百个 连接到Nginx，Nginx 又转发这些到后端的N个 server 实例，看起来实在很傻逼。
+异常 server扩容 后端server总要扩容的，不管是大促还是活动，谁也不能保证不会增加server数量。但是在Nginx代理的情况下， 如果后端新增了 backend，由于是TCP代理，已有的连接不能掐断，但client端的连接池已经初始完毕， 不会继续建立连接到Nginx，这时候新上的server就收不到一丁点流量，直到新连接的建立。'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='gRPC-LoadBalancer • wrfly&#39;s blog'>
@@ -14,12 +15,13 @@
 弊端 且说一下 Nginx 作为 gRPC 服务的负载均衡的问题，由于 Nginx 作为中间件，gRPC 的 client 是不知道后端有多少服务的，它只认 Nginx 的地址，所有的服务发现和负载均衡由Nginx统一处理， 默认的负载方式是轮询。
 连接池 初始阶段，client 建立N多链接到 Nginx（N的数量取决于 pool 的大小，也就是人工实现一个连接池， 其实根本没必要，但为了让流量均衡的发送到后端所有服务上必须要这样），但这个N的数字其实很有讲究， 如果N小于后端服务的数量，那么后端真实server收到的请求是不均匀的，在仅有一个 client，10个 server 的情况下，如果 client 建立5条连接到 Nginx，然后 Nginx 分别转发给后端的每一个 server， 那么就会有5个 server 收不到连接，白干。如果增加 client的数量，2x5=10，后端的10个 server 都收到了请求，才均匀。
 但，这个pool大小的设定实在玄学，client的数量也会变更，鬼知道哪些server收到的请求多，哪些 server收到的请求少？
-又，gRPC 是建立在 TCP 上的，每条连接可处理的请求能到 1w&#43; qps 以上，client 端建立几十几百个 连接到Nginx，Nginx 又转发这些到后端的N个 server 实例，看起来实在很傻逼。'>
+又，gRPC 是建立在 TCP 上的，每条连接可处理的请求能到 1w&#43; qps 以上，client 端建立几十几百个 连接到Nginx，Nginx 又转发这些到后端的N个 server 实例，看起来实在很傻逼。
+异常 server扩容 后端server总要扩容的，不管是大促还是活动，谁也不能保证不会增加server数量。但是在Nginx代理的情况下， 如果后端新增了 backend，由于是TCP代理，已有的连接不能掐断，但client端的连接池已经初始完毕， 不会继续建立连接到Nginx，这时候新上的server就收不到一丁点流量，直到新连接的建立。'>
 <meta property='og:url' content='https://wrfly.kfd.me/posts/grpc-loadbalancer/'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='coding'><meta property='article:tag' content='dev'><meta property='article:published_time' content='2019-03-16T00:32:21&#43;08:00'/><meta property='article:modified_time' content='2019-03-16T00:32:21&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>gRPC-LoadBalancer • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/grpc-loadbalancer/'>
@@ -111,55 +113,37 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<h1 id="grpc-load-balancer-with-etcd">gRPC Load Balancer (with etcd)</h1>
-
+  <h1 id="grpc-load-balancer-with-etcd">gRPC Load Balancer (with etcd)</h1>
 <h2 id="引子">引子</h2>
-
 <p>两个月之前，我们组想脱离公司全局的 Nginx 代理（毕竟 Nginx 的 TCP 代理用来做 gRPC
 的负载均衡有很多问题），使用 gRPC 自带的负载均衡，调研了一圈开源的实现，有用consul的，
 有用旧版本API实现的（方法将要被弃用），不得已，只能自己翻文档实现。</p>
-
 <h2 id="弊端">弊端</h2>
-
 <p>且说一下 Nginx 作为 gRPC 服务的负载均衡的问题，由于 Nginx 作为中间件，gRPC 的 client
 是不知道后端有多少服务的，它只认 Nginx 的地址，所有的服务发现和负载均衡由Nginx统一处理，
 默认的负载方式是轮询。</p>
-
 <h3 id="连接池">连接池</h3>
-
 <p>初始阶段，client 建立N多链接到 Nginx（N的数量取决于 pool 的大小，也就是人工实现一个连接池，
 其实根本没必要，但为了让流量均衡的发送到后端所有服务上必须要这样），但这个N的数字其实很有讲究，
 如果N小于后端服务的数量，那么后端真实server收到的请求是不均匀的，在仅有一个 client，10个
 server 的情况下，如果 client 建立5条连接到 Nginx，然后 Nginx 分别转发给后端的每一个 server，
 那么就会有5个 server 收不到连接，白干。如果增加 client的数量，2x5=10，后端的10个 server
 都收到了请求，才均匀。</p>
-
 <p>但，这个pool大小的设定实在玄学，client的数量也会变更，鬼知道哪些server收到的请求多，哪些
 server收到的请求少？</p>
-
 <p>又，gRPC 是建立在 TCP 上的，每条连接可处理的请求能到 1w+ qps 以上，client 端建立几十几百个
 连接到Nginx，Nginx 又转发这些到后端的N个 server 实例，看起来实在很傻逼。</p>
-
 <h3 id="异常">异常</h3>
-
 <h4 id="server扩容">server扩容</h4>
-
 <p>后端server总要扩容的，不管是大促还是活动，谁也不能保证不会增加server数量。但是在Nginx代理的情况下，
 如果后端新增了 backend，由于是TCP代理，已有的连接不能掐断，但client端的连接池已经初始完毕，
 不会继续建立连接到Nginx，这时候新上的server就收不到一丁点流量，直到新连接的建立。</p>
-
 <p>当然，你可以说，我们可以在client的连接池上动手脚，比如动态增加conn的数量，这样不就有流量到新的
 server上去了吗；我们还可以定时关闭client已建立的连接，然后重新连接，这样nginx代理就均衡了。
 可我只觉得这是脱裤子放屁，多此一举，没事儿找事儿，强行创造KPI。</p>
-
 <h4 id="server重启">server重启</h4>
-
 <p>同样的事情还会发生在server重启上。</p>
-
 <p>如果后端有5个server，在某一时间重启了4个，重启耗时10s。在这10s内发生了很多有意思的事情。</p>
-
 <ol>
 <li>Nginx 发现到 backends 的连接断开</li>
 <li>此时client无感知，client 到 Nginx 的连接还在</li>
@@ -170,13 +154,10 @@ server上去了吗；我们还可以定时关闭client已建立的连接，然�
 估计plus可以，猜测）</li>
 <li>不管怎么处理，所有流量都发到唯一的server上去了</li>
 </ol>
-
 <p>10s过后，4个service启动完毕，然而发现自己很闲，因为再也没有流量过来了。</p>
-
 <p>除非，除非我们的 Nginx 大师更新完 backends 列表或者发现 service 重新 online 之后，
 自动将正在进行的TCP连接迁移到了新的 service 上去，毕竟这在技术上是可以实现的，就是有点难而已。
 难度系数大概10.0吧。但我还是觉得这样做实在是没事儿找事儿，没有问题主动创造问题。</p>
-
 <p>想尝试的可以用这个nginx配置和这些命令：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nginx" data-lang="nginx"><span style="color:#66d9ef">user</span>  <span style="color:#e6db74">nginx</span>;
 <span style="color:#66d9ef">worker_processes</span>  <span style="color:#ae81ff">1</span>;
@@ -194,68 +175,48 @@ server上去了吗；我们还可以定时关闭client已建立的连接，然�
         <span style="color:#f92672">listen</span> <span style="color:#ae81ff">80</span>;
         <span style="color:#f92672">proxy_pass</span> <span style="color:#e6db74">xxx</span>;
     }
-}</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run -dti -p <span style="color:#ae81ff">8080</span>:80 nginx
+}
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run -dti -p 8080:80 nginx
 
-nc -lkp <span style="color:#ae81ff">50001</span> -v -s <span style="color:#ae81ff">172</span>.17.0.1
-nc -lkp <span style="color:#ae81ff">50002</span> -v -s <span style="color:#ae81ff">172</span>.17.0.1
+nc -lkp <span style="color:#ae81ff">50001</span> -v -s 172.17.0.1
+nc -lkp <span style="color:#ae81ff">50002</span> -v -s 172.17.0.1
 
-nc localhost <span style="color:#ae81ff">8080</span> -v</code></pre></div>
-<p>不要忘了开防火墙，不然nginx连不通本机。</p>
-
+nc localhost <span style="color:#ae81ff">8080</span> -v
+</code></pre></div><p>不要忘了开防火墙，不然nginx连不通本机。</p>
 <h4 id="网络抖动">网络抖动</h4>
-
 <p>同理，如果 Nginx 到 service instance 的网络抖动了，也相当于一次重启了，问题同同上。</p>
-
 <h2 id="grpc-lb">gRPC LB</h2>
-
 <p>基于此类问题（明显是人为创造出来的问题，用 Nginx 代理有状态的TCP服务），
 我们必须选择 gRPC 框架中的LB。</p>
-
 <p>但是开源方案又不能满足需求：1. etcd做服务发现。2.新版API。
 所以自己动手丰衣足食。由于是在公司写的，开源出来难免说不过去，所以就只能把思路放在这里，作为备忘录。</p>
-
 <h3 id="首先">首先</h3>
-
-<p><a href="https://grpc.io/blog/loadbalancing" target="_blank">https://grpc.io/blog/loadbalancing</a></p>
-
-<p><a href="https://github.com/grpc/grpc/blob/master/doc/load-balancing.md" target="_blank">https://github.com/grpc/grpc/blob/master/doc/load-balancing.md</a></p>
-
+<p><a href="https://grpc.io/blog/loadbalancing">https://grpc.io/blog/loadbalancing</a></p>
+<p><a href="https://github.com/grpc/grpc/blob/master/doc/load-balancing.md">https://github.com/grpc/grpc/blob/master/doc/load-balancing.md</a></p>
 <h3 id="然后">然后</h3>
-
 <h4 id="分清几个角色">分清几个角色</h4>
-
 <p>Balancer：</p>
-
-<p><a href="https://github.com/grpc/grpc-go/blob/master/balancer/balancer.go" target="_blank">https://github.com/grpc/grpc-go/blob/master/balancer/balancer.go</a></p>
-
+<p><a href="https://github.com/grpc/grpc-go/blob/master/balancer/balancer.go">https://github.com/grpc/grpc-go/blob/master/balancer/balancer.go</a></p>
 <ul>
 <li><code>balancer.Builder</code>：build 一个 Balancer</li>
 <li><code>balancer.Picker</code>：从连接池中选择一个 SubConn 返回，作为真正 request 发送的载体</li>
 <li><code>balancer.Balancer</code>：做的事情就很多了，好在提供了一个Basic可以用，所以不用写代码就能实现。
 作用包括管理SubConn，收集连接的状态，处理gRPC请求。</li>
 </ul>
-
 <p>Resolver：</p>
-
-<p><a href="https://github.com/grpc/grpc-go/blob/master/resolver/resolver.go" target="_blank">https://github.com/grpc/grpc-go/blob/master/resolver/resolver.go</a></p>
-
+<p><a href="https://github.com/grpc/grpc-go/blob/master/resolver/resolver.go">https://github.com/grpc/grpc-go/blob/master/resolver/resolver.go</a></p>
 <ul>
 <li><code>resolver.Builder</code>： build 一个 resolver</li>
 <li><code>resolver.Resolver</code>：给 connection 赋予后端 gRPC server 的 Address（
 被调用ResolveNow方法，传递 Address 给 ClientConn <code>NewAddress(addresses []Address)</code>）</li>
 </ul>
-
 <p>由于grpc自带了一个<code>RoundRobin</code>的<code>Balancer</code>和一个<code>BasicBuilder</code>，所以我们只需要实现<code>resolver.Builder</code>和<code>resolver.Resolver</code></p>
-
-<h4 id="grpc-dial-的时候发生了什么"><code>grpc.Dial</code>的时候发生了什么</h4>
-
+<h4 id="grpcdial的时候发生了什么"><code>grpc.Dial</code>的时候发生了什么</h4>
 <p>个人感觉dial的源码比较复杂，里面有很多 go 出去的 watcher，回调也很麻烦，
 所以在这里的阐述可能有一些缺漏，还请大家批评指正。</p>
-
 <p>大体上分为几个步骤：</p>
-
 <ul>
-<li>解析target： target 根据<a href="https://github.com/grpc/grpc/blob/master/doc/naming.md" target="_blank">naming</a>的协议，
+<li>解析target： target 根据<a href="https://github.com/grpc/grpc/blob/master/doc/naming.md">naming</a>的协议，
 以这种格式存在： <code>scheme://authentication/endpoint</code>，所以如果传入了一个这样的target <code>etcd://user:pass/a_fake_service_discovery_key</code>，
 就表示要用 <code>etcd</code> 的 <code>resolver builder</code>，认证口令为 <code>user:pass</code>，endpoint为 <code>a_fake_service_discovery_key</code>。
 如果只传入一个地址，比如 <code>localhost:5001</code>，那在parse target的时候，就会返回一个默认的scheme，
@@ -274,7 +235,6 @@ nc localhost <span style="color:#ae81ff">8080</span> -v</code></pre></div>
 <li>通过上一个步骤，<code>ClientConn</code> 会创建一堆 <code>SubConn</code>，在这个函数里可以找到相关逻辑
 <code>func (bw *balancerWrapper) lbWatcher()</code>，里面的channel和通知错综复杂，剪不断理还乱。</li>
 </ul>
-
 <p>通过上述过程，一个 ClientConn 就建好了，可以准备被封装成需要的 Client 来发送请求了，发送请求的过程就比较简单了，无非就是选择哪一个 SubConn 进行通信，也就是业务真正落到了谁的头上。这个逻辑是由 <code>balancer.Picker</code> 完成的，最简单的轮询：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">p</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">rrPicker</span>) <span style="color:#a6e22e">Pick</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">opts</span> <span style="color:#a6e22e">balancer</span>.<span style="color:#a6e22e">PickOptions</span>)
     (<span style="color:#a6e22e">balancer</span>.<span style="color:#a6e22e">SubConn</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">balancer</span>.<span style="color:#a6e22e">DoneInfo</span>), <span style="color:#66d9ef">error</span>) {
@@ -283,21 +243,15 @@ nc localhost <span style="color:#ae81ff">8080</span> -v</code></pre></div>
     <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">next</span> = (<span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">next</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> len(<span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">subConns</span>)
     <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">mu</span>.<span style="color:#a6e22e">Unlock</span>()
     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">sc</span>, <span style="color:#66d9ef">nil</span>, <span style="color:#66d9ef">nil</span>
-}</code></pre></div>
-<p>一开始感觉这个代码写的不够好，里面有锁，看上去会影响性能，但实际上，我们的业务，或者大部分业务根本达不到这个锁的瓶颈，
+}
+</code></pre></div><p>一开始感觉这个代码写的不够好，里面有锁，看上去会影响性能，但实际上，我们的业务，或者大部分业务根本达不到这个锁的瓶颈，
 对性能影响的担心是多余的。</p>
-
 <p>P.S. 刚才翻了一下代码，发现事情并没这么简单，里面包含了Invoke，SendMsg，Receive等一系列复杂的逻辑和错误处理，只是grpc
 帮我们处理好了而已，但就本文而言，到达 <code>Picker</code> 已经算是万里长征第一步了，之后的过程不会在此讨论。</p>
-
 <h3 id="最后">最后</h3>
-
 <p>通过以上流程的梳理，就可以完成一个简单的 <code>Resolver</code> 和 <code>Builder</code>，于是我就扩展了一下原来的 <code>grpc-echo</code>，变成了这个样子：</p>
-
-<p><a href="https://github.com/wrfly/grpc-echo" target="_blank">https://github.com/wrfly/grpc-echo</a></p>
-
+<p><a href="https://github.com/wrfly/grpc-echo">https://github.com/wrfly/grpc-echo</a></p>
 <p>如果要做一个生产级别可用的库，要考虑的事情还有很多：</p>
-
 <ul>
 <li>etcd 的 namespace 的划分和认证</li>
 <li>通过 etcd 服务发现，append 新的地址</li>
@@ -315,21 +269,17 @@ nc localhost <span style="color:#ae81ff">8080</span> -v</code></pre></div>
 <li>如果全部的backends都连不上了怎么办？如何容灾？</li>
 <li>需不需要调整负载策略，将RR换成根据权重或者负载大小动态调整流量</li>
 </ul>
-
 <p>总而言之，不是一件简单的事情。</p>
-
 <h2 id="envoy">Envoy</h2>
-
 <p>envoy 原生就支持 gRPC 的负载均衡，我自己虽然没测试过LB，但也搞过它对于 gRPC 的代理。
 说不定下一篇文章就会讨论和实践 envoy 的 gRPC LB，并跟本篇文章进行对比。</p>
-
 <ul>
-<li><a href="https://www.envoyproxy.io/" target="_blank">https://www.envoyproxy.io/</a></li>
-<li><a href="https://www.envoyproxy.io/try/" target="_blank">https://www.envoyproxy.io/try/</a></li>
-<li><a href="https://www.datawire.io/envoyproxy/" target="_blank">https://www.datawire.io/envoyproxy/</a></li>
-<li><a href="https://medium.com/@evalsocket/envoy-proxy-l7-loadblancing-grpc-88c9ab8e0e70" target="_blank">https://medium.com/@evalsocket/envoy-proxy-l7-loadblancing-grpc-88c9ab8e0e70</a></li>
-<li><a href="https://blog.bugsnag.com/envoy/" target="_blank">https://blog.bugsnag.com/envoy/</a></li>
-<li><a href="https://grpc.io/blog/loadbalancing" target="_blank">https://grpc.io/blog/loadbalancing</a> （最后一行也推荐了envoy）</li>
+<li><a href="https://www.envoyproxy.io/">https://www.envoyproxy.io/</a></li>
+<li><a href="https://www.envoyproxy.io/try/">https://www.envoyproxy.io/try/</a></li>
+<li><a href="https://www.datawire.io/envoyproxy/">https://www.datawire.io/envoyproxy/</a></li>
+<li><a href="https://medium.com/@evalsocket/envoy-proxy-l7-loadblancing-grpc-88c9ab8e0e70">https://medium.com/@evalsocket/envoy-proxy-l7-loadblancing-grpc-88c9ab8e0e70</a></li>
+<li><a href="https://blog.bugsnag.com/envoy/">https://blog.bugsnag.com/envoy/</a></li>
+<li><a href="https://grpc.io/blog/loadbalancing">https://grpc.io/blog/loadbalancing</a> （最后一行也推荐了envoy）</li>
 </ul>
 
 </div>

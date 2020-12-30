@@ -4,28 +4,28 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='今天在Kali下配置了Nginx，但是php一直开不起来，妈蛋，搞了好久好久，原来是 php5-frm 没有重启。坑死了。
 先安装php-fpm
-apt-get install php5-fpm 然后修改nginx的配置文件:
-vim /etc/nginx/sites-available/default 里面php-fpm的默认配置是注释掉的 
-pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000 # #location ~ .php$ {
-fastcgi_split_path_info ^(.&#43;.php)(/.&#43;)$; # NOTE: You should have &ldquo;cgi.fix_pathinfo = 0;&rdquo; in php.ini #
-# With php5-cgi alone: fastcgi_pass 127.0.0.1:9000; # With php5-fpm: fastcgi_pass unix:/var/run/php5-fpm.sock; fastcgi_index index.php; include fastcgi_params; #}  改成
-location ~ \.php$ { fastcgi_split_path_info ^(.&#43;\.php)(/.&#43;)$; # # NOTE: You should have &#34;cgi.'>
+apt-get install php5-fpm  然后修改nginx的配置文件:
+vim /etc/nginx/sites-available/default  里面php-fpm的默认配置是注释掉的
+改成
+location ~ \.php$ { fastcgi_split_path_info ^(.&#43;\.php)(/.&#43;)$; # # NOTE: You should have &quot;cgi.fix_pathinfo = 0;&quot; in php.ini # # With php5-cgi alone: # fastcgi_pass 127.0.0.1:9000; # With php5-fpm: fastcgi_pass unix:/var/run/php5-fpm.sock; fastcgi_index index.php; include fastcgi_params; }  即可
+然后重启nginx和php-fpm
+/etc/init.d/php5-fpm restart /etc/init.d/nginx restart  一定要重启，否则你的修改是无效的！'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='kali nginx php • wrfly&#39;s blog'>
 <meta property='og:description' content='今天在Kali下配置了Nginx，但是php一直开不起来，妈蛋，搞了好久好久，原来是 php5-frm 没有重启。坑死了。
 先安装php-fpm
-apt-get install php5-fpm 然后修改nginx的配置文件:
-vim /etc/nginx/sites-available/default 里面php-fpm的默认配置是注释掉的 
-pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000 # #location ~ .php$ {
-fastcgi_split_path_info ^(.&#43;.php)(/.&#43;)$; # NOTE: You should have &ldquo;cgi.fix_pathinfo = 0;&rdquo; in php.ini #
-# With php5-cgi alone: fastcgi_pass 127.0.0.1:9000; # With php5-fpm: fastcgi_pass unix:/var/run/php5-fpm.sock; fastcgi_index index.php; include fastcgi_params; #}  改成
-location ~ \.php$ { fastcgi_split_path_info ^(.&#43;\.php)(/.&#43;)$; # # NOTE: You should have &#34;cgi.'>
+apt-get install php5-fpm  然后修改nginx的配置文件:
+vim /etc/nginx/sites-available/default  里面php-fpm的默认配置是注释掉的
+改成
+location ~ \.php$ { fastcgi_split_path_info ^(.&#43;\.php)(/.&#43;)$; # # NOTE: You should have &quot;cgi.fix_pathinfo = 0;&quot; in php.ini # # With php5-cgi alone: # fastcgi_pass 127.0.0.1:9000; # With php5-fpm: fastcgi_pass unix:/var/run/php5-fpm.sock; fastcgi_index index.php; include fastcgi_params; }  即可
+然后重启nginx和php-fpm
+/etc/init.d/php5-fpm restart /etc/init.d/nginx restart  一定要重启，否则你的修改是无效的！'>
 <meta property='og:url' content='https://wrfly.kfd.me/posts/kali-nginx-php/'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='share'><meta property='article:published_time' content='2015-01-01T00:00:00Z'/><meta property='article:modified_time' content='2015-01-01T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>kali nginx php • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/kali-nginx-php/'>
@@ -117,61 +117,36 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p>今天在Kali下配置了Nginx，但是php一直开不起来，妈蛋，搞了好久好久，原来是 php5-frm 没有重启。坑死了。</p>
-
+  <p>今天在Kali下配置了Nginx，但是php一直开不起来，妈蛋，搞了好久好久，原来是 php5-frm 没有重启。坑死了。</p>
 <p>先安装php-fpm</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">apt-get install  php5-fpm</pre></div>
+<pre><code>apt-get install  php5-fpm
+</code></pre>
 <p>然后修改nginx的配置文件:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">vim /etc/nginx/sites-available/default</pre></div>
-<p>里面php-fpm的默认配置是注释掉的
-<pre></p>
-
-<h1 id="pass-the-php-scripts-to-fastcgi-server-listening-on-127-0-0-1-9000">pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000</h1>
-
-<p>#
-#location ~ .php$ {</p>
-
-<h1 id="fastcgi-split-path-info-php">fastcgi_split_path_info ^(.+.php)(/.+)$;</h1>
-
-<h1 id="note-you-should-have-cgi-fix-pathinfo-0-in-php-ini"># NOTE: You should have &ldquo;cgi.fix_pathinfo = 0;&rdquo; in php.ini</h1>
-
-<p>#</p>
-
-<h1 id="with-php5-cgi-alone"># With php5-cgi alone:</h1>
-
-<h1 id="fastcgi-pass-127-0-0-1-9000">fastcgi_pass 127.0.0.1:9000;</h1>
-
-<h1 id="with-php5-fpm"># With php5-fpm:</h1>
-
-<h1 id="fastcgi-pass-unix-var-run-php5-fpm-sock">fastcgi_pass unix:/var/run/php5-fpm.sock;</h1>
-
-<h1 id="fastcgi-index-index-php">fastcgi_index index.php;</h1>
-
-<h1 id="include-fastcgi-params">include fastcgi_params;</h1>
-
-<p>#}
-</pre>
-改成</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">location ~ \.php$ {
+<pre><code>vim /etc/nginx/sites-available/default
+</code></pre>
+<p>里面php-fpm的默认配置是注释掉的</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>改成</p>
+<pre><code>location ~ \.php$ {
 fastcgi_split_path_info ^(.+\.php)(/.+)$;
-# # NOTE: You should have &#34;cgi.fix_pathinfo = 0;&#34; in php.ini
-
+# # NOTE: You should have &quot;cgi.fix_pathinfo = 0;&quot; in php.ini
+ 
 # # With php5-cgi alone:
 # fastcgi_pass 127.0.0.1:9000;
 # With php5-fpm:
 fastcgi_pass unix:/var/run/php5-fpm.sock;
 fastcgi_index index.php;
 include fastcgi_params;
-}</pre></div>
+}
+</code></pre>
 <p>即可</p>
-
 <p>然后重启nginx和php-fpm</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/etc/init.d/php5-fpm restart
-
-/etc/init.d/nginx restart</pre></div>
-<p><strong>一定要重启，否则你的修改是无效的！</strong></p>
+<pre><code>/etc/init.d/php5-fpm restart
+ 
+/etc/init.d/nginx restart
+</code></pre>
+<p><!-- raw HTML omitted -->一定要重启，否则你的修改是无效的！<!-- raw HTML omitted --></p>
 
 </div>
 

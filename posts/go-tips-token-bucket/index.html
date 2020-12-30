@@ -19,7 +19,7 @@ package main import ( &#34;fmt&#34; &#34;sync&#34; &#34;time&#34; ) func main() 
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='go'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2018-07-28T23:29:49&#43;08:00'/><meta property='article:modified_time' content='2018-07-28T23:29:49&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>Go-Tips-Token-Bucket • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/go-tips-token-bucket/'>
@@ -111,12 +111,9 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  <p>前几天写了一个docker registry的lib <a href="https://github.com/wrfly/reglib" target="_blank">https://github.com/wrfly/reglib</a></p>
-
+  <p>前几天写了一个docker registry的lib <a href="https://github.com/wrfly/reglib">https://github.com/wrfly/reglib</a></p>
 <p>然后在写example的时候发现并发太高, 把registry搞得502了, 然后就想办法怎么限制一下这个并发. 其实这个问题在之前面试的时候被问到过, 当时回答的不好. 因为一般的限流令牌桶的话都是有一个时间往里补充的, 我当时还没接触过别的, 所以就比较尴尬.</p>
-
 <p>但是那天下午忽然就想到可以用channel去实现这个令牌桶, 但是操作恰好相反, 操作的时候不是取出令牌再进行下一步, 而是往里放, 对应的, 操作完成也不是再还回令牌, 而是取出.</p>
-
 <p>可以看一个简单的例子:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 
@@ -146,11 +143,9 @@ if (!doNotTrack) {
 	}
 
 	<span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Wait</span>()
-}</code></pre></div>
-<p><a href="https://play.golang.org/p/pdDf7NWhNob" target="_blank">https://play.golang.org/p/pdDf7NWhNob</a></p>
-
+}
+</code></pre></div><p><a href="https://play.golang.org/p/pdDf7NWhNob">https://play.golang.org/p/pdDf7NWhNob</a></p>
 <p>运行的时候可以看到, 每次打印五个, 间隔一秒.</p>
-
 <p>在playground里运行这个程序, 可以看到是打印是有顺序的:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">this is 14
 this is 0
@@ -166,9 +161,8 @@ this is 9
 this is 10
 this is 11
 this is 12
-this is 13</code></pre></div>
-<p>这是因为playground只给了你一个core, 你只有一个CPU, 所以一次只能处理一个goroutine, for循环结束之后, <code>wg.Wait()</code> 等待结束, 此时调度器切换到go出去的goroutine队列里, 那为什么先打印14, 而不是0呢? 是因为第14个goroutine还没有放到goroutine的队列里, 而是在main里捏着, 当main goroutine跑完的时候, 才将CPU的控制权交出, 并开始调度队列里的01234&hellip;</p>
-
+this is 13
+</code></pre></div><p>这是因为playground只给了你一个core, 你只有一个CPU, 所以一次只能处理一个goroutine, for循环结束之后, <code>wg.Wait()</code> 等待结束, 此时调度器切换到go出去的goroutine队列里, 那为什么先打印14, 而不是0呢? 是因为第14个goroutine还没有放到goroutine的队列里, 而是在main里捏着, 当main goroutine跑完的时候, 才将CPU的控制权交出, 并开始调度队列里的01234&hellip;</p>
 <p>但如果你是在本机运行这段代码, 就会发现打印的时候不是按照顺序来的, 而是一种随机打印了, 这也说明, 在golang调度的时候, 每个goroutine的运行都与当前CPU状态有关. 但是, 每次第一行又都是14, 也就是最后一个goroutine, 这与上面的解释相同, 即当前goroutine还没有放入队列中.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  tokenbucket go run main.go
 this is 14
@@ -202,9 +196,8 @@ this is 7
 this is 9
 this is 13
 this is 11
-➜  tokenbucket</code></pre></div>
-<p>如果想要达到playground的效果, 可以在运行程序之前加上<code>GOMAXPROCS=1</code>, 或者在程序开头加上一行 <code>runtime.GOMAXPROCS(1)</code>.</p>
-
+➜  tokenbucket
+</code></pre></div><p>如果想要达到playground的效果, 可以在运行程序之前加上<code>GOMAXPROCS=1</code>, 或者在程序开头加上一行 <code>runtime.GOMAXPROCS(1)</code>.</p>
 <p>然后再来看这个:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 
@@ -237,18 +230,13 @@ this is 11
 
 	<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Millisecond</span>)
 	<span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Wait</span>()
-}</code></pre></div>
-<p><a href="https://play.golang.org/p/67AruhE1hnV" target="_blank">https://play.golang.org/p/67AruhE1hnV</a></p>
-
+}
+</code></pre></div><p><a href="https://play.golang.org/p/67AruhE1hnV">https://play.golang.org/p/67AruhE1hnV</a></p>
 <p>这次可以看到, 程序输出是按顺序的了. 只因为多了一行 <code>time.Sleep(time.Millisecond)</code></p>
-
 <p>类似的, 还有:</p>
-
-<p><a href="https://play.golang.org/p/5h5YEnnBox2" target="_blank">https://play.golang.org/p/5h5YEnnBox2</a> 和 <a href="https://play.golang.org/p/5RRBRmfvz1U" target="_blank">https://play.golang.org/p/5RRBRmfvz1U</a></p>
-
+<p><a href="https://play.golang.org/p/5h5YEnnBox2">https://play.golang.org/p/5h5YEnnBox2</a> 和 <a href="https://play.golang.org/p/5RRBRmfvz1U">https://play.golang.org/p/5RRBRmfvz1U</a></p>
 <p>也会达到相同的效果. 其实就是把第14号goroutine放到了队列里. 那怎样才会把goroutine放到队列里呢, 有一些关键词: <code>time.Sleep</code>, <code>runtime.Gosched</code>, <code>go</code>.</p>
-
-<p>也可以看下别人的回答: <a href="https://stackoverflow.com/questions/15771232/why-is-time-sleep-required-to-run-certain-goroutines" target="_blank">why-is-time-sleep-required-to-run-certain-goroutines</a></p>
+<p>也可以看下别人的回答: <a href="https://stackoverflow.com/questions/15771232/why-is-time-sleep-required-to-run-certain-goroutines">why-is-time-sleep-required-to-run-certain-goroutines</a></p>
 
 </div>
 

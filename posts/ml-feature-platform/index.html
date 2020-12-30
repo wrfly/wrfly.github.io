@@ -5,7 +5,7 @@
 <meta name='description' content='前言 大概从去年十二月份，领导们想做这样一件事情，重构一下算法组fetch feature的方法，当时是用的codis，用pb encode了一个大的结构体，结构体里包含了很多feature。当小组成员越来越多，模型越来越多，数据越来越多的时候，结构体里面的feature也越来越多，导致不管是添加新的feature还是删除不用的feature都非常麻烦，甚至都不知道哪些feature在用，哪些不用。渐渐的就变成了一座山。
 然后我半路加入了讨论，一开始也是非常懵逼，都不知道他们在说什么，直到等听过一遍代码之后才有了大概的了解，开始着手设计新的方案。
 大概花了一周的时间去设计：
- 数据还是存在Redis里面，从Codis换成了Cache Cloud； 通过一个Config Server来  配置模型的feature，统一管理 配置Redis的地址，分国家，分feature类别 配置生成feature数据的job，包括数据源，写入地址等等  重构了生成日志的方式，这里的日志是“请求”和“返回的数据”，用来训练模型 重构了数据的存储方式，将大的pb结构拆成一个一个的hset，方便增删  设计上个人觉得没什么问题，领导也表示由我主导，但实际上我的话语权并不高，事情的发展也不在我的掌控之中，最终的效果就会有一些出入。更不用说不在我负责范围内的事情了，撇开不谈。
+ 数据还是存在Redis里面，从Codis换成了Cache Cloud； 通过一个Config Server来  配置模型的feature，统一管理 配置Redis的地址，分国家，分feature类别 配置生成feature数据的job，包括数据源，写入地址等等   重构了生成日志的方式，这里的日志是“请求”和“返回的数据”，用来训练模型 重构了数据的存储方式，将大的pb结构拆成一个一个的hset，方便增删  设计上个人觉得没什么问题，领导也表示由我主导，但实际上我的话语权并不高，事情的发展也不在我的掌控之中，最终的效果就会有一些出入。更不用说不在我负责范围内的事情了，撇开不谈。
 上周终于把全部国家的Redis资源申请到了，所以个人认为这件事情也有了一个阶段性成果（五个月？），所以记录一下这个项目和中间遇到的一些问题，希望能给以后的自己有所启发，或者反思。
 思路 名词定义 Category - 表示一类的feature，比如Item Category，Shop Category，同一个Category中的QueryKey是相同的
 QueryKey - 如何从Redis中读取feature，以及如何写入，其实就是Redis的Key。可以分为 ItemID，ShopID，UserID，QueryHash等等，以及他们之间的互相组合。
@@ -23,7 +23,7 @@ kv -&gt; struct 就算解决了。而且比json还要快。
 <meta property='og:description' content='前言 大概从去年十二月份，领导们想做这样一件事情，重构一下算法组fetch feature的方法，当时是用的codis，用pb encode了一个大的结构体，结构体里包含了很多feature。当小组成员越来越多，模型越来越多，数据越来越多的时候，结构体里面的feature也越来越多，导致不管是添加新的feature还是删除不用的feature都非常麻烦，甚至都不知道哪些feature在用，哪些不用。渐渐的就变成了一座山。
 然后我半路加入了讨论，一开始也是非常懵逼，都不知道他们在说什么，直到等听过一遍代码之后才有了大概的了解，开始着手设计新的方案。
 大概花了一周的时间去设计：
- 数据还是存在Redis里面，从Codis换成了Cache Cloud； 通过一个Config Server来  配置模型的feature，统一管理 配置Redis的地址，分国家，分feature类别 配置生成feature数据的job，包括数据源，写入地址等等  重构了生成日志的方式，这里的日志是“请求”和“返回的数据”，用来训练模型 重构了数据的存储方式，将大的pb结构拆成一个一个的hset，方便增删  设计上个人觉得没什么问题，领导也表示由我主导，但实际上我的话语权并不高，事情的发展也不在我的掌控之中，最终的效果就会有一些出入。更不用说不在我负责范围内的事情了，撇开不谈。
+ 数据还是存在Redis里面，从Codis换成了Cache Cloud； 通过一个Config Server来  配置模型的feature，统一管理 配置Redis的地址，分国家，分feature类别 配置生成feature数据的job，包括数据源，写入地址等等   重构了生成日志的方式，这里的日志是“请求”和“返回的数据”，用来训练模型 重构了数据的存储方式，将大的pb结构拆成一个一个的hset，方便增删  设计上个人觉得没什么问题，领导也表示由我主导，但实际上我的话语权并不高，事情的发展也不在我的掌控之中，最终的效果就会有一些出入。更不用说不在我负责范围内的事情了，撇开不谈。
 上周终于把全部国家的Redis资源申请到了，所以个人认为这件事情也有了一个阶段性成果（五个月？），所以记录一下这个项目和中间遇到的一些问题，希望能给以后的自己有所启发，或者反思。
 思路 名词定义 Category - 表示一类的feature，比如Item Category，Shop Category，同一个Category中的QueryKey是相同的
 QueryKey - 如何从Redis中读取feature，以及如何写入，其实就是Redis的Key。可以分为 ItemID，ShopID，UserID，QueryHash等等，以及他们之间的互相组合。
@@ -39,7 +39,7 @@ kv -&gt; struct 就算解决了。而且比json还要快。
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='dev'><meta property='article:tag' content='work'><meta property='article:published_time' content='2020-05-30T23:12:46&#43;08:00'/><meta property='article:modified_time' content='2020-05-30T23:12:46&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>ML-Feature-Platform • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/ml-feature-platform/'>
@@ -131,83 +131,49 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<h2 id="前言">前言</h2>
-
+  <h2 id="前言">前言</h2>
 <p>大概从去年十二月份，领导们想做这样一件事情，重构一下算法组fetch feature的方法，当时是用的codis，用pb encode了一个大的结构体，结构体里包含了很多feature。当小组成员越来越多，模型越来越多，数据越来越多的时候，结构体里面的feature也越来越多，导致不管是添加新的feature还是删除不用的feature都非常麻烦，甚至都不知道哪些feature在用，哪些不用。渐渐的就变成了一座山。</p>
-
 <p>然后我半路加入了讨论，一开始也是非常懵逼，都不知道他们在说什么，直到等听过一遍代码之后才有了大概的了解，开始着手设计新的方案。</p>
-
 <p>大概花了一周的时间去设计：</p>
-
 <ul>
 <li>数据还是存在Redis里面，从Codis换成了Cache Cloud；</li>
 <li>通过一个Config Server来
-
 <ul>
 <li>配置模型的feature，统一管理</li>
 <li>配置Redis的地址，分国家，分feature类别</li>
 <li>配置生成feature数据的job，包括数据源，写入地址等等</li>
-</ul></li>
+</ul>
+</li>
 <li>重构了生成日志的方式，这里的日志是“请求”和“返回的数据”，用来训练模型</li>
 <li>重构了数据的存储方式，将大的pb结构拆成一个一个的hset，方便增删</li>
 </ul>
-
 <p>设计上个人觉得没什么问题，领导也表示由我主导，但实际上我的话语权并不高，事情的发展也不在我的掌控之中，最终的效果就会有一些出入。更不用说不在我负责范围内的事情了，撇开不谈。</p>
-
 <p>上周终于把全部国家的Redis资源申请到了，所以个人认为这件事情也有了一个阶段性成果（五个月？），所以记录一下这个项目和中间遇到的一些问题，希望能给以后的自己有所启发，或者反思。</p>
-
 <h2 id="思路">思路</h2>
-
 <h3 id="名词定义">名词定义</h3>
-
 <p>Category - 表示一类的feature，比如Item Category，Shop Category，同一个Category中的QueryKey是相同的</p>
-
 <p>QueryKey - 如何从Redis中读取feature，以及如何写入，其实就是Redis的Key。可以分为 ItemID，ShopID，UserID，QueryHash等等，以及他们之间的互相组合。</p>
-
 <p>Config Server - 存储和管理Redis的地址，不同的Category不同的国家用哪个Redis，因为写入和读取都需要用到，但是写入和读取又不在同一个项目里，所以不能配置文件的方式保存。这个Server还会管理每个模型用到的feature set，跑map job的时候的配置，还有一些乱七八糟的东西。其实就是一个配置中心，字如其名。解耦用的。</p>
-
 <p>Feature Set - 包含了要获取哪一些feature，这些feature分别在哪些category里。</p>
-
-<h2 id="问题-优化">问题 &amp; 优化</h2>
-
+<h2 id="问题--优化">问题 &amp; 优化</h2>
 <h3 id="1-序列化">1. 序列化</h3>
-
 <p>核心重构就是把存储的数据结构给换了，从pb structure转换成redis的kv，还是hset。因为client还是想拿到一个结构体，所以首先要面临的就是如何读取redis中的数据，并转换成相应的结构体的问题。</p>
-
 <p>旧方案用 <code>pb.Unmarshal</code> 就可以了，但为了让数据读取更灵活（有些模型只需要pb结构里的某几个feature，但因为是整存整取的，所以只能全部取出，再挑出自己模型需要的数据，相应的就给redis带来了压力，不仅是带宽压力，更是Redis的IO压力，以及反序列化的CPU压力），我们就得转换从redis中读取到的KV。</p>
-
 <p>说来也巧，一年前写过一个从环境变量转换成golang structure的一个lib，曾经给ES client用过，拿到这里来刚刚好，无非是数据源从env变成了redis kv，核心方法还是一样的，而且feature的格式是golang的基础类型，以及基础类型的array，完全支持。</p>
-
 <p>kv -&gt; struct 就算解决了。而且比json还要快。</p>
-
 <h3 id="2-redis-key">2. Redis Key</h3>
-
 <p>因为我们的feature全是用redis key组织的，所以redis中就有非常多的key，此时key的大小就非常重要，能省一个字节，就省一个字节。</p>
-
 <p>一开始是用 <code>SET item:123456:name iPhone</code>, <code>SET item:123456:price 1000000</code> 这种方式组织的，但Redis在实现key的时候，会额外占用一些空间，所以key越少越好，越紧凑越好，然后就演化成了 <code>HSET item:12345 name iPhone</code>, <code>HSET item:12345 price 1000000</code>, 但还是很大，我连这个 <code>item</code>， <code>name</code>， <code>price</code> 都不想要。于是又演化了一版，将这些定义存放到了Config Server里面，给每个category编了号，对应的，给每个category中的feature也编了号，这里唯一的缺陷是编号只能累加（或者删除旧的编号，人工赋值新的也行，但最后还是用<code>autoincrease</code>了事儿）。</p>
-
 <p>通过编号的方式，给Redis省下了不少空间，因为数据非常紧凑，几乎没有任何冗余信息。</p>
-
 <h3 id="3-latency">3. Latency</h3>
-
 <p>延时问题是永远也优化不完的。</p>
-
 <p>基本思想是从Redis中取Key，但具体怎么实现，就八仙过海了。初版的性能非常差，因为假设每个请求中有200个item，每一个item要获取5个category中的10个feature，最终要获取的key的数量就是 200×5×10=1w。从redis中获取1w个key，保证在10ms一下，非常大的挑战，即使用了pipeline，分区分块，工程实现上也是不小的挑战。</p>
-
 <p>过程很闹心，直到有一天晚饭前想到一个方法，嗯，说实话我现在不看代码已经忘记是怎么实现的了，只能记得核心思想是整理归并所有的key，把相同Category的key合在一起，整合成N个redis pipeline请求，并发，得到之后再分别赋值给对应的item。罗里罗嗦的，但竟然bug free就过了。看来还是晚上效率高，尤其是刚吃饱之后。最终达到的效果是，p99 20ms, p90 10ms, p50 3ms. （嗯，数字是我编的，测试效果比这好，线上效果比这个差。）</p>
-
 <p>还有一个Latency问题是，借鉴别人的经验，这个feature server是一个gRPC的server，里面还集成了memory cache（后面证明这个memory cache性能很差），然后gRPC的返回结果里面，数据量实在太大了，如果再加上网络的延时以及不稳定因素，直接无法上线。然后我就各种测试，各种优化，gRPC就是不行。</p>
-
 <p>最后，我把这个gRPC server去掉了，直接换成了一个library，由scoring server直接调用，省去了多余的gRPC call，从Redis中直接获取feature。果真最简单的最有效，微服务要慎重。</p>
-
 <h3 id="4-oom">4. OOM</h3>
-
 <p>还是因为数据量太大，调用我library的scoring server经常OOM，只能不厌其烦的pprof，一点一点抠，一点一点优化。</p>
-
 <p>经验如下：</p>
-
 <ul>
 <li><code>fmt.Sprintf</code> 性能很差，不如直接concast string</li>
 <li>alloc太多相同的结构，一定要用sync pool，别嫌麻烦</li>
@@ -216,41 +182,23 @@ if (!doNotTrack) {
 <li><code>strconv.ParseXXX</code> 要比 <code>fmt.Sprint</code> 要好</li>
 <li>etc.</li>
 </ul>
-
 <p>枯燥乏味，锱铢必较。</p>
-
 <h3 id="5-记录请求和返回结果">5. 记录请求和返回结果</h3>
-
 <p>这次重构，还有一个重要的功能就是记录请求以及结果，作为训练模型的输入数据。但是我们有太多请求了，每一条请求的数据量都很大。旧方案只保留了20%的请求，但Kafka仍然压力很大。</p>
-
 <p>为了优化这一点，在feature写入和获取的时候，我们引入了<code>version</code>的概念，其实就是写入这批feature的时间戳，同一个Category的写入时间是一致的，是由同一个spark job写的。所以在记录这个feature的时候，只需要记录这个<code>version</code>，就能知道在这个query key下面所有feature的数值。</p>
-
 <p>如果log中某一条记录的item是123,version是456,那么我们就可以从hadoop中拿到对应的原始数据，然后再补全log就好了。这样就减轻了Kafka的压力。（request log是通过Kafka传送的）</p>
-
 <p>至于后面数据join，生成训练数据的过程，对我而言已然超纲。我也不想去干涉别人的工作以及实现方法，一个外行，没资格提意见。</p>
-
 <h3 id="6-redis-high-latency">6. Redis high latency</h3>
-
 <p>这个问题其实所有人都有，只不过我们的数据量太大了，所以反映到p99上就很明显，当然也有可能是别人不在乎p99。其实我也不想在乎，又不影响CTR或者Revenue，超时几个请求有什么关系呢，哪怕花1年的时间，将p99优化了10ms，能带来多大的收益呢。</p>
-
 <p>其中有Cache Cloud团队的问题，也有内核的问题，也有infra的问题，总之比较复杂。对于我来说，无能为力的事情，顶多顶多吐槽一句，然后该干嘛干嘛。</p>
-
 <h2 id="反思">反思</h2>
-
 <p>就这个项目而言，很新奇，是我之前没接触过的领域，全新，fresh new。当中解决的乱七八糟的问题，不能说有趣，当然可能在当时觉得有趣，只是现在都过了好久好久了，也没什么激情了。能全神贯注的写代码是一种享受，也是一种奢侈。</p>
-
 <p>有些事情总要有人做，你不做，我不做，就永远不会实现。而且很多人都是只说不做，对，你说的没错，所以呢，怎么做？我也很讨厌喊口号的人。所以，自己把事儿做了，让老板知道，年终的时候给自己个A。别一天到晚老说说说。</p>
-
 <p>项目的规划很重要，说几天做完，就要几天做完，一旦有人不遵守，那么就会陷入集体沼泽，互相牵制，到项目后期我连代码都忘了，有的部分还没完成。</p>
-
 <p>一定要想清楚，想清楚要做什么，想清楚要怎么做，想清楚影响和后果是什么，想清楚可能会遇到哪些问题，如何解决，想清楚目标是什么。我很讨厌半路忽然有需求变更，就像四合院都盖了一半了，说：“诶，你看我们如果换成大别墅怎么样”。简直想杀人的心都有了。但还有些没想清楚的问题时有发生，又不能骂人，只能自己憋着。心态非常重要了。</p>
-
 <p>跨组协作的时候，隔三岔五催一下是好的，会哭的孩子有奶喝。在你这里，项目是P1, 可是在别人眼里只是P2,或者P4, 而且在很忙的情况下，很有可能顾不上你的需求，所以，催，使劲催。为达目的不择手段地催。</p>
-
 <p>再就是盘子问题，这个项目而言，其实职责划分不是很清晰，既没有名义上，也没有实质上的PIC，领域四分五裂，盘子也四分五裂，导致没人愿意干的杂活都丢给我，但任劳任怨也不是坏事儿，慢慢来就好了。只是我还是很在意职责划分，所谓边界。如果我是领导的话，我就把每个人的任务分清楚，而不是让下面人自己协调。哪有什么平级，人可是社会动物啊。</p>
-
 <p>无能为力的任务，就交给时间。自己能做的都做了，不能做的也都做了，把基本情况阐述到ticket里面，然后转战下一战场。</p>
-
 <p>最后，严于律己，宽以待人。</p>
 
 </div>
@@ -288,6 +236,16 @@ if (!doNotTrack) {
 </svg>
  </span>
         <span class='screen-reader-text'>: </span>2020-1-1</a>
+    </div><div class='next-entry sep-before'>
+      <a href='/posts/2020-12-31/'>
+        <span class='screen-reader-text'>: </span>2020-12-31<span aria-hidden='true'> <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
     </div></div>
 </nav>
 

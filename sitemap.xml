@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
@@ -8,7 +8,7 @@
   
   <url>
     <loc>https://wrfly.kfd.me/posts/</loc>
-    <lastmod>2020-05-30T23:12:46+08:00</lastmod>
+    <lastmod>2020-12-30T23:08:35+08:00</lastmod>
   </url>
   
   <url>
@@ -24,8 +24,33 @@
   </url>
   
   <url>
+    <loc>https://wrfly.kfd.me/posts/2020-12-31/</loc>
+    <lastmod>2020-12-30T23:08:35+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://wrfly.kfd.me/categories/</loc>
-    <lastmod>2020-05-30T23:12:46+08:00</lastmod>
+    <lastmod>2020-12-30T23:08:35+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/daily/</loc>
+    <lastmod>2020-12-30T23:08:35+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/categories/daily/</loc>
+    <lastmod>2020-12-30T23:08:35+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/</loc>
+    <lastmod>2020-12-30T23:08:35+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/</loc>
+    <lastmod>2020-12-30T23:08:35+08:00</lastmod>
   </url>
   
   <url>
@@ -44,17 +69,7 @@
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/tags/</loc>
-    <lastmod>2020-05-30T23:12:46+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://wrfly.kfd.me/tags/work/</loc>
-    <lastmod>2020-05-30T23:12:46+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://wrfly.kfd.me/</loc>
     <lastmod>2020-05-30T23:12:46+08:00</lastmod>
   </url>
   
@@ -64,17 +79,12 @@
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/categories/daily/</loc>
-    <lastmod>2020-01-01T22:20:24+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://wrfly.kfd.me/tags/daily/</loc>
-    <lastmod>2020-01-01T22:20:24+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://wrfly.kfd.me/tags/experience/</loc>
+    <lastmod>2019-12-01T16:15:21+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/categories/go/</loc>
     <lastmod>2019-12-01T16:15:21+08:00</lastmod>
   </url>
   
@@ -96,6 +106,11 @@
   <url>
     <loc>https://wrfly.kfd.me/categories/share/</loc>
     <lastmod>2019-12-01T16:15:21+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wrfly.kfd.me/tags/go/</loc>
+    <lastmod>2019-09-30T00:41:31+08:00</lastmod>
   </url>
   
   <url>
@@ -174,18 +189,8 @@
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/tags/go/</loc>
-    <lastmod>2018-12-08T16:48:09+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://wrfly.kfd.me/posts/multi-error-handling/</loc>
     <lastmod>2018-12-08T16:48:09+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://wrfly.kfd.me/categories/go/</loc>
-    <lastmod>2018-11-25T14:34:14+08:00</lastmod>
   </url>
   
   <url>
@@ -239,12 +244,12 @@
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/categories/tips/</loc>
+    <loc>https://wrfly.kfd.me/tags/tips/</loc>
     <lastmod>2018-07-31T23:00:06+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/tags/tips/</loc>
+    <loc>https://wrfly.kfd.me/categories/tips/</loc>
     <lastmod>2018-07-31T23:00:06+08:00</lastmod>
   </url>
   
@@ -279,12 +284,12 @@
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/categories/debug/</loc>
+    <loc>https://wrfly.kfd.me/tags/debug/</loc>
     <lastmod>2018-05-10T23:40:26+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/tags/debug/</loc>
+    <loc>https://wrfly.kfd.me/categories/debug/</loc>
     <lastmod>2018-05-10T23:40:26+08:00</lastmod>
   </url>
   
@@ -319,12 +324,12 @@
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/categories/k8s/</loc>
+    <loc>https://wrfly.kfd.me/tags/k8s/</loc>
     <lastmod>2018-04-22T22:18:19+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://wrfly.kfd.me/tags/k8s/</loc>
+    <loc>https://wrfly.kfd.me/categories/k8s/</loc>
     <lastmod>2018-04-22T22:18:19+08:00</lastmod>
   </url>
   

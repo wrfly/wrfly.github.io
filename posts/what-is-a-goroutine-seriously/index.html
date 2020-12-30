@@ -3,7 +3,7 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='拖延了很久的一篇. 借面试的机会, 梳理一遍.
- init and pstree 在系统中, 所有的执行和操作都是通过进程实现的. 当我们按下电源按钮的那一刻, 就相当于盘古开天辟地了, 从此, 所有的进程都会&rdquo;依附于&rdquo;一个叫init进程的特殊进程. 关于Linux初始化init进程, 可以看下这一个系列:
+ init and pstree 在系统中, 所有的执行和操作都是通过进程实现的. 当我们按下电源按钮的那一刻, 就相当于盘古开天辟地了, 从此, 所有的进程都会&quot;依附于&quot;一个叫init进程的特殊进程. 关于Linux初始化init进程, 可以看下这一个系列:
 浅析 Linux 初始化 init 系统:
  Sysvinit UpStart Systemd  我们可以通过 pstree 来查看进程之间的关系.
 Process and Thread 严格意义上讲, 并没有进程,线程的区别, Linus 在一篇邮件中表达了自己的观点: http://lkml.iu.edu/hypermail/linux/kernel/9608/0191.html
@@ -14,7 +14,7 @@ Process and Thread 严格意义上讲, 并没有进程,线程的区别, Linus �
 
 <meta property='og:title' content='What-is-a-Goroutine, seriously • wrfly&#39;s blog'>
 <meta property='og:description' content='拖延了很久的一篇. 借面试的机会, 梳理一遍.
- init and pstree 在系统中, 所有的执行和操作都是通过进程实现的. 当我们按下电源按钮的那一刻, 就相当于盘古开天辟地了, 从此, 所有的进程都会&rdquo;依附于&rdquo;一个叫init进程的特殊进程. 关于Linux初始化init进程, 可以看下这一个系列:
+ init and pstree 在系统中, 所有的执行和操作都是通过进程实现的. 当我们按下电源按钮的那一刻, 就相当于盘古开天辟地了, 从此, 所有的进程都会&quot;依附于&quot;一个叫init进程的特殊进程. 关于Linux初始化init进程, 可以看下这一个系列:
 浅析 Linux 初始化 init 系统:
  Sysvinit UpStart Systemd  我们可以通过 pstree 来查看进程之间的关系.
 Process and Thread 严格意义上讲, 并没有进程,线程的区别, Linus 在一篇邮件中表达了自己的观点: http://lkml.iu.edu/hypermail/linux/kernel/9608/0191.html
@@ -25,7 +25,7 @@ Process and Thread 严格意义上讲, 并没有进程,线程的区别, Linus �
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='go'><meta property='article:published_time' content='2018-07-02T12:29:07&#43;08:00'/><meta property='article:modified_time' content='2018-07-02T12:29:07&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>What-is-a-Goroutine, seriously • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/what-is-a-goroutine-seriously/'>
@@ -117,115 +117,74 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<blockquote>
+  <blockquote>
 <p>拖延了很久的一篇. 借面试的机会, 梳理一遍.</p>
 </blockquote>
-
 <h2 id="init-and-pstree">init and <code>pstree</code></h2>
-
-<p>在系统中, 所有的执行和操作都是通过进程实现的. 当我们按下电源按钮的那一刻, 就相当于盘古开天辟地了, 从此, 所有的进程都会&rdquo;依附于&rdquo;一个叫init进程的特殊进程. 关于Linux初始化init进程, 可以看下这一个系列:</p>
-
+<p>在系统中, 所有的执行和操作都是通过进程实现的. 当我们按下电源按钮的那一刻, 就相当于盘古开天辟地了, 从此, 所有的进程都会&quot;依附于&quot;一个叫init进程的特殊进程. 关于Linux初始化init进程, 可以看下这一个系列:</p>
 <p><strong>浅析 Linux 初始化 init 系统</strong>:</p>
-
 <ul>
-<li><a href="https://www.ibm.com/developerworks/cn/linux/1407_liuming_init1/index.html" target="_blank">Sysvinit</a></li>
-<li><a href="https://www.ibm.com/developerworks/cn/linux/1407_liuming_init2/index.html" target="_blank">UpStart</a></li>
-<li><a href="https://www.ibm.com/developerworks/cn/linux/1407_liuming_init3/index.html" target="_blank">Systemd</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/linux/1407_liuming_init1/index.html">Sysvinit</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/linux/1407_liuming_init2/index.html">UpStart</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/linux/1407_liuming_init3/index.html">Systemd</a></li>
 </ul>
-
 <p>我们可以通过 <code>pstree</code> 来查看进程之间的关系.</p>
-
 <h2 id="process-and-thread">Process and Thread</h2>
-
-<p>严格意义上讲, 并没有进程,线程的区别, Linus 在一篇邮件中表达了自己的观点: <a href="http://lkml.iu.edu/hypermail/linux/kernel/9608/0191.html" target="_blank">http://lkml.iu.edu/hypermail/linux/kernel/9608/0191.html</a></p>
-
+<p>严格意义上讲, 并没有进程,线程的区别, Linus 在一篇邮件中表达了自己的观点: <a href="http://lkml.iu.edu/hypermail/linux/kernel/9608/0191.html">http://lkml.iu.edu/hypermail/linux/kernel/9608/0191.html</a></p>
 <p>不管是Process,还是Threads, 都是一些可被执行的实体,<code>context of execution (COE)</code> or <code>independent sequences of execution</code>.</p>
-
 <p>但如果说区别, 进程之间不会共享内存(一般来讲), 而线程之间则会共享进程的内存.
 线程是进程资源的子集, 他们唯一的区别在于是否共享了资源.</p>
-
 <blockquote>
 <p>That state includes things like CPU state (registers etc), MMU state (page mappings), permission state (uid, gid) and various &ldquo;communication states&rdquo; (open files, signal handlers etc).</p>
 </blockquote>
-
 <p>一个进程所包含的资源(或者称之为状态)有, CPU状态(比如寄存器), 内存状态(Memory management unit, 内存映射), 权限状态(用户是谁, 在哪个组里), 以及一些其他的可通信的状态, 比如打开的文件, 接受的信号等.</p>
-
 <p>在threads之间, 以上这些状态都是共享的. 而不同的processes之间则是相互独立的.</p>
-
-<p>如果说进程是线程的容器, 也能讲得通, 因为在大多数现代操作系统中(面向线程设计的系统), 一个进程最少包含了一个线程, 这里的包含, 就有包容, 容纳的意思. 进程就是线程执行的容器和&rdquo;载体&rdquo;.</p>
-
-<p>&ldquo;进程/线程&rdquo;状态变化:</p>
-
-<p><img src="https://www.ibm.com/developerworks/cn/linux/l-task-killable/figure1.gif" alt="task state" /></p>
-
+<p>如果说进程是线程的容器, 也能讲得通, 因为在大多数现代操作系统中(面向线程设计的系统), 一个进程最少包含了一个线程, 这里的包含, 就有包容, 容纳的意思. 进程就是线程执行的容器和&quot;载体&rdquo;.</p>
+<p>&ldquo;进程/线程&quot;状态变化:</p>
+<p><img src="https://www.ibm.com/developerworks/cn/linux/l-task-killable/figure1.gif" alt="task state"></p>
 <p>关系图:</p>
-
-<p><img src="https://i.stack.imgur.com/NVNge.jpg" alt="" /></p>
-
+<p><img src="https://i.stack.imgur.com/NVNge.jpg" alt=""></p>
 <blockquote>
 <ul>
 <li>Every process is a thread (primary thread).</li>
 <li>But every thread is not a process. It is a part(entity) of a process.</li>
 </ul>
 </blockquote>
-
-<p>总的来说, 进程独立拥有&rdquo;进行操作&rdquo;所需要的全部资源, 而线程共享他们. 进程可以在 <code>/proc</code>目录下发现, 线程则不会. 进程是通过<code>fork</code>或<code>exec</code>创建出来的, 而线程是通过<code>clone</code>创建出来的. 但本质上, 两者都是可以被执行的实体, 或者叫 <code>task</code>, 是被CPU调度的单位.</p>
-
-<p>另外, 一个process在内存中分为了几个部分: <strong>Text Segment</strong>, <strong>Data Segment</strong>, <strong>Stack Segment</strong>, 具体的细节和解释可以看这里: <a href="http://www.hep.wisc.edu/~pinghc/Process_Memory.htm" target="_blank">Process and Memory</a></p>
-
-<h2 id="fork-vfork-exec-clone">fork/vfork/exec/clone</h2>
-
+<p>总的来说, 进程独立拥有&quot;进行操作&quot;所需要的全部资源, 而线程共享他们. 进程可以在 <code>/proc</code>目录下发现, 线程则不会. 进程是通过<code>fork</code>或<code>exec</code>创建出来的, 而线程是通过<code>clone</code>创建出来的. 但本质上, 两者都是可以被执行的实体, 或者叫 <code>task</code>, 是被CPU调度的单位.</p>
+<p>另外, 一个process在内存中分为了几个部分: <strong>Text Segment</strong>, <strong>Data Segment</strong>, <strong>Stack Segment</strong>, 具体的细节和解释可以看这里: <a href="http://www.hep.wisc.edu/~pinghc/Process_Memory.htm">Process and Memory</a></p>
+<h2 id="forkvforkexecclone">fork/vfork/exec/clone</h2>
 <p><strong><code>fork</code></strong>: 对当前进程进行复制, 复制出来的进程几乎跟原始进程一摸一样. 新的进程(子进程)拥有一个新的ID (PID), 他的 &ldquo;parent proess ID&rdquo; (PPID) 是其原始进程的PID. 因为这两个进程运行的代码是一摸一样的, 他们可以相互区分开来, 通过 fork 调用. 原始进程的fork会返回子进程的PID, 而子进程则会返回0. 如果在fork中有异常发生, 那么父进程则不会得到子进程的ID(而是得到一个错误码), 子进程也不会被创建.</p>
-
 <p><strong><code>vfork</code></strong>: <code>vfork</code> 和 <code>fork</code> 的区别在于, 当父进程调用了<code>vfork</code>的时候, 其本身会被suspended(临时), 即不再RUNNING. 子进程则会借用父进程的地址空间. 这种奇怪的状态将会一直持续到子进程调用了 <code>execve</code>或者退出. 然后父进程接着执行.
 这就意味着, 由<code>vfork</code>产生的子进程必须要格外的小心, 以避免对父进程变量的异常操作. 而且子进程也不应该直接<code>exit()</code>, 而是要 <code>_exit()</code>.</p>
-
 <p><strong><code>exec</code></strong>: 这是用来替换当前进程的一个调用. 它将程序加载到当前进程的空间内, 并从入口处开始执行. 除非<code>exec</code>有错误产生, 否则控制权就不会交给原先的进程了.</p>
-
 <p><strong><code>clone</code></strong>: 类似于<code>fork</code>, 都是创建一个新的进程. 但是与<code>fork</code>不同的是, <code>clone</code>允许创建出来的新的进程共享其父进程的一部分资源(这里创建出来的新的进程, 也可以被称作线程, 或者协程, 因为他们共享资源了). 这些资源包括, 内存空间, 文件描述符(们), 接受的信号(们), 等.</p>
-
 <p>当子进程(线程/协程)通过<code>clone</code>创建出来的时候, 他们执行的是某个具体的function(<code>fn(arg)</code>), 这一点就与<code>fork</code>不同了, 因为<code>fork</code>执行的是整个程序, 是从程序的入口处开始执行的. 这个function是一个指向某个函数的指针, 这个指针由子进程执行(作为子进程的entrypoint). <code>fn(arg)</code> arg作为参数传递给子进程(线程/协程).</p>
-
 <p>当这个<code>fn(arg)</code>函数返回的时候, 子进程也就结束了. <code>fn(arg)</code>的返回码就是子进程的退出状态码.</p>
-
 <p>在底层, <code>fork</code>也是由<code>clone</code>产生的, 只不过参数不同. 不同的参数让<code>clone</code>能够复制进程, 或者创造线程.</p>
-
 <h2 id="goroutine">Goroutine</h2>
-
 <p>综上来看, 进程, 线程, 都是一些有资源(内存, 文件描述符, CPU状态), 可以被执行的实体. 那么goroutine也不例外.</p>
-
 <p>本质上, goroutine也是通过<code>clone</code>产生的, 其也共享了进程的各种资源, 但是又比线程更轻量, 因为相比于thread的内存占用(≥ 1MB), goroutine要小很多(2KB).</p>
-
 <p>而且thread是由OS管理的, 这就给系统带来了开销, 而goroutine是由Go的Runtime管理的, go有自己的一套调度模型, 这也减少了对系统的负担.</p>
-
-<p>那么为什么goroutine的内存占用会小很多呢? 可以参见 <strong><a href="https://dave.cheney.net/2014/06/07/five-things-that-make-go-fast" target="_blank">five-things-that-make-go-fast</a></strong> 的第五部分.</p>
-
-<p>大致上是说, 因为thread之间需要一个<code>guard page</code>来避免stack和heap之间的内存碰撞(如果碰撞了, 程序就退出). 因为threads很难预测自己的内存使用, 所以就需要预留一些内存给每个thread的stack以及其gard page(为了不让stack和heap碰撞), 这就造成了thread的&rdquo;内存浪费&rdquo;(也不能说是浪费, 因为是没办法的事情). 这个内存大概是&rdquo;兆级别&rdquo;的.</p>
-
+<p>那么为什么goroutine的内存占用会小很多呢? 可以参见 <strong><a href="https://dave.cheney.net/2014/06/07/five-things-that-make-go-fast">five-things-that-make-go-fast</a></strong> 的第五部分.</p>
+<p>大致上是说, 因为thread之间需要一个<code>guard page</code>来避免stack和heap之间的内存碰撞(如果碰撞了, 程序就退出). 因为threads很难预测自己的内存使用, 所以就需要预留一些内存给每个thread的stack以及其gard page(为了不让stack和heap碰撞), 这就造成了thread的&quot;内存浪费&rdquo;(也不能说是浪费, 因为是没办法的事情). 这个内存大概是&quot;兆级别&quot;的.</p>
 <p>而goroutine在这一方面则有很大不同. 首先就是取消了<code>gard page</code>. go runtime在每个函数执行之前都会检查一下是否有足够的stack供其使用, 如果没有, runtime就会分配更多内存给它. 因为有这样一种检查机制, goroutine的初始stack就可以变得很小(不够了再分配), 就可以省下很多资源. goroutine结束的时候, 再将内存释放回heap.</p>
-
-<p>而go runtime的调度, 可以看一下我之前的一篇<a href="https://wrfly.kfd.me/posts/go-scheduler/" target="_blank">翻译</a>.</p>
-
+<p>而go runtime的调度, 可以看一下我之前的一篇<a href="https://wrfly.kfd.me/posts/go-scheduler/">翻译</a>.</p>
 <p>另外, 下面的参考链接中都说了很多, 非常建议感兴趣的同学读一下.</p>
-
 <h2 id="refs">Refs</h2>
-
 <ul>
-<li><a href="https://go101.org/article/control-flows-more.html" target="_blank">goroutines</a></li>
-<li><a href="https://stackoverflow.com/questions/200469/what-is-the-difference-between-a-process-and-a-thread" target="_blank">the-difference-between-a-process-and-a-thread</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Process_(computing)" target="_blank">wiki/Process</a></li>
-<li><a href="https://stackoverflow.com/questions/2483041/what-is-the-difference-between-fork-and-thread" target="_blank">the-difference-between-fork-and-thread</a></li>
-<li><a href="https://know-embedded.blogspot.com/2014/12/the-difference-between-fork-vfork-exec.html" target="_blank">the-difference-between-fork-vfork-exec</a></li>
-<li><a href="https://stackoverflow.com/questions/4856255/the-difference-between-fork-vfork-exec-and-clone" target="_blank">fork-vfork-exec-and-clone</a></li>
-<li><a href="http://www.hep.wisc.helloedu/~pinghc/Process_Memory.htm" target="_blank">Process and Memory</a></li>
-<li><a href="https://stackoverflow.com/questions/18904292/is-it-true-that-fork-calls-clone-internally" target="_blank">is-it-true-that-fork-calls-clone-internally</a></li>
-<li><a href="http://tleyden.github.io/blog/2014/10/30/goroutines-vs-threads/" target="_blank">Goroutines vs Threads</a></li>
-<li><a href="https://codeburst.io/why-goroutines-are-not-lightweight-threads-7c460c1f155f" target="_blank">Why goroutines are not lightweight threads?</a></li>
-<li><a href="https://www.tutorialspoint.com/operating_system/os_processes.htm" target="_blank">Operating System - Processes</a></li>
-<li><strong><a href="https://dave.cheney.net/2014/06/07/five-things-that-make-go-fast" target="_blank">five-things-that-make-go-fast</a></strong></li>
-<li><a href="https://dave.cheney.net/2013/06/02/why-is-a-goroutines-stack-infinite" target="_blank">why-is-a-goroutines-stack-infinite</a></li>
+<li><a href="https://go101.org/article/control-flows-more.html">goroutines</a></li>
+<li><a href="https://stackoverflow.com/questions/200469/what-is-the-difference-between-a-process-and-a-thread">the-difference-between-a-process-and-a-thread</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Process_(computing)">wiki/Process</a></li>
+<li><a href="https://stackoverflow.com/questions/2483041/what-is-the-difference-between-fork-and-thread">the-difference-between-fork-and-thread</a></li>
+<li><a href="https://know-embedded.blogspot.com/2014/12/the-difference-between-fork-vfork-exec.html">the-difference-between-fork-vfork-exec</a></li>
+<li><a href="https://stackoverflow.com/questions/4856255/the-difference-between-fork-vfork-exec-and-clone">fork-vfork-exec-and-clone</a></li>
+<li><a href="http://www.hep.wisc.helloedu/~pinghc/Process_Memory.htm">Process and Memory</a></li>
+<li><a href="https://stackoverflow.com/questions/18904292/is-it-true-that-fork-calls-clone-internally">is-it-true-that-fork-calls-clone-internally</a></li>
+<li><a href="http://tleyden.github.io/blog/2014/10/30/goroutines-vs-threads/">Goroutines vs Threads</a></li>
+<li><a href="https://codeburst.io/why-goroutines-are-not-lightweight-threads-7c460c1f155f">Why goroutines are not lightweight threads?</a></li>
+<li><a href="https://www.tutorialspoint.com/operating_system/os_processes.htm">Operating System - Processes</a></li>
+<li><strong><a href="https://dave.cheney.net/2014/06/07/five-things-that-make-go-fast">five-things-that-make-go-fast</a></strong></li>
+<li><a href="https://dave.cheney.net/2013/06/02/why-is-a-goroutines-stack-infinite">why-is-a-goroutines-stack-infinite</a></li>
 </ul>
 
 </div>

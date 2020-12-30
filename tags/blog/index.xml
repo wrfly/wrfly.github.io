@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>blog on wrfly&#39;s blog</title>
@@ -34,12 +34,18 @@ Tags的问题 Jekyll的tags可以用空格区分，但是在这里换成了hugo�
       <guid>https://wrfly.kfd.me/posts/build-my-jekyll-blog/</guid>
       <description>I suggest U visit this site first.
 -Jekyll&amp;rsquo;home page-
- md文件末尾不能存在空格，否则浏览器解析会出错误
- jekyll插入图片格式 “ ![name](link) ”
- md的名字中存在的&amp;rdquo;-&amp;ldquo;会被解析成空格
- 首先要在本地搭建好jekyll环境，
-   sudo apt-get install gem sudo gem install jekyll sudo gem install [相关组件]  可以搜一下 jekyll-now 或者 jekyll bootstrap，都有详细的教程。
-大体目录：  . ├── 404.html #404页面 ├── about.html #about页面 ├── archive.html #汇总页面 ├── assets #css，js文件存放 │ ├── css │ │ ├── pygment-trac.css │ │ └── stylesheet.css │ └── js │ ├── main.</description>
+  md文件末尾不能存在空格，否则浏览器解析会出错误
+  jekyll插入图片格式 “ ![name](link) ”
+  md的名字中存在的&amp;rdquo;-&amp;ldquo;会被解析成空格
+  首先要在本地搭建好jekyll环境，
+  可以搜一下 jekyll-now 或者 jekyll bootstrap，都有详细的教程。
+大体目录：
+美化博客在于修改css和js，框架只是框架。
+我是先挑好了一个框架，包括字体，链接样式，背景样式，然后再在这个基础上进行修改。
+其中碰到了很多问题，首先就是这头疼的语法：
+在这儿、这儿和这儿有详细的说明。
+写的比较详细的教程：
+http://blog.csdn.net/on_1y/article/details/19259435</description>
     </item>
     
   </channel>

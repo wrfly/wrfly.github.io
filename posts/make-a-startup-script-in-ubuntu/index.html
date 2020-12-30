@@ -4,18 +4,18 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='There are many ways to make a script startup at boot. It&rsquo;s quite easy to write a script. But the most important things are making it have the execute permission and making sure that your script&rsquo;s path is correct.
 To make it execute, you need to put this command in you terminal
-chmod &#43;x your_script.sh Be sure that you have write a ** absolute path ** in your script or you won&rsquo;t get what you want.'>
+chmod &#43;x your_script.sh  Be sure that you have write a ** absolute path ** in your script or you won&rsquo;t get what you want.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Make-a-startup-script-in-Ubuntu • wrfly&#39;s blog'>
 <meta property='og:description' content='There are many ways to make a script startup at boot. It&rsquo;s quite easy to write a script. But the most important things are making it have the execute permission and making sure that your script&rsquo;s path is correct.
 To make it execute, you need to put this command in you terminal
-chmod &#43;x your_script.sh Be sure that you have write a ** absolute path ** in your script or you won&rsquo;t get what you want.'>
+chmod &#43;x your_script.sh  Be sure that you have write a ** absolute path ** in your script or you won&rsquo;t get what you want.'>
 <meta property='og:url' content='https://wrfly.kfd.me/posts/make-a-startup-script-in-ubuntu/'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='ubuntu'><meta property='article:published_time' content='2015-03-23T00:00:00Z'/><meta property='article:modified_time' content='2015-03-23T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>Make-a-startup-script-in-Ubuntu • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/make-a-startup-script-in-ubuntu/'>
@@ -108,41 +108,38 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>There are many ways to make a script startup at boot. It&rsquo;s quite easy to write a script. But the most important things are making it have the execute permission and making sure that your script&rsquo;s path is correct.</p>
-
 <p>To make it execute, you need to put this command in you terminal</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">chmod +x your_script.sh</pre></div>
+<pre><code>chmod +x your_script.sh
+</code></pre>
 <p>Be sure that you have write a ** absolute path ** in your script or you won&rsquo;t get what you want. For example, if you want to run a program that you installed yourself (such as shadowsocks) you should write <em>/opt/shadowsocks/shadowsocks</em> not <em>shadowsocks</em> even you can easily run this in your teirminal. This is because the system don&rsquo;t know what the command mean (when you type a shadowsocks, the system will find where the program is and then execute it.)</p>
-
 <p>Then put your script in <em>/etc/init.d/</em> for example ( /etc/init.d/your_script.sh ) and next, run this command</p>
-
 <p>This command will make a symble link to rc&rsquo;x&rsquo;.d (x = 2,3,4,5,) and it will startup at boot.</p>
-
 <p>This is a sample init_script blow:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><span style="color:#75715e">#! /bin/sh
-</span><span style="color:#75715e"></span><span style="color:#75715e">### BEGIN INIT INFO</span>
-<span style="color:#75715e"># Provides:          Shadowsocks</span>
-<span style="color:#75715e"># Required-Start:    $remote_fs $syslog</span>
-<span style="color:#75715e"># Required-Stop:     $remote_fs $syslog</span>
-<span style="color:#75715e"># Default-Start:     2 3 4 5</span>
-<span style="color:#75715e"># Default-Stop:      0 1 6</span>
-<span style="color:#75715e"># Short-Description: Start ssserver at boot time</span>
-<span style="color:#75715e"># Description:       shadowsocks server.</span>
-<span style="color:#75715e">### END INIT INFO</span>
-dir<span style="color:#f92672">=</span>/opt/shadowsocks
-<span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span> in
-  start<span style="color:#f92672">)</span>
-    nohup /usr/local/bin/ssserver -c <span style="color:#e6db74">${</span>dir<span style="color:#e6db74">}</span>/config.json &gt; <span style="color:#e6db74">${</span>dir<span style="color:#e6db74">}</span>/log &amp;
+<pre><code>#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          Shadowsocks
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start ssserver at boot time
+# Description:       shadowsocks server.
+### END INIT INFO
+dir=/opt/shadowsocks
+case &quot;$1&quot; in
+  start)
+    nohup /usr/local/bin/ssserver -c ${dir}/config.json &gt; ${dir}/log &amp;
     ;;
-  stop<span style="color:#f92672">)</span>
+  stop)
     pkill ssserver
     ;;
-  *<span style="color:#f92672">)</span>
-   echo <span style="color:#e6db74">&#34;Usage:service shadowsocks {start|stop}&#34;</span>
-    exit <span style="color:#ae81ff">1</span>
+  *)
+   echo &quot;Usage:service shadowsocks {start|stop}&quot;
+    exit 1
 ;;
-<span style="color:#66d9ef">esac</span></pre></div>
+esac
+</code></pre>
 <p>The other method is adding a single command in <em>/etc/rc.local</em> . You can put your command at the bottom of the file. But remember, always put the <strong>absolute path</strong> in your command.</p>
-
 <p>Sorry about my poor English.</p>
 
 </div>

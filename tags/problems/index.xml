@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>problems on wrfly&#39;s blog</title>
@@ -17,8 +17,9 @@
       
       <guid>https://wrfly.kfd.me/posts/hide-unity-panle-when-use-virtualbox-full-screen-model/</guid>
       <description>Question:
-Answer: &amp;gt; Disabling mini-toolbar in VMs settings is a temporary work-around. In the VirtualBox manager go to Settings-&amp;gt;General-&amp;gt;Advanced tab -&amp;gt; Mini ToolBar [] Show in Fullscreen/Seamless and make sure it is unchecked.
-在Ubuntu 下运行 VirtualBox ，开一个虚拟机，全屏模式，Unity的panle会一直显示。
+Answer:
+ Disabling mini-toolbar in VMs settings is a temporary work-around. In the VirtualBox manager go to Settings-&amp;gt;General-&amp;gt;Advanced tab -&amp;gt; Mini ToolBar [] Show in Fullscreen/Seamless and make sure it is unchecked.
+ 在Ubuntu 下运行 VirtualBox ，开一个虚拟机，全屏模式，Unity的panle会一直显示。
 取消显示只需在虚拟机的设置里把“全屏模式下显示小工具栏”取消就可以了。
 在虚拟机的&amp;ndash;设置&amp;ndash;常规&amp;ndash;高级&amp;ndash;小工具栏。
 ![setting/img/hide-unity-panle-in-virtualbox/setting.png)
@@ -50,9 +51,9 @@ Answer: &amp;gt; Disabling mini-toolbar in VMs settings is a temporary work-arou
       <guid>https://wrfly.kfd.me/posts/%E5%8E%BB%E6%8E%89blogger%E5%8D%9A%E5%AE%A2%E4%B8%AD%E7%9A%84attribution/</guid>
       <description>所谓Attribution，就是blogger博客下面的“由Blogger强力驱动” 或者“ Simple template. Powered by Blogger. ”
 有些人会觉得烦，包括我，这篇帖子是教你怎样把页脚的Attribution去掉的。
-1.到 模板 → 修改html ### ![1/img/remove_attribution_in_blogger/remove_attribution_in_blogger.png)
-2.Ctrl + F 查找代码：### &amp;lt;b:widget id=&amp;#39;Attribution1&amp;#39; locked=&amp;#39;true&amp;#39; title: 去掉blogger博客中的Attribution ![2/img/remove_attribution_in_blogger/remove_attribution_in_blogger_2.png)
-3.找到之后，把 locked=&amp;lsquo;true&amp;rsquo; 改成 locked=&amp;lsquo;false&amp;rsquo;### ![3/img/remove_attribution_in_blogger/remove_attribution_in_blogger_3.png)
+1.到 模板 → 修改html ![1/img/remove_attribution_in_blogger/remove_attribution_in_blogger.png)
+2.Ctrl + F 查找代码：### &amp;lt;b:widget id=&#39;Attribution1&#39; locked=&#39;true&#39; title: 去掉blogger博客中的Attribution  ![2/img/remove_attribution_in_blogger/remove_attribution_in_blogger_2.png)
+3.找到之后，把 locked=&#39;true&amp;rsquo; 改成 locked=&#39;false&amp;rsquo;### ![3/img/remove_attribution_in_blogger/remove_attribution_in_blogger_3.png)
 4.保存### 5.删除### 点击 布局 → 页面元素 → 修改 Attribution → 点击删除 即可删掉“由Blogger强力驱动”
 ![4/img/remove_attribution_in_blogger/remove_attribution_in_blogger_4.png)</description>
     </item>

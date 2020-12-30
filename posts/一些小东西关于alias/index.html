@@ -6,8 +6,8 @@
 具体可见维基百科
 但是它只会解析别名, 也就是说, 如果你告诉它, 张三跟张麻子是一个人, 你说张三, 他就知道你说的是张麻子, 但是如果你告诉他张三欠我一块钱, 那他就gg了, 人家并不能理解张麻子欠你一块钱啊. 或许他会说: 等等, 一块钱是什么?
 这里我遇到的问题是如何传递参数进去.
-curl ipinfo.io/8.8.8.8 这条命令是查看 8.8.8.8 的ip所在地, 那么, 如果我设置了
-alias ipadrs=&#39;curl ipinfo.io/$1&#39; 会不会成功?
+curl ipinfo.io/8.8.8.8  这条命令是查看 8.8.8.8 的ip所在地, 那么, 如果我设置了
+alias ipadrs=&#39;curl ipinfo.io/$1&#39;  会不会成功?
 当然不会, 因为他不知道, 也无法处理你给他传进去的 ip.
 没有办法么?
 当然不是.
@@ -25,8 +25,8 @@ hi world 有点意思吧! 我们已经可以把参数传递进去了耶~
 具体可见维基百科
 但是它只会解析别名, 也就是说, 如果你告诉它, 张三跟张麻子是一个人, 你说张三, 他就知道你说的是张麻子, 但是如果你告诉他张三欠我一块钱, 那他就gg了, 人家并不能理解张麻子欠你一块钱啊. 或许他会说: 等等, 一块钱是什么?
 这里我遇到的问题是如何传递参数进去.
-curl ipinfo.io/8.8.8.8 这条命令是查看 8.8.8.8 的ip所在地, 那么, 如果我设置了
-alias ipadrs=&#39;curl ipinfo.io/$1&#39; 会不会成功?
+curl ipinfo.io/8.8.8.8  这条命令是查看 8.8.8.8 的ip所在地, 那么, 如果我设置了
+alias ipadrs=&#39;curl ipinfo.io/$1&#39;  会不会成功?
 当然不会, 因为他不知道, 也无法处理你给他传进去的 ip.
 没有办法么?
 当然不是.
@@ -41,7 +41,7 @@ hi world 有点意思吧! 我们已经可以把参数传递进去了耶~
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='shell'><meta property='article:tag' content='ubuntu'><meta property='article:tag' content='share'><meta property='article:published_time' content='2015-04-11T00:00:00Z'/><meta property='article:modified_time' content='2015-04-11T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>一些小东西,关于alias • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/%E4%B8%80%E4%BA%9B%E5%B0%8F%E4%B8%9C%E8%A5%BF%E5%85%B3%E4%BA%8Ealias/'>
@@ -134,64 +134,47 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>alias 是一个设置别名的小工具~</p>
-
-<p>具体可见<a href="https://en.wikipedia.org/wiki/Alias_%28command%29" target="_blank">维基百科</a></p>
-
+<p>具体可见<a href="https://en.wikipedia.org/wiki/Alias_%28command%29">维基百科</a></p>
 <p>但是它只会解析别名, 也就是说, 如果你告诉它, 张三跟张麻子是一个人, 你说张三, 他就知道你说的是张麻子, 但是如果你告诉他张三欠我一块钱, 那他就gg了, 人家并不能理解张麻子欠你一块钱啊. 或许他会说: 等等, 一块钱是什么?</p>
-
 <p>这里我遇到的问题是如何传递参数进去.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">curl ipinfo.io/8.8.8.8</pre></div>
+<pre><code>curl ipinfo.io/8.8.8.8
+</code></pre>
 <p>这条命令是查看 8.8.8.8 的ip所在地, 那么, 如果我设置了</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">alias ipadrs=&#39;curl ipinfo.io/$1&#39;</pre></div>
+<pre><code>alias ipadrs='curl ipinfo.io/$1'
+</code></pre>
 <p>会不会成功?</p>
-
 <p>当然不会, 因为他不知道, 也无法处理你给他传进去的 ip.</p>
-
 <p>没有办法么?</p>
-
 <p>当然不是.</p>
-
 <p>这里用到的技巧是function命令.</p>
-
 <p>首先定义一个function hi() #你也可以把这个function去掉, 如果你觉得啰嗦的话,毕竟系统知道这是一个函数而不是好吃的.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#66d9ef">function</span> hi<span style="color:#f92672">(){</span>
     echo <span style="color:#e6db74">&#34;Hello  </span>$1<span style="color:#e6db74">!&#34;</span>
-<span style="color:#f92672">}</span></code></pre></div>
-<p>当然啦,你完全可以横着写:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#66d9ef">function</span> hi<span style="color:#f92672">(){</span> echo <span style="color:#e6db74">&#34;Hello </span>$1<span style="color:#e6db74">!&#34;</span>;<span style="color:#f92672">}</span> <span style="color:#75715e">#你也可以把这个function去掉, 并不像C那样声明一下返回值</span></code></pre></div>
-<p>然后你在命令行里输入</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    hi world</code></pre></div>
-<p>有点意思吧! 我们已经可以把参数传递进去了耶~</p>
-
+<span style="color:#f92672">}</span>
+</code></pre></div><p>当然啦,你完全可以横着写:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#66d9ef">function</span> hi<span style="color:#f92672">(){</span> echo <span style="color:#e6db74">&#34;Hello </span>$1<span style="color:#e6db74">!&#34;</span>;<span style="color:#f92672">}</span> <span style="color:#75715e">#你也可以把这个function去掉, 并不像C那样声明一下返回值</span>
+</code></pre></div><p>然后你在命令行里输入</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    hi world
+</code></pre></div><p>有点意思吧! 我们已经可以把参数传递进去了耶~</p>
 <p>且慢! 如果你关闭了这个窗口, 你就会发现, 为毛行不通了?</p>
-
 <p>那是必须的, 因为在这个shell中运行的是临时变量, 也就是说没有在文件中保存下来, 毕竟我们没有对文件进行操作啊, 所以呢, 就要把他记录下来, 然后每次运行的时候都会有这个function. 但是话又说回来, 往哪儿写呢?</p>
-
 <p>当然是大名鼎鼎的 .bashrc 啦!</p>
-
 <p>在 ~/.bashrc 文件中的末尾添加一句</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#66d9ef">function</span> hi<span style="color:#f92672">(){</span> echo <span style="color:#e6db74">&#34;Hello </span>$1<span style="color:#e6db74">!&#34;</span>;<span style="color:#f92672">}</span></code></pre></div>
-<p>不要忘记source一下哦~ (<code>source ~/.bashrc</code> 或者 `<code>. ~/.bashrc</code>)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#66d9ef">function</span> hi<span style="color:#f92672">(){</span> echo <span style="color:#e6db74">&#34;Hello </span>$1<span style="color:#e6db74">!&#34;</span>;<span style="color:#f92672">}</span>
+</code></pre></div><p>不要忘记source一下哦~ (<code>source ~/.bashrc</code> 或者 ``. ~/.bashrc`)
 这样就会有一个function等你调用啦!</p>
-
 <p>但是还有没有别的方法呢?当然也是有的!条条大路通罗马哟~</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    alias hi<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;function hi(){ echo &#34;Hello $1!&#34;;} hi&#39;</span></code></pre></div>
-<p>然后将这条命令写入 ~/.bashrc 或者 ~/.bash_alias 文件中.(记得 source 一下哦~)</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    alias hi<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;function hi(){ echo &#34;Hello $1!&#34;;} hi&#39;</span>
+</code></pre></div><p>然后将这条命令写入 ~/.bashrc 或者 ~/.bash_alias 文件中.(记得 source 一下哦~)</p>
 <p>再次运行 hi balala 你就会得到:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">    Hello balala!    </pre></div>
-<p>那么, 重新返回我们的问题, 怎样把ip地址传递进去呢?</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">    Hello balala!    
+</code></pre></div><p>那么, 重新返回我们的问题, 怎样把ip地址传递进去呢?</p>
 <p>我相信聪明的你一定会自己写出来的~</p>
-
 <p>巴拉拉, 卖萌结束. 继续抄代码~</p>
-
 <p>PS:刚刚发现上面的方法好啰嗦&hellip;</p>
-
 <p>直接在 .bash_alias 或者 .bashrc 中添加如下代码:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    hi<span style="color:#f92672">(){</span> echo <span style="color:#e6db74">&#34;Hello </span>$1<span style="color:#e6db74">!&#34;</span>;<span style="color:#f92672">}</span></code></pre></div>
-<p>然后试着 <strong><em>hi wrfly</em></strong> 一下~</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    hi<span style="color:#f92672">(){</span> echo <span style="color:#e6db74">&#34;Hello </span>$1<span style="color:#e6db74">!&#34;</span>;<span style="color:#f92672">}</span>
+</code></pre></div><p>然后试着 <em><strong>hi wrfly</strong></em> 一下~</p>
 <p>完成, 酸爽!</p>
 
 </div>

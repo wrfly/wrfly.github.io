@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>hack on wrfly&#39;s blog</title>
@@ -37,12 +37,12 @@ rarcrack,其官方主页：http://rarcrack.sourceforge.net/
 该软件用于暴力破解压缩文件的密码，但仅支持RAR, ZIP, 7Z这三种类型，其特点是可以使用多线程而且可以暂停与继续(会在当前目录生成一个xml文件，里面显示了正在尝试的一个密码)。
 安装方法
 首先从官网下载安装包，然后执行如下命令
-$ tar -xjf rarcrack-0.2.tar.bz2 $ cd rarcrack-0.2.tar.bz2 $ make $ make install 使用方法
-rarcrack 文件名 [--threads thread_num] [--type rar|zip|7z] 该软件还自带了测试样例，该目录内，执行 rarcrack test.rar &amp;ndash;threads 4 &amp;ndash;type rar ，等待一会儿即可得到结果。
+$ tar -xjf rarcrack-0.2.tar.bz2 $ cd rarcrack-0.2.tar.bz2 $ make $ make install  使用方法
+rarcrack 文件名 [--threads thread_num] [--type rar|zip|7z]  该软件还自带了测试样例，该目录内，执行 rarcrack test.rar &amp;ndash;threads 4 &amp;ndash;type rar ，等待一会儿即可得到结果。
 如果要改变尝试的位置可以直接打开xml，修改当前密码那一行即可。
 如果出现如下错误：
-gcc -pthread rarcrack.c xml2-config --libs --cflags -O2 -o rarcrack /bin/sh: 1: xml2-config: not found In file included from rarcrack.c:21:0: rarcrack.h:25:48: 致命错误： libxml/xmlmemory.h：没有那个文件或目录 编译中断。 make: *** [all] 错误 1 则执行：
-sudo apt-get install libxml2-dev libxslt-dev 安装相应的依赖包。</description>
+gcc -pthread rarcrack.c xml2-config --libs --cflags -O2 -o rarcrack /bin/sh: 1: xml2-config: not found In file included from rarcrack.c:21:0: rarcrack.h:25:48: 致命错误： libxml/xmlmemory.h：没有那个文件或目录 编译中断。 make: *** [all] 错误 1  则执行：
+sudo apt-get install libxml2-dev libxslt-dev  安装相应的依赖包。</description>
     </item>
     
     <item>
@@ -52,8 +52,7 @@ sudo apt-get install libxml2-dev libxslt-dev 安装相应的依赖包。</descri
       
       <guid>https://wrfly.kfd.me/posts/interesting-web-cameras/</guid>
       <description>google search:
- inurl:CgiStart?page=Multi inurl:ViewerFrame?Mode=  or just visit
- http://webcamcity.gosnippy.com</description>
+or just visit</description>
     </item>
     
   </channel>

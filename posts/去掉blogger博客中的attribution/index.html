@@ -4,9 +4,9 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='所谓Attribution，就是blogger博客下面的“由Blogger强力驱动” 或者“ Simple template. Powered by Blogger. ”
 有些人会觉得烦，包括我，这篇帖子是教你怎样把页脚的Attribution去掉的。
-1.到 模板 → 修改html ### ![1/img/remove_attribution_in_blogger/remove_attribution_in_blogger.png)
-2.Ctrl &#43; F 查找代码：### &lt;b:widget id=&#39;Attribution1&#39; locked=&#39;true&#39; title: 去掉blogger博客中的Attribution ![2/img/remove_attribution_in_blogger/remove_attribution_in_blogger_2.png)
-3.找到之后，把 locked=&lsquo;true&rsquo; 改成 locked=&lsquo;false&rsquo;### ![3/img/remove_attribution_in_blogger/remove_attribution_in_blogger_3.png)
+1.到 模板 → 修改html ![1/img/remove_attribution_in_blogger/remove_attribution_in_blogger.png)
+2.Ctrl &#43; F 查找代码：### &lt;b:widget id=&#39;Attribution1&#39; locked=&#39;true&#39; title: 去掉blogger博客中的Attribution  ![2/img/remove_attribution_in_blogger/remove_attribution_in_blogger_2.png)
+3.找到之后，把 locked=&#39;true&rsquo; 改成 locked=&#39;false&rsquo;### ![3/img/remove_attribution_in_blogger/remove_attribution_in_blogger_3.png)
 4.保存### 5.删除### 点击 布局 → 页面元素 → 修改 Attribution → 点击删除 即可删掉“由Blogger强力驱动”
 ![4/img/remove_attribution_in_blogger/remove_attribution_in_blogger_4.png)'>
 <meta name='theme-color' content='#ffcd00'>
@@ -14,16 +14,16 @@
 <meta property='og:title' content='去掉blogger博客中的Attribution • wrfly&#39;s blog'>
 <meta property='og:description' content='所谓Attribution，就是blogger博客下面的“由Blogger强力驱动” 或者“ Simple template. Powered by Blogger. ”
 有些人会觉得烦，包括我，这篇帖子是教你怎样把页脚的Attribution去掉的。
-1.到 模板 → 修改html ### ![1/img/remove_attribution_in_blogger/remove_attribution_in_blogger.png)
-2.Ctrl &#43; F 查找代码：### &lt;b:widget id=&#39;Attribution1&#39; locked=&#39;true&#39; title: 去掉blogger博客中的Attribution ![2/img/remove_attribution_in_blogger/remove_attribution_in_blogger_2.png)
-3.找到之后，把 locked=&lsquo;true&rsquo; 改成 locked=&lsquo;false&rsquo;### ![3/img/remove_attribution_in_blogger/remove_attribution_in_blogger_3.png)
+1.到 模板 → 修改html ![1/img/remove_attribution_in_blogger/remove_attribution_in_blogger.png)
+2.Ctrl &#43; F 查找代码：### &lt;b:widget id=&#39;Attribution1&#39; locked=&#39;true&#39; title: 去掉blogger博客中的Attribution  ![2/img/remove_attribution_in_blogger/remove_attribution_in_blogger_2.png)
+3.找到之后，把 locked=&#39;true&rsquo; 改成 locked=&#39;false&rsquo;### ![3/img/remove_attribution_in_blogger/remove_attribution_in_blogger_3.png)
 4.保存### 5.删除### 点击 布局 → 页面元素 → 修改 Attribution → 点击删除 即可删掉“由Blogger强力驱动”
 ![4/img/remove_attribution_in_blogger/remove_attribution_in_blogger_4.png)'>
 <meta property='og:url' content='https://wrfly.kfd.me/posts/%E5%8E%BB%E6%8E%89blogger%E5%8D%9A%E5%AE%A2%E4%B8%AD%E7%9A%84attribution/'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='problems'><meta property='article:published_time' content='2014-10-04T00:00:00Z'/><meta property='article:modified_time' content='2014-10-04T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>去掉blogger博客中的Attribution • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/%E5%8E%BB%E6%8E%89blogger%E5%8D%9A%E5%AE%A2%E4%B8%AD%E7%9A%84attribution/'>
@@ -115,30 +115,19 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p>所谓Attribution，就是blogger博客下面的“由Blogger强力驱动” 或者“ Simple template. Powered by Blogger. ”</p>
-
+  <p>所谓Attribution，就是blogger博客下面的“由Blogger强力驱动” 或者“ Simple template. Powered by Blogger. ”</p>
 <p>有些人会觉得烦，包括我，这篇帖子是教你怎样把页脚的Attribution去掉的。</p>
-
-<h3 id="1-到-模板-修改html">1.到 模板 → 修改html ###</h3>
-
+<h3 id="1到-模板--修改html-">1.到 模板 → 修改html</h3>
 <p>![1/img/remove_attribution_in_blogger/remove_attribution_in_blogger.png)</p>
-
-<h3 id="2-ctrl-f-查找代码">2.Ctrl + F 查找代码：###</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;b:widget id=&#39;Attribution1&#39; locked=&#39;true&#39; title: 去掉blogger博客中的Attribution</pre></div>
+<h3 id="2ctrl--f-查找代码">2.Ctrl + F 查找代码：###</h3>
+<pre><code>&lt;b:widget id='Attribution1' locked='true' title: 去掉blogger博客中的Attribution
+</code></pre>
 <p>![2/img/remove_attribution_in_blogger/remove_attribution_in_blogger_2.png)</p>
-
-<h3 id="3-找到之后-把-locked-true-改成-locked-false">3.找到之后，把 locked=&lsquo;true&rsquo; 改成 locked=&lsquo;false&rsquo;###</h3>
-
+<h3 id="3找到之后把-lockedtrue-改成-lockedfalse">3.找到之后，把 locked='true&rsquo; 改成 locked='false&rsquo;###</h3>
 <p>![3/img/remove_attribution_in_blogger/remove_attribution_in_blogger_3.png)</p>
-
-<h3 id="4-保存">4.保存###</h3>
-
-<h3 id="5-删除">5.删除###</h3>
-
+<h3 id="4保存">4.保存###</h3>
+<h3 id="5删除">5.删除###</h3>
 <p>点击  布局 → 页面元素 → 修改 Attribution → 点击删除   即可删掉“由Blogger强力驱动”</p>
-
 <p>![4/img/remove_attribution_in_blogger/remove_attribution_in_blogger_4.png)</p>
 
 </div>

@@ -29,7 +29,7 @@ https://play.golang.org/p/CugWJ9tP34Q
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='go'><meta property='article:tag' content='code'><meta property='article:published_time' content='2018-06-24T21:26:01&#43;08:00'/><meta property='article:modified_time' content='2018-06-24T21:26:01&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>Golang-Append • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/golang-append/'>
@@ -121,10 +121,7 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p>这几天在准备面试, 想起之前被问到的一个全排序的问题, 今天用golang写了一遍, 无意中发现了一个冷门的知识(或者叫<strong>坑</strong>).</p>
-
+  <p>这几天在准备面试, 想起之前被问到的一个全排序的问题, 今天用golang写了一遍, 无意中发现了一个冷门的知识(或者叫<strong>坑</strong>).</p>
 <p>看下面一段代码:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">NUMS</span> = []<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>}
 
@@ -134,49 +131,41 @@ if (!doNotTrack) {
 	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">x1</span>, <span style="color:#a6e22e">x2</span>, <span style="color:#a6e22e">NUMS</span>)
 	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(append(<span style="color:#a6e22e">x1</span>, <span style="color:#a6e22e">x2</span><span style="color:#f92672">...</span>))
 	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">x1</span>, <span style="color:#a6e22e">x2</span>, <span style="color:#a6e22e">NUMS</span>)
-}</code></pre></div>
-<p>大脑编译一下, 结果会是什么?</p>
+}
+</code></pre></div><p>大脑编译一下, 结果会是什么?</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">[1] [3] [1 2 3]
 [1 3]
-[1] [3] [1 2 3]</code></pre></div>
-<p>是上面这样吗?</p>
-
+[1] [3] [1 2 3]
+</code></pre></div><p>是上面这样吗?</p>
 <p>首先截取了 <code>NUMS</code> 的第一个作为 <code>x1</code>(1), 然后截取 <code>NUMS</code> 的第二个之后的, 作为 <code>x2</code>(3), 然后输出 <code>x1</code>, <code>x2</code> 和 <code>NUMS</code>; 然后将 <code>x1</code> <code>x2</code> 连接起来输出(1 3); 然后重复第一次的输出.</p>
-
 <p>好像没问题吧?</p>
-
 <p>但是.</p>
-
-<p><a href="https://play.golang.org/p/CugWJ9tP34Q" target="_blank">https://play.golang.org/p/CugWJ9tP34Q</a></p>
-
+<p><a href="https://play.golang.org/p/CugWJ9tP34Q">https://play.golang.org/p/CugWJ9tP34Q</a></p>
 <p>结果却有点出人意料:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">[1] [3] [1 2 3]
 [1 3]
-[1] [3] [1 3 3]</code></pre></div>
-<p>为什么 <code>NUMS</code> 会被修改呢???</p>
-
+[1] [3] [1 3 3]
+</code></pre></div><p>为什么 <code>NUMS</code> 会被修改呢???</p>
 <p>没人碰它啊! 除了&hellip; <code>append</code> ???</p>
-
 <p>然后, 就发现了这样一个坑, <code>append</code> 的确会修改数组.</p>
-
-<p>See: <a href="https://stackoverflow.com/questions/35920534/why-does-append-modify-passed-slice" target="_blank">https://stackoverflow.com/questions/35920534/why-does-append-modify-passed-slice</a></p>
-
+<p>See: <a href="https://stackoverflow.com/questions/35920534/why-does-append-modify-passed-slice">https://stackoverflow.com/questions/35920534/why-does-append-modify-passed-slice</a></p>
 <blockquote>
 <h4 id="appending-to-and-copying-slices">Appending to and copying slices</h4>
-
+</blockquote>
+<blockquote>
 <p>The built-in functions append and copy assist in common slice operations. For both functions, the result is independent of whether the memory referenced by the arguments overlaps.</p>
-
+</blockquote>
+<blockquote>
 <p>The variadic function append appends zero or more values x to s of type S, which must be a slice type, and returns the resulting slice, also of type S. The values x are passed to a parameter of type &hellip;T where T is the element type of S and the respective parameter passing rules apply. As a special case, append also accepts a first argument assignable to type []byte with a second argument of string type followed by &hellip;. This form appends the bytes of the string.</p>
-
+</blockquote>
+<blockquote>
 <p><code>append(s S, x ...T) S  // T is the element type of S</code></p>
-
+</blockquote>
+<blockquote>
 <p>If the capacity of s is not large enough to fit the additional values, append allocates a new, sufficiently large underlying array that fits both the existing slice elements and the additional values. <strong>Otherwise, append re-uses the underlying array.</strong></p>
 </blockquote>
-
 <p>注意上面加粗的引用部分, 如果 <code>append(slice, elements...)</code> 中的<code>slice</code>有足够的空间(<code>cap</code>)容纳 <code>elements</code>的话, 那就直接复用 <code>slice</code> 了. 也就是说, 将<code>slice</code>中的某些值, 修改为追加的值.</p>
-
 <p>所以, 当我们 <code>append(x1, x2...)</code> 的时候(注意, <code>x1</code>在底层还是引用的<code>NUMS</code>), 因为<code>NUMS</code>有足够的空间容纳 <code>x2</code>, 所以<code>append</code>直接将<code>NUMS[1]</code> 修改为了 <code>x2[0]</code>, <code>NUMS</code>也就变成了 <code>[1, 3, 3]</code>.</p>
-
 <p>所以, 如果想要不修改<code>NUMS</code>的值, 则需要先copy一份, 比如:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">NUMS</span> = []<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>}
 
@@ -189,12 +178,10 @@ if (!doNotTrack) {
 	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">x1</span>, <span style="color:#a6e22e">x2</span>, <span style="color:#a6e22e">NUMS</span>)
 	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(append(<span style="color:#a6e22e">x1</span>, <span style="color:#a6e22e">x2</span><span style="color:#f92672">...</span>))
 	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">x1</span>, <span style="color:#a6e22e">x2</span>, <span style="color:#a6e22e">NUMS</span>)
-}</code></pre></div>
-<p>这样所有的修改就都不会影响到初始的<code>NUMS</code>了.</p>
-
-<hr />
-
-<p>附上数组全排序: <a href="https://play.golang.org/p/sKE2jouqKB_4" target="_blank">https://play.golang.org/p/sKE2jouqKB_4</a></p>
+}
+</code></pre></div><p>这样所有的修改就都不会影响到初始的<code>NUMS</code>了.</p>
+<hr>
+<p>附上数组全排序: <a href="https://play.golang.org/p/sKE2jouqKB_4">https://play.golang.org/p/sKE2jouqKB_4</a></p>
 
 </div>
 

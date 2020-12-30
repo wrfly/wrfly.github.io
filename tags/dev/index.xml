@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>dev on wrfly&#39;s blog</title>
@@ -19,7 +19,7 @@
       <description>前言 大概从去年十二月份，领导们想做这样一件事情，重构一下算法组fetch feature的方法，当时是用的codis，用pb encode了一个大的结构体，结构体里包含了很多feature。当小组成员越来越多，模型越来越多，数据越来越多的时候，结构体里面的feature也越来越多，导致不管是添加新的feature还是删除不用的feature都非常麻烦，甚至都不知道哪些feature在用，哪些不用。渐渐的就变成了一座山。
 然后我半路加入了讨论，一开始也是非常懵逼，都不知道他们在说什么，直到等听过一遍代码之后才有了大概的了解，开始着手设计新的方案。
 大概花了一周的时间去设计：
- 数据还是存在Redis里面，从Codis换成了Cache Cloud； 通过一个Config Server来  配置模型的feature，统一管理 配置Redis的地址，分国家，分feature类别 配置生成feature数据的job，包括数据源，写入地址等等  重构了生成日志的方式，这里的日志是“请求”和“返回的数据”，用来训练模型 重构了数据的存储方式，将大的pb结构拆成一个一个的hset，方便增删  设计上个人觉得没什么问题，领导也表示由我主导，但实际上我的话语权并不高，事情的发展也不在我的掌控之中，最终的效果就会有一些出入。更不用说不在我负责范围内的事情了，撇开不谈。
+ 数据还是存在Redis里面，从Codis换成了Cache Cloud； 通过一个Config Server来  配置模型的feature，统一管理 配置Redis的地址，分国家，分feature类别 配置生成feature数据的job，包括数据源，写入地址等等   重构了生成日志的方式，这里的日志是“请求”和“返回的数据”，用来训练模型 重构了数据的存储方式，将大的pb结构拆成一个一个的hset，方便增删  设计上个人觉得没什么问题，领导也表示由我主导，但实际上我的话语权并不高，事情的发展也不在我的掌控之中，最终的效果就会有一些出入。更不用说不在我负责范围内的事情了，撇开不谈。
 上周终于把全部国家的Redis资源申请到了，所以个人认为这件事情也有了一个阶段性成果（五个月？），所以记录一下这个项目和中间遇到的一些问题，希望能给以后的自己有所启发，或者反思。
 思路 名词定义 Category - 表示一类的feature，比如Item Category，Shop Category，同一个Category中的QueryKey是相同的
 QueryKey - 如何从Redis中读取feature，以及如何写入，其实就是Redis的Key。可以分为 ItemID，ShopID，UserID，QueryHash等等，以及他们之间的互相组合。
@@ -72,7 +72,7 @@ fnv(country + session + uid [+ hour]) % 100 的出一个数字，通过这个数
  支持多个项目：不同项目有自己不同的配置和实验 支持多service绑定测试：同一个项目中有多个不同的service 配置/实验区分国家： 不同的国家有不同的配置/测试 可根据UserID，SessionID等维度划分实验流量 支持配置权重：同一个配置有多个值，值附带权重属性 配置多版本，实验多版本：不同版本同时保存，互不冲突 实时分析试验结果：不必麻烦数据团队隔夜处理数据，计算CTR  大概有36个API，因为没有前端（PM画了界面，但是没人有时间写），我还写了一个简单的Python Cli程序。对了，程序语言是Golang，当然。
 我给系统起名叫 Mendel，但是PM的PRD上叫MVT，Multiple Variable Testing system，这个名字个人感觉很low，不如“孟德尔”有意思。不过我才是写代码的人，我想怎么写就怎么写（傲娇）。
 架构 整个系统分为四个部分：
- Mendel Server Mendel Assistant Database  MySQL DB etcd influxDB  Mendel Lib  Mendel Server 负责处理所有API请求，基本上就是CURD，接受请求，验证处理，存入DB，同步到etcd上。这部分写起来其实很讨厌，虽然简单，但是太麻烦，每一个接口都要有CURD，我原来想用MongoDB作为后端存储，但是公司不提供MongoDB的维护，自己用容器风险又太大（没人维护），只能用MySQL，然后用text保存数据。因为如果想要满足设计，配置就需要相当复杂，区分国家，配置权重，service关系，不同配置的层级关系，用MySQL字段保存的话太麻烦了，也不能满足多种层级。其实写好一个CURD也不是容易事，太多细节需要考虑，不仅仅是麻烦的问题。
+ Mendel Server Mendel Assistant Database  MySQL DB etcd influxDB   Mendel Lib  Mendel Server 负责处理所有API请求，基本上就是CURD，接受请求，验证处理，存入DB，同步到etcd上。这部分写起来其实很讨厌，虽然简单，但是太麻烦，每一个接口都要有CURD，我原来想用MongoDB作为后端存储，但是公司不提供MongoDB的维护，自己用容器风险又太大（没人维护），只能用MySQL，然后用text保存数据。因为如果想要满足设计，配置就需要相当复杂，区分国家，配置权重，service关系，不同配置的层级关系，用MySQL字段保存的话太麻烦了，也不能满足多种层级。其实写好一个CURD也不是容易事，太多细节需要考虑，不仅仅是麻烦的问题。
 Mendel Assistant
 这个组件是为了实时分析实验结果的，通过实时读取Tracking数据，获取Tracking里面的AB Testing Siganture，解开Signature，写入InfluxDB和暴露metrics给Prometheus，计算不同实验的CTR，对比效果。Mendel Server部署一个就够了，他只是个CURD Server，但这个Assistant需要部署很多个，毕竟Tracking的数据量太大了。
 Database
@@ -83,7 +83,7 @@ Mendel Lib
 原来的设计是没一个请求进来，我们用一个TrackingID去标记，然后在TrackingID上append不同的配置，写入一个KV存储中，但是Lead说，公司的Codis不靠谱，没有一个靠谱的持久化KV存储，如果TrackingID的数据丢了就麻烦了，所以最后折中了一个Signature的方案，从很长的配置细节变成一个能够自解的signature，并且signature对外不可读。对于signature的介绍将在本文最后进行。
 其实用trackingID的方式是最好的，这样不仅可以用来标记数据，也可以用这个ID对请求进行追踪，比如在什么时候产生了访问，返回了多少广告，关键词是什么，在什么时候点击的，点击了第几个位置，这个位置的广告的平均CTR是多少，rank分是多少，similarity是多少，这些数据对于我们分析用户行为，提升算法精准度，都是有很大帮助的，但是无奈，只能用signature去自解AB Testing的数据。无奈。
 配置结构 在这套系统中，有几个关键的概念：
- project: 拥有独立流量（独立请求和返回结果）的业务线称为一个项目 base_config: 项目的基础配置，一个项目配置中，可以包含多个服务  service: 服务，一个服务配置中，包含多个模块配置 module:：模块，具体表现为程序的某个模块，可以包含多个层级配置 layer: 在程序中的特定层，具体为某一个模块中的某一个步骤 config value: 对层级的配置，包括这个层中，对国家的配置值，不同值的权重等  traffic slots: 每一个项目拥有自己独立的流量分配，每一个国家也有独立的流量分配（保证了实验的可以在国家的维度进行） experiment: 每一个实验本质上也是一套配置，不过是建立在基础配置之上的特定修改，而且实验配置不能超出基础配置，一定是修改。实验可以根据不同的维度划分，比如根据UID划分，根据SessionID划分，但是它们一定是共享整个项目的流量的，相同国家内的流量不能够重叠交叉。实验中对于layer的配置也可以有多种，且对于每一种配置值，其权重都是相同的（有别于base config中的config value）。对于实验没有修改的layer，当base config中layer有变更时，experiment也要同步进行修改，更新，下发。  对于base config和expeirment config，所有数据都有唯一的ID和版本号，保证了不会有数据丢失，方便回滚和审计。</description>
+ project: 拥有独立流量（独立请求和返回结果）的业务线称为一个项目 base_config: 项目的基础配置，一个项目配置中，可以包含多个服务  service: 服务，一个服务配置中，包含多个模块配置 module:：模块，具体表现为程序的某个模块，可以包含多个层级配置 layer: 在程序中的特定层，具体为某一个模块中的某一个步骤 config value: 对层级的配置，包括这个层中，对国家的配置值，不同值的权重等   traffic slots: 每一个项目拥有自己独立的流量分配，每一个国家也有独立的流量分配（保证了实验的可以在国家的维度进行） experiment: 每一个实验本质上也是一套配置，不过是建立在基础配置之上的特定修改，而且实验配置不能超出基础配置，一定是修改。实验可以根据不同的维度划分，比如根据UID划分，根据SessionID划分，但是它们一定是共享整个项目的流量的，相同国家内的流量不能够重叠交叉。实验中对于layer的配置也可以有多种，且对于每一种配置值，其权重都是相同的（有别于base config中的config value）。对于实验没有修改的layer，当base config中layer有变更时，experiment也要同步进行修改，更新，下发。  对于base config和expeirment config，所有数据都有唯一的ID和版本号，保证了不会有数据丢失，方便回滚和审计。</description>
     </item>
     
     <item>
@@ -97,7 +97,7 @@ Mendel Lib
 升级后，新的instance没有请求，依赖这个服务的所有service都连着旧的地址（在mesos上重新部署之后地址和端口都变了），但这些instance都是通过etcd作服务发现的，把自己注册到etcd上，而且etcd上也的确看到了新的地址，但是为什么那些server还抓着旧地址不放呢？（讲道理我写的lib没问题啊）而且重启之后就能拿到新的地址了，也有请求到升级之后的instance上去了。
 经过 Dat在群里贴了这样一段，取自etcd官方文档：
  At first, a client must create a gRPC connection only to authenticate its user ID and password. An etcd server will respond with an authentication reply. The reponse will be an authentication token on success or an error on failure. The client can use its authentication token to present its credentials to etcd when making API requests.
-The client connection used to request the authentication token is typically thrown away; it cannot carry the new token&amp;rsquo;s credentials.</description>
+  The client connection used to request the authentication token is typically thrown away; it cannot carry the new token&amp;rsquo;s credentials.</description>
     </item>
     
     <item>
@@ -125,7 +125,8 @@ fileName := &amp;#34;/tmp/alert-history.txt&amp;#34; f, err := os.OpenFile(fileN
 弊端 且说一下 Nginx 作为 gRPC 服务的负载均衡的问题，由于 Nginx 作为中间件，gRPC 的 client 是不知道后端有多少服务的，它只认 Nginx 的地址，所有的服务发现和负载均衡由Nginx统一处理， 默认的负载方式是轮询。
 连接池 初始阶段，client 建立N多链接到 Nginx（N的数量取决于 pool 的大小，也就是人工实现一个连接池， 其实根本没必要，但为了让流量均衡的发送到后端所有服务上必须要这样），但这个N的数字其实很有讲究， 如果N小于后端服务的数量，那么后端真实server收到的请求是不均匀的，在仅有一个 client，10个 server 的情况下，如果 client 建立5条连接到 Nginx，然后 Nginx 分别转发给后端的每一个 server， 那么就会有5个 server 收不到连接，白干。如果增加 client的数量，2x5=10，后端的10个 server 都收到了请求，才均匀。
 但，这个pool大小的设定实在玄学，client的数量也会变更，鬼知道哪些server收到的请求多，哪些 server收到的请求少？
-又，gRPC 是建立在 TCP 上的，每条连接可处理的请求能到 1w+ qps 以上，client 端建立几十几百个 连接到Nginx，Nginx 又转发这些到后端的N个 server 实例，看起来实在很傻逼。</description>
+又，gRPC 是建立在 TCP 上的，每条连接可处理的请求能到 1w+ qps 以上，client 端建立几十几百个 连接到Nginx，Nginx 又转发这些到后端的N个 server 实例，看起来实在很傻逼。
+异常 server扩容 后端server总要扩容的，不管是大促还是活动，谁也不能保证不会增加server数量。但是在Nginx代理的情况下， 如果后端新增了 backend，由于是TCP代理，已有的连接不能掐断，但client端的连接池已经初始完毕， 不会继续建立连接到Nginx，这时候新上的server就收不到一丁点流量，直到新连接的建立。</description>
     </item>
     
     <item>
@@ -137,19 +138,19 @@ fileName := &amp;#34;/tmp/alert-history.txt&amp;#34; f, err := os.OpenFile(fileN
       <description>今天下午健身回来想着注册线上的search server到zk，让prometheus去拉metrics，然后由于申请机器权限的系统经常性的抽风，申请登录机器一直不成功（老牛鼻子问题了，他们就是不修），然后就想直接更新zk的数据，反正脚本也是这样，然后就到了consule的UI上（我也不知道为啥consul的UI跟ZK的数据是连着的），直接创建对应的key。
 创建完成之后发现并没有卵用，过了一会儿就被打岔喊道了楼上去（现在想起来，如果不上去的话会不会自己就把key给删了？但大概率会忘掉！），说了一会儿之后正巧他们出故障了，隐隐约约听到了我们组的名字，妈的瞬间就精神了，这不是我刚才建的key吗，卧槽我是不是闯祸了？
 仔细听下去，果真。日。
-事情的起因是我想注册我们的search server到ZK，让prometheus去拉数据。
+ 事情的起因是我想注册我们的search server到ZK，让prometheus去拉数据。
 经过是没有登录到注册zk的机器上，然后就手工写错了注册的path和value。
 结果导致平台组负责服务发现的程序崩溃？
 程序期待一个JSON，我写了一个string，然后程序就崩溃了。贰叁叁。
 最终导致订单系统停止服务五十分钟。（讲道理五十分钟才解决这种故障也是……）
-然后群里领导们就在讨论如何避免以后类似问题的发生，说如何限制zk的写入，如何提交ticket，如何更新服务发现等等等等。
+ 然后群里领导们就在讨论如何避免以后类似问题的发生，说如何限制zk的写入，如何提交ticket，如何更新服务发现等等等等。
 我就想，这难道没有work flow和programer的责任吗，每个人都能写线上的ZK不太好吧？这么简单的异常，程序没有正确处理而是直接崩溃不好吧？花费五十分钟还顺带回滚服务（当然没卵用了也）才解决问题也不好吧？最终我（导火索）如果没有恰好站在旁边背锅，也发现不了是怎么引起的bug也不太对吧？
 洋洋洒洒都在讨论auth的问题，真是，醉了。
 服务发现用ZK本来就值得吐槽了，而且各种服务都写ZK，不区分国家和服务类型，把ZK当银弹用，还是一颗，这么明显的问题都没人提出来，也没人说程序写的有问题，（这么关键的程序，感觉像是随便写写的），深深的觉着领导层有点本末倒置。
 普林西普的刺杀引发了一战，但讲道理，让普林西普背一战的锅就说不过去。当然也没人让我背锅，我只是觉着导火索就不应该存在，把潜在的问题扼杀在摇篮中是最好的。因为这次可能是我写string，下次可能就是程序写int，在下次可能就是黑客直接递归删key了，暴露出这么多问题，一个auth能解决？一个disable能解决？
 服务发现本来就很复杂，etcd都能被打挂，zk也不是万能钥匙啊，况且还不分区。这么关键的核心服务连这种异常都hold不住，也难怪天天修bug。
 我肯定是要被批评的，因为我写的key嘛，就像上次99时候DNS挂了，一个更改防火墙的DBA背锅一样。
-几点经验教训：
+ 几点经验教训：
  对核心数据的权限控制：什么样的人能干什么样的事儿，该干什么样的事儿要有明确的划分。 对数据的隔离和分区：不要把鸡蛋放在一个篮子里，老生常谈了。 核心程序的code review和至少80%的单元测试：不要让这么低级的异常把整个系统搞挂。 关键数据的备份要做好：实在解决不了问题咱回滚数据行不行？ 还是告警，还是日志，错误处理不是说说那么简单的。 服务发现是个大事儿：别用zk，用etcd。 哪怕是内部服务，也不能完全可信，尤其是带有网络调用的，数据验证是基本操作。 出问题是好事儿，跌倒也是好事儿，但出了问题不总结就不是好事儿，总结不到位也不是好事儿，就像明明是脚上扎了钉子，却一直想办法如何修路。早点暴露问题就能早点修复，以免在更严重的时期触发问题；早点跌倒就会早点反思，而不是拖着一只被扎穿的脚彳亍。 最重要的一点也是针对我的一点，没事儿别瞎搞，对于不了解的东西要如履薄冰，如坐针毡，没准你就是最后一块被抽掉的积木。  </description>
     </item>
     
@@ -191,15 +192,15 @@ config := sarama.NewConfig() config.Version = sarama.V1_0_0_0 // HERE! // sarama
       <guid>https://wrfly.kfd.me/posts/go-trimleft-and-trimprefix/</guid>
       <description>今天忽然发现了一个bug，其实是我自己的错误啦，不过也可以甩锅给文档……
 简而言之，是用法错误，看这样一个例子：
-package main import ( &amp;#34;fmt&amp;#34; &amp;#34;strings&amp;#34; ) func main() { str := &amp;#34;/some/key&amp;#34; fmt.Println(strings.TrimLeft(str, &amp;#34;/some&amp;#34;)) }key Program exited. https://play.golang.org/p/Hn8-iVEUi-W
+package main import ( &amp;#34;fmt&amp;#34; &amp;#34;strings&amp;#34; ) func main() { str := &amp;#34;/some/key&amp;#34; fmt.Println(strings.TrimLeft(str, &amp;#34;/some&amp;#34;)) } key Program exited. https://play.golang.org/p/Hn8-iVEUi-W
 没毛病是吧？
 如果你也觉着没毛病，那你也错啦！
-package main import ( &amp;#34;fmt&amp;#34; &amp;#34;strings&amp;#34; ) func main() { str := &amp;#34;/some/sugar&amp;#34; fmt.Println(strings.TrimLeft(str, &amp;#34;/some&amp;#34;)) }ugar Program exited. https://play.golang.org/p/_-3V1PgLwjh
+package main import ( &amp;#34;fmt&amp;#34; &amp;#34;strings&amp;#34; ) func main() { str := &amp;#34;/some/sugar&amp;#34; fmt.Println(strings.TrimLeft(str, &amp;#34;/some&amp;#34;)) } ugar Program exited. https://play.golang.org/p/_-3V1PgLwjh
 喂喂喂！怎么把我的sugar的s给吃了，这是bug吧！
 嗯。的确是bug，不过，“凡事总要先从自身找原因”:
  func TrimLeft
-func TrimLeft(s string, cutset string) string
-TrimLeft returns a slice of the string s with all leading Unicode code points contained in cutset removed.</description>
+  func TrimLeft(s string, cutset string) string
+  TrimLeft returns a slice of the string s with all leading Unicode code points contained in cutset removed.</description>
     </item>
     
   </channel>

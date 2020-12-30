@@ -23,7 +23,7 @@ func Poller(res *Resources) { for { // get the least recently-polled Resource  /
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='translate'><meta property='article:tag' content='share'><meta property='article:published_time' content='2018-01-06T20:39:56&#43;08:00'/><meta property='article:modified_time' content='2018-01-06T20:39:56&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>Share-Memory-by-Communicating • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/share-memory-by-communicating/'>
@@ -115,16 +115,12 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  <p>Origin: <a href="https://blog.golang.org/share-memory-by-communicating" target="_blank">https://blog.golang.org/share-memory-by-communicating</a></p>
-
+  <p>Origin: <a href="https://blog.golang.org/share-memory-by-communicating">https://blog.golang.org/share-memory-by-communicating</a></p>
 <p>传统的多线程编程（比如Java，C++，Python等）需要码农通过在线程间共享内存的方式通信。一般来讲，共享的数据结构用锁来保护，线程想获取数据的时候必须先拿到锁。在某些情况下，用线程安全的数据结构能使其变得更加容易，比如Python的Queue。</p>
-
-<p>Go的并发原语 - goroutine和channel - 提供了另一种优雅的方式去写并发软件。（这些概念有一个<a href="http://swtch.com/~rsc/thread/" target="_blank">有趣的历史</a>，起源于C. A. R. Hoare的 <a href="http://www.usingcsp.com/" target="_blank">Communicating Sequential Processes</a>）Go鼓励用channel的方式在goroutine之间传递引用数据，而不是声明一把锁去协调对共享数据的访问。这样的操作保证了在同一时刻只有一个goroutine拥有对数据的访问权。这个概念在<a href="http://golang.org/doc/effective_go.html" target="_blank">高效Go编程</a>（go程序员的必读文档）中有总结。</p>
-
+<p>Go的并发原语 - goroutine和channel - 提供了另一种优雅的方式去写并发软件。（这些概念有一个<a href="http://swtch.com/~rsc/thread/">有趣的历史</a>，起源于C. A. R. Hoare的 <a href="http://www.usingcsp.com/">Communicating Sequential Processes</a>）Go鼓励用channel的方式在goroutine之间传递引用数据，而不是声明一把锁去协调对共享数据的访问。这样的操作保证了在同一时刻只有一个goroutine拥有对数据的访问权。这个概念在<a href="http://golang.org/doc/effective_go.html">高效Go编程</a>（go程序员的必读文档）中有总结。</p>
 <blockquote>
 <p>不要通过共享的方式去沟通，通过沟通的方式共享内存。</p>
 </blockquote>
-
 <p>考虑这样一个程序，它轮旬一堆的URL。在传统的多线程编程中，你或许用以下的数据结构：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Resource</span> <span style="color:#66d9ef">struct</span> {
     <span style="color:#a6e22e">url</span>        <span style="color:#66d9ef">string</span>
@@ -135,8 +131,8 @@ if (!doNotTrack) {
 <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Resources</span> <span style="color:#66d9ef">struct</span> {
     <span style="color:#a6e22e">data</span> []<span style="color:#f92672">*</span><span style="color:#a6e22e">Resource</span>
     <span style="color:#a6e22e">lock</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">Mutex</span>
-}</code></pre></div>
-<p>然后有一个<code>Poller</code>的函数（并发执行）看起来可能会这样：</p>
+}
+</code></pre></div><p>然后有一个<code>Poller</code>的函数（并发执行）看起来可能会这样：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Poller</span>(<span style="color:#a6e22e">res</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Resources</span>) {
     <span style="color:#66d9ef">for</span> {
         <span style="color:#75715e">// get the least recently-polled Resource
@@ -167,9 +163,8 @@ if (!doNotTrack) {
         <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">lastPolled</span> = <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Nanoseconds</span>()
         <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">lock</span>.<span style="color:#a6e22e">Unlock</span>()
     }
-}</code></pre></div>
-<p>这个函数看起来比较长，并且还会更长（需要更多的细节去完善）。它甚至不包含对于获取URL的逻辑，以及对于辛苦获取到的资源的优雅处理。</p>
-
+}
+</code></pre></div><p>这个函数看起来比较长，并且还会更长（需要更多的细节去完善）。它甚至不包含对于获取URL的逻辑，以及对于辛苦获取到的资源的优雅处理。</p>
 <p>然后我们再来对比一下用go的方式。在这个例子中，<code>Poller</code>函数的功能是从输入的channel中接收要被获取的URL地址，处理完成后再传递给输出channel：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Resource</span> <span style="color:#66d9ef">string</span>
 
@@ -180,19 +175,13 @@ if (!doNotTrack) {
         <span style="color:#75715e">// send the processed Resource to out
 </span><span style="color:#75715e"></span>        <span style="color:#a6e22e">out</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">r</span>
     }
-}</code></pre></div>
-<p>这种优雅的实现，对于开头的例子而言显然是没有的，而且我们的<code>Resource</code>在结构上也没有了需要记录的数据。事实上，剩下都是必须的代码。这些强大而简单的语言特性应该能够给你一些暗示了。</p>
-
-<p>在上面的代码片段中有很多遗漏，更详细的代码参见<a href="http://golang.org/doc/codewalk/sharemem/" target="_blank">此处</a></p>
-
+}
+</code></pre></div><p>这种优雅的实现，对于开头的例子而言显然是没有的，而且我们的<code>Resource</code>在结构上也没有了需要记录的数据。事实上，剩下都是必须的代码。这些强大而简单的语言特性应该能够给你一些暗示了。</p>
+<p>在上面的代码片段中有很多遗漏，更详细的代码参见<a href="http://golang.org/doc/codewalk/sharemem/">此处</a></p>
 <p><em>By Andrew Gerrand</em></p>
-
-<hr />
-
-<p>关于用锁还是用channel，附上一篇go自己的说明: <a href="https://github.com/golang/go/wiki/MutexOrChannel" target="_blank">https://github.com/golang/go/wiki/MutexOrChannel</a></p>
-
-<p>也参见<a href="https://www.zhihu.com/question/58004055/answer/155367140" target="_blank">唐生的回答 - 知乎</a></p>
-
+<hr>
+<p>关于用锁还是用channel，附上一篇go自己的说明: <a href="https://github.com/golang/go/wiki/MutexOrChannel">https://github.com/golang/go/wiki/MutexOrChannel</a></p>
+<p>也参见<a href="https://www.zhihu.com/question/58004055/answer/155367140">唐生的回答 - 知乎</a></p>
 <p>另外个人的看法是，哪个适合就用哪个，没有好坏之分，只有在当前情境下合不合适。</p>
 
 </div>

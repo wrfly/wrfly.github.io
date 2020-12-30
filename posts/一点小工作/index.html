@@ -25,7 +25,7 @@ sort -u -t &#39;,&#39; -k2,2 data 这条关于sort的命令，用来以文件的
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='daily'><meta property='article:published_time' content='2016-07-06T00:00:00Z'/><meta property='article:modified_time' content='2016-07-06T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>一点小工作 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/%E4%B8%80%E7%82%B9%E5%B0%8F%E5%B7%A5%E4%BD%9C/'>
@@ -121,19 +121,15 @@ if (!doNotTrack) {
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nginx" data-lang="nginx">    <span style="color:#66d9ef">valid_referers</span> <span style="color:#e6db74">kfd.me</span> <span style="color:#e6db74">*.kfd.me</span> <span style="color:#e6db74">server_names</span> ~<span style="color:#e6db74">\.google\.</span> ~<span style="color:#e6db74">\.baidu\.;</span>
     <span style="color:#e6db74">if</span> <span style="color:#e6db74">(</span>$invalid_referer<span style="color:#e6db74">)</span> {
         <span style="color:#f92672">rewrite</span> <span style="color:#e6db74">^/</span> <span style="color:#e6db74">http://kfd.me</span>;
-    }</code></pre></div>
-<p>算是做了一点小小的工作，而且还挺管用的。可惜了以前每天几千UV的日子，现在只有几十了。</p>
+    }
 
+</code></pre></div><p>算是做了一点小小的工作，而且还挺管用的。可惜了以前每天几千UV的日子，现在只有几十了。</p>
 <p>首先定义了一些Refer，然后服务其判断如果来源不是这些的话，就会返回到我的主站，不知道gov的那些爬虫会不会继续搞我，就先这样吧。</p>
-
 <p>还有一些小东西：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sort -u -t <span style="color:#e6db74">&#39;,&#39;</span> -k2,2 data</code></pre></div>
-<p>这条关于<code>sort</code>的命令，用来以文件的第二个字段（字段之间用‘，’分隔）排序并去重。超级好用！</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sort -u -t <span style="color:#e6db74">&#39;,&#39;</span> -k2,2 data
+</code></pre></div><p>这条关于<code>sort</code>的命令，用来以文件的第二个字段（字段之间用‘，’分隔）排序并去重。超级好用！</p>
 <p>之所以会用到这条命令，是我这几天在搞一些用户名密码相关的事情，以后的日子还算清闲，没有别的事情，就研究用户名和密码了。</p>
-
 <p>还有一个小脚本，争取明天写个框架，是一个Telegram的机器人，放到VPS上，当监控来用。</p>
-
 <p>偷懒了好久，该活动活动了。</p>
 
 </div>

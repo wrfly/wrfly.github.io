@@ -7,7 +7,7 @@
 升级后，新的instance没有请求，依赖这个服务的所有service都连着旧的地址（在mesos上重新部署之后地址和端口都变了），但这些instance都是通过etcd作服务发现的，把自己注册到etcd上，而且etcd上也的确看到了新的地址，但是为什么那些server还抓着旧地址不放呢？（讲道理我写的lib没问题啊）而且重启之后就能拿到新的地址了，也有请求到升级之后的instance上去了。
 经过 Dat在群里贴了这样一段，取自etcd官方文档：
  At first, a client must create a gRPC connection only to authenticate its user ID and password. An etcd server will respond with an authentication reply. The reponse will be an authentication token on success or an error on failure. The client can use its authentication token to present its credentials to etcd when making API requests.
-The client connection used to request the authentication token is typically thrown away; it cannot carry the new token&rsquo;s credentials.'>
+  The client connection used to request the authentication token is typically thrown away; it cannot carry the new token&rsquo;s credentials.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Etcd-Authentication • wrfly&#39;s blog'>
@@ -16,12 +16,12 @@ The client connection used to request the authentication token is typically thro
 升级后，新的instance没有请求，依赖这个服务的所有service都连着旧的地址（在mesos上重新部署之后地址和端口都变了），但这些instance都是通过etcd作服务发现的，把自己注册到etcd上，而且etcd上也的确看到了新的地址，但是为什么那些server还抓着旧地址不放呢？（讲道理我写的lib没问题啊）而且重启之后就能拿到新的地址了，也有请求到升级之后的instance上去了。
 经过 Dat在群里贴了这样一段，取自etcd官方文档：
  At first, a client must create a gRPC connection only to authenticate its user ID and password. An etcd server will respond with an authentication reply. The reponse will be an authentication token on success or an error on failure. The client can use its authentication token to present its credentials to etcd when making API requests.
-The client connection used to request the authentication token is typically thrown away; it cannot carry the new token&rsquo;s credentials.'>
+  The client connection used to request the authentication token is typically thrown away; it cannot carry the new token&rsquo;s credentials.'>
 <meta property='og:url' content='https://wrfly.kfd.me/posts/etcd-authentication/'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='dev'><meta property='article:tag' content='etcd'><meta property='article:published_time' content='2019-05-16T21:15:45&#43;08:00'/><meta property='article:modified_time' content='2019-05-16T21:15:45&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>Etcd-Authentication • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/etcd-authentication/'>
@@ -113,28 +113,19 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<h2 id="起因">起因</h2>
-
+  <h2 id="起因">起因</h2>
 <p>今早上我们的某个程序升级了，负责升级的哥们儿没有检查QPS就去睡觉了（当然检查了也没用，除了尽早发现bug然后把大家喊起来），然后我们的搜索出了问题（好久），直到上班才发现，然后重启解决（Thanks Dat）。</p>
-
 <p>问题是啥？</p>
-
 <p>升级后，新的instance没有请求，依赖这个服务的所有service都连着旧的地址（在mesos上重新部署之后地址和端口都变了），但这些instance都是通过etcd作服务发现的，把自己注册到etcd上，而且etcd上也的确看到了新的地址，但是为什么那些server还抓着旧地址不放呢？（讲道理我写的lib没问题啊）而且重启之后就能拿到新的地址了，也有请求到升级之后的instance上去了。</p>
-
 <h2 id="经过">经过</h2>
-
-<p>Dat在群里贴了这样一段，取自etcd<a href="https://coreos.com/etcd/docs/latest/learning/auth_design.html#authentication" target="_blank">官方文档</a>：</p>
-
+<p>Dat在群里贴了这样一段，取自etcd<a href="https://coreos.com/etcd/docs/latest/learning/auth_design.html#authentication">官方文档</a>：</p>
 <blockquote>
 <p>At first, a client must create a gRPC connection only to authenticate its user ID and password. An etcd server will respond with an authentication reply. The reponse will be an authentication token on success or an error on failure. The client can use its authentication token to present its credentials to etcd when making API requests.</p>
-
+</blockquote>
+<blockquote>
 <p>The client connection used to request the authentication token is typically thrown away; it cannot carry the new token&rsquo;s credentials. This is because gRPC doesn&rsquo;t provide a way for adding per RPC credential after creation of the connection (calling grpc.Dial()). Therefore, a client cannot assign a token to its connection that is obtained through the connection. The client needs a new connection for using the token.</p>
 </blockquote>
-
 <p>起初我是怀疑这个操作的，所以自己就做了一个实验：</p>
-
 <ul>
 <li><code>export ETCDCTL_API=3</code></li>
 <li><code>bin/etcdctl user add root:root</code></li>
@@ -143,15 +134,10 @@ if (!doNotTrack) {
 <li><code>bin/etcdctl role grant-permission --prefix=true test readwrite /test</code></li>
 <li><code>bin/etcdctl user grant-role test test</code></li>
 </ul>
-
 <p>一个窗口put key，一个窗口watch change：</p>
-
-<p><img src="../img/etcd-auth/put-watch.png" alt="put and watch" /></p>
-
+<p><img src="../img/etcd-auth/put-watch.png" alt="put and watch"></p>
 <p>没毛病啊！即使打开了认证，已经建立的watch连接还是能看到变化啊，所以问题出在哪儿？</p>
-
 <p>所以我们又在test环境测试了一下，试图重现线上的问题。这个经过不再罗嗦，但结果是能够复现这个问题：</p>
-
 <ul>
 <li>关掉etcd的认证</li>
 <li>重启<code>svc A</code>以及依赖<code>svc A</code>的<code>svc B</code></li>
@@ -161,44 +147,30 @@ if (!doNotTrack) {
 <li>此时<code>svc B</code>拿不到新的<code>svc A</code>的地址，仍然在retry旧的地址</li>
 <li>爆炸</li>
 </ul>
-
 <p>而且通过重启<code>svc B</code>是能够解决问题的。</p>
-
 <p>所以我又写了一个小程序去debug。这次是独立测试我们的lib，也就是<code>grpc-lb</code>这个库。发现watch操作和keep lease都是正常的，除了，<code>GET</code>。</p>
-
 <p>lib的更新是这样的：</p>
-
 <ul>
 <li>watch change</li>
 <li>if found, get new contents(server lists)</li>
 </ul>
-
 <p>但是在<code>etcd authentication disable</code>的时候，<code>NewClient</code>的操作其实是“不成功的”，之所以“不成功”，是因为虽然返回了一个etcd clientv3,但是这个client并不带认证，因为server端此时没有开启认证，并且client会打印日志：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">{&#34;level&#34;:&#34;warn&#34;,&#34;ts&#34;:&#34;2019-05-16T22:46:04.481+0800&#34;,&#34;caller&#34;:&#34;clientv3/retry_interceptor.go:60&#34;,&#34;msg&#34;:&#34;retrying of unary invoker failed&#34;,&#34;target&#34;:&#34;endpoint://client-dbc9cada-657f-4bf2-800e-1c0728b09277/localhost:2379&#34;,&#34;attempt&#34;:0,&#34;error&#34;:&#34;rpc error: code = FailedPrecondition desc = etcdserver: authentication is not enabled&#34;}</pre></div>
-<p>当打开了认证的时候，<code>GET</code>操作就会返回空，并有WARN日志：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">{&#34;level&#34;:&#34;warn&#34;,&#34;ts&#34;:&#34;&#34;,&#34;caller&#34;:&#34;clientv3/retry_interceptor.go:60&#34;,&#34;msg&#34;:&#34;retrying of unary invoker failed&#34;,&#34;target&#34;:&#34;endpoint://client-a6b927f0-39d2-4ef1-80ba-af9f7dfca5f3/localhost:2379&#34;,&#34;attempt&#34;:0,&#34;error&#34;:&#34;rpc error: code = InvalidArgument desc = etcdserver: user name is empty&#34;}
-etcdserver: user name is empty</pre></div>
-<h2 id="结果">结果</h2>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">{&#34;level&#34;:&#34;warn&#34;,&#34;ts&#34;:&#34;2019-05-16T22:46:04.481+0800&#34;,&#34;caller&#34;:&#34;clientv3/retry_interceptor.go:60&#34;,&#34;msg&#34;:&#34;retrying of unary invoker failed&#34;,&#34;target&#34;:&#34;endpoint://client-dbc9cada-657f-4bf2-800e-1c0728b09277/localhost:2379&#34;,&#34;attempt&#34;:0,&#34;error&#34;:&#34;rpc error: code = FailedPrecondition desc = etcdserver: authentication is not enabled&#34;}
+</code></pre></div><p>当打开了认证的时候，<code>GET</code>操作就会返回空，并有WARN日志：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">{&#34;level&#34;:&#34;warn&#34;,&#34;ts&#34;:&#34;&#34;,&#34;caller&#34;:&#34;clientv3/retry_interceptor.go:60&#34;,&#34;msg&#34;:&#34;retrying of unary invoker failed&#34;,&#34;target&#34;:&#34;endpoint://client-a6b927f0-39d2-4ef1-80ba-af9f7dfca5f3/localhost:2379&#34;,&#34;attempt&#34;:0,&#34;error&#34;:&#34;rpc error: code = InvalidArgument desc = etcdserver: user name is empty&#34;}
+etcdserver: user name is empty
+</code></pre></div><h2 id="结果">结果</h2>
 <p>通过上面的分析，可以得出结论;</p>
-
 <ul>
 <li>打开etcd的认证，不会影响已经建立的client的<code>watch</code>和<code>keep lease</code></li>
 <li>如果一个client是建立在etcd关闭认证的情况下，当etcd重新打开认证的时候，client的<code>GET</code>操作会失败</li>
 </ul>
-
 <p>解决方案也很简单，当发现错误为<code>etcdserver: user name is empty</code>时，重新创建一个新的client，并重新<code>GET</code>。（这个时候会有两个client，旧的是为了watch，新的是为了get）</p>
-
 <p>通过深入etcd的源码发现，当client带着一个用户名和密码去跟server请求JWT的时候，server会首先检查一下自己是否开了认证，如果没开，直接返回<code>ErrGRPCAuthNotEnabled</code>，而client也不会得到server“应该”返回的SimpleToken，所以当etcd server重新开启认证时，这个旧的client的<code>GET</code> RPC 就会得到<code>ErrGRPCUserEmpty</code>这样的error。</p>
-
 <p>讲道理etcd团队在设计这个API的时候，可能没有考虑（或者我们的操作就是错的，不应该在运行的etcd cluster上随便开关认证）在创建的时候发送认证信息的已经建立好的client再次连接重新开启认证的etcd server的情况。</p>
-
 <p>由于<code>watch</code>和<code>keep lease</code>都是stream，所以RPC一旦建立，除了重启etcd，就不会有认证问题。如果etcd重启了，那么虽然gRPC会重连，但是曾经拿到的token已经变了，我们用旧的token去验证自己，永远不会成功。</p>
-
 <p>BTW，我们也需要考虑etcd重启的情况，所以万能的解决方案是，重连。一旦失败，重连整个client，重新获得token，重新建立gRPC连接，因为不管是开启认证，还是重启etcd，subConn都已经失效了。</p>
-
 <p><strong>重启大法好</strong></p>
-
 <p>P.S. etcd 的版本为 <code>3.3.13</code>@<code>98d308426</code></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">GO_BUILD_FLAGS=&#34;-v&#34; ./build
 ./bin/etcd --version
@@ -208,7 +180,8 @@ Go Version: go1.12
 Go OS/Arch: linux/amd64
 ETCDCTL_API=3 ./bin/etcdctl version
 etcdctl version: 3.3.13
-API version: 3.3</code></pre></div>
+API version: 3.3
+</code></pre></div>
 </div>
 
   

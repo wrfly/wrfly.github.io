@@ -4,7 +4,7 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='From: https://www.gitbook.com/book/yeasy/docker_practice/details
 BASIC Just some commands&hellip;
-sudo chmod &#43;s /usr/bin/docker (give docker an &rsquo;s&rsquo;)
+sudo chmod &#43;s /usr/bin/docker (give docker an &lsquo;s&rsquo;)
 docker pull ubuntu (like git..)
 docker run -idt &ndash;hostname test &ndash;name test ubuntu (a background ubuntu bash, use docker-enter to enter it or nsenter its pid)
 docker rm (rm containers)
@@ -19,7 +19,7 @@ docker run -idt &ndash;hostname test -v /opt/docker-share:/root/share ubuntu (Wh
 <meta property='og:title' content='Docker笔记 • wrfly&#39;s blog'>
 <meta property='og:description' content='From: https://www.gitbook.com/book/yeasy/docker_practice/details
 BASIC Just some commands&hellip;
-sudo chmod &#43;s /usr/bin/docker (give docker an &rsquo;s&rsquo;)
+sudo chmod &#43;s /usr/bin/docker (give docker an &lsquo;s&rsquo;)
 docker pull ubuntu (like git..)
 docker run -idt &ndash;hostname test &ndash;name test ubuntu (a background ubuntu bash, use docker-enter to enter it or nsenter its pid)
 docker rm (rm containers)
@@ -33,7 +33,7 @@ docker run -idt &ndash;hostname test -v /opt/docker-share:/root/share ubuntu (Wh
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='daily'><meta property='article:published_time' content='2015-12-10T00:00:00Z'/><meta property='article:modified_time' content='2015-12-10T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>Docker笔记 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/docker%E7%AC%94%E8%AE%B0/'>
@@ -125,54 +125,29 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p>From: <a href="https://www.gitbook.com/book/yeasy/docker_practice/details" target="_blank">https://www.gitbook.com/book/yeasy/docker_practice/details</a></p>
-
+  <p>From: <a href="https://www.gitbook.com/book/yeasy/docker_practice/details">https://www.gitbook.com/book/yeasy/docker_practice/details</a></p>
 <h2 id="basic">BASIC</h2>
-
 <p>Just some commands&hellip;</p>
-
-<p>sudo chmod +s /usr/bin/docker (give docker an &rsquo;s&rsquo;)</p>
-
+<p>sudo chmod +s /usr/bin/docker (give docker an &lsquo;s&rsquo;)</p>
 <p>docker pull ubuntu (like git..)</p>
-
 <p>docker run -idt &ndash;hostname test &ndash;name test  ubuntu (a background ubuntu bash, use docker-enter to enter it or nsenter its pid)</p>
-
 <p>docker rm (rm containers)</p>
-
 <p>docker rm $(docker ps -a -q)</p>
-
 <p>docker rmi (rm images)</p>
-
-<p>From: <a href="https://raw.githubusercontent.com/yeasy/docker_practice/master/_local/.bashrc_docker" target="_blank">https://raw.githubusercontent.com/yeasy/docker_practice/master/_local/.bashrc_docker</a></p>
-
+<p>From: <a href="https://raw.githubusercontent.com/yeasy/docker_practice/master/_local/.bashrc_docker">https://raw.githubusercontent.com/yeasy/docker_practice/master/_local/.bashrc_docker</a></p>
 <p>docker-enter container</p>
-
 <p>docker run -d -p 5000:5000 registry</p>
-
 <p>docker run -idt &ndash;hostname test -v /opt/docker-share:/root/share ubuntu (When rm use docker rm -v xxx)</p>
-
 <p>docker run -d -v /dbdata &ndash;name d-data ubunutu</p>
-
 <p>docker run -dti -p 5000:5000 ubuntu</p>
-
 <p>docker run -dti -p 127.0.0.1:5000:5000 ubuntu</p>
-
 <p>docker run -dti -p 127.0.0.1:5000:5000 -p 2333:80 ubuntu</p>
-
 <p>docker run -dti -p 127.0.0.1:5000:5000/udp ubuntu</p>
-
 <p>docker run -dti -P ubuntu</p>
-
-<p>docker  port [tag_or_name_of_container]</p>
-
+<p>docker	port [tag_or_name_of_container]</p>
 <p>ps: container&rsquo;s name is exclusive.</p>
-
 <p>docker run -dti &ndash;hostname test-db &ndash;name db ubuntu</p>
-
 <p>docker run -dti &ndash;hostname test-web &ndash;name web &ndash;link db:db ubuntu # And you can ping db to get direct connection to db container</p>
-
 <h2 id="advanced">ADVANCED</h2>
 
 </div>

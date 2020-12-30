@@ -27,7 +27,7 @@
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='debug'><meta property='article:tag' content='bash'><meta property='article:published_time' content='2018-03-13T22:31:28&#43;08:00'/><meta property='article:modified_time' content='2018-03-13T22:31:28&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>Max-Length-in-Shebang • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/max-length-in-shebang/'>
@@ -122,19 +122,12 @@ if (!doNotTrack) {
   <blockquote>
 <p>Life is full of surprises.</p>
 </blockquote>
-
 <p>昨天遇到一个Jenkins CI中执行tox出错的问题, 说 interpreter not found, 仔细debug了一番, 最终发现是shebang太长了.</p>
-
-<p>然后就找到了对应的解释: <a href="https://stackoverflow.com/questions/10813538/shebang-line-limit-in-bash-and-linux-kernel" target="_blank">shebang-line-limit-in-bash-and-linux-kernel</a></p>
-
+<p>然后就找到了对应的解释: <a href="https://stackoverflow.com/questions/10813538/shebang-line-limit-in-bash-and-linux-kernel">shebang-line-limit-in-bash-and-linux-kernel</a></p>
 <p>原因是在执行tox的过程中, tox没有使用系统自带的python 或者 pip, 而是自己下载了一个, 放到 <code>$YOUR_PROJECT/.tox/bin/py27/pip</code> 里面, 然后这个pip文件里的开头是 <code>#!$YOUR_PROJECT/.tox/bin/py27/python2.7</code>, 如果你的project名字太长, 导致这一行超过了128个字符的话, 那么就gg.</p>
-
 <p>这个问题会经常出现在Jenkins的python项目里, 因为jenkins在CI的过程中会自动扩展你项目的名字, 让他变得很长, 很大概率超过128个, 比如我们项目的 <code>#!/var/jenkins_home/workspace/srv_feature_PLATFORMDEV-581-QM1COB64VSWGD5RGAT631CKDKW3TXH2CEI0XKLJZICJXXBM8SF9A@2/.tox/py27/bin/python2.7</code> 根本tmd不能用. 报错信息: <code>bad interpreter: Permission denied</code></p>
-
-<p>还有一些人在讨论: <a href="https://github.com/pypa/pip/issues/1773" target="_blank">https://github.com/pypa/pip/issues/1773</a> 然而他们好久没有发布新版本出来了&hellip;</p>
-
-<p>有个老哥也遇到坑了: <a href="https://www.saltycrane.com/blog/2008/05/usrbinpython-bad-interpreter-permission/" target="_blank">/usr/bin/python: bad interpreter: Permission denied error</a></p>
-
+<p>还有一些人在讨论: <a href="https://github.com/pypa/pip/issues/1773">https://github.com/pypa/pip/issues/1773</a> 然而他们好久没有发布新版本出来了&hellip;</p>
+<p>有个老哥也遇到坑了: <a href="https://www.saltycrane.com/blog/2008/05/usrbinpython-bad-interpreter-permission/">/usr/bin/python: bad interpreter: Permission denied error</a></p>
 <p>解决方案是, 在tox的配置文件里指定command而不是用它自己生成的python或者pip:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[tox]</span>
 <span style="color:#75715e"># List the environment that will be run by default</span>
@@ -154,13 +147,10 @@ if (!doNotTrack) {
 
 <span style="color:#a6e22e">commands</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">python {envdir}/bin/coverage erase
 </span><span style="color:#e6db74">           python {envdir}/bin/coverage run -m unittest discover -s tests/
-</span><span style="color:#e6db74">           python {envdir}/bin/coverage report -m --omit=*test*,.tox/*</span></code></pre></div>
-<p>然后, 为了让搜索引擎更快的找到我, 加一些关键词在这里:</p>
-
+</span><span style="color:#e6db74">           python {envdir}/bin/coverage report -m --omit=*test*,.tox/*</span>
+</code></pre></div><p>然后, 为了让搜索引擎更快的找到我, 加一些关键词在这里:</p>
 <p>jenkins tox bad interpreter permission denied</p>
-
 <p>jenkins CI 构建失败 没有权限 python</p>
-
 <blockquote>
 <p>Good Luck~</p>
 </blockquote>

@@ -6,7 +6,7 @@
 只解决问题，不废话：
 cd /opt/sublime_text &amp;&amp;\ sudo wget &#34;https://gist.githubusercontent.com/wrfly/baf1314ae25f41fe8cde/raw/45c669808bed8eb6d98fe6caa3f730076e5aede3/imfix.c&#34; &amp;&amp;\ sudo apt-get install build-essential libgtk2.0-dev &amp;&amp;\ sudo gcc -shared -o imfix.so imfix.c `pkg-config --libs --cflags gtk&#43;-2.0` -fPIC &amp;&amp;\ sudo sed -i &#34;s/exec/LD_PRELOAD=\/opt\/sublime_text\/imfix.so/&#34; /usr/bin/subl &amp;&amp;\ sudo sed -i &#34;s/\/opt\/sublime_text\/sublime_text/subl/g&#34; /usr/share/applications/sublime_text.desktop &amp;&amp;\ echo &#34;Succeed!&#34; 如果你还嫌麻烦的话，没关系～
 一键安装脚本在这儿：
-wget https://gist.githubusercontent.com/wrfly/5f4187be96d93e95ad07/raw/15953c30b549efb4185df6d229324e465d279606/auto_imfix.sh 然后运行就好了 :)
+wget https://gist.githubusercontent.com/wrfly/5f4187be96d93e95ad07/raw/15953c30b549efb4185df6d229324e465d279606/auto_imfix.sh  然后运行就好了 :)
 部分引用自http://html5beta.com/page/ubuntu-14-04-install-fcitx-sougoupinyin-sublime-text-3-chinese-input-fix.html'>
 <meta name='theme-color' content='#ffcd00'>
 
@@ -15,13 +15,13 @@ wget https://gist.githubusercontent.com/wrfly/5f4187be96d93e95ad07/raw/15953c30b
 只解决问题，不废话：
 cd /opt/sublime_text &amp;&amp;\ sudo wget &#34;https://gist.githubusercontent.com/wrfly/baf1314ae25f41fe8cde/raw/45c669808bed8eb6d98fe6caa3f730076e5aede3/imfix.c&#34; &amp;&amp;\ sudo apt-get install build-essential libgtk2.0-dev &amp;&amp;\ sudo gcc -shared -o imfix.so imfix.c `pkg-config --libs --cflags gtk&#43;-2.0` -fPIC &amp;&amp;\ sudo sed -i &#34;s/exec/LD_PRELOAD=\/opt\/sublime_text\/imfix.so/&#34; /usr/bin/subl &amp;&amp;\ sudo sed -i &#34;s/\/opt\/sublime_text\/sublime_text/subl/g&#34; /usr/share/applications/sublime_text.desktop &amp;&amp;\ echo &#34;Succeed!&#34; 如果你还嫌麻烦的话，没关系～
 一键安装脚本在这儿：
-wget https://gist.githubusercontent.com/wrfly/5f4187be96d93e95ad07/raw/15953c30b549efb4185df6d229324e465d279606/auto_imfix.sh 然后运行就好了 :)
+wget https://gist.githubusercontent.com/wrfly/5f4187be96d93e95ad07/raw/15953c30b549efb4185df6d229324e465d279606/auto_imfix.sh  然后运行就好了 :)
 部分引用自http://html5beta.com/page/ubuntu-14-04-install-fcitx-sougoupinyin-sublime-text-3-chinese-input-fix.html'>
 <meta property='og:url' content='https://wrfly.kfd.me/posts/%E8%AE%A9sublime-text-%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87%E8%BE%93%E5%85%A5ubuntu/'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='ubuntu'><meta property='article:published_time' content='2015-06-05T00:00:00Z'/><meta property='article:modified_time' content='2015-06-05T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>让sublime text 支持中文输入（ubuntu） • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/%E8%AE%A9sublime-text-%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87%E8%BE%93%E5%85%A5ubuntu/'>
@@ -114,7 +114,6 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>解决在ubuntu下用 <em>sublime_text_3</em> 输入中文的问题。</p>
-
 <p>只解决问题，不废话：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cd /opt/sublime_text <span style="color:#f92672">&amp;&amp;</span><span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>sudo  wget <span style="color:#e6db74">&#34;https://gist.githubusercontent.com/wrfly/baf1314ae25f41fe8cde/raw/45c669808bed8eb6d98fe6caa3f730076e5aede3/imfix.c&#34;</span> <span style="color:#f92672">&amp;&amp;</span><span style="color:#ae81ff">\
@@ -122,14 +121,13 @@ if (!doNotTrack) {
 </span><span style="color:#ae81ff"></span>sudo gcc -shared -o imfix.so imfix.c  <span style="color:#e6db74">`</span>pkg-config --libs --cflags gtk+-2.0<span style="color:#e6db74">`</span> -fPIC <span style="color:#f92672">&amp;&amp;</span><span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>sudo sed -i <span style="color:#e6db74">&#34;s/exec/LD_PRELOAD=\/opt\/sublime_text\/imfix.so/&#34;</span> /usr/bin/subl <span style="color:#f92672">&amp;&amp;</span><span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>sudo sed -i <span style="color:#e6db74">&#34;s/\/opt\/sublime_text\/sublime_text/subl/g&#34;</span> /usr/share/applications/sublime_text.desktop <span style="color:#f92672">&amp;&amp;</span><span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>echo <span style="color:#e6db74">&#34;Succeed!&#34;</span></code></pre></div>
-<p>如果你还嫌麻烦的话，没关系～</p>
-
+</span><span style="color:#ae81ff"></span>echo <span style="color:#e6db74">&#34;Succeed!&#34;</span>
+</code></pre></div><p>如果你还嫌麻烦的话，没关系～</p>
 <p>一键安装脚本在这儿：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">wget https://gist.githubusercontent.com/wrfly/5f4187be96d93e95ad07/raw/15953c30b549efb4185df6d229324e465d279606/auto_imfix.sh</pre></div>
+<pre><code>wget https://gist.githubusercontent.com/wrfly/5f4187be96d93e95ad07/raw/15953c30b549efb4185df6d229324e465d279606/auto_imfix.sh
+</code></pre>
 <p>然后运行就好了 :)</p>
-
-<p>部分引用自<a href="http://html5beta.com/page/ubuntu-14-04-install-fcitx-sougoupinyin-sublime-text-3-chinese-input-fix.html" target="_blank">http://html5beta.com/page/ubuntu-14-04-install-fcitx-sougoupinyin-sublime-text-3-chinese-input-fix.html</a></p>
+<p>部分引用自<a href="http://html5beta.com/page/ubuntu-14-04-install-fcitx-sougoupinyin-sublime-text-3-chinese-input-fix.html">http://html5beta.com/page/ubuntu-14-04-install-fcitx-sougoupinyin-sublime-text-3-chinese-input-fix.html</a></p>
 
 </div>
 

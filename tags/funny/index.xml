@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>funny on wrfly&#39;s blog</title>
@@ -19,21 +19,19 @@
       <description>1.sl 命令
 你会看到一辆火车从屏幕右边开往左边……
 安装
-$ sudo apt-get install sl 运行
-$ sl 命令有 -a l F e 几个选项，
+$ sudo apt-get install sl  运行
+$ sl  命令有 -a l F e 几个选项，
 -a An accident seems to happen. You&amp;rsquo;ll feel pity for people who cry for help.
 -l shows little one.
 -F It flies.
 -e Allow interrupt by Ctrl+C.
 可以给别人来个恶作剧，他一敲ls，不知道的肯定很有效果
-$alias ls=sl 2.fortune 命令
+$alias ls=sl  2.fortune 命令
 输出一句话，有笑话，名言什么的 (还有唐诗宋词sudo apt-get install fortune-zh)
 安装
-$sudo apt-get install fortune 运行
-$fortune 3.cowsay 命令
-用ASCII字符打印牛，羊等动物，还有个cowthink，这个是奶牛想，那个是奶牛说，哈哈，差不多
-安装
-$sudo apt-get install cowsay 运行</description>
+$sudo apt-get install fortune  运行
+$fortune  3.cowsay 命令
+用ASCII字符打印牛，羊等动物，还有个cowthink，这个是奶牛想，那个是奶牛说，哈哈，差不多</description>
     </item>
     
   </channel>

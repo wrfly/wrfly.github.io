@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>translate on wrfly&#39;s blog</title>
@@ -18,8 +18,8 @@
       <guid>https://wrfly.kfd.me/posts/go-scheduler/</guid>
       <description>翻译自: http://morsmachine.dk/go-scheduler
 虽然是13年的一篇文章, 但还是值得一读的.
-介绍 Go 1.1版本一个大的改动是由Dmitry Vyukov做的新的调度器. 新的调度器在性能上为go程序并行提供了&amp;rdquo;戏剧性&amp;rdquo;的提升(总之是很牛), 然后自己又没别的事情做, 就想着写一写这个新的调度器(或者说思路, 方法, 概念 balabala).
-这篇文章中的大部分内容都在这个原始文档中提出了, 这个文档写的很全面, 但是太&amp;rdquo;技术&amp;rdquo;了. (我感觉也太技术了, 云里雾里的, 所以作者在这里打算通俗的讲一讲)
+介绍 Go 1.1版本一个大的改动是由Dmitry Vyukov做的新的调度器. 新的调度器在性能上为go程序并行提供了&amp;quot;戏剧性&amp;quot;的提升(总之是很牛), 然后自己又没别的事情做, 就想着写一写这个新的调度器(或者说思路, 方法, 概念 balabala).
+这篇文章中的大部分内容都在这个原始文档中提出了, 这个文档写的很全面, 但是太&amp;quot;技术&amp;quot;了. (我感觉也太技术了, 云里雾里的, 所以作者在这里打算通俗的讲一讲)
 关于新的调度器, 你需要知道的都在那篇原始文档里, 但是这篇文章有图~ 所以更清晰一点.
 带有调度器的Go运行时(go runtime)需要什么 在我们深入了解调度器之前, 我们需要理解为什么它是必须的. 为什么在操作系统可以帮你调度线程的时候, 你仍然需要一个用户空间下的调度器.
 POSIX线程API对于现存的Unix进程模型来说更像是一个逻辑扩展, 于此, 对于线程的控制, 更接近与对进程的控制. 线程拥有其自己的信号标志位, 可以被CPU协同分配, 可以被放进cgroups中管理, 可以被查询其所用的资源等. 这些控件对于go程序调度goroutine来说, 增加了很多无谓的功能和开销, 并且当线程数达到100,000时, 开销会迅速增加.
@@ -50,8 +50,8 @@ func Poller(res *Resources) { for { // get the least recently-polled Resource  /
       
       <guid>https://wrfly.kfd.me/posts/linux%E4%B8%AD%E7%9A%84tar%E5%91%BD%E4%BB%A4/</guid>
       <description>原文链接：http://www.tecmint.com/18-tar-command-examples-in-linux/
-tar [-options(&amp;#34;-&amp;#34; is not necessary)] [name] [path or file(default current directory, if epmty)] 废话不多说，直接拿来用～
-创建一个tar文档（打包文档） tar -cvf [name.tar] [path or file] #c-creat v-view(show the progress) f-file(并不会解释) 创建一个tar.gz文档（打包并压缩） tar -cvzf [name.tar.gz] [path or file] #z-compress file to **gzip** 创建tar.bz2文档（压缩，另一种形式） tar cvfj [name.tar.bz2] [path or file] #这次是 **j** 解压一个tar文件 (x-extract-uncompress) tar -xvf [name.tar or name.tar.gz or name.tar.bz2] -c [path] or tar xvf [name.tar or name.tar.gz or name.tar.bz2] #empty for current directory 查看压缩文件目录(list) tar tvf name.</description>
+tar [-options(&amp;quot;-&amp;quot; is not necessary)] [name] [path or file(default current directory, if epmty)]  废话不多说，直接拿来用～
+创建一个tar文档（打包文档） tar -cvf [name.tar] [path or file] #c-creat v-view(show the progress) f-file(并不会解释)  创建一个tar.gz文档（打包并压缩） tar -cvzf [name.tar.gz] [path or file] #z-compress file to **gzip**  创建tar.bz2文档（压缩，另一种形式） tar cvfj [name.tar.bz2] [path or file] #这次是 **j**  解压一个tar文件 (x-extract-uncompress) tar -xvf [name.tar or name.tar.gz or name.tar.bz2] -c [path] or tar xvf [name.tar or name.tar.gz or name.tar.bz2] #empty for current directory  查看压缩文件目录(list) tar tvf name.</description>
     </item>
     
   </channel>

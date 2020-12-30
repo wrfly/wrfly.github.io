@@ -3,9 +3,9 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='sublimetext的PackageControl连接总是超时，但是手头又没有http的代理，都是用的shadowsocks，然后就要想个办法怎样把socks5代理转换成http代理。
-先是大体搜了一下，解决方案有这两种： - proxychains - tsocks
-但是这两种代理都不复合我的要求，因为他们只能代理一次请求，不会持续listen一个端口，然后提供服务。
-不得已之下，自己&rdquo;写&rdquo;一个吧。
+先是大体搜了一下，解决方案有这两种：
+ proxychains tsocks  但是这两种代理都不复合我的要求，因为他们只能代理一次请求，不会持续listen一个端口，然后提供服务。
+不得已之下，自己&quot;写&quot;一个吧。
 https://github.com/wrfly/hovers
 其实到后来才搜到，有个老牌的代理软件：privoxy，安装之后，在配置文件里添加 forward-socks5 / 127.0.0.1:1080 . 就可以了。其中127.0.0.1:1080是socks5的代理地址。
 然后在sublime中配置一下： ~/.config/sublime-text-3/Packages/User/Package Control.sublime-settings
@@ -15,9 +15,9 @@ https://github.com/wrfly/hovers
 
 <meta property='og:title' content='还是代理 • wrfly&#39;s blog'>
 <meta property='og:description' content='sublimetext的PackageControl连接总是超时，但是手头又没有http的代理，都是用的shadowsocks，然后就要想个办法怎样把socks5代理转换成http代理。
-先是大体搜了一下，解决方案有这两种： - proxychains - tsocks
-但是这两种代理都不复合我的要求，因为他们只能代理一次请求，不会持续listen一个端口，然后提供服务。
-不得已之下，自己&rdquo;写&rdquo;一个吧。
+先是大体搜了一下，解决方案有这两种：
+ proxychains tsocks  但是这两种代理都不复合我的要求，因为他们只能代理一次请求，不会持续listen一个端口，然后提供服务。
+不得已之下，自己&quot;写&quot;一个吧。
 https://github.com/wrfly/hovers
 其实到后来才搜到，有个老牌的代理软件：privoxy，安装之后，在配置文件里添加 forward-socks5 / 127.0.0.1:1080 . 就可以了。其中127.0.0.1:1080是socks5的代理地址。
 然后在sublime中配置一下： ~/.config/sublime-text-3/Packages/User/Package Control.sublime-settings
@@ -27,7 +27,7 @@ https://github.com/wrfly/hovers
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='code'><meta property='article:published_time' content='2017-04-02T00:00:00Z'/><meta property='article:modified_time' content='2017-04-02T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>还是代理 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/%E8%BF%98%E6%98%AF%E4%BB%A3%E7%90%86/'>
@@ -120,25 +120,20 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>sublimetext的PackageControl连接总是超时，但是手头又没有http的代理，都是用的shadowsocks，然后就要想个办法怎样把socks5代理转换成http代理。</p>
-
-<p>先是大体搜了一下，解决方案有这两种：
-- proxychains
-- tsocks</p>
-
+<p>先是大体搜了一下，解决方案有这两种：</p>
+<ul>
+<li>proxychains</li>
+<li>tsocks</li>
+</ul>
 <p>但是这两种代理都不复合我的要求，因为他们只能代理一次请求，不会持续listen一个端口，然后提供服务。</p>
-
-<p>不得已之下，自己&rdquo;写&rdquo;一个吧。</p>
-
-<p><a href="https://github.com/wrfly/hovers" target="_blank">https://github.com/wrfly/hovers</a></p>
-
+<p>不得已之下，自己&quot;写&quot;一个吧。</p>
+<p><a href="https://github.com/wrfly/hovers">https://github.com/wrfly/hovers</a></p>
 <p>其实到后来才搜到，有个老牌的代理软件：<code>privoxy</code>，安装之后，在配置文件里添加 <code>forward-socks5  /  127.0.0.1:1080  .</code> 就可以了。其中<code>127.0.0.1:1080</code>是socks5的代理地址。</p>
-
 <p>然后在sublime中配置一下：
 <code>~/.config/sublime-text-3/Packages/User/Package Control.sublime-settings</code></p>
-
 <p>添加：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&#34;http_proxy&#34;: &#34;localhost:8118&#34;</pre></div>
-<p>即可。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">&#34;http_proxy&#34;: &#34;localhost:8118&#34;
+</code></pre></div><p>即可。</p>
 
 </div>
 

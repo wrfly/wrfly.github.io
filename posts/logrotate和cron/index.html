@@ -27,7 +27,7 @@ http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-2
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='share'><meta property='article:tag' content='devops'><meta property='article:published_time' content='2016-07-21T00:00:00Z'/><meta property='article:modified_time' content='2016-07-21T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>logrotate和cron • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/logrotate%E5%92%8Ccron/'>
@@ -120,15 +120,11 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>来公司实习了四天了，遇到了一些大大小小的问题，写脚本遇到的就不详细说了，说一下定时任务和logrotate（日志滚转）。</p>
-
-<p>两篇文章介绍logrotate：<a href="http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-1" target="_blank">http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-1</a></p>
-
-<p><a href="http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-2" target="_blank">http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-2</a></p>
-
+<p>两篇文章介绍logrotate：http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-1</p>
+<p><a href="http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-2">http://articles.slicehost.com/2010/6/30/understanding-logrotate-on-ubuntu-part-2</a></p>
 <p>说的很详细，具体文件可以参考 <code>/etc/logrotate.d/</code> 目录下的内容。</p>
-
 <p>给出一个范本：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/var/log/test/*.log {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">/var/log/test/*.log {
     hourly
     rotate 4
     missingok
@@ -136,13 +132,10 @@ if (!doNotTrack) {
     notifempty
     compress
     create
-}</pre></div>
-<p>从<code>/var/log/test/</code>目录下查找所有的以<code>.log</code>结尾的文件，每小时轮回一次，保存最近的四个，如果文件不存在也OK，限定大小是超过10M的文件，这里要注意的是，如果文件大小已经超过10M了，那下次logrotate运行的时候，就会忽略上面的hourly，直接rotate，notifempty的意思是，如果文件是空的，则不进行rotate，默认情况是进行的，可以查看man手册查阅详细的说明。压缩，并创建一个新的空文件，防止依赖日志文件的应用报错。</p>
-
+}
+</code></pre></div><p>从<code>/var/log/test/</code>目录下查找所有的以<code>.log</code>结尾的文件，每小时轮回一次，保存最近的四个，如果文件不存在也OK，限定大小是超过10M的文件，这里要注意的是，如果文件大小已经超过10M了，那下次logrotate运行的时候，就会忽略上面的hourly，直接rotate，notifempty的意思是，如果文件是空的，则不进行rotate，默认情况是进行的，可以查看man手册查阅详细的说明。压缩，并创建一个新的空文件，防止依赖日志文件的应用报错。</p>
 <p>还需要把logrotate放到cron.hourly目录下，这样配置的hourly才会生效。</p>
-
 <p>还要说的是，可以使用<code>logrotate -f</code>来强制执行轮回。</p>
-
 <p>在这里实习很好玩，真的有很多事情可以做。</p>
 
 </div>

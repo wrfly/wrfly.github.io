@@ -25,7 +25,7 @@ package main import &#34;net&#34; const host = &#34;www.google.com&#34; func mai
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='go'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2018-07-31T23:00:06&#43;08:00'/><meta property='article:modified_time' content='2018-07-31T23:00:06&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>golang: netgo vs cgo • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/golang-netgo-vs-cgo/'>
@@ -117,24 +117,14 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p>由于alpine很小巧, 其经常被拿来当作容器应用运行时的基础镜像, 但是稍不注意, 就会踩一个坑.</p>
-
+  <p>由于alpine很小巧, 其经常被拿来当作容器应用运行时的基础镜像, 但是稍不注意, 就会踩一个坑.</p>
 <p>一般来讲, 如果我们想改变某个域名的地址, 除了更改DNS记录, 那就只有更改hosts文件了, 由于容器的便捷性, 我们总是会更改容器的hosts文件, 不管是通过 <code>--add-host</code>也好, 挂载hosts文件进去也好, 总之, 是更改这个文件.</p>
-
 <h3 id="问题发现">问题发现</h3>
-
 <p>然鹅! 有时候竟然会出现更改hosts文件无效的情况! 明明在里面ping是可以的呀! 为什么程序就不走这个IP呢? (默认golang程序)</p>
-
 <p>经过仔细的排查发现, 是golang程序的问题&hellip; 中间过程略去不表&hellip;</p>
-
-<p>alpine由于是个小巧的linux系统, 里面没有 <code>/etc/nsswitch.conf</code> 文件, 默认编译的go程序(netgo)会首先去查找这个文件, 判断dns查找顺序, 如果找不到这个文件, 那就 &ldquo;自行决断&rdquo;, 去DNS服务器里查找了. 所以如果想解决这个问题, 可以在image里面把这个文件给 &ldquo;补上&rdquo;: <a href="https://github.com/docker/distribution-library-image/pull/66" target="_blank">可以看这个PR</a></p>
-
-<p>关于<code>nsswitch.conf</code>的详细介绍, 可以看这里 <a href="http://man7.org/linux/man-pages/man5/nsswitch.conf.5.html" target="_blank">man</a> 或者 <code>man nsswitch.conf</code></p>
-
+<p>alpine由于是个小巧的linux系统, 里面没有 <code>/etc/nsswitch.conf</code> 文件, 默认编译的go程序(netgo)会首先去查找这个文件, 判断dns查找顺序, 如果找不到这个文件, 那就 &ldquo;自行决断&rdquo;, 去DNS服务器里查找了. 所以如果想解决这个问题, 可以在image里面把这个文件给 &ldquo;补上&rdquo;: <a href="https://github.com/docker/distribution-library-image/pull/66">可以看这个PR</a></p>
+<p>关于<code>nsswitch.conf</code>的详细介绍, 可以看这里 <a href="http://man7.org/linux/man-pages/man5/nsswitch.conf.5.html">man</a> 或者 <code>man nsswitch.conf</code></p>
 <h3 id="实验验证">实验验证</h3>
-
 <p>下面有个小实验:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 
@@ -153,20 +143,19 @@ if (!doNotTrack) {
 		println(<span style="color:#e6db74">&#34;lookup:&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">ip</span>.<span style="color:#a6e22e">String</span>())
 		<span style="color:#66d9ef">return</span>
 	}
-}</code></pre></div>
-<p>这个程序会查找google的IP地址并打印出来.</p>
+}
+</code></pre></div><p>这个程序会查找google的IP地址并打印出来.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> golang:alpine</span><span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># remove this file</span><span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> rm /etc/nsswitch.conf<span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span>COPY main.go /root<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> main.go /root<span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> go build -o /bin/ncgo /root/main.go<span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span><span style="color:#e6db74"> [ &#34;/bin/ncgo&#34; ]</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span> [ <span style="color:#e6db74">&#34;/bin/ncgo&#34;</span> ]<span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># GODEBUG=netdns=go /bin/ncgo</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># GODEBUG=netdns=cgo /bin/ncgo</span></code></pre></div>
-<p>这个dockerfile会编译这个文件, 并首先删除系统里的nsswitch.conf(alpine默认是没有的, golang后来添加的)</p>
-
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># GODEBUG=netdns=cgo /bin/ncgo</span><span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>这个dockerfile会编译这个文件, 并首先删除系统里的nsswitch.conf(alpine默认是没有的, golang后来添加的)</p>
 <p>然后我们构建这个镜像并运行一下:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  netgo_cgo docker build -t netgo_cgo .
 Sending build context to Docker daemon  5.408MB
@@ -193,16 +182,13 @@ lookup:69.171.245.84
 ➜  netgo_cgo docker run --rm -ti --add-host www.google.com:1.1.1.1 -e GODEBUG=netdns=cgo netgo_cgo 
 www.google.com
 lookup:1.1.1.1
-➜  netgo_cgo</code></pre></div>
-<p>可以看到, 使用go默认的resolver会忽略hosts文件种的内容, 而使用cgo则读取了hosts文件中的内容.</p>
-
+➜  netgo_cgo
+</code></pre></div><p>可以看到, 使用go默认的resolver会忽略hosts文件种的内容, 而使用cgo则读取了hosts文件中的内容.</p>
 <p>这种使用环境变量去设定程序resolver的方式, 也可以在build的时候添加tag来实现:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">go build --tags netcgo -o netcgo
-go build --tags netgo -o netgo</code></pre></div>
-<p>那么, 这两个tag还有什么不同呢?</p>
-
+go build --tags netgo -o netgo
+</code></pre></div><p>那么, 这两个tag还有什么不同呢?</p>
 <h3 id="深入研究">深入研究</h3>
-
 <p>我们加上调试参数来看看:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  netgo_cgo go build -x --tags netcgo -o netcgo
 WORK=/tmp/go-build691479627
@@ -236,11 +222,9 @@ cd /home/mr/test/go/netgo_cgo
 /opt/go/pkg/tool/linux_amd64/compile -o $WORK/_/home/mr/test/go/netgo_cgo.a -trimpath $WORK -goversion go1.9.2 -p main -complete -buildid eb016ff3c1708c2bfbf31469f574aff99c045d11 -D _/home/mr/test/go/netgo_cgo -I $WORK -pack ./main.go
 cd .
 /opt/go/pkg/tool/linux_amd64/link -o $WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out -L $WORK -extld=gcc -buildmode=exe -buildid=eb016ff3c1708c2bfbf31469f574aff99c045d11 $WORK/_/home/mr/test/go/netgo_cgo.a
-cp $WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out netcgo</code></pre></div>
-<p>好长一大串!</p>
-
+cp $WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out netcgo
+</code></pre></div><p>好长一大串!</p>
 <p>可以看到, golang使用了gcc去编译这个文件.</p>
-
 <p>那么换成<code>netgo</code>呢?</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  netgo_cgo go build -x --tags netgo -o netgo 
 WORK=/tmp/go-build857020109
@@ -255,9 +239,8 @@ cd /home/mr/test/go/netgo_cgo
 cd .
 /opt/go/pkg/tool/linux_amd64/link -o $WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out -L $WORK -extld=gcc -buildmode=exe -buildid=a0e2e67cde44dfa98c4ccaf123bd7ff6ae1370f8 $WORK/_/home/mr/test/go/netgo_cgo.a
 cp $WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out netgo
-➜  netgo_cgo </code></pre></div>
-<p>就短多了, 可以看到用的是 <code>/opt/go/pkg/tool/linux_amd64/compile</code></p>
-
+➜  netgo_cgo 
+</code></pre></div><p>就短多了, 可以看到用的是 <code>/opt/go/pkg/tool/linux_amd64/compile</code></p>
 <p>在来看一下默认的build:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">➜  netgo_cgo go build -x
 WORK=/tmp/go-build285258876
@@ -268,17 +251,18 @@ cd /home/mr/test/go/netgo_cgo
 cd .
 /opt/go/pkg/tool/linux_amd64/link -o $WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out -L $WORK -extld=gcc -buildmode=exe -buildid=137ba24345f4e3075192f2afe0e3b5aad76f10b7 $WORK/_/home/mr/test/go/netgo_cgo.a
 cp $WORK/_/home/mr/test/go/netgo_cgo/_obj/exe/a.out netgo_cgo
-➜  netgo_cgo</code></pre></div>
-<p>然后我们对比一下这些二进制文件:</p>
+➜  netgo_cgo
+</code></pre></div><p>然后我们对比一下这些二进制文件:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">➜  netgo_cgo ll
 total <span style="color:#ae81ff">8004</span>
-drwxrwxr-x  <span style="color:#ae81ff">2</span> mr mr    <span style="color:#ae81ff">4096</span> Jul <span style="color:#ae81ff">31</span> <span style="color:#ae81ff">23</span>:31 ./
-drwxr-xr-x <span style="color:#ae81ff">46</span> mr mr   <span style="color:#ae81ff">12288</span> Jul <span style="color:#ae81ff">31</span> <span style="color:#ae81ff">22</span>:19 ../
--rw-r--r--  <span style="color:#ae81ff">1</span> mr mr     <span style="color:#ae81ff">206</span> Jul <span style="color:#ae81ff">31</span> <span style="color:#ae81ff">23</span>:18 Dockerfile
--rw-rw-r--  <span style="color:#ae81ff">1</span> mr mr     <span style="color:#ae81ff">229</span> Jul <span style="color:#ae81ff">31</span> <span style="color:#ae81ff">23</span>:17 main.go
--rwxr-xr-x  <span style="color:#ae81ff">1</span> mr mr <span style="color:#ae81ff">2726957</span> Jul <span style="color:#ae81ff">31</span> <span style="color:#ae81ff">23</span>:30 netcgo*
--rwxr-xr-x  <span style="color:#ae81ff">1</span> mr mr <span style="color:#ae81ff">2672063</span> Jul <span style="color:#ae81ff">31</span> <span style="color:#ae81ff">23</span>:31 netgo*
--rwxr-xr-x  <span style="color:#ae81ff">1</span> mr mr <span style="color:#ae81ff">2726922</span> Jul <span style="color:#ae81ff">31</span> <span style="color:#ae81ff">23</span>:31 netgo_cgo*</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">➜  netgo_cgo ls
+drwxrwxr-x  <span style="color:#ae81ff">2</span> mr mr    <span style="color:#ae81ff">4096</span> Jul <span style="color:#ae81ff">31</span> 23:31 ./
+drwxr-xr-x <span style="color:#ae81ff">46</span> mr mr   <span style="color:#ae81ff">12288</span> Jul <span style="color:#ae81ff">31</span> 22:19 ../
+-rw-r--r--  <span style="color:#ae81ff">1</span> mr mr     <span style="color:#ae81ff">206</span> Jul <span style="color:#ae81ff">31</span> 23:18 Dockerfile
+-rw-rw-r--  <span style="color:#ae81ff">1</span> mr mr     <span style="color:#ae81ff">229</span> Jul <span style="color:#ae81ff">31</span> 23:17 main.go
+-rwxr-xr-x  <span style="color:#ae81ff">1</span> mr mr <span style="color:#ae81ff">2726957</span> Jul <span style="color:#ae81ff">31</span> 23:30 netcgo*
+-rwxr-xr-x  <span style="color:#ae81ff">1</span> mr mr <span style="color:#ae81ff">2672063</span> Jul <span style="color:#ae81ff">31</span> 23:31 netgo*
+-rwxr-xr-x  <span style="color:#ae81ff">1</span> mr mr <span style="color:#ae81ff">2726922</span> Jul <span style="color:#ae81ff">31</span> 23:31 netgo_cgo*
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">➜  netgo_cgo ls
 Dockerfile  main.go  netcgo  netgo  netgo_cgo
 ➜  netgo_cgo ldd net*
 netcgo:
@@ -293,13 +277,13 @@ netgo_cgo:
 	libpthread.so.0 <span style="color:#f92672">=</span>&gt; /lib/x86_64-linux-gnu/libpthread.so.0 <span style="color:#f92672">(</span>0x00007f4d7ad12000<span style="color:#f92672">)</span>
 	libc.so.6 <span style="color:#f92672">=</span>&gt; /lib/x86_64-linux-gnu/libc.so.6 <span style="color:#f92672">(</span>0x00007f4d7a921000<span style="color:#f92672">)</span>
 	/lib64/ld-linux-x86-64.so.2 <span style="color:#f92672">(</span>0x00007f4d7af31000<span style="color:#f92672">)</span>
-➜  netgo_cgo </code></pre></div>
-<p>在容器内部可以看到:</p>
+➜  netgo_cgo 
+</code></pre></div><p>在容器内部可以看到:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">➜  netgo_cgo docker run --rm -ti netgo_cgo ldd /bin/ncgo
 	/lib/ld-musl-x86_64.so.1 <span style="color:#f92672">(</span>0x7f0567c59000<span style="color:#f92672">)</span>
 	libc.musl-x86_64.so.1 <span style="color:#f92672">=</span>&gt; /lib/ld-musl-x86_64.so.1 <span style="color:#f92672">(</span>0x7f0567c59000<span style="color:#f92672">)</span>
-➜  netgo_cgo</code></pre></div>
-<p>然后再看一下其他信息:</p>
+➜  netgo_cgo
+</code></pre></div><p>然后再看一下其他信息:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">➜  netgo_cgo readelf -d netcgo
 
 Dynamic section at offset 0x1a9120 contains <span style="color:#ae81ff">19</span> entries:
@@ -347,11 +331,10 @@ Dynamic section at offset 0x1a9120 contains <span style="color:#ae81ff">19</span
  0x0000000000000017 <span style="color:#f92672">(</span>JMPREL<span style="color:#f92672">)</span>             0x534c58
  0x0000000000000000 <span style="color:#f92672">(</span>NULL<span style="color:#f92672">)</span>               0x0
 ➜  netgo_cgo file net*
-netcgo:    ELF <span style="color:#ae81ff">64</span>-bit LSB executable, x86-64, version <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>SYSV<span style="color:#f92672">)</span>, dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, with debug_info, not stripped
-netgo:     ELF <span style="color:#ae81ff">64</span>-bit LSB executable, x86-64, version <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>SYSV<span style="color:#f92672">)</span>, statically linked, with debug_info, not stripped
-netgo_cgo: ELF <span style="color:#ae81ff">64</span>-bit LSB executable, x86-64, version <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>SYSV<span style="color:#f92672">)</span>, dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, with debug_info, not stripped</code></pre></div>
-<p>再来strace一下, 找一找关键的点:</p>
-
+netcgo:    ELF 64-bit LSB executable, x86-64, version <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>SYSV<span style="color:#f92672">)</span>, dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, with debug_info, not stripped
+netgo:     ELF 64-bit LSB executable, x86-64, version <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>SYSV<span style="color:#f92672">)</span>, statically linked, with debug_info, not stripped
+netgo_cgo: ELF 64-bit LSB executable, x86-64, version <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>SYSV<span style="color:#f92672">)</span>, dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, with debug_info, not stripped
+</code></pre></div><p>再来strace一下, 找一找关键的点:</p>
 <p>&hellip; cogo的太长了, 感兴趣的自己对比吧, 大体意思就是, <code>netcgo</code>的调了各种lib,open这个那个的, 而<code>netgo</code>的是静态文件, 用了几个我不认识的调用就完事儿了:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">...
 ...
@@ -365,22 +348,18 @@ close(3)                                = 0
 rt_sigprocmask(SIG_SETMASK, ~[], [], 8) = 0
 clone(lookup:69.171.245.84
  &lt;unfinished ...&gt;)                = ?
-+++ exited with 0 +++</code></pre></div>
-<p>所以, 得出的结论是, 使用cgo编译的程序(或者运行时为cgo), 运行的时候会调用系统的libc, 在alpine中, 虽然它的libc是精简过的, 但人家好歹也是读了hosts文件, 所以会达到预期的效果.</p>
-
++++ exited with 0 +++
+</code></pre></div><p>所以, 得出的结论是, 使用cgo编译的程序(或者运行时为cgo), 运行的时候会调用系统的libc, 在alpine中, 虽然它的libc是精简过的, 但人家好歹也是读了hosts文件, 所以会达到预期的效果.</p>
 <h3 id="解决方案">解决方案</h3>
-
 <ol>
 <li>在alpine镜像中添加<code>/etc/nsswitch.conf</code>文件</li>
 <li>使用netcgo编译</li>
 <li>增加一个GODEBUG环境变量, 强制使用netcgo</li>
 </ol>
-
 <h3 id="known-issues">known issues</h3>
-
 <ul>
-<li><a href="https://github.com/docker/distribution/issues/2467" target="_blank">https://github.com/docker/distribution/issues/2467</a></li>
-<li><a href="https://github.com/gliderlabs/docker-alpine/issues/367" target="_blank">https://github.com/gliderlabs/docker-alpine/issues/367</a></li>
+<li><a href="https://github.com/docker/distribution/issues/2467">https://github.com/docker/distribution/issues/2467</a></li>
+<li><a href="https://github.com/gliderlabs/docker-alpine/issues/367">https://github.com/gliderlabs/docker-alpine/issues/367</a></li>
 </ul>
 
 </div>

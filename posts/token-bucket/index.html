@@ -35,7 +35,7 @@
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='code'><meta property='article:published_time' content='2018-01-14T01:07:51&#43;08:00'/><meta property='article:modified_time' content='2018-01-14T01:07:51&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>Token-Bucket • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/token-bucket/'>
@@ -128,40 +128,27 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>上周解决的bug（其实并不能算是bug，是因为量太大导致的OOM）用到了令牌桶，简单在此记录一下。</p>
-
 <p>关于令牌桶，最早接触的时候还是实习的时候用到的<code>tc</code>，这货限流就是用的令牌桶，简单地说，就是有一个桶，这个桶中有一些令牌，每进来一个包，就拿走一个令牌，当一定时间内（比如说，一秒）令牌被拿完了，那接下来的包就被丢弃了，因为他们没有拿到令牌；等到下一个时间周期，桶中再次被填满令牌，然后包来了再拿。</p>
-
-<p>更详尽的参考：<a href="http://maiyang.github.io/%E6%8A%80%E6%9C%AF/%E7%AE%97%E6%B3%95/2017/05/28/rate-limit-algorithm" target="_blank">限流:漏桶算法和令牌桶算法 </a> 其中也有wikipedia的链接。</p>
-
+<p>更详尽的参考：<a href="http://maiyang.github.io/%E6%8A%80%E6%9C%AF/%E7%AE%97%E6%B3%95/2017/05/28/rate-limit-algorithm">限流:漏桶算法和令牌桶算法 </a> 其中也有wikipedia的链接。</p>
 <p>关于实现，github上搜到的golang的实现有这几个：</p>
-
 <ul>
-<li><a href="https://github.com/bsm/ratelimit" target="_blank">https://github.com/bsm/ratelimit</a></li>
-<li><a href="https://github.com/juju/ratelimit" target="_blank">https://github.com/juju/ratelimit</a></li>
-<li><a href="https://github.com/tsenart/tb" target="_blank">https://github.com/tsenart/tb</a></li>
+<li><a href="https://github.com/bsm/ratelimit">https://github.com/bsm/ratelimit</a></li>
+<li><a href="https://github.com/juju/ratelimit">https://github.com/juju/ratelimit</a></li>
+<li><a href="https://github.com/tsenart/tb">https://github.com/tsenart/tb</a></li>
 </ul>
-
-<p>(P.S 还有我的hhh <a href="https://github.com/wrfly/testing-kit/tree/master/utils/tokenbucket" target="_blank">token bucket</a>)</p>
-
+<p>(P.S 还有我的hhh <a href="https://github.com/wrfly/testing-kit/tree/master/utils/tokenbucket">token bucket</a>)</p>
 <p>大体思路有这几个：</p>
-
 <ol>
 <li>使用lock+对比时间</li>
 <li>使用原子操作+对比时间</li>
 <li>使用原子操作+后台填桶（tikcer）</li>
 </ol>
-
 <p>令牌桶其实很简单，就看怎样实现性能最好。</p>
-
 <p>使用<code>lock</code>去拿token（看桶里还有没有token），然后再对比一下上次填桶的时间和取token的时间，就可以判断这个token能不能取到，这种实现的弊处在于<code>lock</code>的引入在数据量很大的情况下带来了不必要的<code>lock</code>和<code>unlock</code>，引起性能的下降。</p>
-
 <p>所以就引出了第二种方案，使用原子操作来取代<code>lock</code>，性能有很大的提升。对比测试在下文中有代码。</p>
-
 <p>可能会有人问，为什么要用对比时间的方式呢，后台用一个ticker定时填满不就行了。这也是我一开始想到的，但实际操作中却出现了问题，不知道是我姿势不对还是什么，测出的效果很差，怀疑是ticker没有定时执行，CPU没能调度到它上，没有来得及重置bucket。</p>
-
 <p>然后就到了最后一种方式，后台填桶。这是最直白的，开一个goroutine每隔一段时间更新bucket中的token数量。但是，理论上在高并发的情况下，CPU繁忙，go出去的ticker容易失效（goroutine没能得到CPU资源），但实际情况却。。。大大超出我的想想，这种方法竟然是效率最高的！！！</p>
-
-<p>对比测试：<a href="https://gist.github.com/wrfly/d6f3470522e10c80a77679a4636cbdb2" target="_blank">token-bucket-test.go</a></p>
+<p>对比测试：<a href="https://gist.github.com/wrfly/d6f3470522e10c80a77679a4636cbdb2">token-bucket-test.go</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">2018/01/13 18:05:17 5s test
 2018/01/13 18:05:22 bsm:  5.000064716
 2018/01/13 18:05:22 take: 6000
@@ -189,9 +176,8 @@ if (!doNotTrack) {
 2018/01/13 18:05:46 tb:  0.299582854
 2018/01/13 18:05:46 take: 1000
 2018/01/13 18:05:46 drop: 99999000
-2018/01/13 18:05:46</code></pre></div>
-<p>回头要看一下是什么原因导致<code>ticker</code>的方式竟然没毛病了，在繁忙的情况下，可能是我测试的方法不对，没能达到很多CPU占用的效果。</p>
-
+2018/01/13 18:05:46
+</code></pre></div><p>回头要看一下是什么原因导致<code>ticker</code>的方式竟然没毛病了，在繁忙的情况下，可能是我测试的方法不对，没能达到很多CPU占用的效果。</p>
 <p>但是在CPU资源充足的时候，用这种方法是绝对没问题的。</p>
 
 </div>

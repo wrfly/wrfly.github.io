@@ -4,20 +4,20 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Linux 101 hacks 翻译  ”There are only 10 types of people in the world — those who understand binary, those who don’t, and those who understand gray code” — Geek
  Author:Ramesh Natarajan 译者：wrfly From:www.thegeekstuff.com
- CDPATH
-$ pwd /tmp $ cd mail -bash: cd: mail: No such file or directory [木有这个目录] $ export CDPATH=/etc # 或者直接 CDPATH=/etc $ cd mail /etc/mail [进去了!!!] $ pwd /etc/mail  ps:CDPATH支持多个目录变量，比如，你可以CDPATH=$CDPATH:/home:/var/www:/etc:/opt，然后就可以切换到任意其中一个目录的子目录下，相当可爱～'>
+ CDPATH  $ pwd /tmp $ cd mail -bash: cd: mail: No such file or directory [木有这个目录] $ export CDPATH=/etc # 或者直接 CDPATH=/etc $ cd mail /etc/mail [进去了!!!] $ pwd /etc/mail ps:CDPATH支持多个目录变量，比如，你可以CDPATH=$CDPATH:/home:/var/www:/etc:/opt，然后就可以切换到任意其中一个目录的子目录下，相当可爱～
+ 返回上上上上层目录  alias .'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='linux-101-hacks • wrfly&#39;s blog'>
 <meta property='og:description' content='Linux 101 hacks 翻译  ”There are only 10 types of people in the world — those who understand binary, those who don’t, and those who understand gray code” — Geek
  Author:Ramesh Natarajan 译者：wrfly From:www.thegeekstuff.com
- CDPATH
-$ pwd /tmp $ cd mail -bash: cd: mail: No such file or directory [木有这个目录] $ export CDPATH=/etc # 或者直接 CDPATH=/etc $ cd mail /etc/mail [进去了!!!] $ pwd /etc/mail  ps:CDPATH支持多个目录变量，比如，你可以CDPATH=$CDPATH:/home:/var/www:/etc:/opt，然后就可以切换到任意其中一个目录的子目录下，相当可爱～'>
+ CDPATH  $ pwd /tmp $ cd mail -bash: cd: mail: No such file or directory [木有这个目录] $ export CDPATH=/etc # 或者直接 CDPATH=/etc $ cd mail /etc/mail [进去了!!!] $ pwd /etc/mail ps:CDPATH支持多个目录变量，比如，你可以CDPATH=$CDPATH:/home:/var/www:/etc:/opt，然后就可以切换到任意其中一个目录的子目录下，相当可爱～
+ 返回上上上上层目录  alias .'>
 <meta property='og:url' content='https://wrfly.kfd.me/posts/linux-101-hacks/'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:published_time' content='2015-09-24T00:00:00Z'/><meta property='article:modified_time' content='2015-09-24T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>linux-101-hacks • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/linux-101-hacks/'>
@@ -109,21 +109,17 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<h2 id="linux-101-hacks-翻译">Linux 101 hacks 翻译</h2>
-
+  <h2 id="linux-101-hacks-翻译">Linux 101 hacks 翻译</h2>
 <blockquote>
 <p>”There are only 10 types of people in the world — those who understand binary, those who don’t, and those who understand gray code”
 — Geek</p>
 </blockquote>
-
 <p><strong>Author:Ramesh Natarajan</strong>
 译者：wrfly
 From:www.thegeekstuff.com</p>
-
 <ul>
-<li><p>CDPATH</p>
+<li>CDPATH</li>
+</ul>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ pwd
 /tmp
 $ cd mail
@@ -134,44 +130,42 @@ $ cd mail
 /etc/mail
 <span style="color:#f92672">[</span>进去了!!!<span style="color:#f92672">]</span>
 $ pwd
-/etc/mail</code></pre></div></li>
-</ul>
-
-<p>ps:<code>CDPATH</code>支持多个目录变量，比如，你可以<code>CDPATH=$CDPATH:/home:/var/www:/etc:/opt</code>，然后就可以切换到任意其中一个目录的子目录下，相当可爱～</p>
-
+/etc/mail
+</code></pre></div><p>ps:<code>CDPATH</code>支持多个目录变量，比如，你可以<code>CDPATH=$CDPATH:/home:/var/www:/etc:/opt</code>，然后就可以切换到任意其中一个目录的子目录下，相当可爱～</p>
 <ul>
-<li><p>返回上上上上层目录</p>
+<li>返回上上上上层目录</li>
+</ul>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">alias ..<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cd ..&#34;</span>
 alias ..2<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cd ../..&#34;</span>
 alias ..3<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cd ../../..&#34;</span>
 alias ..4<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cd ../../../..&#34;</span>
-alias ..5<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cd ../../../../..&#34;</span></code></pre></div></li>
-</ul>
-
-<p>或者</p>
+alias ..5<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cd ../../../../..&#34;</span>
+</code></pre></div><p>或者</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">alias cd1<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cd ..&#34;</span>
 alias cd2<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cd ../..&#34;</span>
 alias cd3<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cd ../../..&#34;</span>
 alias cd4<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cd ../../../..&#34;</span>
-alias cd5<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cd ../../../../..&#34;</span></code></pre></div>
-<p>挺有趣的。</p>
-
+alias cd5<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cd ../../../../..&#34;</span>
+</code></pre></div><p>挺有趣的。</p>
 <ul>
-<li><p>mcd
-把下面的function添加到 <code>.bash_aliases</code>中。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#66d9ef">function</span> mkdircd <span style="color:#f92672">()</span> <span style="color:#f92672">{</span> mkdir -p <span style="color:#e6db74">&#34;</span>$@<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">&amp;&amp;</span> eval cd <span style="color:#e6db74">&#34;\&#34;\$</span>$#<span style="color:#e6db74">\&#34;&#34;</span>; <span style="color:#f92672">}</span></code></pre></div></li>
-
-<li><p><code>cd -</code>
-返回到上次的目录，相当于后退。</p></li>
-
-<li><p>popd pushd dirs
-这三条命令相当有趣，其中<code>pushd dir_1</code>是：1.把dir_1这个文件夹push到dir的队列中；2.进入dir_1；3.显示当前的dir队列。
-而<code>popd</code>则是从dir的队列中跳出来，</p></li>
+<li>mcd
+把下面的function添加到 <code>.bash_aliases</code>中。</li>
 </ul>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#66d9ef">function</span> mkdircd <span style="color:#f92672">()</span> <span style="color:#f92672">{</span> mkdir -p <span style="color:#e6db74">&#34;</span>$@<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">&amp;&amp;</span> eval cd <span style="color:#e6db74">&#34;\&#34;\$</span>$#<span style="color:#e6db74">\&#34;&#34;</span>; <span style="color:#f92672">}</span>
+</code></pre></div><ul>
+<li>
+<p><code>cd -</code>
+返回到上次的目录，相当于后退。</p>
+</li>
+<li>
+<p>popd pushd dirs
+这三条命令相当有趣，其中<code>pushd dir_1</code>是：1.把dir_1这个文件夹push到dir的队列中；2.进入dir_1；3.显示当前的dir队列。
+而<code>popd</code>则是从dir的队列中跳出来，</p>
+</li>
+</ul>
 <p>……
 好久没翻译了……有点羞愧呢……
-目前翻译转移到了 <a href="www.gitbook.com/wrfly/" target="_blank">gitbook</a>
+目前翻译转移到了 <a href="www.gitbook.com/wrfly/">gitbook</a>
 2015-12-20</p>
 
 </div>

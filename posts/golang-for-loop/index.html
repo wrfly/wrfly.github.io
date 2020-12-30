@@ -17,7 +17,7 @@ newUsers := []*User{} for _, u := range UserArray{ if checkFailed(u){ continue }
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='golang'><meta property='article:published_time' content='2018-11-25T14:34:14&#43;08:00'/><meta property='article:modified_time' content='2018-11-25T14:34:14&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>Golang-For-Loop • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/golang-for-loop/'>
@@ -110,9 +110,7 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>😀</p>
-
 <p>Recently my colleague meets a problem with golang for loop. He ranged an array of <code>User</code>, wanted to filter some user and append them (use pointer to get their address) to another user array, but finally got an array contains the same user.</p>
-
 <p>Some thing like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#a6e22e">newUsers</span> <span style="color:#f92672">:=</span> []<span style="color:#f92672">*</span><span style="color:#a6e22e">User</span>{}
 <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">u</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">UserArray</span>{
@@ -120,14 +118,11 @@ if (!doNotTrack) {
 		<span style="color:#66d9ef">continue</span>
 	}
 	<span style="color:#a6e22e">newUsers</span> = append(<span style="color:#a6e22e">newUsers</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">u</span>)
-}</code></pre></div>
-<p>The <code>newUsers</code> got the same user with different indexes.</p>
-
+}
+</code></pre></div><p>The <code>newUsers</code> got the same user with different indexes.</p>
 <p>If you didn&rsquo;t read the full documents of golang, you may think it&rsquo;s unbelievable just like I did. But the truth is, for-loop will not allocate new address for the variable, it just reuse the address and pass the new value to it. So anything you do with that value will not infect the original one unless the value itself is a pointer. Also, if you want get the address of the value, you will always get the same since for-loop use single address.</p>
-
 <p>Let&rsquo;s make some code to prove it.</p>
-
-<p>(You can get it in here: <a href="https://u.kfd.me/2l" target="_blank">https://u.kfd.me/2l</a>)</p>
+<p>(You can get it in here: <a href="https://u.kfd.me/2l">https://u.kfd.me/2l</a>)</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 
 <span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;fmt&#34;</span>
@@ -183,8 +178,8 @@ if (!doNotTrack) {
 	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">iMap</span> {
 		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;[i] k: %d, v: %d, p: %p\n&#34;</span>, <span style="color:#a6e22e">k</span>, <span style="color:#f92672">*</span><span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">v</span>)
 	}
-}</code></pre></div>
-<p>Result:</p>
+}
+</code></pre></div><p>Result:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">test array
 [x] p: 0x416030, v: 5
 [x] p: 0x416030, v: 5
@@ -213,14 +208,11 @@ address of mapp[2]: 0x416088
 [x] k: 1, v: 1, p: 0x416084
 [x] k: 2, v: 2, p: 0x416088
 [i] k: 1, v: 1, p: 0x416084
-[i] k: 2, v: 2, p: 0x416088</code></pre></div>
-<p>As we can see, in our first try, <code>xArray</code> got the same value and the same address while the <code>iArray</code> got the different value and the real address of the original array. So, in a for-loop, the second value (besides pointer, actually the pointer is also a value-copy but since it&rsquo;s a pointer, there is no difference) is a value-copy, if you want to get the real address, use the index of that array, not the second value.</p>
-
-<hr />
-
+[i] k: 2, v: 2, p: 0x416088
+</code></pre></div><p>As we can see, in our first try, <code>xArray</code> got the same value and the same address while the <code>iArray</code> got the different value and the real address of the original array. So, in a for-loop, the second value (besides pointer, actually the pointer is also a value-copy but since it&rsquo;s a pointer, there is no difference) is a value-copy, if you want to get the real address, use the index of that array, not the second value.</p>
+<hr>
 <p>Last but not least, this article described this problem deep and full, please do read this if you are interested in the <code>for-loop</code>:</p>
-
-<p><strong><a href="https://garbagecollected.org/2017/02/22/go-range-loop-internals/" target="_blank">Go Range Loop Internals</a></strong></p>
+<p><strong><a href="https://garbagecollected.org/2017/02/22/go-range-loop-internals/">Go Range Loop Internals</a></strong></p>
 
 </div>
 

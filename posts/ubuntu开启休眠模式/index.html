@@ -13,10 +13,10 @@
  在Linux内核中，休眠功能通过swsusp实现，并被内建在2.6版以后的内核中。替代性的实现是TuxOnIce，在3.4版以后的内核中作为补丁存在。另一个替代性的实现是uswsusp。
  Linux默认不显示这个休眠选项，如果想要加进去的话（比如我有两个系统，一个ubuntu，一个win8，但是我不能让内存同使用有两种数据，但我还想开机速度更快些，并且保存原有的程序，那我就需要对系统进行休眠），可以这样做：
 1.先测试下电脑是否支持休眠
-sudo pm-hibernate 2.如果成功了，那就可以写入系统文件了
-sudo -i cd **/var/lib**/polkit-1/localauthority/50-local.d/ vi com.ubuntu.enable-hibernate.pkla （PS：如果配置不成功的话，你可以换一下路径，把/var/lib/换成/etc）
+sudo pm-hibernate  2.如果成功了，那就可以写入系统文件了
+sudo -i cd **/var/lib**/polkit-1/localauthority/50-local.d/ vi com.ubuntu.enable-hibernate.pkla  （PS：如果配置不成功的话，你可以换一下路径，把**/var/lib/**换成**/etc**）
 3.将下列代码写入
-[Re-enable hibernate by default in upower] Identity=unix-user:* Action=org.freedesktop.upower.hibernate ResultActive=yes [Re-enable hibernate by default in logind] Identity=unix-user:* Action=org.freedesktop.login1.hibernate ResultActive=yes 4.重启电脑'>
+[Re-enable hibernate by default in upower] Identity=unix-user:* Action=org.freedesktop.upower.hibernate ResultActive=yes [Re-enable hibernate by default in logind] Identity=unix-user:* Action=org.freedesktop.login1.hibernate ResultActive=yes  4.重启电脑'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Ubuntu开启休眠模式 • wrfly&#39;s blog'>
@@ -31,15 +31,15 @@ sudo -i cd **/var/lib**/polkit-1/localauthority/50-local.d/ vi com.ubuntu.enable
  在Linux内核中，休眠功能通过swsusp实现，并被内建在2.6版以后的内核中。替代性的实现是TuxOnIce，在3.4版以后的内核中作为补丁存在。另一个替代性的实现是uswsusp。
  Linux默认不显示这个休眠选项，如果想要加进去的话（比如我有两个系统，一个ubuntu，一个win8，但是我不能让内存同使用有两种数据，但我还想开机速度更快些，并且保存原有的程序，那我就需要对系统进行休眠），可以这样做：
 1.先测试下电脑是否支持休眠
-sudo pm-hibernate 2.如果成功了，那就可以写入系统文件了
-sudo -i cd **/var/lib**/polkit-1/localauthority/50-local.d/ vi com.ubuntu.enable-hibernate.pkla （PS：如果配置不成功的话，你可以换一下路径，把/var/lib/换成/etc）
+sudo pm-hibernate  2.如果成功了，那就可以写入系统文件了
+sudo -i cd **/var/lib**/polkit-1/localauthority/50-local.d/ vi com.ubuntu.enable-hibernate.pkla  （PS：如果配置不成功的话，你可以换一下路径，把**/var/lib/**换成**/etc**）
 3.将下列代码写入
-[Re-enable hibernate by default in upower] Identity=unix-user:* Action=org.freedesktop.upower.hibernate ResultActive=yes [Re-enable hibernate by default in logind] Identity=unix-user:* Action=org.freedesktop.login1.hibernate ResultActive=yes 4.重启电脑'>
+[Re-enable hibernate by default in upower] Identity=unix-user:* Action=org.freedesktop.upower.hibernate ResultActive=yes [Re-enable hibernate by default in logind] Identity=unix-user:* Action=org.freedesktop.login1.hibernate ResultActive=yes  4.重启电脑'>
 <meta property='og:url' content='https://wrfly.kfd.me/posts/ubuntu%E5%BC%80%E5%90%AF%E4%BC%91%E7%9C%A0%E6%A8%A1%E5%BC%8F/'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='ubuntu'><meta property='article:published_time' content='2015-04-06T00:00:00Z'/><meta property='article:modified_time' content='2015-04-06T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>Ubuntu开启休眠模式 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/ubuntu%E5%BC%80%E5%90%AF%E4%BC%91%E7%9C%A0%E6%A8%A1%E5%BC%8F/'>
@@ -132,41 +132,34 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>在电源菜单中有一个sleep，那是睡眠，即</p>
-
 <blockquote>
 <p>计算机睡眠模式结合了待机和休眠的所有优点。将系统切换到睡眠状态后，系统会将内存中的数据全部转存到硬盘上的休眠文件中（这一点类似休眠），然后关闭除了内存外所有设备的供电，让内存中的数据依然维持着（这一点类似待机）。这样，当我们想要恢复的时候，如果在睡眠过程中供电没有发生过异常，就可以直接从内存中的数据恢复（类似待机），速度很快；但如果睡眠过程中供电异常，内存中的数据已经丢失了，还可以从硬盘上恢复（类似休眠），只是速度会慢一点。不过无论如何，这种模式都不会导致数据丢失。</p>
 </blockquote>
-
-<p><a href="http://baike.baidu.com/view/2449620.htm" target="_blank">电脑睡眠</a></p>
-
+<p><a href="http://baike.baidu.com/view/2449620.htm">电脑睡眠</a></p>
 <p>而休眠是指：</p>
-
 <blockquote>
-<p>休眠在计算机科学中的含义指在关闭计算机的同时保持其运行状态。<br />
-通过休眠，计算机将内存中的内容保存至硬盘或其它非易失存储器中，并在下次开机时从硬盘中将这些内容重新载入，使机器还原到与休眠前一致的状态。<br />
+<p>休眠在计算机科学中的含义指在关闭计算机的同时保持其运行状态。<br>
+通过休眠，计算机将内存中的内容保存至硬盘或其它非易失存储器中，并在下次开机时从硬盘中将这些内容重新载入，使机器还原到与休眠前一致的状态。<br>
 当用作保存电池电量的手段时，休眠与睡眠模式类似，不过比后者节约更多的电量，代价则是从休眠中恢复时速度更慢（因为硬盘的速度比内存慢得多）。</p>
 </blockquote>
-
-<p><a href="https://zh.wikipedia.org/zh-cn/%E4%BC%91%E7%9C%A0_%28%E9%9B%BB%E8%85%A6%29" target="_blank">电脑休眠</a></p>
-
+<p><a href="https://zh.wikipedia.org/zh-cn/%E4%BC%91%E7%9C%A0_%28%E9%9B%BB%E8%85%A6%29">电脑休眠</a></p>
 <blockquote>
 <p>在Linux内核中，休眠功能通过swsusp实现，并被内建在2.6版以后的内核中。替代性的实现是TuxOnIce，在3.4版以后的内核中作为补丁存在。另一个替代性的实现是uswsusp。</p>
 </blockquote>
-
 <p>Linux默认不显示这个休眠选项，如果想要加进去的话（比如我有两个系统，一个ubuntu，一个win8，但是我不能让内存同使用有两种数据，但我还想开机速度更快些，并且保存原有的程序，那我就需要对系统进行休眠），可以这样做：</p>
-
 <p>1.先测试下电脑是否支持休眠</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo pm-hibernate</pre></div>
+<pre><code>sudo pm-hibernate
+</code></pre>
 <p>2.如果成功了，那就可以写入系统文件了</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">sudo -i
+<pre><code>sudo -i
 
 cd **/var/lib**/polkit-1/localauthority/50-local.d/
 
-vi com.ubuntu.enable-hibernate.pkla</pre></div>
-<p>（PS：如果配置不成功的话，你可以换一下路径，把<strong>/var/lib/</strong>换成<strong>/etc</strong>）</p>
-
+vi com.ubuntu.enable-hibernate.pkla
+</code></pre>
+<p>（PS：如果配置不成功的话，你可以换一下路径，把**/var/lib/**换成**/etc**）</p>
 <p>3.将下列代码写入</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">[Re-enable hibernate by default in upower]
+<pre><code>[Re-enable hibernate by default in upower]
 Identity=unix-user:*
 Action=org.freedesktop.upower.hibernate
 ResultActive=yes
@@ -174,7 +167,8 @@ ResultActive=yes
 [Re-enable hibernate by default in logind]
 Identity=unix-user:*
 Action=org.freedesktop.login1.hibernate
-ResultActive=yes</pre></div>
+ResultActive=yes
+</code></pre>
 <p>4.重启电脑</p>
 
 </div>

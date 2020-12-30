@@ -25,7 +25,7 @@ package main import ( &#34;context&#34; &#34;fmt&#34; &#34;sync&#34; &#34;time&#
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='code'><meta property='article:tag' content='golang'><meta property='article:published_time' content='2018-01-03T23:03:07&#43;08:00'/><meta property='article:modified_time' content='2018-01-03T23:03:07&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>Gracefully-Shutdown • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/gracefully-shutdown/'>
@@ -120,17 +120,11 @@ if (!doNotTrack) {
   <blockquote>
 <p>时间是宇宙唯一的资源 &mdash; 我</p>
 </blockquote>
-
 <p>因为上周准备code review的时候遇到了这个问题，大家也给出了一些建议，和imcom哥也进行了一番讨论，了解了golang中context的一些用法，在这里记录备份一下，也希望对别人有所帮助。</p>
-
 <p>首先简单的阐述一下问题是什么。golang编程，经常会go出去一些goroutine，抛出去不难，关键要看怎么收回来，因为程序不仅有启动，还要有退出，不管是正常退出还是非正常退出，总得有一个clean up的过程，不然就会导致程序不可控，引发非正常退出，数据丢失或者脏数据等一些乱七八糟的问题。</p>
-
 <p>所以我们要在程序退出的时候对申请的资源进行释放，主动关闭已经建立的连接，完成正在进行的工作，然后退出程序。</p>
-
 <p>github上有很多公开的让http服务graceful退出的lib，好像某些框架也提供了gracefulstop的方法。其本质就是停止服务，关闭端口，拒绝了新来的请求，然后把手头正在进行的请求处理完，或者设置一个超时时间强制结束正在进行的请求，然后server就stop了。这里我不谈论这个，因为有很多框架都自带了这个功能，而且不限于http服务。</p>
-
 <p>但有个东西是要参考的，golang中的<strong>context</strong>。写过http服务的人都知道，每个请求的request中都带了一个context，一开始我是不知道这是做什么用的，但每个东西都有其用法，这个context的用法就是让server端和client联系起来的一个上下文，也可以理解为纽带。最基础的，比如client发出了一个请求，但是由于某种原因（网络断了，链接丢了，客户端主动关闭了，Ctrl+C了），这个连接断了，那么server端还要继续处理么，肯定不要了嘛，不然发给谁，给鬼啊，所以server就要根据这个context进行下一步处理，如果context已经done了，那么这个请求就可以直接return了。</p>
-
 <p>说起来会很枯燥，看代码（跟上面说的server无关了哈，有点偏）：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 
@@ -173,27 +167,18 @@ if (!doNotTrack) {
 			<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;tick&#34;</span>)
 		}
 	}
-}</code></pre></div>
-<p><a href="https://play.golang.org/p/Y3X-f_jP_mZ" target="_blank">https://play.golang.org/p/Y3X-f_jP_mZ</a></p>
+}
 
-<p>或者我的短域名hhh -&gt; <a href="https://u.kfd.me/00000f" target="_blank">https://u.kfd.me/00000f</a></p>
-
+</code></pre></div><p><a href="https://play.golang.org/p/Y3X-f_jP_mZ">https://play.golang.org/p/Y3X-f_jP_mZ</a></p>
+<p>或者我的短域名hhh -&gt; <a href="https://u.kfd.me/00000f">https://u.kfd.me/00000f</a></p>
 <p>把一个函数go出去，如果不管他的话，程序退出的时候可以靠GC去清理，但在一个长期运行的服务里，不知道要go出去多少协程，如果不去管理，随着时间的增长，机器很快就会撑不住，性能受影响不说，业务也受影响，这是不允许的。</p>
-
-<p>所以在上面的例子中可以看到，go出去的协程接收了一个context作为其参数，并且监听这个context的变化。context在这里要说明一点的是，context是可以衍生出新的“自己”的，即每个context都是由<code>context.Background()</code>衍生出来的。更具体的解释可以看<a href="https://blog.golang.org/context" title="golang context" target="_blank">这篇文章</a>。父context生成（<code>context.WithCancel()</code>或者别的）出来的context还可以继续生成新的。而且子context被cancel了之后，父context不受影响，但父context“退出”之后，所有的子context以及子context生成的context也都会done。这就给我们程序分层带来了好处。主进程有一个大的context，由于某种原因退出后，context自动cancel掉，然后子服务随即退出。或者，如果一个程序需要提供多种服务，那么每个子服务就要select这个context，然后主程序g掉之后，自动clean up。</p>
-
+<p>所以在上面的例子中可以看到，go出去的协程接收了一个context作为其参数，并且监听这个context的变化。context在这里要说明一点的是，context是可以衍生出新的“自己”的，即每个context都是由<code>context.Background()</code>衍生出来的。更具体的解释可以看<a href="https://blog.golang.org/context" title="golang context">这篇文章</a>。父context生成（<code>context.WithCancel()</code>或者别的）出来的context还可以继续生成新的。而且子context被cancel了之后，父context不受影响，但父context“退出”之后，所有的子context以及子context生成的context也都会done。这就给我们程序分层带来了好处。主进程有一个大的context，由于某种原因退出后，context自动cancel掉，然后子服务随即退出。或者，如果一个程序需要提供多种服务，那么每个子服务就要select这个context，然后主程序g掉之后，自动clean up。</p>
 <p>这里有个选择，就是当我们初始化一个service的时候，假设这个service有两个方法，<code>Serve</code>和<code>Shutdown</code>，那么还有必要主动Shutdown吗。我个人认为哈，在select了context之后，是没必要主动shutdown服务的，因为在初始化的时候就（或许，全凭个人）已经挂上了clean up的操作，只要context done了就进行，所以Shutdown的接口有点多余了。</p>
-
 <p>但如果在初始化的时候没有利用context去管理退出之后的清理工作，而是利用这个context进行了别的操作，放到了别的goroutine当中，那么还是有必要加一个Shutdown的接口，手动退出的。</p>
-
 <p>接下来还一个问题，如何知道main中的所有service都退出了。或者说，如何知道某一个service已经graceful shutdown了。</p>
-
 <p>这就需要一个<strong>wait group</strong>。</p>
-
 <p>我们可以在每个service中添加一个local的wait group，每go出去一个函数，都在wg里加一，然后退出（<code>GracefulShutdown()</code>）的时候就有数了。这里要注意的一个问题是错误处理，如果在退出的时候出现了异常，即如果有的goroutine没能退出，那么在shutdown的时候就要直接<code>return error</code>而不是继续<code>wg.Wait()</code>了，因为出现了错误，service永远不会（可能，也许，大概，全凭个人怎么写，也可以加上重试机制，或者强制退出，时间超时等等）优雅退出了。</p>
-
 <p>其实还是将wait group在main里的用法，扩展到了每一个package，每个package负责自己的context，自己的wait group，不论是初始化还是退出，个人管个人的，不建议有全局的wait group，不方便管理，而且逻辑上也不好区分和分层。</p>
-
 <p>有了<code>context</code>作为退出信号的发起者，<code>wait group</code>作为保证，那么基本上可以放心的让程序退出了。</p>
 
 </div>

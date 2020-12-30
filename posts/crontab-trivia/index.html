@@ -13,7 +13,7 @@ I wrote the job command as follows:'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='trivia'><meta property='article:published_time' content='2018-10-21T01:01:50&#43;08:00'/><meta property='article:modified_time' content='2018-10-21T01:01:50&#43;08:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>Crontab-Trivia • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/crontab-trivia/'>
@@ -106,7 +106,6 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>Recently I have to use crontab to run a script at midnight (a Hadoop job in our office cluster to collect some tracking data). To follow the script&rsquo;s log, I use tee to fork the log to some log file named with the date. But after the day I set the cronjob, I found nothing in the grafana neither of the HDFS, this means the job didn&rsquo;t run.</p>
-
 <p>I wrote the job command as follows:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># Example of job definition:</span>
 <span style="color:#75715e"># .---------------- minute (0 - 59)</span>
@@ -116,17 +115,13 @@ if (!doNotTrack) {
 <span style="color:#75715e"># |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat</span>
 <span style="color:#75715e"># |  |  |  |  |</span>
 <span style="color:#75715e"># *  *  *  *  * user-name  command to be executed</span>
-<span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span> * * * root bash /home/myname/collect/run.sh | tee /home/myname/collect/log/<span style="color:#66d9ef">$(</span>date +%s<span style="color:#66d9ef">)</span>.log</code></pre></div>
-<p>What do you think of this script? Is it really OK to run?</p>
-
+<span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span> * * * root bash /home/myname/collect/run.sh | tee /home/myname/collect/log/<span style="color:#66d9ef">$(</span>date +%s<span style="color:#66d9ef">)</span>.log
+</code></pre></div><p>What do you think of this script? Is it really OK to run?</p>
 <p>But the <code>vim</code> shows me a different color of the character <code>%</code>. Firstly I didn&rsquo;t notice the hit, think it was just a highlight. As soon as I found the job didn&rsquo;t run, I noticed that the matter isn&rsquo;t that simple.</p>
-
-<p>Cronjob is not simply a shell script. It has its own meaning of the special character. Wikipedia can tell you that. Cron <a href="https://en.wikipedia.org/wiki/Cron" target="_blank">EN</a> | <a href="https://wiki.kfd.me/wiki/Cron" target="_blank">ZH</a></p>
-
+<p>Cronjob is not simply a shell script. It has its own meaning of the special character. Wikipedia can tell you that. Cron <a href="https://en.wikipedia.org/wiki/Cron">EN</a> | <a href="https://wiki.kfd.me/wiki/Cron">ZH</a></p>
 <p>We should use backslash <code>\</code> to escape the special <code>%</code>. Otherwise, all data after the first <code>%</code> are sent to the command as standard input.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span> * * * root bash /home/myname/collect/run.sh | tee /home/myname/collect/log/<span style="color:#66d9ef">$(</span>date +<span style="color:#ae81ff">\%</span>s<span style="color:#66d9ef">)</span>.log</code></pre></div>
-<hr />
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span> * * * root bash /home/myname/collect/run.sh | tee /home/myname/collect/log/<span style="color:#66d9ef">$(</span>date +<span style="color:#ae81ff">\%</span>s<span style="color:#66d9ef">)</span>.log
+</code></pre></div><hr>
 <p>Sometimes a common, simple thing can cause a big problem for you. What you have to do is RTFM, no matter simple the thing is. Actually, we know nothing.</p>
 
 </div>

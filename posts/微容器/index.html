@@ -47,7 +47,7 @@ REPOSITORY TAG IMAGE ID CREATED SIZE alpine latest 2bba2978e457 4 weeks ago 4.79
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='code'><meta property='article:published_time' content='2016-05-01T00:00:00Z'/><meta property='article:modified_time' content='2016-05-01T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>微容器 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/%E5%BE%AE%E5%AE%B9%E5%99%A8/'>
@@ -139,65 +139,38 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<h3 id="日常唠叨">日常唠叨</h3>
-
+  <h3 id="日常唠叨">日常唠叨</h3>
 <p>这是一篇拖了两周的博文。</p>
-
 <p>为了给实习做铺垫，我得多了解一下Docker相关的知识，两周前策划着要写国内docker服务商的对比，现在只起了个头，截了一些图，然后就写不下去了，因为要对比区别，就要压力测试，就要大把的时间，而时间这种消耗品，自己消耗的太快了，再加上自己还拖延症，又是一个烂尾工程。。。好在这一篇容易些，因为只需要花点时间搜集资料，花点时间搭建环境，花点时间测试一下就OK了，压力测试什么的最烦人了。</p>
-
 <p>不过总的体验来说，网易的蜂巢更像是一个卖VPS的，一个月28的价格也算很良心；灵雀云的话，很有微软的作风，不过微软至少每个页面都有标题，而灵雀云连页面标题都没有，该找个靠谱的前端了，还有微信绑定报错，也没人管，不过他家的镜像市场很不错，网络服务也是很给力，不管是香港服务器还是北京上海等国内服务器，速度都很给力，毕竟有亚马逊和微软合作；然后Daocloud，可以说是最docker的一家公司了，至于怎么docker了，你得试试才知道。</p>
-
 <p>然后正文开始。</p>
-
 <h3 id="从容器说起">从容器说起</h3>
-
 <p>容器是啥？简单地说就是一个运行应用的盒子，有点类似沙盒，但是沙盒并不集成运行环境，而是依附主机的环境运行程序，给程序一块空间，让他跑。容器呢，则是集成了运行环境的一个空间，相当于在系统中新开了一块地，里面有啥？啥也没有，你得自己往里安装。</p>
-
 <p>所以容器有有点类似虚拟机的感觉，我想着也是为什么蜂巢把docker做的这么VPS。</p>
-
 <p>既然是容器，那他肯定是存放东西的，放点啥呢？放应用。</p>
-
 <p>而这应用又得分门别类的说一说，python是应用吧，ruby是应用吧，nodejs是应用吧，php是应用吧，甚至ubuntu系统都是一个应用。</p>
-
-<p>大部分的应用都是跑在系统上的，所以他们的基础镜像都是一个系统，这样一想的话，又跟虚拟机差不多了。当然，除了资源消耗。启动速度等等这些。在这里有一篇文章，说的就是关于docker的一些知识，可以花几分钟看一下，以后吹逼的时候也好有话说：<a href="https://segmentfault.com/a/1190000002734062" target="_blank">https://segmentfault.com/a/1190000002734062</a></p>
-
+<p>大部分的应用都是跑在系统上的，所以他们的基础镜像都是一个系统，这样一想的话，又跟虚拟机差不多了。当然，除了资源消耗。启动速度等等这些。在这里有一篇文章，说的就是关于docker的一些知识，可以花几分钟看一下，以后吹逼的时候也好有话说：<a href="https://segmentfault.com/a/1190000002734062">https://segmentfault.com/a/1190000002734062</a></p>
 <h3 id="微容器">微容器</h3>
-
 <p>顾名思义，微容器就是比一般容器小的容器，为什么比一般容器小呢？因为系统就这么大呀。</p>
-
 <p>还记得第一个docker容器，helloworld吗，那个就可以理解为一个简单的微容器，因为他小啊，而且还能输出helloworld，好像只有几K吧。</p>
-
 <p>然而ubuntu：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">REPOSITORY   TAG       IMAGE ID        CREATED        SIZE
-ubuntu       latest    4a2102d9faa8    4 months ago   187.9 MB</pre></div>
-<p>我这是四个月以前的镜像，现在升级了，估计得更大一点。</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">REPOSITORY   TAG       IMAGE ID        CREATED        SIZE
+ubuntu       latest    4a2102d9faa8    4 months ago   187.9 MB
+</code></pre></div><p>我这是四个月以前的镜像，现在升级了，估计得更大一点。</p>
 <p>对于服务器来说并不算什么，带宽都这么高了，分分钟就拖完了。但是对于个人来说，网速没那么快，安装升级东西很慢，测试的时候时常需要增增减减，如果要push到dockerhub上去的话，速度也是很感人的，打包的话也不是不可以啊，但是还是有点大。</p>
-
 <p>那么，就有了微容器，也可以说是一个微型的系统：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">REPOSITORY    TAG        IMAGE ID         CREATED         SIZE
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">REPOSITORY    TAG        IMAGE ID         CREATED         SIZE
 alpine        latest     2bba2978e457     4 weeks ago     4.794 MB
-busybox       latest     47bcc53f74dc     6 weeks ago     1.113 MB</pre></div>
-<p>关于busybox，维基百科上有比较详细的介绍：<a href="https://zh.wikipedia.org/wiki/BusyBox" target="_blank">wikipedia - BusyBox</a></p>
-
-<p>还有轻量级的系统 alpine : <a href="https://zh.wikipedia.org/wiki/%E8%BD%BB%E9%87%8F%E7%BA%A7Linux%E5%8F%91%E8%A1%8C%E7%89%88" target="_blank">wikipedia - 轻量级linux发行版</a></p>
-
+busybox       latest     47bcc53f74dc     6 weeks ago     1.113 MB
+</code></pre></div><p>关于busybox，维基百科上有比较详细的介绍：<a href="https://zh.wikipedia.org/wiki/BusyBox">wikipedia - BusyBox</a></p>
+<p>还有轻量级的系统 alpine : <a href="https://zh.wikipedia.org/wiki/%E8%BD%BB%E9%87%8F%E7%BA%A7Linux%E5%8F%91%E8%A1%8C%E7%89%88">wikipedia - 轻量级linux发行版</a></p>
 <p>简单地说，微容器就是建立在alpine等轻量级系统上的容器。</p>
-
 <h3 id="创建一个微容器">创建一个微容器</h3>
-
 <p>得到一个微容器很简单，<code>docker pull alpine</code>就能得到了，进去之后（<code>docker run -dti alpine ash</code>）就是一个小型linux系统。可以用<code>apk add</code>来安装一些常用的软件，比如nginx，php，mysql等等。</p>
-
 <p>然后可以用<code>docker commit</code>来保存更改到新的镜像中。</p>
-
 <p>光会pull还不行，我们怎么创建一个新的镜像呢？</p>
-
-<p>这就用到了dockerfile：<a href="https://docs.docker.com/engine/reference/builder/" target="_blank">https://docs.docker.com/engine/reference/builder/</a></p>
-
-<p>这里面已经介绍的很详细了，我还写了几个微容器的例子，放到<a href="https://github.com/wrfly/micro-docker" target="_blank">github</a>了。</p>
-
+<p>这就用到了dockerfile：<a href="https://docs.docker.com/engine/reference/builder/">https://docs.docker.com/engine/reference/builder/</a></p>
+<p>这里面已经介绍的很详细了，我还写了几个微容器的例子，放到<a href="https://github.com/wrfly/micro-docker">github</a>了。</p>
 <p>那最简单的nginx来说：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Dockerfile" data-lang="Dockerfile"><span style="color:#75715e"># Micro docker</span><span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> alpine:latest</span><span style="color:#960050;background-color:#1e0010">
@@ -208,39 +181,25 @@ busybox       latest     47bcc53f74dc     6 weeks ago     1.113 MB</pre></div>
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Expose port</span><span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">EXPOSE</span><span style="color:#e6db74"> 80</span><span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">ENTRYPOINT</span><span style="color:#e6db74"> [ &#34;nginx&#34;, &#34;-g&#34;, &#34;daemon off;&#34; ]</span></code></pre></div>
-<p>啊其实不想在这里说了，啰里啰嗦的，各位看官有兴趣自己去github上看吧。</p>
-
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">ENTRYPOINT</span> [ <span style="color:#e6db74">&#34;nginx&#34;</span>, <span style="color:#e6db74">&#34;-g&#34;</span>, <span style="color:#e6db74">&#34;daemon off;&#34;</span> ]<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>啊其实不想在这里说了，啰里啰嗦的，各位看官有兴趣自己去github上看吧。</p>
 <p>花点时间看一下Dockerfile的创建，基本上就差不多了。</p>
-
 <h3 id="微容器的好处">微容器的好处</h3>
-
 <p>第一点就是小，升空间。一个系统才几兆，太神奇了。</p>
-
 <p>第二个就是移植方便，我可以把应用打包成一个很小的tar，然后给别人运行，虽然ubuntu镜像也可以打包，但是毕竟大嘛。</p>
-
 <p>至于启动时间，两者都差不多，详细的时间对比在这：
-<a href="https://github.com/wrfly/my-pastes/blob/master/compare-docker.txt" target="_blank">https://github.com/wrfly/my-pastes/blob/master/compare-docker.txt</a></p>
-
+<a href="https://github.com/wrfly/my-pastes/blob/master/compare-docker.txt">https://github.com/wrfly/my-pastes/blob/master/compare-docker.txt</a></p>
 <p>还有就是创建测试的时候很方便，虽然有cache，但是第一次build的
 时候ubuntu还是耗费更多的时间。</p>
-
 <p>还有一点，对我来说比较重要的，就是，之前做渗透测试练习的时候，pentestlab给出了一些镜像，做得都太小了，令我很震撼，一个xss漏洞做的只有38M，简直了，所以我就想，既然虚拟机可以做到，那么docker也肯定能做到，于是乎，如此。</p>
-
 <h3 id="用supervisor管理docker里面的程序">用supervisor管理docker里面的程序</h3>
-
 <p>写那几个dockerfile的时候遇到了一些坑，最坑的是supervisor。</p>
-
 <p>其实还是自己太弱，没有弄懂里面的来龙去脉。虽然之前做过用supervisor管理shadowsocks-server，但是毕竟那东西只是一个应用，没有守护进程的，supervisor充当了它的守护进程。</p>
-
 <p>而若要是想让supervisor守护nginx和php这种的，就要费一些周折。</p>
-
 <p>（PS:其实没有必要用supervisor管理nginx和php，因为他们本身都有守护进程，我之所以这样做是因为没法用一条命令启动两个程序，不过现在也想了一个办法，就是写一个启动脚本，把要运行的命令全都放到启动脚本里面，然后用CMD或者ENTRYPOINT运行这个启动脚本。）</p>
-
 <p>因为nginx自带守护进程，而且还是一个master几个worker这种模式，所以就要添加一条 &ldquo;daemon off;&rdquo; 的参数，具体是： <code>nginx -g &quot;daemon off;&quot;</code>,然后nginx就能在前台运行了，而至于php-fpm，我还没有想到别的方法，不过有一种在前台运行的，用php的<code>-S</code>参数，这样就不用nginx了：<code>php -S 0.0.0.0:80</code>，php自带一个web server，监听80端口，效果是一样的，只是不知道性能怎么样，估计很一般。。</p>
-
 <p>所以supervisor的配置文件就得这样写：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">... ...
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">... ...
 ... ...
 
 [program:php]
@@ -253,22 +212,17 @@ autorestart = false
 command = /usr/sbin/nginx -g &#34;daemon off;&#34;
 user = root
 startsecs = 0
-autorestart = false</pre></div>
-<p>php会报错，不过运行是正常的。</p>
-
+autorestart = false
+</code></pre></div><p>php会报错，不过运行是正常的。</p>
 <p>这里有几篇参考的文章：</p>
-
 <ul>
-<li><a href="https://dzone.com/articles/microservices-microcontainers" target="_blank">https://dzone.com/articles/microservices-microcontainers</a></li>
-<li><a href="http://dockone.io/article/1035" target="_blank">http://dockone.io/article/1035</a></li>
-<li><a href="https://segmentfault.com/q/1010000000417103" target="_blank">Dockerfile里指定执行命令用ENTRYPOING和用CMD有何不同？</a></li>
-<li><a href="http://www.dedoimedo.com/computers/docker-supervisord.html" target="_blank">Docker &amp; supervisord</a></li>
+<li><a href="https://dzone.com/articles/microservices-microcontainers">https://dzone.com/articles/microservices-microcontainers</a></li>
+<li><a href="http://dockone.io/article/1035">http://dockone.io/article/1035</a></li>
+<li><a href="https://segmentfault.com/q/1010000000417103">Dockerfile里指定执行命令用ENTRYPOING和用CMD有何不同？</a></li>
+<li><a href="http://www.dedoimedo.com/computers/docker-supervisord.html">Docker &amp; supervisord</a></li>
 </ul>
-
-<hr />
-
+<hr>
 <p>现在docker的发展日新月异，multi build更是大大缩减了image的size，还有各种集成环境，CI CD，今天还知道了codacy，auto-review code，科技真是了不起啊。</p>
-
 <p>加油！</p>
 
 </div>

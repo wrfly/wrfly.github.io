@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>ubuntu on wrfly&#39;s blog</title>
@@ -20,14 +20,12 @@
 下面这些是我从上面摘抄的，但是也请转载注明出处～
 先装上pv，然后再敲这一条，会把你帅呆了的！
 echo &amp;#34;You can simulate on-screen typing just like in the movies&amp;#34; | pv -qL 10 来，测试一下咱的硬盘有多快：
-timeout 2s yes &amp;#34;hello world!&amp;#34; &amp;gt; big_file &amp;amp; watch du -h big_file 常用的20条命令++
-history | awk &amp;#39;{a[$2]++}END{for(i in a){print a[i] &amp;#34; &amp;#34; i}}&amp;#39; | sort -rn | head 文字版星球大战!!!
-telnet towel.blinkenlights.nl 在终端右上角显示个表
+timeout 2s yes &amp;quot;hello world!&amp;quot; &amp;gt; big_file &amp;amp; watch du -h big_file  常用的20条命令++
+history | awk &#39;{a[$2]++}END{for(i in a){print a[i] &amp;quot; &amp;quot; i}}&#39; | sort -rn | head  文字版星球大战!!!
+telnet towel.blinkenlights.nl  在终端右上角显示个表
 去tmp目录下逛一圈再回来(小括号代表子shell)
-(cd /tmp &amp;amp;&amp;amp; ls) nc用来传文件：
-nc -v -l 80 &amp;lt; file.ext 更改文件后缀名，把wrfly.png改成wrfly.jpg：
-mv wrfly.{png,jpg} 把命令的输出内容转换成图片，超酷炫：
-ifconfig | convert label:@- ip.</description>
+(cd /tmp &amp;amp;&amp;amp; ls)  nc用来传文件：
+nc -v -l 80 &amp;lt; file.ext  更改文件后缀名，把wrfly.png改成wrfly.jpg：</description>
     </item>
     
     <item>
@@ -40,7 +38,7 @@ ifconfig | convert label:@- ip.</description>
 只解决问题，不废话：
 cd /opt/sublime_text &amp;amp;&amp;amp;\ sudo wget &amp;#34;https://gist.githubusercontent.com/wrfly/baf1314ae25f41fe8cde/raw/45c669808bed8eb6d98fe6caa3f730076e5aede3/imfix.c&amp;#34; &amp;amp;&amp;amp;\ sudo apt-get install build-essential libgtk2.0-dev &amp;amp;&amp;amp;\ sudo gcc -shared -o imfix.so imfix.c `pkg-config --libs --cflags gtk+-2.0` -fPIC &amp;amp;&amp;amp;\ sudo sed -i &amp;#34;s/exec/LD_PRELOAD=\/opt\/sublime_text\/imfix.so/&amp;#34; /usr/bin/subl &amp;amp;&amp;amp;\ sudo sed -i &amp;#34;s/\/opt\/sublime_text\/sublime_text/subl/g&amp;#34; /usr/share/applications/sublime_text.desktop &amp;amp;&amp;amp;\ echo &amp;#34;Succeed!&amp;#34; 如果你还嫌麻烦的话，没关系～
 一键安装脚本在这儿：
-wget https://gist.githubusercontent.com/wrfly/5f4187be96d93e95ad07/raw/15953c30b549efb4185df6d229324e465d279606/auto_imfix.sh 然后运行就好了 :)
+wget https://gist.githubusercontent.com/wrfly/5f4187be96d93e95ad07/raw/15953c30b549efb4185df6d229324e465d279606/auto_imfix.sh  然后运行就好了 :)
 部分引用自http://html5beta.com/page/ubuntu-14-04-install-fcitx-sougoupinyin-sublime-text-3-chinese-input-fix.html</description>
     </item>
     
@@ -51,10 +49,10 @@ wget https://gist.githubusercontent.com/wrfly/5f4187be96d93e95ad07/raw/15953c30b
       
       <guid>https://wrfly.kfd.me/posts/linux%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E5%A6%99%E7%94%A8/</guid>
       <description>Fork from:http://mingxinglai.com/cn/2012/08/toos-of-bash/
-前言：虽然现在各种动态脚本语言发展得热火朝天,一片欣欣向荣的景象,而且动态脚本语言如python确实学习成本低,入门快,虽然unix 下各种工具比我们很多人年龄都大,但是我还是相信一些有用的小工具在可预见的时间内不会消失,因为灵活运用它们能够快速解决很多小问题,而且你不大可能写出更短的代码来。
-1. 一行命令算术运算 seq 100 | echo $[ $(tr &amp;#39;\n&amp;#39; &amp;#39;+&amp;#39;) 0] seq 5 3 20 | echo $[ $(tr &amp;#39;\n&amp;#39; &amp;#39;*&amp;#39;) 1] seq 用于产生一组等差的数列,默认首项和公差都是1,所以上面的第一行代码会产生1 －－ 100 的整数,且每个数占一行,使用tr 将换行替换成＋号以后,形成如1+2+......+100+的一行字符串,所以需要在字符串最后加一个0,最后使用echo $[ ]进行算数运算,也可以通过管道使用bc来计算seq 100 | echo $(tr &#39;\n&#39; &#39;+&#39;) 0 | bc。
+**前言：**虽然现在各种动态脚本语言发展得热火朝天,一片欣欣向荣的景象,而且动态脚本语言如python确实学习成本低,入门快,虽然unix 下各种工具比我们很多人年龄都大,但是我还是相信一些有用的小工具在可预见的时间内不会消失,因为灵活运用它们能够快速解决很多小问题,而且你不大可能写出更短的代码来。
+1. 一行命令算术运算 seq 100 | echo $[ $(tr &#39;\n&#39; &#39;+&#39;) 0] seq 5 3 20 | echo $[ $(tr &#39;\n&#39; &#39;*&#39;) 1]  seq 用于产生一组等差的数列,默认首项和公差都是1,所以上面的第一行代码会产生1 －－ 100 的整数,且每个数占一行,使用tr 将换行替换成＋号以后,形成如1+2+......+100+的一行字符串,所以需要在字符串最后加一个0,最后使用echo $[ ]进行算数运算,也可以通过管道使用bc来计算seq 100 | echo $(tr &#39;\n&#39; &#39;+&#39;) 0 | bc。
 2. 100的阶乘末尾有几个零？ 这是计算机专业面试的一个比较有名的题目,正确的解法答案是 n/5 + n/5/5 + n/5/5/5&amp;hellip;&amp;hellip; 下面我们写一行代码来验证一下
-echo {1..100}|tr &amp;#39; &amp;#39; &amp;#39;*&amp;#39;|bc|tr &amp;#39;1-9&amp;#39; &amp;#39;\n&amp;#39;|sort -r| head -1|awk &amp;#39;{print length($0) }&amp;#39; 这里{1..100}属于通配符,例如你要新建100个文件,就可以touch test{1..100}.txt,还可以touch test{a..z}.txt。 算后计算出1乘到100的结果,将结果中非零的数字替换成换行符在1乘到100的结果中,必然是末尾的0最多 所以我们只需要在tr &#39;1-9&#39; &#39;\n&#39;之后,找出最长的那一行就可以了,这里使用的方法是先将结果逆序排序sort -r,然后打印第一行head -,计算出第一行的长度awk &#39;{print length($0)}&#39;。</description>
+echo {1..100}|tr &#39; &#39; &#39;*&#39;|bc|tr &#39;1-9&#39; &#39;\n&#39;|sort -r| head -1|awk &#39;{print length($0) }&#39;  这里{1..100}属于通配符,例如你要新建100个文件,就可以touch test{1..100}.txt,还可以touch test{a..z}.txt。 算后计算出1乘到100的结果,将结果中非零的数字替换成换行符在1乘到100的结果中,必然是末尾的0最多 所以我们只需要在tr &#39;1-9&#39; &#39;\n&#39;之后,找出最长的那一行就可以了,这里使用的方法是先将结果逆序排序sort -r,然后打印第一行head -,计算出第一行的长度awk &#39;{print length($0)}&#39;。</description>
     </item>
     
     <item>
@@ -67,8 +65,8 @@ echo {1..100}|tr &amp;#39; &amp;#39; &amp;#39;*&amp;#39;|bc|tr &amp;#39;1-9&amp;
 具体可见维基百科
 但是它只会解析别名, 也就是说, 如果你告诉它, 张三跟张麻子是一个人, 你说张三, 他就知道你说的是张麻子, 但是如果你告诉他张三欠我一块钱, 那他就gg了, 人家并不能理解张麻子欠你一块钱啊. 或许他会说: 等等, 一块钱是什么?
 这里我遇到的问题是如何传递参数进去.
-curl ipinfo.io/8.8.8.8 这条命令是查看 8.8.8.8 的ip所在地, 那么, 如果我设置了
-alias ipadrs=&amp;#39;curl ipinfo.io/$1&amp;#39; 会不会成功?
+curl ipinfo.io/8.8.8.8  这条命令是查看 8.8.8.8 的ip所在地, 那么, 如果我设置了
+alias ipadrs=&#39;curl ipinfo.io/$1&#39;  会不会成功?
 当然不会, 因为他不知道, 也无法处理你给他传进去的 ip.
 没有办法么?
 当然不是.
@@ -98,10 +96,10 @@ hi world 有点意思吧! 我们已经可以把参数传递进去了耶~
  在Linux内核中，休眠功能通过swsusp实现，并被内建在2.6版以后的内核中。替代性的实现是TuxOnIce，在3.4版以后的内核中作为补丁存在。另一个替代性的实现是uswsusp。
  Linux默认不显示这个休眠选项，如果想要加进去的话（比如我有两个系统，一个ubuntu，一个win8，但是我不能让内存同使用有两种数据，但我还想开机速度更快些，并且保存原有的程序，那我就需要对系统进行休眠），可以这样做：
 1.先测试下电脑是否支持休眠
-sudo pm-hibernate 2.如果成功了，那就可以写入系统文件了
-sudo -i cd **/var/lib**/polkit-1/localauthority/50-local.d/ vi com.ubuntu.enable-hibernate.pkla （PS：如果配置不成功的话，你可以换一下路径，把/var/lib/换成/etc）
+sudo pm-hibernate  2.如果成功了，那就可以写入系统文件了
+sudo -i cd **/var/lib**/polkit-1/localauthority/50-local.d/ vi com.ubuntu.enable-hibernate.pkla  （PS：如果配置不成功的话，你可以换一下路径，把**/var/lib/**换成**/etc**）
 3.将下列代码写入
-[Re-enable hibernate by default in upower] Identity=unix-user:* Action=org.freedesktop.upower.hibernate ResultActive=yes [Re-enable hibernate by default in logind] Identity=unix-user:* Action=org.freedesktop.login1.hibernate ResultActive=yes 4.重启电脑</description>
+[Re-enable hibernate by default in upower] Identity=unix-user:* Action=org.freedesktop.upower.hibernate ResultActive=yes [Re-enable hibernate by default in logind] Identity=unix-user:* Action=org.freedesktop.login1.hibernate ResultActive=yes  4.重启电脑</description>
     </item>
     
     <item>
@@ -112,7 +110,7 @@ sudo -i cd **/var/lib**/polkit-1/localauthority/50-local.d/ vi com.ubuntu.enable
       <guid>https://wrfly.kfd.me/posts/make-a-startup-script-in-ubuntu/</guid>
       <description>There are many ways to make a script startup at boot. It&amp;rsquo;s quite easy to write a script. But the most important things are making it have the execute permission and making sure that your script&amp;rsquo;s path is correct.
 To make it execute, you need to put this command in you terminal
-chmod +x your_script.sh Be sure that you have write a ** absolute path ** in your script or you won&amp;rsquo;t get what you want.</description>
+chmod +x your_script.sh  Be sure that you have write a ** absolute path ** in your script or you won&amp;rsquo;t get what you want.</description>
     </item>
     
     <item>
@@ -122,23 +120,23 @@ chmod +x your_script.sh Be sure that you have write a ** absolute path ** in you
       
       <guid>https://wrfly.kfd.me/posts/syntax-for-socks-proxy-in-apt-conf/</guid>
       <description>在ubuntu下更新软件的时候,经常会遇到网络连接失败的情况,其实并不是服务器的问题,而是GFW在捣鬼,所以,我们不得不给apt-get加上一个代理,使其更新的时候可以通过代理访问.
-HTTP代理 1.在/etc/apt/apt.conf里面添加如下代码:
-Acquire::http::Proxy &#34;http://yourproxyaddress:proxyport&#34;; 再进行apt-get操作的时候就会通过代理访问目标服务器.
+HTTP代理### 1.在/etc/apt/apt.conf里面添加如下代码:
+再进行apt-get操作的时候就会通过代理访问目标服务器.
 2.设置临时代理
-切换root用户,在bash中输入: export http_proxy=http://yourproxyaddress:proxyport
-如果要使用sudo apt-get的话,你需要在/etc/sudoers里面添加: Defaults env_keep = &amp;ldquo;http_proxy https_proxy ftp_proxy&amp;rdquo;
+切换root用户,在bash中输入:
+如果要使用sudo apt-get的话,你需要在/etc/sudoers里面添加:
 这样会在你sudo运行命令的时候保持原来的代理,不会因为切换了root用户而改变环境变量.
 3.设置永久代理
 在.bashrc文件里面添加如下代码:
-http_proxy=http://yourproxyaddress:proxyport export http_proxy 保存文件,并重新打开终端.
+保存文件,并重新打开终端.
 PS:如果http代理需要认证的话,可以将原来的代码替换为:
-http_proxy=http://username:password@yourproxyaddress:proxyport SOCKS代理 如果你没用http代理,而是用的 shadowsocks 或者 ssh -D 这样的代理,那么你就需要一个转发的软件了,因为apt-get默认是不支持socks代理的,尽管网上有些人将http替换为了socks,那样也是不管用的.
+SOCKS代理### 如果你没用http代理,而是用的 shadowsocks 或者 ssh -D 这样的代理,那么你就需要一个转发的软件了,因为apt-get默认是不支持socks代理的,尽管网上有些人将http替换为了socks,那样也是不管用的.
 但是有种方法可以让 apt-get 走 socks 代理的流量, tsocks.
 首先你要安装tsocks.
-sudo apt-get install tsocks 然后在/etc/tsocks.cong的最下面设置好socks代理的服务器以及端口号.
+sudo apt-get install tsocks  然后在/etc/tsocks.cong的最下面设置好socks代理的服务器以及端口号.
 然后就可以使用代理了,具体操作如下:
-$ sudo -s # tsocks apt-get dist-upgrade # exit $ 或者这样:
-$ sudo -s # . tsocks -on # apt-get dist-upgrade # .</description>
+$ sudo -s # tsocks apt-get dist-upgrade # exit $  或者这样:
+$ sudo -s # . tsocks -on # apt-get dist-upgrade # . tsocks -off # not really necessary, given the exit # exit $  或者更简单点:</description>
     </item>
     
     <item>
@@ -148,8 +146,9 @@ $ sudo -s # . tsocks -on # apt-get dist-upgrade # .</description>
       
       <guid>https://wrfly.kfd.me/posts/hide-unity-panle-when-use-virtualbox-full-screen-model/</guid>
       <description>Question:
-Answer: &amp;gt; Disabling mini-toolbar in VMs settings is a temporary work-around. In the VirtualBox manager go to Settings-&amp;gt;General-&amp;gt;Advanced tab -&amp;gt; Mini ToolBar [] Show in Fullscreen/Seamless and make sure it is unchecked.
-在Ubuntu 下运行 VirtualBox ，开一个虚拟机，全屏模式，Unity的panle会一直显示。
+Answer:
+ Disabling mini-toolbar in VMs settings is a temporary work-around. In the VirtualBox manager go to Settings-&amp;gt;General-&amp;gt;Advanced tab -&amp;gt; Mini ToolBar [] Show in Fullscreen/Seamless and make sure it is unchecked.
+ 在Ubuntu 下运行 VirtualBox ，开一个虚拟机，全屏模式，Unity的panle会一直显示。
 取消显示只需在虚拟机的设置里把“全屏模式下显示小工具栏”取消就可以了。
 在虚拟机的&amp;ndash;设置&amp;ndash;常规&amp;ndash;高级&amp;ndash;小工具栏。
 ![setting/img/hide-unity-panle-in-virtualbox/setting.png)
@@ -179,8 +178,8 @@ See: https://developer.gnome.org/integration-guide/stable/desktop-files.html.en<
       
       <guid>https://wrfly.kfd.me/posts/%E5%85%B3%E4%BA%8Eubuntu%E7%9A%84path/</guid>
       <description>修改ubuntu下私人用户的PATH:
-Ubuntu的环境变量，一个是存放在&amp;rdquo;environment&amp;rdquo;文件里，另外一个是在&amp;rdquo;.profile&amp;rdquo;文件中
-如果你想在PATH中添加自己的路径，那么在 ~/.profile文件最后的export PATH=后面加上:~/.bash_shell/: 就能运行你放在这个目录中的脚本程序了。
+Ubuntu的环境变量，一个是存放在&amp;quot;environment&amp;quot;文件里，另外一个是在&amp;rdquo;.profile&amp;quot;文件中
+如果你想在PATH中添加自己的路径，那么在 ~/.profile文件最后的export PATH= 后面加上:~/.bash_shell/: 就能运行你放在这个目录中的脚本程序了。
 当然，前提是你要在用户目录下面创建一个那样的文件夹。</description>
     </item>
     

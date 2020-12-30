@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>devops on wrfly&#39;s blog</title>
@@ -19,7 +19,7 @@
       <description>今天遇到一个logrotate的问题。
 现象是配置不生效（其实也不是完全不生效，只是每小时的滚转策略变成一天了）。
 配置文件：
-# see &amp;#34;man logrotate&amp;#34; for details # rotate log files weekly weekly # keep 4 weeks worth of backlogs rotate 4 # create new (empty) log files after rotating old ones create # use date as a suffix of the rotated file dateext # uncomment this if you want your log files compressed #compress # packages drop log rotation information into this directory include /etc/logrotate.d$ ls -l /etc/cron.</description>
+# see &amp;#34;man logrotate&amp;#34; for details # rotate log files weekly weekly # keep 4 weeks worth of backlogs rotate 4 # create new (empty) log files after rotating old ones create # use date as a suffix of the rotated file dateext # uncomment this if you want your log files compressed #compress # packages drop log rotation information into this directory include /etc/logrotate.d $ ls -l /etc/cron.</description>
     </item>
     
     <item>

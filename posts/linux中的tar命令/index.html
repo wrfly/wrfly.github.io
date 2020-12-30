@@ -3,19 +3,19 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='原文链接：http://www.tecmint.com/18-tar-command-examples-in-linux/
-tar [-options(&#34;-&#34; is not necessary)] [name] [path or file(default current directory, if epmty)] 废话不多说，直接拿来用～
-创建一个tar文档（打包文档） tar -cvf [name.tar] [path or file] #c-creat v-view(show the progress) f-file(并不会解释) 创建一个tar.gz文档（打包并压缩） tar -cvzf [name.tar.gz] [path or file] #z-compress file to **gzip** 创建tar.bz2文档（压缩，另一种形式） tar cvfj [name.tar.bz2] [path or file] #这次是 **j** 解压一个tar文件 (x-extract-uncompress) tar -xvf [name.tar or name.tar.gz or name.tar.bz2] -c [path] or tar xvf [name.tar or name.tar.gz or name.tar.bz2] #empty for current directory 查看压缩文件目录(list) tar tvf name.'>
+tar [-options(&quot;-&quot; is not necessary)] [name] [path or file(default current directory, if epmty)]  废话不多说，直接拿来用～
+创建一个tar文档（打包文档） tar -cvf [name.tar] [path or file] #c-creat v-view(show the progress) f-file(并不会解释)  创建一个tar.gz文档（打包并压缩） tar -cvzf [name.tar.gz] [path or file] #z-compress file to **gzip**  创建tar.bz2文档（压缩，另一种形式） tar cvfj [name.tar.bz2] [path or file] #这次是 **j**  解压一个tar文件 (x-extract-uncompress) tar -xvf [name.tar or name.tar.gz or name.tar.bz2] -c [path] or tar xvf [name.tar or name.tar.gz or name.tar.bz2] #empty for current directory  查看压缩文件目录(list) tar tvf name.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='linux中的tar命令 • wrfly&#39;s blog'>
 <meta property='og:description' content='原文链接：http://www.tecmint.com/18-tar-command-examples-in-linux/
-tar [-options(&#34;-&#34; is not necessary)] [name] [path or file(default current directory, if epmty)] 废话不多说，直接拿来用～
-创建一个tar文档（打包文档） tar -cvf [name.tar] [path or file] #c-creat v-view(show the progress) f-file(并不会解释) 创建一个tar.gz文档（打包并压缩） tar -cvzf [name.tar.gz] [path or file] #z-compress file to **gzip** 创建tar.bz2文档（压缩，另一种形式） tar cvfj [name.tar.bz2] [path or file] #这次是 **j** 解压一个tar文件 (x-extract-uncompress) tar -xvf [name.tar or name.tar.gz or name.tar.bz2] -c [path] or tar xvf [name.tar or name.tar.gz or name.tar.bz2] #empty for current directory 查看压缩文件目录(list) tar tvf name.'>
+tar [-options(&quot;-&quot; is not necessary)] [name] [path or file(default current directory, if epmty)]  废话不多说，直接拿来用～
+创建一个tar文档（打包文档） tar -cvf [name.tar] [path or file] #c-creat v-view(show the progress) f-file(并不会解释)  创建一个tar.gz文档（打包并压缩） tar -cvzf [name.tar.gz] [path or file] #z-compress file to **gzip**  创建tar.bz2文档（压缩，另一种形式） tar cvfj [name.tar.bz2] [path or file] #这次是 **j**  解压一个tar文件 (x-extract-uncompress) tar -xvf [name.tar or name.tar.gz or name.tar.bz2] -c [path] or tar xvf [name.tar or name.tar.gz or name.tar.bz2] #empty for current directory  查看压缩文件目录(list) tar tvf name.'>
 <meta property='og:url' content='https://wrfly.kfd.me/posts/linux%E4%B8%AD%E7%9A%84tar%E5%91%BD%E4%BB%A4/'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='translate'><meta property='article:published_time' content='2015-05-18T00:00:00Z'/><meta property='article:modified_time' content='2015-05-18T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>linux中的tar命令 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/linux%E4%B8%AD%E7%9A%84tar%E5%91%BD%E4%BB%A4/'>
@@ -107,86 +107,74 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p>原文链接：<a href="http://www.tecmint.com/18-tar-command-examples-in-linux/" target="_blank">http://www.tecmint.com/18-tar-command-examples-in-linux/</a></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">tar [-options(&#34;-&#34; is not necessary)] [name] [path or file(default current directory, if epmty)]</pre></div>
+  <p>原文链接：<a href="http://www.tecmint.com/18-tar-command-examples-in-linux/">http://www.tecmint.com/18-tar-command-examples-in-linux/</a></p>
+<pre><code>tar [-options(&quot;-&quot; is not necessary)] [name] [path or file(default current directory, if epmty)]
+</code></pre>
 <p>废话不多说，直接拿来用～</p>
-
-<h3 id="创建一个tar文档-打包文档">创建一个tar文档（打包文档）</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">tar -cvf [name.tar] [path or file] #c-creat v-view(show the progress) f-file(并不会解释)</pre></div>
-<p><img src="/img/tar/tar.png" alt="tar" /></p>
-
-<h3 id="创建一个tar-gz文档-打包并压缩">创建一个tar.gz文档（打包并压缩）</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">tar -cvzf [name.tar.gz] [path or file] #z-compress file to **gzip**</pre></div>
-<p><img src="/img/tar/tar.gz.png" alt="tar.gz" /></p>
-
-<h3 id="创建tar-bz2文档-压缩-另一种形式">创建tar.bz2文档（压缩，另一种形式）</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">tar cvfj [name.tar.bz2] [path or file] #这次是 **j**</pre></div>
-<p><img src="/img/tar/tar.bz2.png" alt="tar.bz2.png" /></p>
-
+<h3 id="创建一个tar文档打包文档">创建一个tar文档（打包文档）</h3>
+<pre><code>tar -cvf [name.tar] [path or file] #c-creat v-view(show the progress) f-file(并不会解释)
+</code></pre>
+<p><img src="/img/tar/tar.png" alt="tar"></p>
+<h3 id="创建一个targz文档打包并压缩">创建一个tar.gz文档（打包并压缩）</h3>
+<pre><code>tar -cvzf [name.tar.gz] [path or file] #z-compress file to **gzip**
+</code></pre>
+<p><img src="/img/tar/tar.gz.png" alt="tar.gz"></p>
+<h3 id="创建tarbz2文档压缩另一种形式">创建tar.bz2文档（压缩，另一种形式）</h3>
+<pre><code>tar cvfj [name.tar.bz2] [path or file] #这次是 **j**
+</code></pre>
+<p><img src="/img/tar/tar.bz2.png" alt="tar.bz2.png"></p>
 <h3 id="解压一个tar文件-x-extract-uncompress">解压一个tar文件 (x-extract-uncompress)</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">tar -xvf [name.tar or name.tar.gz or name.tar.bz2] -c [path]
+<pre><code>tar -xvf [name.tar or name.tar.gz or name.tar.bz2] -c [path]
 or
-tar xvf [name.tar or name.tar.gz or name.tar.bz2] #empty for current directory</pre></div>
-<p><img src="/img/tar/untar.png" alt="untar" /></p>
-
-<p><img src="/img/tar/untar.gz.png" alt="untar.gz" /></p>
-
-<p><img src="/img/tar/untar.bz2.png" alt="untar.gz.bz2" /></p>
-
-<h3 id="查看压缩文件目录-list">查看压缩文件目录(list)</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">tar tvf name.tar</pre></div>
-<p><img src="/img/tar/list.png" alt="list" /></p>
-
-<p><img src="/img/tar/list2.png" alt="list2" /></p>
-
-<p><img src="/img/tar/list3.png" alt="list3" /></p>
-
+tar xvf [name.tar or name.tar.gz or name.tar.bz2] #empty for current directory
+</code></pre>
+<p><img src="/img/tar/untar.png" alt="untar"></p>
+<p><img src="/img/tar/untar.gz.png" alt="untar.gz"></p>
+<p><img src="/img/tar/untar.bz2.png" alt="untar.gz.bz2"></p>
+<h3 id="查看压缩文件目录list">查看压缩文件目录(list)</h3>
+<pre><code>tar tvf name.tar
+</code></pre>
+<p><img src="/img/tar/list.png" alt="list"></p>
+<p><img src="/img/tar/list2.png" alt="list2"></p>
+<p><img src="/img/tar/list3.png" alt="list3"></p>
 <h3 id="提取文档中的某一个文件">提取文档中的某一个文件</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">tar -xvf name.tar file_name
+<pre><code>tar -xvf name.tar file_name
 or
-tar --extract --file=name.tar file_name</pre></div>
-<p><img src="/img/tar/single.png" alt="single" /></p>
-
+tar --extract --file=name.tar file_name
+</code></pre>
+<p><img src="/img/tar/single.png" alt="single"></p>
 <h3 id="解压文档中的某一文件">解压文档中的某一文件</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">tar -zxvf name.tar.gz file_name
+<pre><code>tar -zxvf name.tar.gz file_name
 or
-tar --extract --file=name.tar.gz file_name</pre></div>
-<p><img src="/img/tar/single-gz.png" alt="untar_single" /></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">tar -jxvf name.tar.bz2 file_name
+tar --extract --file=name.tar.gz file_name
+</code></pre>
+<p><img src="/img/tar/single-gz.png" alt="untar_single"></p>
+<pre><code>tar -jxvf name.tar.bz2 file_name
 or
-...a long long command and I don&#39;t think U will be willing to use it...</pre></div>
-<p><img src="/img/tar/single-bz2.png" alt="untar_single_bz2" /></p>
-
-<h3 id="解压-提取-文件中的多个文件">解压/提取 文件中的多个文件</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">上图吧...</pre></div>
-<p><img src="/img/tar/multiple.png" alt="multiple" /></p>
-
-<h3 id="用正则去匹配文档中的文件-并解压提取出来">用正则去匹配文档中的文件，并解压提取出来</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">--wildcards &#34;*[Aa].wow&#34;</pre></div>
-<p><img src="/img/tar/wildcards.png" alt="wildcards" /></p>
-
-<h3 id="向文档中添加某些文件-包括压缩的和非压缩的">向文档中添加某些文件（包括压缩的和非压缩的）</h3>
-
+...a long long command and I don't think U will be willing to use it...
+</code></pre>
+<p><img src="/img/tar/single-bz2.png" alt="untar_single_bz2"></p>
+<h3 id="解压提取-文件中的多个文件">解压/提取 文件中的多个文件</h3>
+<pre><code>上图吧...
+</code></pre>
+<p><img src="/img/tar/multiple.png" alt="multiple"></p>
+<h3 id="用正则去匹配文档中的文件并解压提取出来">用正则去匹配文档中的文件，并解压提取出来</h3>
+<pre><code>--wildcards &quot;*[Aa].wow&quot;
+</code></pre>
+<p><img src="/img/tar/wildcards.png" alt="wildcards"></p>
+<h3 id="向文档中添加某些文件包括压缩的和非压缩的">向文档中添加某些文件（包括压缩的和非压缩的）</h3>
 <p>直接上图啦</p>
-
-<p><img src="/img/tar/add_file.png" alt="add" /></p>
-
-<p><img src="/img/tar/add_file2.png" alt="add" /></p>
-
-<h3 id="查验文档是啥-在你不知道压缩文档是什么类型的时候用">查验文档是啥（在你不知道压缩文档是什么类型的时候用）</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">W(大写)代表verify(不要问我什么鬼，我也不知道为啥w就代表verify了)</pre></div>
-<p><img src="/img/tar/verify.png" alt="verify" /></p>
-
-<h3 id="查看文档的大小-并不是经常用">查看文档的大小（并不是经常用）</h3>
-
+<p><img src="/img/tar/add_file.png" alt="add"></p>
+<p><img src="/img/tar/add_file2.png" alt="add"></p>
+<h3 id="查验文档是啥在你不知道压缩文档是什么类型的时候用">查验文档是啥（在你不知道压缩文档是什么类型的时候用）</h3>
+<pre><code>W(大写)代表verify(不要问我什么鬼，我也不知道为啥w就代表verify了)
+</code></pre>
+<p><img src="/img/tar/verify.png" alt="verify"></p>
+<h3 id="查看文档的大小并不是经常用">查看文档的大小（并不是经常用）</h3>
 <p>通过管道传递到 wc -c 来查看</p>
-
-<p><img src="/img/tar/check.png" alt="check" /></p>
-
+<p><img src="/img/tar/check.png" alt="check"></p>
 <p>另附英文版参数解释：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">c – create a archive file.
+<pre><code>c – create a archive file.
 x – extract a archive file.
 v – show the progress of archive file.
 f – filename of archive file.
@@ -194,7 +182,9 @@ t – viewing content of archive file.
 j – filter archive through bzip2.
 z – filter archive through gzip.
 W – Verify a archive file.
-wildcards – Specify patters in unix tar command.</pre></div>
+wildcards – Specify patters in unix tar command.
+</code></pre>
+
 </div>
 
   

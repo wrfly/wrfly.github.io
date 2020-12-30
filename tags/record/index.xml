@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>record on wrfly&#39;s blog</title>
@@ -16,7 +16,7 @@
       <pubDate>Thu, 18 Dec 2014 00:00:00 +0000</pubDate>
       
       <guid>https://wrfly.kfd.me/posts/php%E5%8F%8D%E4%BB%A3%E7%90%86%E4%BB%A5%E5%8F%8Agoagent-php%E4%BB%A3%E7%90%86/</guid>
-      <description>一下午没去上课，弄了下php反代理。因为看到有一些谷歌的镜像网站，很神奇，所以我也尝试着做了一个&amp;ldquo;google.love-u.me&amp;rdquo; &amp;amp; &amp;ldquo;youtube.love-u.me&amp;rdquo;谷歌可以用，但是youtube就不行了,只能看看图片，视频还看不了。
+      <description>一下午没去上课，弄了下php反代理。因为看到有一些谷歌的镜像网站，很神奇，所以我也尝试着做了一个&amp;quot;google.love-u.me&amp;quot;&amp;amp; &amp;quot;youtube.love-u.me&amp;quot;谷歌可以用，但是youtube就不行了,只能看看图片，视频还看不了。
 其实这中间的原理我也不是很懂，大概的意思是让php去请求你所需的网页，然后再回来。相当于一层代理了吧。我用的是7ghost的代码，那个项目也已经好久不更新了，但是代码还是可以用的，给他点个赞！
 然后，由于学校的ipv6也不是很稳定，goagent上面的ipv4地址更是经常挂，所以我就尝试了一下php代理服务器，也很简单，把那些文件放到国外的php空间上就ok了，原理估计跟上面的差不多。
 我要是再说具体方法就感觉多此一举了，要是想做就搜一下去吧，谷歌上有很多，也欢迎使用“我的”谷歌～
@@ -30,8 +30,8 @@
       
       <guid>https://wrfly.kfd.me/posts/do-not-update-python-on-ubuntu/</guid>
       <description>or
-apt-get upgrade The fellows are what I did(including the reason and result. :(
-$./configure $make #make install But, it&amp;rsquo;s the beginning of my nightmare.
+apt-get upgrade  The fellows are what I did(including the reason and result. :(
+$./configure $make #make install  But, it&amp;rsquo;s the beginning of my nightmare.
 My Goagent didn&amp;rsquo;t work.
 When I run python, it told me that I should install python-gevent and python-gtk2. But these two packages ware installed before! I can use it minutes ago! I didn&amp;rsquo;t study python before and I was puzzled. At first I think it&amp;rsquo;s the python3.</description>
     </item>

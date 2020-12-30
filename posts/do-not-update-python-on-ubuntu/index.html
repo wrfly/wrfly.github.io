@@ -3,23 +3,23 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='or
-apt-get upgrade The fellows are what I did(including the reason and result. :(
-$./configure $make #make install But, it&rsquo;s the beginning of my nightmare.
+apt-get upgrade  The fellows are what I did(including the reason and result. :(
+$./configure $make #make install  But, it&rsquo;s the beginning of my nightmare.
 My Goagent didn&rsquo;t work.
 When I run python, it told me that I should install python-gevent and python-gtk2. But these two packages ware installed before! I can use it minutes ago! I didn&rsquo;t study python before and I was puzzled. At first I think it&rsquo;s the python3.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='DO NOT UPDATE PYTHON ON UBUNTU • wrfly&#39;s blog'>
 <meta property='og:description' content='or
-apt-get upgrade The fellows are what I did(including the reason and result. :(
-$./configure $make #make install But, it&rsquo;s the beginning of my nightmare.
+apt-get upgrade  The fellows are what I did(including the reason and result. :(
+$./configure $make #make install  But, it&rsquo;s the beginning of my nightmare.
 My Goagent didn&rsquo;t work.
 When I run python, it told me that I should install python-gevent and python-gtk2. But these two packages ware installed before! I can use it minutes ago! I didn&rsquo;t study python before and I was puzzled. At first I think it&rsquo;s the python3.'>
 <meta property='og:url' content='https://wrfly.kfd.me/posts/do-not-update-python-on-ubuntu/'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='record'><meta property='article:published_time' content='2014-10-07T00:00:00Z'/><meta property='article:modified_time' content='2014-10-07T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>DO NOT UPDATE PYTHON ON UBUNTU • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/do-not-update-python-on-ubuntu/'>
@@ -112,15 +112,15 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>or</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">apt-get upgrade</pre></div>
+<pre><code>apt-get upgrade
+</code></pre>
 <p>The fellows are what I did(including the reason and result. :(</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$./configure
+<pre><code>$./configure
 $make
-#make install</pre></div>
+#make install
+</code></pre>
 <p>But, it&rsquo;s the beginning of my nightmare.</p>
-
 <p>My Goagent didn&rsquo;t work.</p>
-
 <p>When I run python, it told me  that I should install python-gevent and python-gtk2.
 But these two packages ware installed before! I can use it minutes ago!
 I didn&rsquo;t study python before and I was puzzled.
@@ -130,26 +130,24 @@ Python2 and Python3 confused their environment and can not find the packages bel
 But when I tried to remove python3, the computer told me that the softwares rely on python will also be removed.(Almost all of my software!!) WTF!
 Why does it so complicated!
 I give up this way.</p>
-
 <p>And I tried to correct the environment.</p>
-
 <p>The user&rsquo;s environment are located in</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/home/their name/.bashrc</pre></div>
+<pre><code>/home/their name/.bashrc
+</code></pre>
 <p>file.
 You can change your software environment by just adding some words at the end of the file.
 For example, if you want to change the python path, you can add</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">PYTHONPATH=&#34;/usr/local/python2.7:</pre></div>
+<pre><code>PYTHONPATH=&quot;/usr/local/python2.7:
+</code></pre>
 <p>and then the python will find its packages in</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/usr/local/python2.7</pre></div>
+<pre><code>/usr/local/python2.7
+</code></pre>
 <p>(WARING it&rsquo;s just an example, do not do this in your &ldquo;.bashrc&rdquo; file)
 When I added some path to PYTHONPATH, it works a little&hellip;.But also has some errors.
 It drives me crazy!</p>
-
 <p>And I decided to reinstall my Ubuntu system.
 Back up the data, make a install U-disk and reinstall.</p>
-
 <p>WTF!My tools and environment! I have to reinstall them too!!!!</p>
-
 <p>No zuo, No die, Why I try!!!!</p>
 
 </div>

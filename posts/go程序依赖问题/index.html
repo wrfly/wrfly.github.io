@@ -7,8 +7,8 @@
 原因与直觉相同，因为二者系统的动态链接库不同，alpine用了精简版的libc，不是glibc。
 如果build binary的时候没有用到系统的依赖，那么则不会出现依赖性问题。
 解决方法有两种，在build的时候：
- go build -ldflags &ldquo;-s -w&rdquo; -a -tagsnetgo -installsuffix netgo
- CGO_ENABLED=0 go build -ldflags &ldquo;-s&rdquo; -a -installsuffix cgo .
+  go build -ldflags &ldquo;-s -w&rdquo; -a -tagsnetgo -installsuffix netgo
+  CGO_ENABLED=0 go build -ldflags &ldquo;-s&rdquo; -a -installsuffix cgo .
   见：
  &lt;http://www.jeffsloyer.io/post date: 2017-07-04 title: go程序依赖问题 https://stackoverflow.com/questions/36279253/go-compiled-binary-wont-run-in-an-alpine-docker-container-on-ubuntu-host  '>
 <meta name='theme-color' content='#ffcd00'>
@@ -19,15 +19,15 @@
 原因与直觉相同，因为二者系统的动态链接库不同，alpine用了精简版的libc，不是glibc。
 如果build binary的时候没有用到系统的依赖，那么则不会出现依赖性问题。
 解决方法有两种，在build的时候：
- go build -ldflags &ldquo;-s -w&rdquo; -a -tagsnetgo -installsuffix netgo
- CGO_ENABLED=0 go build -ldflags &ldquo;-s&rdquo; -a -installsuffix cgo .
+  go build -ldflags &ldquo;-s -w&rdquo; -a -tagsnetgo -installsuffix netgo
+  CGO_ENABLED=0 go build -ldflags &ldquo;-s&rdquo; -a -installsuffix cgo .
   见：
  &lt;http://www.jeffsloyer.io/post date: 2017-07-04 title: go程序依赖问题 https://stackoverflow.com/questions/36279253/go-compiled-binary-wont-run-in-an-alpine-docker-container-on-ubuntu-host  '>
 <meta property='og:url' content='https://wrfly.kfd.me/posts/go%E7%A8%8B%E5%BA%8F%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/'>
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='code'><meta property='article:published_time' content='2017-07-04T00:00:00Z'/><meta property='article:modified_time' content='2017-07-04T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
   <title>go程序依赖问题 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/go%E7%A8%8B%E5%BA%8F%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/'>
@@ -120,28 +120,24 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>今天遇到一个问题就是，在centos下build出来的golang程序能不能直接放到alpine上面运行。</p>
-
 <p>实际测试发现，有的可以，有的不可以。</p>
-
 <p>原因与直觉相同，因为二者系统的动态链接库不同，alpine用了精简版的libc，不是glibc。</p>
-
 <p>如果build binary的时候没有用到系统的依赖，那么则不会出现依赖性问题。</p>
-
 <p>解决方法有两种，在build的时候：</p>
-
 <ul>
-<li><p>go build -ldflags &ldquo;-s -w&rdquo; -a -tagsnetgo -installsuffix netgo</p></li>
-
-<li><p>CGO_ENABLED=0 go build -ldflags &ldquo;-s&rdquo; -a -installsuffix cgo .</p></li>
+<li>
+<p>go build -ldflags &ldquo;-s -w&rdquo; -a -tagsnetgo -installsuffix netgo</p>
+</li>
+<li>
+<p>CGO_ENABLED=0 go build -ldflags &ldquo;-s&rdquo; -a -installsuffix cgo .</p>
+</li>
 </ul>
-
 <p>见：</p>
-
 <ul>
-<li>&lt;<a href="http://www.jeffsloyer.io/post" target="_blank">http://www.jeffsloyer.io/post</a>
+<li>&lt;http://www.jeffsloyer.io/post
 date: 2017-07-04
 title: go程序依赖问题</li>
-<li><a href="https://stackoverflow.com/questions/36279253/go-compiled-binary-wont-run-in-an-alpine-docker-container-on-ubuntu-host" target="_blank">https://stackoverflow.com/questions/36279253/go-compiled-binary-wont-run-in-an-alpine-docker-container-on-ubuntu-host</a></li>
+<li><a href="https://stackoverflow.com/questions/36279253/go-compiled-binary-wont-run-in-an-alpine-docker-container-on-ubuntu-host">https://stackoverflow.com/questions/36279253/go-compiled-binary-wont-run-in-an-alpine-docker-container-on-ubuntu-host</a></li>
 </ul>
 
 </div>
