@@ -25,7 +25,7 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://wrfly.kfd.me/links/</guid>
-      <description> BigTang 离别歌 简庐 LarryXi  </description>
+      <description> BigTang 离别歌 简庐  </description>
     </item>
     
     <item>
@@ -1780,7 +1780,7 @@ HTTP代理 HTTP代理跟上面原理类似，用处也基本相同，都是让�
 fuser - identify processes using files or sockets.
 根据占用的文件或者socket来确定进程。好东西啊。
 fuser-几个常用的命令  fuser 8080/tcp 打印占用8080端口的进程 fuser /etc/passwd 打印占用/etc/passwd的进程 fuser -k 8080/tcp 杀死占用8080端口的进程  下面是来自thegeekstuff的关于fuser的一些介绍和技巧。To share and mark.
-文件或目录 $fuser . /home/mr/test: 13965c 可以看到进程ID后面跟了一个字母&amp;rsquo;c&amp;rsquo;，这个&amp;rsquo;c&#39;其实是一个标识符，表示 这个进程把此目录作为他的当前目录。类似的还有：
+文件或目录 $fuser . /home/mr/test: 13965c 可以看到进程ID后面跟了一个字母&amp;rsquo;c&amp;rsquo;，这个&amp;rsquo;c&amp;rsquo;其实是一个标识符，表示 这个进程把此目录作为他的当前目录。类似的还有：
    参数 意义     c 当前目录   e 可执行文件正在运行   f 进程正在打开文件，默认省略   F 进程正在打开文件往里写入，默认省略   r 进程的根目录   m 内存映射，或者共享库    具体可以加上**-v**查看ACCESS详情，但是我感觉用处不大。另外**-v**还可以查看运行进程的用户是谁，运行的命令是什么， 这个还是很有用的。</description>
     </item>
     

@@ -19,7 +19,7 @@ echo {1..100}|tr &#39; &#39; &#39;*&#39;|bc|tr &#39;1-9&#39; &#39;\n&#39;|sort -
 <meta property='og:site_name' content='wrfly&#39;s blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='shell'><meta property='article:tag' content='ubuntu'><meta property='article:published_time' content='2015-05-13T00:00:00Z'/><meta property='article:modified_time' content='2015-05-13T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.68.3" />
+<meta name="generator" content="Hugo 0.70.0" />
 
   <title>linux命令行工具妙用 • wrfly&#39;s blog</title>
   <link rel='canonical' href='https://wrfly.kfd.me/posts/linux%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E5%A6%99%E7%94%A8/'>
@@ -215,7 +215,7 @@ awk '$1 ＝= 1{print $0}'
 find . -print
 find .. -print0
 </code></pre>
-<p>bash_path可以是任意位置，如(/home/slynx)，<code>find</code>会从该位置开始向下查找。.指定当前目录，..指定父目录，这是Unix文件系统的约定用法。<code>-print</code>指明打印出匹配文件的文件名，当使用<code>-print</code>时，'\n'作为用于分隔文件的定界符，<code>-print0</code>指明使用作为&rsquo;\0'用于分隔文件的定界符。</p>
+<p>bash_path可以是任意位置，如(/home/slynx)，<code>find</code>会从该位置开始向下查找。.指定当前目录，..指定父目录，这是Unix文件系统的约定用法。<code>-print</code>指明打印出匹配文件的文件名，当使用<code>-print</code>时，'\n&rsquo;作为用于分隔文件的定界符，<code>-print0</code>指明使用作为&rsquo;\0&rsquo;用于分隔文件的定界符。</p>
 <p>作为一个强大的命令行工具，<code>find</code>命令包含了诸多值得留意的选项，接下来让我们来看一下<code>find</code>命令的一些其他选项。</p>
 <h3 id="1-根据文件名或者正则表达式匹配搜索">(1). 根据文件名或者正则表达式匹配搜索</h3>
 <p>选项<code>-name</code>的参数指定了文件名所必须匹配的字符串。我们可以将同配符作为参数使用。如下所示：</p>
@@ -436,7 +436,7 @@ print &quot;Text file: %s\n&quot; {} \;
       </li></ul>
   </nav>
 </section><div class='copyright'>
-  <p> &copy; 2014-2020 wrfly </p>
+  <p> &copy; 2014-2024 wrfly </p>
 </div>
 
         </div>
